@@ -1,0 +1,4 @@
+▲ Next.js 16.2.6
+- Local:         http://localhost:3001
+- Network:       http://36.50.27.222:3001
+✓ Ready in 331ms

@@ -29,11 +29,19 @@ export type AggregateReportCayXanh = {
 export type ReportCayXanhAvgAggregateOutputType = {
   year: number | null
   soLuongCay: number | null
+  toaDoDauLat: number | null
+  toaDoDauLng: number | null
+  toaDoCuoiLat: number | null
+  toaDoCuoiLng: number | null
 }
 
 export type ReportCayXanhSumAggregateOutputType = {
   year: number | null
   soLuongCay: number | null
+  toaDoDauLat: number | null
+  toaDoDauLng: number | null
+  toaDoCuoiLat: number | null
+  toaDoCuoiLng: number | null
 }
 
 export type ReportCayXanhMinAggregateOutputType = {
@@ -47,6 +55,10 @@ export type ReportCayXanhMinAggregateOutputType = {
   soLuongCay: number | null
   chieuSangPhia: string | null
   chungLoaiCay: string | null
+  toaDoDauLat: number | null
+  toaDoDauLng: number | null
+  toaDoCuoiLat: number | null
+  toaDoCuoiLng: number | null
   ghiChu: string | null
   status: $Enums.ReportStatus | null
   sourceFile: string | null
@@ -66,6 +78,10 @@ export type ReportCayXanhMaxAggregateOutputType = {
   soLuongCay: number | null
   chieuSangPhia: string | null
   chungLoaiCay: string | null
+  toaDoDauLat: number | null
+  toaDoDauLng: number | null
+  toaDoCuoiLat: number | null
+  toaDoCuoiLng: number | null
   ghiChu: string | null
   status: $Enums.ReportStatus | null
   sourceFile: string | null
@@ -85,6 +101,10 @@ export type ReportCayXanhCountAggregateOutputType = {
   soLuongCay: number
   chieuSangPhia: number
   chungLoaiCay: number
+  toaDoDauLat: number
+  toaDoDauLng: number
+  toaDoCuoiLat: number
+  toaDoCuoiLng: number
   ghiChu: number
   status: number
   sourceFile: number
@@ -98,11 +118,19 @@ export type ReportCayXanhCountAggregateOutputType = {
 export type ReportCayXanhAvgAggregateInputType = {
   year?: true
   soLuongCay?: true
+  toaDoDauLat?: true
+  toaDoDauLng?: true
+  toaDoCuoiLat?: true
+  toaDoCuoiLng?: true
 }
 
 export type ReportCayXanhSumAggregateInputType = {
   year?: true
   soLuongCay?: true
+  toaDoDauLat?: true
+  toaDoDauLng?: true
+  toaDoCuoiLat?: true
+  toaDoCuoiLng?: true
 }
 
 export type ReportCayXanhMinAggregateInputType = {
@@ -116,6 +144,10 @@ export type ReportCayXanhMinAggregateInputType = {
   soLuongCay?: true
   chieuSangPhia?: true
   chungLoaiCay?: true
+  toaDoDauLat?: true
+  toaDoDauLng?: true
+  toaDoCuoiLat?: true
+  toaDoCuoiLng?: true
   ghiChu?: true
   status?: true
   sourceFile?: true
@@ -135,6 +167,10 @@ export type ReportCayXanhMaxAggregateInputType = {
   soLuongCay?: true
   chieuSangPhia?: true
   chungLoaiCay?: true
+  toaDoDauLat?: true
+  toaDoDauLng?: true
+  toaDoCuoiLat?: true
+  toaDoCuoiLng?: true
   ghiChu?: true
   status?: true
   sourceFile?: true
@@ -154,6 +190,10 @@ export type ReportCayXanhCountAggregateInputType = {
   soLuongCay?: true
   chieuSangPhia?: true
   chungLoaiCay?: true
+  toaDoDauLat?: true
+  toaDoDauLng?: true
+  toaDoCuoiLat?: true
+  toaDoCuoiLng?: true
   ghiChu?: true
   status?: true
   sourceFile?: true
@@ -260,6 +300,10 @@ export type ReportCayXanhGroupByOutputType = {
   soLuongCay: number | null
   chieuSangPhia: string | null
   chungLoaiCay: string | null
+  toaDoDauLat: number | null
+  toaDoDauLng: number | null
+  toaDoCuoiLat: number | null
+  toaDoCuoiLng: number | null
   ghiChu: string | null
   status: $Enums.ReportStatus
   sourceFile: string | null
@@ -302,6 +346,10 @@ export type ReportCayXanhWhereInput = {
   soLuongCay?: Prisma.IntNullableFilter<"ReportCayXanh"> | number | null
   chieuSangPhia?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
   chungLoaiCay?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
+  toaDoDauLat?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoDauLng?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLat?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLng?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
   ghiChu?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
   status?: Prisma.EnumReportStatusFilter<"ReportCayXanh"> | $Enums.ReportStatus
   sourceFile?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
@@ -323,6 +371,10 @@ export type ReportCayXanhOrderByWithRelationInput = {
   soLuongCay?: Prisma.SortOrderInput | Prisma.SortOrder
   chieuSangPhia?: Prisma.SortOrderInput | Prisma.SortOrder
   chungLoaiCay?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrderInput | Prisma.SortOrder
   ghiChu?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -347,6 +399,10 @@ export type ReportCayXanhWhereUniqueInput = Prisma.AtLeast<{
   soLuongCay?: Prisma.IntNullableFilter<"ReportCayXanh"> | number | null
   chieuSangPhia?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
   chungLoaiCay?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
+  toaDoDauLat?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoDauLng?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLat?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLng?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
   ghiChu?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
   status?: Prisma.EnumReportStatusFilter<"ReportCayXanh"> | $Enums.ReportStatus
   sourceFile?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
@@ -368,6 +424,10 @@ export type ReportCayXanhOrderByWithAggregationInput = {
   soLuongCay?: Prisma.SortOrderInput | Prisma.SortOrder
   chieuSangPhia?: Prisma.SortOrderInput | Prisma.SortOrder
   chungLoaiCay?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrderInput | Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrderInput | Prisma.SortOrder
   ghiChu?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -395,6 +455,10 @@ export type ReportCayXanhScalarWhereWithAggregatesInput = {
   soLuongCay?: Prisma.IntNullableWithAggregatesFilter<"ReportCayXanh"> | number | null
   chieuSangPhia?: Prisma.StringNullableWithAggregatesFilter<"ReportCayXanh"> | string | null
   chungLoaiCay?: Prisma.StringNullableWithAggregatesFilter<"ReportCayXanh"> | string | null
+  toaDoDauLat?: Prisma.FloatNullableWithAggregatesFilter<"ReportCayXanh"> | number | null
+  toaDoDauLng?: Prisma.FloatNullableWithAggregatesFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLat?: Prisma.FloatNullableWithAggregatesFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLng?: Prisma.FloatNullableWithAggregatesFilter<"ReportCayXanh"> | number | null
   ghiChu?: Prisma.StringNullableWithAggregatesFilter<"ReportCayXanh"> | string | null
   status?: Prisma.EnumReportStatusWithAggregatesFilter<"ReportCayXanh"> | $Enums.ReportStatus
   sourceFile?: Prisma.StringNullableWithAggregatesFilter<"ReportCayXanh"> | string | null
@@ -413,6 +477,10 @@ export type ReportCayXanhCreateInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -433,6 +501,10 @@ export type ReportCayXanhUncheckedCreateInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -451,6 +523,10 @@ export type ReportCayXanhUpdateInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -471,6 +547,10 @@ export type ReportCayXanhUncheckedUpdateInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -490,6 +570,10 @@ export type ReportCayXanhCreateManyInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -508,6 +592,10 @@ export type ReportCayXanhUpdateManyMutationInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -526,6 +614,10 @@ export type ReportCayXanhUncheckedUpdateManyInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -555,6 +647,10 @@ export type ReportCayXanhCountOrderByAggregateInput = {
   soLuongCay?: Prisma.SortOrder
   chieuSangPhia?: Prisma.SortOrder
   chungLoaiCay?: Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrder
   ghiChu?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrder
@@ -566,6 +662,10 @@ export type ReportCayXanhCountOrderByAggregateInput = {
 export type ReportCayXanhAvgOrderByAggregateInput = {
   year?: Prisma.SortOrder
   soLuongCay?: Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrder
 }
 
 export type ReportCayXanhMaxOrderByAggregateInput = {
@@ -579,6 +679,10 @@ export type ReportCayXanhMaxOrderByAggregateInput = {
   soLuongCay?: Prisma.SortOrder
   chieuSangPhia?: Prisma.SortOrder
   chungLoaiCay?: Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrder
   ghiChu?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrder
@@ -598,6 +702,10 @@ export type ReportCayXanhMinOrderByAggregateInput = {
   soLuongCay?: Prisma.SortOrder
   chieuSangPhia?: Prisma.SortOrder
   chungLoaiCay?: Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrder
   ghiChu?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrder
@@ -609,6 +717,10 @@ export type ReportCayXanhMinOrderByAggregateInput = {
 export type ReportCayXanhSumOrderByAggregateInput = {
   year?: Prisma.SortOrder
   soLuongCay?: Prisma.SortOrder
+  toaDoDauLat?: Prisma.SortOrder
+  toaDoDauLng?: Prisma.SortOrder
+  toaDoCuoiLat?: Prisma.SortOrder
+  toaDoCuoiLng?: Prisma.SortOrder
 }
 
 export type ReportCayXanhCreateNestedManyWithoutCreatedByInput = {
@@ -705,6 +817,10 @@ export type ReportCayXanhCreateWithoutCreatedByInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -724,6 +840,10 @@ export type ReportCayXanhUncheckedCreateWithoutCreatedByInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -771,6 +891,10 @@ export type ReportCayXanhScalarWhereInput = {
   soLuongCay?: Prisma.IntNullableFilter<"ReportCayXanh"> | number | null
   chieuSangPhia?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
   chungLoaiCay?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
+  toaDoDauLat?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoDauLng?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLat?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
+  toaDoCuoiLng?: Prisma.FloatNullableFilter<"ReportCayXanh"> | number | null
   ghiChu?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
   status?: Prisma.EnumReportStatusFilter<"ReportCayXanh"> | $Enums.ReportStatus
   sourceFile?: Prisma.StringNullableFilter<"ReportCayXanh"> | string | null
@@ -789,6 +913,10 @@ export type ReportCayXanhCreateWithoutWardInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -807,6 +935,10 @@ export type ReportCayXanhUncheckedCreateWithoutWardInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -852,6 +984,10 @@ export type ReportCayXanhCreateManyCreatedByInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -869,6 +1005,10 @@ export type ReportCayXanhUpdateWithoutCreatedByInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -888,6 +1028,10 @@ export type ReportCayXanhUncheckedUpdateWithoutCreatedByInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -906,6 +1050,10 @@ export type ReportCayXanhUncheckedUpdateManyWithoutCreatedByInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -923,6 +1071,10 @@ export type ReportCayXanhCreateManyWardInput = {
   soLuongCay?: number | null
   chieuSangPhia?: string | null
   chungLoaiCay?: string | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
   ghiChu?: string | null
   status?: $Enums.ReportStatus
   sourceFile?: string | null
@@ -941,6 +1093,10 @@ export type ReportCayXanhUpdateWithoutWardInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -959,6 +1115,10 @@ export type ReportCayXanhUncheckedUpdateWithoutWardInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -977,6 +1137,10 @@ export type ReportCayXanhUncheckedUpdateManyWithoutWardInput = {
   soLuongCay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chungLoaiCay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -998,6 +1162,10 @@ export type ReportCayXanhSelect<ExtArgs extends runtime.Types.Extensions.Interna
   soLuongCay?: boolean
   chieuSangPhia?: boolean
   chungLoaiCay?: boolean
+  toaDoDauLat?: boolean
+  toaDoDauLng?: boolean
+  toaDoCuoiLat?: boolean
+  toaDoCuoiLng?: boolean
   ghiChu?: boolean
   status?: boolean
   sourceFile?: boolean
@@ -1019,6 +1187,10 @@ export type ReportCayXanhSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   soLuongCay?: boolean
   chieuSangPhia?: boolean
   chungLoaiCay?: boolean
+  toaDoDauLat?: boolean
+  toaDoDauLng?: boolean
+  toaDoCuoiLat?: boolean
+  toaDoCuoiLng?: boolean
   ghiChu?: boolean
   status?: boolean
   sourceFile?: boolean
@@ -1040,6 +1212,10 @@ export type ReportCayXanhSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   soLuongCay?: boolean
   chieuSangPhia?: boolean
   chungLoaiCay?: boolean
+  toaDoDauLat?: boolean
+  toaDoDauLng?: boolean
+  toaDoCuoiLat?: boolean
+  toaDoCuoiLng?: boolean
   ghiChu?: boolean
   status?: boolean
   sourceFile?: boolean
@@ -1061,6 +1237,10 @@ export type ReportCayXanhSelectScalar = {
   soLuongCay?: boolean
   chieuSangPhia?: boolean
   chungLoaiCay?: boolean
+  toaDoDauLat?: boolean
+  toaDoDauLng?: boolean
+  toaDoCuoiLat?: boolean
+  toaDoCuoiLng?: boolean
   ghiChu?: boolean
   status?: boolean
   sourceFile?: boolean
@@ -1069,7 +1249,7 @@ export type ReportCayXanhSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReportCayXanhOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "year" | "stt" | "tuyen" | "diemDau" | "diemCuoi" | "soLuongCay" | "chieuSangPhia" | "chungLoaiCay" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportCayXanh"]>
+export type ReportCayXanhOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "year" | "stt" | "tuyen" | "diemDau" | "diemCuoi" | "soLuongCay" | "chieuSangPhia" | "chungLoaiCay" | "toaDoDauLat" | "toaDoDauLng" | "toaDoCuoiLat" | "toaDoCuoiLng" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportCayXanh"]>
 export type ReportCayXanhInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1100,6 +1280,10 @@ export type $ReportCayXanhPayload<ExtArgs extends runtime.Types.Extensions.Inter
     soLuongCay: number | null
     chieuSangPhia: string | null
     chungLoaiCay: string | null
+    toaDoDauLat: number | null
+    toaDoDauLng: number | null
+    toaDoCuoiLat: number | null
+    toaDoCuoiLng: number | null
     ghiChu: string | null
     status: $Enums.ReportStatus
     sourceFile: string | null
@@ -1541,6 +1725,10 @@ export interface ReportCayXanhFieldRefs {
   readonly soLuongCay: Prisma.FieldRef<"ReportCayXanh", 'Int'>
   readonly chieuSangPhia: Prisma.FieldRef<"ReportCayXanh", 'String'>
   readonly chungLoaiCay: Prisma.FieldRef<"ReportCayXanh", 'String'>
+  readonly toaDoDauLat: Prisma.FieldRef<"ReportCayXanh", 'Float'>
+  readonly toaDoDauLng: Prisma.FieldRef<"ReportCayXanh", 'Float'>
+  readonly toaDoCuoiLat: Prisma.FieldRef<"ReportCayXanh", 'Float'>
+  readonly toaDoCuoiLng: Prisma.FieldRef<"ReportCayXanh", 'Float'>
   readonly ghiChu: Prisma.FieldRef<"ReportCayXanh", 'String'>
   readonly status: Prisma.FieldRef<"ReportCayXanh", 'ReportStatus'>
   readonly sourceFile: Prisma.FieldRef<"ReportCayXanh", 'String'>

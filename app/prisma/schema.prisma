@@ -1433,6 +1433,7 @@ model ToChuc {
   thuTu        Int         @default(0)           // Thứ tự hiển thị trong cùng cấp
   isActive     Boolean     @default(true)
   moTa         String?
+  maSoThue     String?                           // Mã số thuế của đơn vị (13 ký tự)
 
   // Phân cấp tự tham chiếu
   parentId     String?
