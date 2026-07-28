@@ -1,0 +1,3346 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── AUTHENTICATION & RBAC ───────────────────────────────────────────────────
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  name        String
+  password    String
+  phone       String?
+  roleId      String
+  role        Role      @relation(fields: [roleId], references: [id])
+  wardId      String?
+  ward        AdministrativeUnit? @relation("UserWard", fields: [wardId], references: [id])
+
+  // Phân quyền theo phòng ban — kế thừa cây tổ chức to_chuc
+  toChucId           String?
+  toChuc             ToChuc?  @relation("UserToChuc", fields: [toChucId], references: [id])
+  isDepartmentLeader Boolean  @default(false)
+
+  isActive          Boolean   @default(true)
+  mustChangePassword Boolean  @default(false)
+  failedLoginCount  Int       @default(0)   // số lần nhập sai MK liên tiếp; ≥5 = khoá tới khi cấp lại
+  lastLoginAt       DateTime?
+  resetTokenHash      String?    // SHA-256 của token đặt lại mật khẩu (one-time)
+  resetTokenExpiresAt DateTime?  // hạn token (thường 1 giờ)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  auditLogs           AuditLog[]
+  assignedWorkOrders  WorkOrder[]        @relation("AssignedTo")
+  createdWorkOrders   WorkOrder[]        @relation("CreatedBy")
+  inspections         Inspection[]
+  reportedIncidents   Incident[]         @relation("ReportedBy")
+  resolvedIncidents   Incident[]         @relation("ResolvedBy")
+  assetImports        AssetImportBatch[]
+  wardReports         WardReport[]       @relation("WardReportCreator")
+  canBo               CanBo?
+  chatbotLogs         ChatbotLog[]
+  reportDuong         ReportDuong[]      @relation("DuongCreator")
+  reportDienCS        ReportDienCS[]     @relation("DienCSCreator")
+  reportThoatNuoc     ReportThoatNuoc[]  @relation("ThoatNuocCreator")
+  reportCayXanh       ReportCayXanh[]    @relation("CayXanhCreator")
+  reportCongVien      ReportCongVien[]   @relation("CongVienCreator")
+  reportCapNuoc       ReportCapNuoc[]    @relation("CapNuocCreator")
+  reportBaiDoXe       ReportBaiDoXe[]    @relation("BaiDoXeCreator")
+  officeSalaryEntries OfficeSalaryHistory[] @relation("OfficeSalaryCreator")
+  officeWorkEntries   OfficeWorkHistory[]   @relation("OfficeWorkCreator")
+  officeRewardEntries     OfficeRewardRecord[]     @relation("OfficeRewardCreator")
+  officeEvalEntries       OfficeAnnualEvaluation[] @relation("OfficeEvalCreator")
+  officeDisciplineEntries OfficeDisciplineRecord[] @relation("OfficeDisciplineCreator")
+  salaryCasesCreated   OfficeSalaryReviewCase[] @relation("SalaryCaseCreator")
+  salaryCasesReviewed  OfficeSalaryReviewCase[] @relation("SalaryCaseReviewer")
+  salaryCasesApproved  OfficeSalaryReviewCase[] @relation("SalaryCaseApprover")
+  generatedDocuments   OfficeGeneratedDocument[] @relation("OfficeDocCreator")
+  // Quản lý công việc phòng/ban
+  congViecGiao        CongViec[]          @relation("CongViecNguoiGiao")
+  congViecPhuTrach    CongViec[]          @relation("CongViecNguoiPhuTrach")
+  congViecTao         CongViec[]          @relation("CongViecCreatedBy")
+  congViecThanhVien   CongViecThanhVien[] @relation("CongViecThanhVienUser")
+  congViecNhatKy      CongViecNhatKy[]    @relation("CongViecNhatKyUser")
+  lichCaNhans         LichCaNhan[]        @relation("LichCaNhanUser")
+  nghiepVuTao         NghiepVuBanGhi[]    @relation("NghiepVuCreatedBy")
+
+  @@index([toChucId])
+  @@index([roleId])
+  @@index([wardId])
+  @@map("users")
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  displayName String
+  description String?
+  isSystem    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  users       User[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  module      String
+  action      String
+  description String?
+
+  roles RolePermission[]
+
+  @@unique([module, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  module     String
+  targetId   String?
+  targetType String?
+  detail     String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([module])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ─── ĐƠN VỊ HÀNH CHÍNH ───────────────────────────────────────────────────────
+
+model AdministrativeUnit {
+  id        String                @id @default(cuid())
+  code      String                @unique
+  name      String
+  fullName  String?
+  type      AdministrativeUnitType
+  parentId  String?
+  parent    AdministrativeUnit?   @relation("UnitHierarchy", fields: [parentId], references: [id])
+  children  AdministrativeUnit[]  @relation("UnitHierarchy")
+  centerLat Float?                // Tọa độ trung tâm (approximate)
+  centerLon Float?
+  isActive  Boolean               @default(true)
+
+  // Số liệu diện tích – dân số (NQ 1680/NQ-UBTVQH15; nguồn sapnhap.bando.com.vn)
+  dienTichKm2  Decimal? @db.Decimal(9, 2) // Diện tích tự nhiên (km2)
+  danSo        Int?                        // Quy mô dân số (người)
+  trungTamHc   String?                     // Nơi đặt trung tâm hành chính
+  truocSapNhap String?                     // Các ĐVHC cũ hợp thành
+  huyenThiCu   String?                     // Huyện/TP/thị xã chủ quản trước sáp nhập
+  vungLoi      String?                     // Lõi đô thị | Thuộc đô thị (phần xã) | Bán đô thị (thị trấn) | Nông thôn | Đặc khu
+
+  assets          Asset[]
+  incidents       Incident[]
+  projects        Project[]
+  streets         Street[]
+  wardReports     WardReport[]     @relation("WardReports")
+  users           User[]           @relation("UserWard")
+  reportDuong     ReportDuong[]    @relation("WardReportDuong")
+  reportDienCS    ReportDienCS[]   @relation("WardReportDienCS")
+  reportThoatNuoc ReportThoatNuoc[] @relation("WardReportThoatNuoc")
+  reportCayXanh   ReportCayXanh[]  @relation("WardReportCayXanh")
+  reportCongVien  ReportCongVien[] @relation("WardReportCongVien")
+  reportCapNuoc   ReportCapNuoc[]  @relation("WardReportCapNuoc")
+  reportBaiDoXe   ReportBaiDoXe[]  @relation("WardReportBaiDoXe")
+  // Mạng lưới hạ tầng
+  denChieuSang    DenChieuSang[]       @relation("DenWard")
+  cayXanh         CayXanhDuong[]       @relation("CayWard")
+  hoGa            HoGa[]               @relation("HoGaWard")
+  congThoatNuoc   CongThoatNuoc[]      @relation("CongWard")
+  ongCapNuoc      OngCapNuoc[]         @relation("OngWard")
+  vanCapNuoc      VanCapNuoc[]         @relation("VanWard")
+  capVienThong    CapVienThong[]       @relation("CapWard")
+  viaHe           ViaHe[]              @relation("ViaHeWard")
+  tuyenMangLuoi   TuyenMangLuoi[]      @relation("TuyenWard")
+  nhaMayXuLy      NhaMayXuLyNuocThai[] @relation("NhaMayWard")
+  tramBom         TramBom[]            @relation("TramBomWard")
+  toChuc          ToChuc[]             @relation("ToChucDonViHC")
+  lanhDaoXa       LanhDaoXa[]          @relation("LanhDaoWard")
+  duAnGpmbs       DsDuAnGpmb[]         @relation("DsGpmbWard")
+
+  @@index([type])
+  @@index([parentId])
+  @@map("administrative_units")
+}
+
+// Lãnh đạo & Trưởng phòng Kinh tế của từng xã/phường (QĐ sắp xếp ĐVHC 2025).
+// Cho phép tra cứu linh hoạt theo xã/phường, theo phòng ban, hoặc theo SĐT.
+model LanhDaoXa {
+  id          String             @id @default(cuid())
+  wardId      String
+  ward        AdministrativeUnit @relation("LanhDaoWard", fields: [wardId], references: [id], onDelete: Cascade)
+  hoTen       String
+  chucVu      String
+  soDienThoai String?
+  phongBan    String?            // Nhóm: Thường trực HĐND / Lãnh đạo UBND / Thường trực Đảng ủy / Phòng Kinh tế - Hạ tầng - Đô thị
+  thuTu       Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([wardId])
+  @@index([soDienThoai])
+  @@index([phongBan])
+  @@map("lanh_dao_xa")
+}
+
+enum AdministrativeUnitType {
+  TINH
+  QUAN_HUYEN
+  PHUONG_XA
+}
+
+model Street {
+  id       String @id @default(cuid())
+  code     String @unique
+  name     String
+  wardId   String?
+  ward     AdministrativeUnit? @relation(fields: [wardId], references: [id])
+  length   Float?   // Chiều dài tổng tuyến (m)
+  isActive Boolean @default(true)
+
+  // Tài sản legacy
+  assets          Asset[]
+  // Mạng lưới hạ tầng theo tuyến
+  denChieuSang    DenChieuSang[]    @relation("DenTrenTuyen")
+  cayXanh         CayXanhDuong[]    @relation("CayTrenTuyen")
+  hoGa            HoGa[]            @relation("HoGaTrenTuyen")
+  congThoatNuoc   CongThoatNuoc[]   @relation("CongTrenTuyen")
+  ongCapNuoc      OngCapNuoc[]      @relation("OngTrenTuyen")
+  vanCapNuoc      VanCapNuoc[]      @relation("VanTrenTuyen")
+  capVienThong    CapVienThong[]    @relation("CapTrenTuyen")
+  viaHe           ViaHe[]           @relation("ViaHeTrenTuyen")
+  doanCong        DoanTuyenCong[]   @relation("DoanTrenTuyen")
+  doanOng         DoanTuyenOng[]    @relation("DoanOngTrenTuyen")
+  tramBom         TramBom[]         @relation("TramBomTrenTuyen")
+
+  @@index([wardId])
+  @@map("streets")
+}
+
+// ─── DANH MỤC HẠ TẦNG ────────────────────────────────────────────────────────
+
+enum InfrastructureDomain {
+  GIAO_THONG      // Đường giao thông
+  CAP_NUOC        // Cấp nước
+  THOAT_NUOC      // Thoát nước
+  CHIEU_SANG      // Chiếu sáng đô thị
+  CAY_XANH        // Cây xanh / Công viên
+  MOI_TRUONG      // Môi trường / Thu gom rác
+  CHINH_TRANG     // Chỉnh trang đô thị
+}
+
+model AssetType {
+  id          String               @id @default(cuid())
+  code        String               @unique
+  name        String
+  domain      InfrastructureDomain
+  description String?
+  isActive    Boolean              @default(true)
+
+  assets                Asset[]
+  maintenanceSchedules  MaintenanceSchedule[]
+  inspectionTemplates   InspectionTemplate[]
+  importBatches         AssetImportBatch[]
+
+  @@map("asset_types")
+}
+
+model ExecutingUnit {
+  id       String  @id @default(cuid())
+  name     String
+  code     String  @unique
+  phone    String?
+  email    String?
+  address  String?
+  isActive Boolean @default(true)
+
+  workOrders WorkOrder[]
+  projects   Project[]
+
+  @@map("executing_units")
+}
+
+// ─── HỆ THỐNG MẠNG LƯỚI HẠ TẦNG KỸ THUẬT ───────────────────────────────────
+// Tuyến đường là xương sống — mọi tài sản gắn vào theo lý trình (chainage)
+// Hệ trục vị trí: lyTrinhM (mét từ đầu tuyến) + viTri (TRAI/PHAI/GIUA/TREN/DUOI)
+
+enum AssetViTri {
+  TRAI    // Bên trái chiều đi
+  PHAI    // Bên phải chiều đi
+  GIUA    // Giữa / Dải phân cách
+  TREN    // Trên mặt đường
+  DUOI    // Ngầm dưới mặt đường
+}
+
+enum TinhTrang {
+  TOT        // Tốt — hoạt động bình thường
+  KHA        // Khá — cần theo dõi
+  TRUNG_BINH // Trung bình — cần bảo dưỡng
+  XAU        // Xấu — cần sửa chữa
+  HU_HONG    // Hỏng / Nguy hiểm — cần xử lý ngay
+}
+
+enum TrangThaiHoatDong {
+  DANG_SU_DUNG  // Đang hoạt động
+  DUNG_TAM      // Tạm dừng
+  SUA_CHUA      // Đang sửa chữa
+  NGUNG          // Ngưng vĩnh viễn
+  THAO_DO        // Đã tháo dỡ
+}
+
+// ── ĐƯỜNG GIAO THÔNG (Street — backbone đã có, mở rộng thêm) ─────────────────
+// Street model hiện tại: id, code, name, wardId, length, isActive
+// Các tài sản đều có streetId → Street
+
+// ── ĐÈN CHIẾU SÁNG ĐƯỜNG PHỐ ────────────────────────────────────────────────
+model DenChieuSang {
+  id              String             @id @default(cuid())
+  maTS            String             @unique // Mã tài sản nội bộ
+  streetId        String
+  street          Street             @relation("DenTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("DenWard", fields: [wardId], references: [id])
+  lyTrinhM        Float              // Vị trí lý trình (m từ đầu tuyến)
+  viTri           AssetViTri         @default(PHAI)
+  // Thông tin cột đèn
+  chieuCaoCotM    Float?             // Chiều cao cột (m)
+  vatLieuCot      String?            // Vật liệu cột (THEP/BE_TONG/COMPOSITE)
+  loaiBong        String             // Loại bóng: LED / Sodium / Halogen
+  loaiBongChuan   String?            // Đã chuẩn hoá cho thống kê
+  congSuatW       Float?             // Công suất (W)
+  quangThongLm    Float?             // Quang thông (lm)
+  dieuKhien       String?            // TU_DONG / SENSOR / SCADA / THU_CONG
+  capDien         String?            // NGAM / NOI
+  voltageV        Float?             // Điện áp (V)
+  tuDienId        String?            // Mã tủ điện điều khiển
+  khoangCachTruM  Float?             // Khoảng cách giữa 2 trụ (m)
+  coNangLuongMT   Boolean            @default(false)
+  namLapDat       Int?
+  hangSX          String?
+  model           String?
+  soSeri          String?
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  latitude        Float?
+  longitude       Float?
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([streetId, lyTrinhM])
+  @@index([wardId])
+  @@index([loaiBongChuan])
+  @@index([tinhTrang])
+  @@map("den_chieu_sang")
+}
+
+// ── CÂY XANH ĐƯỜNG PHỐ ──────────────────────────────────────────────────────
+model CayXanhDuong {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String
+  street          Street             @relation("CayTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("CayWard", fields: [wardId], references: [id])
+  lyTrinhM        Float              // Vị trí lý trình (m)
+  viTri           AssetViTri         @default(TRAI)
+  // Thông tin cây
+  tenCay          String             // Tên phổ thông (Muồng, Phượng...)
+  tenKhoaHoc      String?            // Tên khoa học
+  viTriTrong      String?            // DUONG_PHO / CONG_VIEN / DAI_PHAN_CACH
+  chieuCaoM       Float?             // Chiều cao (m)
+  chuViCm         Float?             // Chu vi thân (cm) đo ở 1.3m
+  duongKinhTanM   Float?             // Đường kính tán (m)
+  tuoiNam         Int?               // Tuổi ước tính (năm)
+  namTrong        Int?
+  sucKhoe         String?            // KHOE_MANH / BINH_THUONG / YEU / SAU_BENH / NGUY_HIEM
+  ngayCatTia      DateTime?          @db.Date
+  ngayBonPhan     DateTime?          @db.Date
+  coKhungBaoVe   Boolean            @default(false)
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  latitude        Float?
+  longitude       Float?
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([streetId, lyTrinhM])
+  @@index([wardId])
+  @@map("cay_xanh_duong")
+}
+
+// ── HỐ GA THOÁT NƯỚC (node trong mạng lưới) ─────────────────────────────────
+model HoGa {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String?            // Hố ga thường nằm trên tuyến đường
+  street          Street?            @relation("HoGaTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("HoGaWard", fields: [wardId], references: [id])
+  lyTrinhM        Float?             // Vị trí lý trình (m)
+  viTri           AssetViTri?        @default(TREN)
+  // Thông số hố ga
+  loaiHoGa        String             // THU_NUOC / KIEM_TRA / THOAT_KHI / CHIA_NUOC
+  dkNapMm         Float?             // Đường kính/cạnh nắp (mm)
+  chieuSauM       Float?             // Chiều sâu (m)
+  vatLieuNap      String?            // GANG / COMPOSITE / BE_TONG
+  vatLieuThanh    String?            // GACH / BE_TONG / HDPE
+  soOngKetNoi     Int?               // Số ống cống kết nối
+  caoDoDinhNapM   Float?             // Cao độ đỉnh nắp (m, VN-2000)
+  taiTrongEN124   String?            // A15 / B125 / C250 / D400 / E600
+  coLuoiChanRac  Boolean            @default(false)
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  latitude        Float?
+  longitude       Float?
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  // Quan hệ mạng lưới: hố ga là node kết nối các đoạn cống
+  congTuHoGaNay   CongThoatNuoc[] @relation("CongTu")
+  congDenHoGaNay  CongThoatNuoc[] @relation("CongDen")
+
+  @@index([streetId])
+  @@index([wardId])
+  @@map("ho_ga")
+}
+
+// ── CỐNG THOÁT NƯỚC (edge kết nối hố ga) ────────────────────────────────────
+model CongThoatNuoc {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String
+  street          Street             @relation("CongTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("CongWard", fields: [wardId], references: [id])
+  lyTrinhTuM      Float              // Lý trình điểm đầu (m)
+  lyTrinhDenM     Float              // Lý trình điểm cuối (m)
+  viTri           AssetViTri         @default(DUOI)
+  // Topology: cống nối 2 hố ga
+  hoGaDauId       String?            // Hố ga đầu (upstream)
+  hoGaDau         HoGa?              @relation("CongTu", fields: [hoGaDauId], references: [id])
+  hoGaCuoiId      String?            // Hố ga cuối (downstream)
+  hoGaCuoi        HoGa?              @relation("CongDen", fields: [hoGaCuoiId], references: [id])
+  // Thông số kỹ thuật
+  hinhDang        String             // TRON / VUONG / CHU_NHAT / BAN_NGUYET
+  dkTrongMm       Float?             // Đường kính trong (mm) nếu tròn
+  rong_Mm         Float?             // Chiều rộng (mm) nếu hộp
+  cao_Mm          Float?             // Chiều cao (mm) nếu hộp
+  chieuDaiM       Float?             // Chiều dài đoạn (m)
+  vatLieu         String?            // BE_TONG / HDPE / PVC / GANG / GACH
+  doSauDinhCongM  Float?             // Độ sâu đến đỉnh cống (m)
+  caoDoDayCongM   Float?             // Cao độ đáy cống (m)
+  doDocPct        Float?             // Độ dốc (%)
+  huongThoat      String?            // Hướng thoát nước
+  loaiNuoc        String?            // MUA / THAI / CHUNG
+  luuLuongM3h     Float?             // Lưu lượng thiết kế (m³/h)
+  namXayDung      Int?
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([streetId, lyTrinhTuM])
+  @@index([hoGaDauId])
+  @@index([hoGaCuoiId])
+  @@map("cong_thoat_nuoc")
+}
+
+// ── ỐNG CẤP NƯỚC ─────────────────────────────────────────────────────────────
+model OngCapNuoc {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String
+  street          Street             @relation("OngTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("OngWard", fields: [wardId], references: [id])
+  lyTrinhTuM      Float
+  lyTrinhDenM     Float
+  viTri           AssetViTri         @default(DUOI)
+  // Thông số kỹ thuật
+  vatLieu         String             // GANG_DEO / HDPE / UPVC / THEP / GANG_XAM
+  dkTrongMm       Float              // Đường kính trong (mm)
+  dkNgoaiMm       Float?             // Đường kính ngoài (mm)
+  chieuDaiM       Float?             // Chiều dài đoạn (m)
+  apSuatThietKeBar Float?            // Áp suất thiết kế (bar)
+  apSuatVanHanhBar Float?            // Áp suất vận hành (bar)
+  doSauChomM      Float?             // Độ sâu chôn (m)
+  capMang         String?            // TRUYEN_DAN / PHAN_PHOI / DICH_VU
+  kieuNoi         String?            // BICH / MIENG_BICH / HAN / VONG_CAO_SU
+  namLapDat       Int?
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  // Các van khóa trên đoạn ống này
+  vanKhoa         VanCapNuoc[]
+
+  @@index([streetId, lyTrinhTuM])
+  @@map("ong_cap_nuoc")
+}
+
+// ── VAN KHOÁ CẤP NƯỚC ────────────────────────────────────────────────────────
+model VanCapNuoc {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String?
+  street          Street?            @relation("VanTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("VanWard", fields: [wardId], references: [id])
+  ongCapNuocId    String?            // Thuộc đoạn ống nào
+  ongCapNuoc      OngCapNuoc?        @relation(fields: [ongCapNuocId], references: [id])
+  lyTrinhM        Float?
+  loaiVan         String             // VAN_KHUA / VAN_BUOM / VAN_CAU / VAN_KIEM_TRA
+  dkMm            Float              // Đường kính (mm)
+  vatLieu         String?            // GANG / DONG / THEP
+  apSuatBar       Float?             // Áp suất định mức (bar)
+  doSauM          Float?             // Độ sâu lắp đặt (m)
+  coHopBaoVe     Boolean            @default(true)
+  vanHanh         String?            // TAY / DIEN / KHI_NEN
+  namLapDat       Int?
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  latitude        Float?
+  longitude       Float?
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([streetId])
+  @@index([ongCapNuocId])
+  @@map("van_cap_nuoc")
+}
+
+// ── CÁP VIỄN THÔNG ───────────────────────────────────────────────────────────
+model CapVienThong {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String
+  street          Street             @relation("CapTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("CapWard", fields: [wardId], references: [id])
+  lyTrinhTuM      Float
+  lyTrinhDenM     Float
+  viTri           AssetViTri         @default(DUOI)
+  // Thông số kỹ thuật
+  donViMang       String             // VIETTEL / VNPT / MOBIFONE / FPT / SCTV / KHAC
+  loaiCap         String             // QUANG / DONG / DONG_TRUC / CAT6
+  hinhThucLapDat  String             // NGAM / NOI / NGAM_ONG
+  soLoiSoi        Int?               // Số lõi/sợi quang
+  dkOngBaoVeMm    Float?             // Đường kính ống bảo vệ (mm)
+  vatLieuOng      String?            // HDPE / PVC / THEP
+  doSauChomM      Float?             // Độ sâu chôn (m)
+  chieuDaiM       Float?             // Chiều dài tuyến (m)
+  bangThongGbps   Float?             // Băng thông (Gbps)
+  namLapDat       Int?
+  soHopMangSong   Int?               // Số hộp măng sông
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([streetId, lyTrinhTuM])
+  @@index([donViMang])
+  @@map("cap_vien_thong")
+}
+
+// ── VỈA HÈ ──────────────────────────────────────────────────────────────────
+model ViaHe {
+  id              String             @id @default(cuid())
+  maTS            String             @unique
+  streetId        String
+  street          Street             @relation("ViaHeTrenTuyen", fields: [streetId], references: [id])
+  wardId          String?
+  ward            AdministrativeUnit? @relation("ViaHeWard", fields: [wardId], references: [id])
+  lyTrinhTuM      Float
+  lyTrinhDenM     Float
+  viTri           AssetViTri         // TRAI / PHAI (vỉa hè 2 bên)
+  chieuDaiM       Float?             // Chiều dài đoạn (m)
+  chieuRongM      Float?             // Chiều rộng vỉa hè (m)
+  vatLieuLat      String?            // GACH_TU_NHIEN / GACH_BE_TONG / BT_XM
+  coLeADuong      Boolean            @default(true)   // Có đá lề đường
+  vatLieuLe       String?
+  dienTichM2      Float?             // Diện tích (m²)
+  coThoatNuoc    Boolean            @default(false)
+  namXayDung      Int?
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([streetId, lyTrinhTuM])
+  @@map("via_he")
+}
+
+// ── TUYẾN MẠNG LƯỚI (Route qua nhiều đoạn đường) ────────────────────────────
+// Ví dụ: Tuyến cống D600 đi từ Nhà máy XL → Trạm bơm → ra biển
+// Gồm nhiều đoạn CongThoatNuoc hoặc OngCapNuoc trên các tuyến đường khác nhau
+
+model TuyenMangLuoi {
+  id            String             @id @default(cuid())
+  maTuyen       String             @unique
+  tenTuyen      String             // VD: "Tuyến cống D600 - Lê Duẩn → Trần Phú"
+  loai          String             // CONG_THOAT_NUOC / ONG_CAP_NUOC / CAP_VIEN_THONG
+  moTa          String?
+  chieuDaiTongM Float?             // Tổng chiều dài tất cả đoạn (m)
+  wardId        String?
+  ward          AdministrativeUnit? @relation("TuyenWard", fields: [wardId], references: [id])
+  // Điểm đầu / cuối của toàn tuyến
+  diemBatDau    String?            // Mô tả điểm bắt đầu (VD: "Nhà máy XL nước thải A")
+  diemKetThuc   String?            // Mô tả điểm kết thúc
+  diemBatDauLat Float?
+  diemBatDauLon Float?
+  diemKetThucLat Float?
+  diemKetThucLon Float?
+  // Liên kết tới cơ sở xử lý
+  nhaMayXuLyId  String?
+  nhaMayXuLy    NhaMayXuLyNuocThai? @relation(fields: [nhaMayXuLyId], references: [id])
+  tramBomId     String?
+  tramBom       TramBom?           @relation("TramBomTuyen", fields: [tramBomId], references: [id])
+
+  tinhTrang     TinhTrang          @default(TOT)
+  trangThai     TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  namXayDung    Int?
+  ghiChu        String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  // Các đoạn cụ thể tạo nên tuyến này (theo thứ tự)
+  doanCong      DoanTuyenCong[]
+  doanOng       DoanTuyenOng[]
+
+  @@index([loai])
+  @@map("tuyen_mang_luoi")
+}
+
+// ── ĐOẠN TUYẾN CỐNG (1 đoạn trong TuyenMangLuoi qua 1 tuyến đường) ──────────
+model DoanTuyenCong {
+  id              String         @id @default(cuid())
+  tuyenId         String
+  tuyen           TuyenMangLuoi  @relation(fields: [tuyenId], references: [id])
+  thuTu           Int            // Thứ tự đoạn trong tuyến (1, 2, 3...)
+  streetId        String
+  street          Street         @relation("DoanTrenTuyen", fields: [streetId], references: [id])
+  lyTrinhTuM      Float          // Từ lý trình (m)
+  lyTrinhDenM     Float          // Đến lý trình (m)
+  chieuDaiM       Float?         // Chiều dài đoạn (tự tính = DenM - TuM)
+  viTri           AssetViTri     @default(DUOI)
+  // Thông số kỹ thuật đoạn này
+  hinhDang        String?        // TRON / VUONG / CHU_NHAT
+  dkTrongMm       Float?
+  vatLieu         String?
+  doDocPct        Float?
+  ghiChu          String?
+
+  @@index([tuyenId, thuTu])
+  @@index([streetId])
+  @@map("doan_tuyen_cong")
+}
+
+// ── ĐOẠN TUYẾN ỐNG CẤP NƯỚC (1 đoạn trong TuyenMangLuoi) ────────────────────
+model DoanTuyenOng {
+  id              String         @id @default(cuid())
+  tuyenId         String
+  tuyen           TuyenMangLuoi  @relation(fields: [tuyenId], references: [id])
+  thuTu           Int
+  streetId        String
+  street          Street         @relation("DoanOngTrenTuyen", fields: [streetId], references: [id])
+  lyTrinhTuM      Float
+  lyTrinhDenM     Float
+  chieuDaiM       Float?
+  viTri           AssetViTri     @default(DUOI)
+  dkTrongMm       Float?
+  vatLieu         String?
+  ghiChu          String?
+
+  @@index([tuyenId, thuTu])
+  @@map("doan_tuyen_ong")
+}
+
+// ── NHÀ MÁY XỬ LÝ NƯỚC THẢI ─────────────────────────────────────────────────
+model NhaMayXuLyNuocThai {
+  id              String             @id @default(cuid())
+  maCS            String             @unique // Mã cơ sở
+  ten             String             // Tên nhà máy
+  wardId          String?
+  ward            AdministrativeUnit? @relation("NhaMayWard", fields: [wardId], references: [id])
+  diaChi          String?
+  latitude        Float?
+  longitude       Float?
+  dienTichHa      Float?             // Diện tích (ha)
+  // Thông số kỹ thuật
+  congSuatThietKeM3Ngay Float?       // Công suất thiết kế (m³/ngày)
+  congSuatHienTaiM3Ngay Float?       // Công suất hiện tại (m³/ngày)
+  congNghe        String?            // Công nghệ xử lý (VD: A2O, MBR, MBBR)
+  tieuchuanXaThai String?            // Tiêu chuẩn xả thải (QCVN 14:2008/A)
+  nguonTiepNhan   String?            // Nguồn tiếp nhận nước thải đầu vào
+  noiXaThai       String?            // Nơi xả thải sau xử lý (sông/biển...)
+  namDuaVaoSuDung Int?
+  donViQuanLy     String?            // Đơn vị quản lý vận hành
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  tuyenDanVao     TuyenMangLuoi[]    // Các tuyến dẫn vào nhà máy
+  tramBom         TramBom[]          // Trạm bơm thuộc nhà máy
+
+  @@map("nha_may_xu_ly_nuoc_thai")
+}
+
+// ── TRẠM BƠM (Bơm thoát nước / cấp nước / nước thải) ─────────────────────────
+model TramBom {
+  id              String             @id @default(cuid())
+  maCS            String             @unique
+  ten             String
+  loai            String             // THOAT_NUOC / CAP_NUOC / NUOC_THAI / PHONG_CHAY
+  wardId          String?
+  ward            AdministrativeUnit? @relation("TramBomWard", fields: [wardId], references: [id])
+  streetId        String?            // Trạm bơm gần tuyến đường nào
+  street          Street?            @relation("TramBomTrenTuyen", fields: [streetId], references: [id])
+  lyTrinhM        Float?             // Vị trí lý trình nếu nằm trên tuyến
+  diaChi          String?
+  latitude        Float?
+  longitude       Float?
+  dienTichM2      Float?             // Diện tích trạm (m²)
+  nhaMayXuLyId    String?            // Thuộc nhà máy xử lý nào (nếu có)
+  nhaMayXuLy      NhaMayXuLyNuocThai? @relation(fields: [nhaMayXuLyId], references: [id])
+  // Thông số kỹ thuật
+  soBom           Int?               // Số máy bơm
+  congSuatMoiBomKW Float?            // Công suất mỗi máy bơm (kW)
+  luuLuongThietKeM3h Float?          // Lưu lượng thiết kế (m³/h)
+  caoTrinh        Float?             // Cao trình đặt bơm (m)
+  nguonDienKV     Float?             // Điện áp nguồn điện (kV)
+  coMayPhatDuPhong Boolean           @default(false)
+  coHoThuNuoc    Boolean            @default(true)
+  dungTichHoM3    Float?             // Dung tích hố thu (m³)
+  namXayDung      Int?
+  donViQuanLy     String?
+  tinhTrang       TinhTrang          @default(TOT)
+  trangThai       TrangThaiHoatDong  @default(DANG_SU_DUNG)
+  ghiChu          String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  tuyenDiRa       TuyenMangLuoi[]    @relation("TramBomTuyen")
+
+  @@index([loai])
+  @@index([wardId])
+  @@map("tram_bom")
+}
+
+// ─── TÀI SẢN HẠ TẦNG (Legacy — giữ lại tương thích) ─────────────────────────
+
+enum GeometryType {
+  POINT    // Điểm: cây, đèn, hố ga, van nước
+  LINE     // Đường: cống, ống nước, cáp, tuyến đường
+  POLYGON  // Vùng: công viên, mảng xanh, khu vực
+}
+
+enum AssetCondition {
+  TOT       // Tốt
+  KHA       // Khá
+  TRUNG_BINH // Trung bình
+  XAU       // Xấu
+  HONG      // Hỏng / Nguy hiểm
+}
+
+enum AssetStatus {
+  DANG_SU_DUNG   // Đang sử dụng
+  DUNG_TAM       // Dừng tạm thời
+  DANG_SUA_CHUA  // Đang sửa chữa
+  NGUNG_SU_DUNG  // Ngưng sử dụng
+  THOAI_HOA      // Tháo dỡ / Thải bỏ
+}
+
+model Asset {
+  id             String               @id @default(cuid())
+  assetCode      String               @unique
+  nationalCode   String?              @unique
+  name           String
+  assetTypeId    String
+  assetType      AssetType            @relation(fields: [assetTypeId], references: [id])
+  domain         InfrastructureDomain
+  // Vị trí
+  address        String?
+  wardId         String?
+  ward           AdministrativeUnit?  @relation(fields: [wardId], references: [id])
+  streetId       String?
+  street         Street?              @relation(fields: [streetId], references: [id])
+  latitude       Float?
+  longitude      Float?
+  elevation      Float?               // Cao độ (m). Dương = trên mặt đất, Âm = ngầm dưới đất
+  lyTrinh        Float?               // Lý trình: mét tính từ đầu tuyến (Km 0+000)
+  viTriDuong     String?              // Vị trí ngang: TRAI | PHAI | GIUA | TREN
+  geometryType   GeometryType         @default(POINT)
+  geojson        Json?                // GeoJSON LineString/Polygon cho tài sản dạng đường/vùng
+  // Thông tin cơ bản
+  installDate    DateTime?            @db.Date
+  warrantyExpiry DateTime?            @db.Date
+  manufacturer   String?
+  model          String?
+  serialNumber   String?
+  // Trạng thái
+  condition      AssetCondition       @default(TOT)
+  status         AssetStatus          @default(DANG_SU_DUNG)
+  // Thông số kỹ thuật mở rộng theo từng lĩnh vực
+  techSpecs      Json?
+  notes          String?
+  images         String[]             @default([])
+  documents      String[]             @default([])
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  workOrders           WorkOrder[]
+  inspections          Inspection[]
+  incidents            Incident[]
+  maintenanceSchedules MaintenanceSchedule[]
+
+  @@index([domain])
+  @@index([wardId])
+  @@index([status])
+  @@index([condition])
+  @@map("assets")
+}
+
+// ─── LỊCH BẢO DƯỠNG ĐỊNH KỲ ─────────────────────────────────────────────────
+
+enum MaintenanceFrequency {
+  HANG_NGAY      // Hàng ngày
+  HANG_TUAN      // Hàng tuần
+  HANG_THANG     // Hàng tháng
+  QUY            // Hàng quý (3 tháng)
+  NAM_THANG      // 6 tháng
+  HANG_NAM       // Hàng năm
+}
+
+model MaintenanceSchedule {
+  id          String               @id @default(cuid())
+  name        String
+  assetTypeId String?
+  assetType   AssetType?           @relation(fields: [assetTypeId], references: [id])
+  assetId     String?
+  asset       Asset?               @relation(fields: [assetId], references: [id])
+  frequency   MaintenanceFrequency
+  description String?
+  lastDoneAt  DateTime?            @db.Date
+  nextDueAt   DateTime?            @db.Date
+  isActive    Boolean              @default(true)
+  createdAt   DateTime             @default(now())
+
+  workOrders WorkOrder[]
+
+  @@map("maintenance_schedules")
+}
+
+// ─── KIỂM TRA HIỆN TRẠNG ────────────────────────────────────────────────────
+
+model InspectionTemplate {
+  id          String               @id @default(cuid())
+  name        String
+  domain      InfrastructureDomain
+  assetTypeId String?
+  assetType   AssetType?           @relation(fields: [assetTypeId], references: [id])
+  description String?
+  isActive    Boolean              @default(true)
+  createdAt   DateTime             @default(now())
+
+  items       InspectionTemplateItem[]
+  inspections Inspection[]
+
+  @@map("inspection_templates")
+}
+
+model InspectionTemplateItem {
+  id          String             @id @default(cuid())
+  templateId  String
+  template    InspectionTemplate @relation(fields: [templateId], references: [id])
+  name        String
+  description String?
+  inputType   InspectionInputType @default(RATING)
+  sortOrder   Int                 @default(0)
+  isRequired  Boolean             @default(true)
+
+  results InspectionResult[]
+
+  @@map("inspection_template_items")
+}
+
+enum InspectionInputType {
+  RATING      // Điểm 1-5
+  YES_NO      // Đạt / Không đạt
+  TEXT        // Nhập text
+  NUMBER      // Nhập số
+  PHOTO       // Chụp ảnh
+}
+
+enum InspectionStatus {
+  NHAP        // Bản nháp
+  DANG_KIEM   // Đang kiểm tra
+  HOAN_THANH  // Hoàn thành
+  HUY         // Huỷ
+}
+
+model Inspection {
+  id             String             @id @default(cuid())
+  inspectionCode String             @unique
+  templateId     String
+  template       InspectionTemplate @relation(fields: [templateId], references: [id])
+  assetId        String
+  asset          Asset              @relation(fields: [assetId], references: [id])
+  inspectorId    String
+  inspector      User               @relation(fields: [inspectorId], references: [id])
+  scheduledDate  DateTime           @db.Date
+  inspectedAt    DateTime?
+  conditionBefore AssetCondition?
+  conditionAfter  AssetCondition?
+  overallRating  Float?
+  summary        String?
+  status         InspectionStatus   @default(NHAP)
+  images         String[]           @default([])
+  notes          String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  results   InspectionResult[]
+  incidents Incident[]
+
+  @@index([assetId])
+  @@index([scheduledDate])
+  @@map("inspections")
+}
+
+model InspectionResult {
+  id         String                 @id @default(cuid())
+  inspectionId String
+  inspection   Inspection            @relation(fields: [inspectionId], references: [id])
+  itemId       String
+  item         InspectionTemplateItem @relation(fields: [itemId], references: [id])
+  rating       Int?
+  yesNo        Boolean?
+  textValue    String?
+  numberValue  Float?
+  images       String[]              @default([])
+  notes        String?
+
+  @@unique([inspectionId, itemId])
+  @@map("inspection_results")
+}
+
+// ─── SỰ CỐ & PHẢN ÁNH ────────────────────────────────────────────────────────
+
+enum IncidentSource {
+  BAO_CAO_NV    // Báo cáo nội bộ / nhân viên
+  PHAN_ANH_CD   // Phản ánh từ công dân
+  KET_QUA_KIEM  // Phát hiện qua kiểm tra
+  HE_THONG      // Cảnh báo hệ thống / cảm biến
+}
+
+enum IncidentPriority {
+  THAP    // Thấp
+  TRUNG   // Trung bình
+  CAO     // Cao
+  KHAN_CAP // Khẩn cấp
+}
+
+enum IncidentStatus {
+  MOI           // Mới tiếp nhận
+  DA_TIEP_NHAN  // Đã tiếp nhận
+  DANG_XU_LY   // Đang xử lý
+  TAM_DUNG      // Tạm dừng chờ vật tư
+  DA_GIAI_QUYET // Đã giải quyết
+  DONG          // Đóng
+}
+
+model Incident {
+  id            String               @id @default(cuid())
+  incidentCode  String               @unique
+  title         String
+  description   String?
+  source        IncidentSource       @default(BAO_CAO_NV)
+  domain        InfrastructureDomain
+  assetId       String?
+  asset         Asset?               @relation(fields: [assetId], references: [id])
+  inspectionId  String?
+  inspection    Inspection?          @relation(fields: [inspectionId], references: [id])
+  // Vị trí sự cố
+  address       String?
+  wardId        String?
+  ward          AdministrativeUnit?  @relation(fields: [wardId], references: [id])
+  latitude      Float?
+  longitude     Float?
+  // Phân loại & Ưu tiên
+  priority      IncidentPriority     @default(TRUNG)
+  status        IncidentStatus       @default(MOI)
+  // Người báo cáo
+  reportedById  String?
+  reportedBy    User?                @relation("ReportedBy", fields: [reportedById], references: [id])
+  reporterName  String?
+  reporterPhone String?
+  // Người xử lý
+  resolvedById  String?
+  resolvedBy    User?                @relation("ResolvedBy", fields: [resolvedById], references: [id])
+  // Thời gian
+  reportedAt    DateTime             @default(now())
+  resolvedAt    DateTime?
+  deadlineAt    DateTime?
+  // Hình ảnh & Ghi chú
+  images        String[]             @default([])
+  notes         String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  workOrders WorkOrder[]
+
+  @@index([domain])
+  @@index([status])
+  @@index([priority])
+  @@index([reportedAt])
+  @@map("incidents")
+}
+
+// ─── PHIẾU CÔNG VIỆC / BẢO TRÌ ───────────────────────────────────────────────
+
+enum WorkOrderType {
+  BAO_TRI_DINH_KY  // Bảo trì định kỳ
+  SUA_CHUA         // Sửa chữa đột xuất
+  KIEM_TRA         // Kiểm tra, quan trắc
+  NAO_VET          // Nạo vét (thoát nước)
+  THAY_THE         // Thay thế thiết bị
+  CAI_TAO          // Cải tạo, nâng cấp nhỏ
+}
+
+enum WorkOrderStatus {
+  MOI           // Mới tạo
+  DA_GIAO       // Đã giao
+  DANG_THUC_HIEN // Đang thực hiện
+  TAM_DUNG      // Tạm dừng
+  HOAN_THANH    // Hoàn thành
+  NGHIEM_THU    // Đã nghiệm thu
+  HUY           // Huỷ
+}
+
+enum WorkOrderPriority {
+  THAP
+  TRUNG
+  CAO
+  KHAN_CAP
+}
+
+model WorkOrder {
+  id              String            @id @default(cuid())
+  workOrderCode   String            @unique
+  title           String
+  type            WorkOrderType
+  priority        WorkOrderPriority @default(TRUNG)
+  status          WorkOrderStatus   @default(MOI)
+  domain          InfrastructureDomain
+  // Liên kết
+  assetId         String?
+  asset           Asset?            @relation(fields: [assetId], references: [id])
+  incidentId      String?
+  incident        Incident?         @relation(fields: [incidentId], references: [id])
+  scheduleId      String?
+  schedule        MaintenanceSchedule? @relation(fields: [scheduleId], references: [id])
+  // Đơn vị thực hiện
+  executingUnitId String?
+  executingUnit   ExecutingUnit?    @relation(fields: [executingUnitId], references: [id])
+  assignedToId    String?
+  assignedTo      User?             @relation("AssignedTo", fields: [assignedToId], references: [id])
+  createdById     String
+  createdBy       User              @relation("CreatedBy", fields: [createdById], references: [id])
+  // Thời gian
+  plannedStart    DateTime?         @db.Date
+  plannedEnd      DateTime?         @db.Date
+  actualStart     DateTime?
+  actualEnd       DateTime?
+  // Chi phí
+  estimatedCost   Float?
+  actualCost      Float?
+  // Nội dung
+  description     String?
+  resolution      String?
+  images          String[]          @default([])
+  documents       String[]          @default([])
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  materials WorkOrderMaterial[]
+
+  @@index([domain])
+  @@index([status])
+  @@index([plannedStart])
+  @@index([assetId])
+  @@map("work_orders")
+}
+
+model WorkOrderMaterial {
+  id          String    @id @default(cuid())
+  workOrderId String
+  workOrder   WorkOrder @relation(fields: [workOrderId], references: [id])
+  materialId  String?
+  material    Material? @relation(fields: [materialId], references: [id])
+  name        String
+  unit        String
+  quantity    Float
+  unitPrice   Float?
+  totalPrice  Float?
+  notes       String?
+
+  @@map("work_order_materials")
+}
+
+// ─── DỰ ÁN CÔNG TRÌNH ────────────────────────────────────────────────────────
+
+enum ProjectType {
+  KHU_DO_THI    // Khu đô thị mới
+  KHU_TDC       // Khu tái định cư
+  KHU_DAN_CU    // Khu dân cư mới
+  NHA_O_XA_HOI  // Nhà ở xã hội / Nhà ở công nhân
+  CONG_TRINH_CC // Công trình công cộng
+  XAY_MOI       // Xây dựng mới (hạ tầng)
+  CAI_TAO       // Cải tạo, nâng cấp
+  CHINH_TRANG   // Chỉnh trang đô thị
+  BAO_TRI_LON   // Bảo trì lớn
+  KHAC          // Khác
+}
+
+enum ProjectStatus {
+  CHUAN_BI      // Chuẩn bị / Lập hồ sơ
+  DA_DUYET      // Đã phê duyệt
+  DANG_THUC_HIEN // Đang thi công
+  NGHIEM_THU    // Đã nghiệm thu
+  HAN_THANH     // Hoàn thành bàn giao
+  TAM_DUNG      // Tạm dừng
+  HUY           // Huỷ
+}
+
+model Project {
+  id              String               @id @default(cuid())
+  projectCode     String               @unique
+  nationalCode    String?              @unique
+  name            String
+  domain          InfrastructureDomain
+  type            ProjectType          @default(XAY_MOI)
+  status          ProjectStatus        @default(CHUAN_BI)
+  // Vị trí
+  location        String?
+  wardId          String?
+  ward            AdministrativeUnit?  @relation(fields: [wardId], references: [id])
+  // Các bên liên quan
+  investor        String?              // Chủ đầu tư
+  pmUnit          String?              // Ban quản lý dự án
+  designUnit      String?              // Đơn vị tư vấn thiết kế
+  executingUnitId String?
+  executingUnit   ExecutingUnit?       @relation(fields: [executingUnitId], references: [id])
+  supervisionUnit String?              // Đơn vị tư vấn giám sát
+  supervisor      String?              // Người giám sát
+  // Ngân sách
+  totalBudget     Float?               // Tổng mức đầu tư (đồng)
+  gpmbBudget      Float?               // Kinh phí GPMB (đồng)
+  fundingSource   String?              // Nguồn vốn
+  spentAmount     Float?               // Đã giải ngân (đồng)
+  completionPct   Float?               // Tỷ lệ hoàn thành (%)
+  // Thời gian
+  approvalDate    DateTime?            @db.Date  // Ngày phê duyệt dự án đầu tư
+  startDate       DateTime?            @db.Date  // Ngày khởi công
+  endDate         DateTime?            @db.Date  // Ngày hoàn thành kế hoạch
+  actualEndDate   DateTime?            @db.Date  // Ngày hoàn thành thực tế
+  // Hồ sơ pháp lý
+  decisionNumber    String?            // Số QĐ phê duyệt chủ trương đầu tư
+  approvalDecisionNo String?           // Số QĐ phê duyệt dự án đầu tư
+  approvalAuthority  String?           // Cơ quan phê duyệt
+  constructionPermitNo String?         // Số giấy phép xây dựng
+  // Quy mô (đặc thù khu đô thị / TĐC)
+  landArea        Float?               // Diện tích đất tổng thể (ha)
+  residentialLotArea Float?            // Diện tích đất ở (ha)
+  plotCount       Int?                 // Số lô đất
+  householdCount  Int?                 // Số hộ dân (TĐC)
+  // Nội dung
+  description     String?
+  notes           String?
+  documents       String[]             @default([])
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  milestones ProjectMilestone[]
+
+  @@index([domain])
+  @@index([status])
+  @@map("projects")
+}
+
+model ProjectMilestone {
+  id          String        @id @default(cuid())
+  projectId   String
+  project     Project       @relation(fields: [projectId], references: [id])
+  name        String
+  description String?
+  plannedDate DateTime      @db.Date
+  actualDate  DateTime?     @db.Date
+  isDone      Boolean       @default(false)
+  sortOrder   Int           @default(0)
+
+  @@map("project_milestones")
+}
+
+// ─── VẬT TƯ & KHO ─────────────────────────────────────────────────────────────
+
+model MaterialCategory {
+  id       String     @id @default(cuid())
+  code     String     @unique
+  name     String
+  parentId String?
+  parent   MaterialCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children MaterialCategory[] @relation("CategoryHierarchy")
+  isActive Boolean    @default(true)
+
+  materials Material[]
+
+  @@map("material_categories")
+}
+
+model Material {
+  id           String           @id @default(cuid())
+  code         String           @unique
+  name         String
+  categoryId   String
+  category     MaterialCategory @relation(fields: [categoryId], references: [id])
+  unit         String
+  unitPrice    Float?
+  minStock     Float            @default(0)
+  currentStock Float            @default(0)
+  description  String?
+  isActive     Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  stockTransactions  StockTransaction[]
+  workOrderMaterials WorkOrderMaterial[]
+
+  @@map("materials")
+}
+
+enum TransactionType {
+  NHAP_KHO   // Nhập kho
+  XUAT_KHO   // Xuất kho
+  DIEU_CHUYEN // Điều chuyển
+  KIEM_KE    // Kiểm kê điều chỉnh
+}
+
+model StockTransaction {
+  id           String          @id @default(cuid())
+  materialId   String
+  material     Material        @relation(fields: [materialId], references: [id])
+  type         TransactionType
+  quantity     Float
+  unitPrice    Float?
+  totalValue   Float?
+  reference    String?
+  note         String?
+  transactedAt DateTime        @default(now())
+  createdAt    DateTime        @default(now())
+
+  @@index([materialId])
+  @@index([type])
+  @@map("stock_transactions")
+}
+
+// ─── CẢNH BÁO HỆ THỐNG ───────────────────────────────────────────────────────
+
+enum AlertType {
+  BAO_TRI_QUA_HAN       // Bảo trì quá hạn
+  KIEM_TRA_QUA_HAN      // Kiểm tra quá hạn
+  SU_CO_KHAN_CAP        // Sự cố khẩn cấp chưa xử lý
+  CONG_TRINH_QUA_HAN    // Công trình quá hạn tiến độ
+  VAT_TU_THIEU          // Vật tư dưới mức tối thiểu
+  ASSET_XAU_HONG        // Tài sản ở trạng thái xấu/hỏng
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+model SystemAlert {
+  id         String        @id @default(cuid())
+  type       AlertType
+  severity   AlertSeverity @default(WARNING)
+  title      String
+  message    String
+  targetId   String?
+  targetType String?
+  isRead     Boolean       @default(false)
+  isResolved Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  resolvedAt DateTime?
+
+  @@index([isRead, isResolved])
+  @@index([type])
+  @@map("system_alerts")
+}
+
+// ─── IMPORT EXCEL HÀ LOẠT TÀI SẢN ───────────────────────────────────────────
+
+enum ImportStatus {
+  DANG_XU_LY  // Đang xử lý
+  THANH_CONG  // Thành công
+  CO_LOI      // Có lỗi một phần
+  THAT_BAI    // Thất bại hoàn toàn
+}
+
+model AssetImportBatch {
+  id           String       @id @default(cuid())
+  batchCode    String       @unique
+  assetTypeId  String
+  assetType    AssetType    @relation(fields: [assetTypeId], references: [id])
+  fileName     String
+  importedById String
+  importedBy   User         @relation(fields: [importedById], references: [id])
+  status       ImportStatus @default(DANG_XU_LY)
+  totalRows    Int          @default(0)
+  successRows  Int          @default(0)
+  errorRows    Int          @default(0)
+  errors       Json?        // Array of {row, field, message}
+  importedAt   DateTime     @default(now())
+
+  @@index([assetTypeId])
+  @@map("asset_import_batches")
+}
+
+// ─── CẤU HÌNH TÍCH HỢP BÊN NGOÀI ────────────────────────────────────────────
+
+model IntegrationConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @default("")
+  updatedAt DateTime @updatedAt
+
+  @@map("integration_configs")
+}
+
+model IntegrationLog {
+  id          String   @id @default(cuid())
+  source      String   // "congdanso"
+  action      String   // "sync", "test"
+  status      String   // "success", "error", "partial"
+  message     String?
+  recordCount Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([source, createdAt])
+  @@map("integration_logs")
+}
+
+// ─── CHATBOT LOG & FEEDBACK ──────────────────────────────────────────────────
+
+enum ChatbotFeedback {
+  LIKE      // Trả lời đúng, hữu ích
+  DISLIKE   // Sai / cần admin kiểm tra
+}
+
+model ChatbotLog {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  isWardUser  Boolean          @default(false)   // true = tài khoản phường/xã
+  question    String           @db.Text
+  answer      String           @db.Text
+  toolsUsed   String[]                           // tên các tool đã gọi
+  feedback    ChatbotFeedback?                   // null = chưa đánh giá
+  feedbackAt  DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([feedback])
+  @@map("chatbot_logs")
+}
+
+// ─── TỔ CHỨC & NHÂN SỰ ──────────────────────────────────────────────────────
+//
+// Thiết kế chuẩn hoá phân cấp tổ chức:
+//   ToChuc  → cây đơn vị (Sở → Phòng → Tổ / UBND → Ban)
+//   ChucDanh → danh mục chức danh chuẩn
+//   PhanCong → gắn cán bộ vào (đơn vị × chức danh), hỗ trợ kiêm nhiệm
+//   CanBo    → hồ sơ cán bộ, có FK tới toChucId + chucDanhId (chính)
+
+enum LoaiToChuc {
+  SO                       // Sở / Cơ quan cấp tỉnh
+  LANH_DAO_SO              // Nhóm lãnh đạo Sở (Giám đốc + Phó)
+  VAN_PHONG                // Văn phòng Sở
+  PHONG                    // Phòng chuyên môn
+  BAN                      // Ban thuộc Sở
+  TO                       // Tổ / Nhóm chuyên môn
+  DON_VI_TRUC_THUOC        // Đơn vị trực thuộc (TT, XN, BQL...)
+  UBND_PHUONG_XA           // UBND phường/xã (liên kết đơn vị hành chính)
+  BAN_PHUONG_XA            // Ban/Bộ phận thuộc UBND phường/xã
+}
+
+enum LoaiChucDanh {
+  LANH_DAO_SO              // Giám đốc, Phó Giám đốc Sở
+  QUAN_LY                  // Trưởng/Phó phòng, Chánh/Phó VP
+  CHUYEN_MON               // Chuyên viên, Kỹ sư, Kiến trúc sư
+  HANH_CHINH               // Văn thư, Kế toán, Thủ quỹ, Lái xe, Bảo vệ, Tạp vụ (NĐ 111/2022)
+  LANH_DAO_UBND            // Chủ tịch, Phó Chủ tịch UBND
+  CONG_CHUC_PHUONG         // Công chức phường/xã
+  LANH_DAO_DVSN            // Lãnh đạo đơn vị sự nghiệp trực thuộc (GĐ/Viện trưởng/Hiệu trưởng + phó) — NĐ 120/2020; KHÔNG phải lãnh đạo Sở
+}
+
+// Cây đơn vị tổ chức — hỗ trợ đệ quy (parentId)
+model ToChuc {
+  id           String      @id @default(cuid())
+  ma           String      @unique               // VD: SO_XD, PHONG_HTKT, UBND_DONG_HOI
+  ten          String                            // Tên đầy đủ
+  tenVietTat   String?                           // Tên viết tắt / hiển thị ngắn
+  loai         LoaiToChuc
+  cap          Int         @default(1)           // 1=Sở, 2=Phòng/VP, 3=Tổ/Ban nhỏ
+  thuTu        Int         @default(0)           // Thứ tự hiển thị trong cùng cấp
+  isActive     Boolean     @default(true)
+  moTa         String?
+
+  // Phân cấp tự tham chiếu
+  parentId     String?
+  parent       ToChuc?     @relation("ToChucCon", fields: [parentId], references: [id])
+  children     ToChuc[]    @relation("ToChucCon")
+
+  // Liên kết đơn vị hành chính (dùng cho UBND phường/xã)
+  donViHCId    String?
+  donViHC      AdministrativeUnit? @relation("ToChucDonViHC", fields: [donViHCId], references: [id])
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  canBos       CanBo[]     @relation("CanBoToChucChinh")
+  phanCongs    PhanCong[]
+  users        User[]      @relation("UserToChuc")
+  congViecs    CongViec[]
+  congViecLoais CongViecLoai[]
+  lichCaNhans  LichCaNhan[]
+  nghiepVuBanGhis NghiepVuBanGhi[]
+  duAnGpmbs    DsDuAnGpmb[]    @relation("DsGpmbToChuc")
+
+  @@index([parentId])
+  @@index([loai])
+  @@index([isActive])
+  @@index([donViHCId])
+  @@map("to_chuc")
+}
+
+// Danh mục chức danh chuẩn
+model ChucDanh {
+  id           String        @id @default(cuid())
+  ma           String        @unique               // VD: GIAM_DOC, TRUONG_PHONG, CHUYEN_VIEN
+  ten          String                              // Tên chức danh hiển thị
+  loai         LoaiChucDanh
+  capQuanLy    Int           @default(5)           // 1=GĐ, 2=PGĐ, 3=TP/CVP, 4=PP/PCVP/LX, 5=NV
+  isLanhDao    Boolean       @default(false)       // Là vị trí lãnh đạo
+  createdAt    DateTime      @default(now())
+
+  canBos       CanBo[]      @relation("CanBoChucDanhChinh")
+  phanCongs    PhanCong[]
+
+  @@index([loai])
+  @@index([capQuanLy])
+  @@map("chuc_danh")
+}
+
+// Phân công cán bộ — hỗ trợ kiêm nhiệm nhiều đơn vị
+model PhanCong {
+  id           String    @id @default(cuid())
+
+  canBoId      String
+  canBo        CanBo     @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+
+  toChucId     String
+  toChuc       ToChuc    @relation(fields: [toChucId], references: [id])
+
+  chucDanhId   String
+  chucDanh     ChucDanh  @relation(fields: [chucDanhId], references: [id])
+
+  laChinh      Boolean   @default(true)   // Phân công chính (false = kiêm nhiệm)
+  tuNgay       DateTime? @db.Date
+  denNgay      DateTime? @db.Date         // NULL = đang giữ
+  quyetDinhSo  String?                    // Số quyết định bổ nhiệm
+  ghiChu       String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Index thật trong DB là UNIQUE ... NULLS NOT DISTINCT (mig 034) — Prisma chưa
+  // biểu diễn được; KHÔNG để prisma migrate tự sinh lại index này.
+  @@unique([canBoId, toChucId, chucDanhId, tuNgay])
+  @@index([canBoId])
+  @@index([toChucId])
+  @@index([chucDanhId])
+  @@index([denNgay])    // Lọc "đang giữ": denNgay IS NULL
+  @@map("phan_cong")
+}
+
+// ─── DANH BẠ CÁN BỘ SỞ XÂY DỰNG ────────────────────────────────────────────
+
+enum GioiTinh {
+  NAM
+  NU
+}
+
+enum DoiTuongNhanSu {
+  CONG_CHUC       // Công chức (Luật CBCC 2025, NĐ 170/2025)
+  VIEN_CHUC       // Viên chức (Luật Viên chức, NĐ 115/2020)
+  NGUOI_LAO_DONG  // Người lao động / hợp đồng (BLLĐ 2019, NĐ 111/2022)
+}
+
+model CanBo {
+  id            String     @id @default(cuid())
+  cccd          String     @unique                // Số CCCD 12 số (cột BA biểu QLNS)
+  hoTen         String
+  // Text cũ giữ lại để backward-compat; dùng FK bên dưới để lọc chuẩn
+  chucVu        String?                           // Text gốc (deprecated → dùng chucDanhId)
+  phongBan      String?                           // Text gốc (deprecated → dùng toChucId)
+  email         String?
+  soDienThoai   String?
+  ngaySinh      DateTime?  @db.Date
+  heSoLuong     Float?                            // Cột V
+  phuCap        Float?                            // Cột W: Phụ cấp chức vụ
+  vuotKhung     Float?                            // Cột X: % vượt khung
+  ngayNangLuong       DateTime?  @db.Date   // Cột Y: Ngày hưởng lương (bậc hiện tại)
+  ngayNangLuongKeTiep DateTime?  @db.Date   // Cột AA: Ngày lên lương lần sau (= Y + 3 năm)
+
+  // ── Nhân thân & cư trú (biểu QLNS cột G..M) ──
+  gioiTinh      GioiTinh?
+  queQuanTruoc  String?                           // G: Quê quán (trước hợp nhất)
+  queQuanSau    String?                           // H: Quê quán (sau hợp nhất) — tự động chuyển đổi từ G
+  noiOTruoc     String?                           // I: Nơi ở (trước hợp nhất)
+  noiOHienNay   String?                           // J: Nơi ở (hiện nay)
+  quangTriCuRa  String?                           // K: QT (cũ) ra
+
+  // ── Phân loại đối tượng & hợp đồng lao động ──
+  doiTuong             DoiTuongNhanSu?            // CC / VC / NLĐ — áp đúng chế độ
+  viTriViecLam         String?                    // Vị trí việc làm (NĐ 62/2020, 106/2020)
+  loaiHopDong          String?                    // Với NLĐ: KXĐTH / XĐTH 12 tháng / HĐ111...
+  ngayKetThucHopDong   DateTime? @db.Date         // Hạn HĐ (NLĐ) — cảnh báo hết hạn
+
+  // ── Biên chế & bổ nhiệm (cột N..S) ──
+  loaiHinh             String?                    // N: BCHC / BCSN / HĐ...
+  ngayVaoBienChe       DateTime? @db.Date         // O: Ngày vào BC, HĐ
+  ngayVaoCongChucCoQuanNN DateTime? @db.Date      // Ngày vào công chức, cơ quan NN (từ bảng tính thi đua)
+  boNhiemLanDau        String?                    // P: Bổ nhiệm lần đầu (text kèm ghi chú)
+  ngayBoNhiemGanNhat   DateTime? @db.Date         // Q
+  ngayBoNhiemTiepTheo  DateTime? @db.Date         // R = Q + 5 năm
+  ngayVeHuu            DateTime? @db.Date         // S
+
+  // ── Ngạch, bậc (cột T, U, AB, AC) ──
+  maNgach          String?                        // T: VD 01.001
+  bacLuong         Int?                           // U
+  ngachHienHuong   String?                        // AB: CVCC/CVC/CV...
+  ngayBoNhiemNgach DateTime? @db.Date             // AC — thời gian giữ ngạch tính từ đây
+
+  // ── Trình độ đào tạo (cột AE..AT) ──
+  trinhDoChuyenMon  String?                       // AE (nhiều dòng: TS/ThS/KS...)
+  chuyenNganh       String?                       // AF
+  namTotNghiep      String?                       // AG
+  heDaoTao          String?                       // AH: Chính quy / Tại chức...
+  trinhDoQLNN       String?                       // AI
+  namDaoTaoQLNN     String?                       // AJ
+  trinhDoLLCT       String?                       // AK: Cao cấp / Trung cấp...
+  namDaoTaoLLCT     String?                       // AL
+  trinhDoNgoaiNgu   String?                       // AM
+  namDaoTaoNgoaiNgu String?                       // AN
+  trinhDoTinHoc     String?                       // AO
+  namDaoTaoTinHoc   String?                       // AP
+  namDaoTaoCapPhong String?                       // AQ
+  namDaoTaoCapSo    String?                       // AR
+  qpAn              String?                       // AS: ĐT1/ĐT2/ĐT3...
+  namDaoTaoQPAN     String?                       // AT
+
+  // ── Đảng (cột AU..AW, AZ) — tuổi đời (AX), tuổi Đảng (AY) tính động ──
+  soTheDang            String?                    // AU
+  ngayKetNapDang       DateTime? @db.Date         // AV
+  ngayVaoDangChinhThuc DateTime? @db.Date         // AW
+  chiBo                String?                    // AZ
+
+  // ── BHXH & Thuế (quản lý toàn diện) ──
+  maSoBHXH        String?                            // Mã số BHXH (10 số)
+  ngayThamGiaBHXH DateTime? @db.Date                 // Ngày bắt đầu tham gia BHXH
+  maSoThue        String?                            // Mã số thuế cá nhân (TT 86/2024: dùng CCCD)
+
+  trangThai     String     @default("DANG_CONG_TAC") // DANG_CONG_TAC/HOP_DONG/NGHI_HUU/CHUYEN_CONG_TAC/NGHI_VIEC
+  ghiChu        String?
+
+  // FK chuẩn hoá — đơn vị & chức danh chính
+  toChucId      String?
+  toChuc        ToChuc?    @relation("CanBoToChucChinh", fields: [toChucId], references: [id])
+  chucDanhId    String?
+  chucDanh      ChucDanh?  @relation("CanBoChucDanhChinh", fields: [chucDanhId], references: [id])
+
+  userId        String?    @unique
+  user          User?      @relation(fields: [userId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  phanCongs     PhanCong[]
+  salaryHistory OfficeSalaryHistory[]
+  workHistory   OfficeWorkHistory[]
+  rewardRecords      OfficeRewardRecord[]
+  annualEvaluations  OfficeAnnualEvaluation[]
+  disciplineRecords  OfficeDisciplineRecord[]
+  salaryReviewCases  OfficeSalaryReviewCase[]
+  generatedDocuments OfficeGeneratedDocument[]
+  leaveRequests      OfficeLeaveRequest[]
+
+  @@index([phongBan])
+  @@index([toChucId])
+  @@index([chucDanhId])
+  @@index([trangThai])
+  @@index([chiBo])
+  @@map("can_bo")
+}
+
+// ─── 7 BẢNG BÁO CÁO PHƯỜNG/XÃ CHUẨN HOÁ ────────────────────────────────────
+// Thay thế WardReport JSON → quan hệ thực sự, SQL có thể GROUP BY / SUM trực tiếp
+
+enum ReportStatus {
+  NHAP       // Xã đang nhập, chưa gửi
+  CHO_DUYET  // Đã gửi, chờ Sở duyệt
+  DA_DUYET   // Sở đã duyệt — dữ liệu chính thức
+  TRA_LAI    // Sở trả lại, yêu cầu sửa
+}
+
+// ── BIỂU MẪU 01: Đường giao thông ───────────────────────────────────────────
+model ReportDuong {
+  id            String             @id @default(cuid())
+  wardId        String
+  ward          AdministrativeUnit @relation("WardReportDuong", fields: [wardId], references: [id])
+  year          Int
+  stt           String?            // STT trong file gốc
+  tenDuong      String             // Tên đường (bắt buộc)
+  diemDau       String?            // Điểm đầu (Lý trình)
+  diemCuoi      String?            // Điểm cuối (Lý trình)
+  chieuDaiKm    Float?             // Chiều dài tuyến (km)
+  nenM          Float?             // Nền đường (m)
+  matM          Float?             // Mặt đường (m)
+  heTraiM       Float?             // Hè trái (m)
+  hePhaiM       Float?             // Hè phải (m)
+  giaiPhanCachM Float?             // Giải phân cách (m)
+  ketCauMat     String?            // Kết cấu mặt đường
+  toaDoDauLat   Float?             // Tọa độ điểm đầu - Vĩ độ
+  toaDoDauLng   Float?             // Tọa độ điểm đầu - Kinh độ
+  toaDoCuoiLat  Float?             // Tọa độ điểm cuối - Vĩ độ
+  toaDoCuoiLng  Float?             // Tọa độ điểm cuối - Kinh độ
+  ghiChu        String?
+  status        ReportStatus       @default(NHAP)
+  sourceFile    String?
+  createdById   String
+  createdBy     User               @relation("DuongCreator", fields: [createdById], references: [id])
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([createdById])
+  @@map("report_duong")
+}
+
+// ── BIỂU MẪU 02: Điện chiếu sáng ────────────────────────────────────────────
+model ReportDienCS {
+  id             String             @id @default(cuid())
+  wardId         String
+  ward           AdministrativeUnit @relation("WardReportDienCS", fields: [wardId], references: [id])
+  year           Int
+  stt            String?
+  tuyenDuong     String             // Tuyến đường (bắt buộc)
+  chieuDaiCSKm   Float?             // Chiều dài chiếu sáng (km)
+  soColDen       Int?               // Số cột đèn toàn tuyến (cột)
+  loaiDen        String?            // Loại đèn gốc từ file
+  loaiDenChuan   String?            // Loại đèn đã chuẩn hóa (LED / Sodium / Halogen...)
+  congSuatW      Float?             // Công suất (W)
+  chieuSangPhia  String?            // 1 bên / 2 bên / giữa
+  namDauTu       Int?               // Năm đầu tư
+  toaDoLat       Float?             // Tọa độ tuyến - Vĩ độ
+  toaDoLng       Float?             // Tọa độ tuyến - Kinh độ
+  ghiChu         String?
+  status         ReportStatus       @default(NHAP)
+  sourceFile     String?
+  createdById    String
+  createdBy      User               @relation("DienCSCreator", fields: [createdById], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([loaiDenChuan])
+  @@index([createdById])
+  @@map("report_dien_cs")
+}
+
+// ── BIỂU MẪU 03: Thoát nước mưa và thải ────────────────────────────────────
+model ReportThoatNuoc {
+  id             String             @id @default(cuid())
+  wardId         String
+  ward           AdministrativeUnit @relation("WardReportThoatNuoc", fields: [wardId], references: [id])
+  year           Int
+  stt            String?
+  tuyen          String             // Tuyến (bắt buộc)
+  diemDau        String?            // Điểm đầu
+  diemCuoi       String?            // Điểm cuối
+  loaiNuoc       String?            // Nước mưa / Nước thải / Cả hai
+  chieuDaiM      Float?             // Tổng chiều dài tuyến (m)
+  chieuSangPhia  String?            // 1 phía / 2 phía
+  kichThuocCong  String?            // Kích thước cống (D800, B500...)
+  namSuDung      Int?               // Năm đưa vào sử dụng
+  toaDoDauLat    Float?             // Tọa độ điểm đầu - Vĩ độ
+  toaDoDauLng    Float?             // Tọa độ điểm đầu - Kinh độ
+  toaDoCuoiLat   Float?             // Tọa độ điểm cuối - Vĩ độ
+  toaDoCuoiLng   Float?             // Tọa độ điểm cuối - Kinh độ
+  ghiChu         String?
+  status         ReportStatus       @default(NHAP)
+  sourceFile     String?
+  createdById    String
+  createdBy      User               @relation("ThoatNuocCreator", fields: [createdById], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([createdById])
+  @@map("report_thoat_nuoc")
+}
+
+// ── BIỂU MẪU 04: Cây xanh ───────────────────────────────────────────────────
+model ReportCayXanh {
+  id            String             @id @default(cuid())
+  wardId        String
+  ward          AdministrativeUnit @relation("WardReportCayXanh", fields: [wardId], references: [id])
+  year          Int
+  stt           String?
+  tuyen         String             // Tuyến (bắt buộc)
+  diemDau       String?            // Điểm đầu
+  diemCuoi      String?            // Điểm cuối
+  soLuongCay    Int?               // Số lượng cây (cây) ← số nguyên, không phải text
+  chieuSangPhia String?            // 1 phía / 2 phía
+  chungLoaiCay  String?            // Chủng loại cây
+  toaDoDauLat   Float?             // Tọa độ điểm đầu - Vĩ độ
+  toaDoDauLng   Float?             // Tọa độ điểm đầu - Kinh độ
+  toaDoCuoiLat  Float?             // Tọa độ điểm cuối - Vĩ độ
+  toaDoCuoiLng  Float?             // Tọa độ điểm cuối - Kinh độ
+  ghiChu        String?
+  status        ReportStatus       @default(NHAP)
+  sourceFile    String?
+  createdById   String
+  createdBy     User               @relation("CayXanhCreator", fields: [createdById], references: [id])
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([createdById])
+  @@map("report_cay_xanh")
+}
+
+// ── BIỂU MẪU 05: Công viên ──────────────────────────────────────────────────
+model ReportCongVien {
+  id               String             @id @default(cuid())
+  wardId           String
+  ward             AdministrativeUnit @relation("WardReportCongVien", fields: [wardId], references: [id])
+  year             Int
+  stt              String?
+  tenCongVien      String             // Tên công viên / quảng trường (bắt buộc)
+  viTri            String?            // Vị trí
+  dienTichM2       Float?             // Diện tích (m²)
+  dienTichThamCoM2 Float?             // Diện tích thảm cỏ (m²)
+  soLuongCay       Int?               // Số lượng cây (cây)
+  chungLoaiCay     String?            // Chủng loại cây
+  toaDoLat         Float?             // Tọa độ tâm công viên - Vĩ độ
+  toaDoLng         Float?             // Tọa độ tâm công viên - Kinh độ
+  ghiChu           String?
+  status           ReportStatus       @default(NHAP)
+  sourceFile       String?
+  createdById      String
+  createdBy        User               @relation("CongVienCreator", fields: [createdById], references: [id])
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([createdById])
+  @@map("report_cong_vien")
+}
+
+// ── BIỂU MẪU 06: Cấp nước ───────────────────────────────────────────────────
+model ReportCapNuoc {
+  id             String             @id @default(cuid())
+  wardId         String
+  ward           AdministrativeUnit @relation("WardReportCapNuoc", fields: [wardId], references: [id])
+  year           Int
+  stt            String?
+  tuyenDuong     String             // Tuyến đường / Thôn (bắt buộc)
+  diaChi         String?            // Địa chỉ
+  soHoGiaDinh    Int?               // Số hộ gia đình (hộ) ← số nguyên
+  hienTrang      String?            // Hiện trạng sử dụng nước
+  duKienNguon    String?            // Dự kiến nguồn nước
+  ghiChu         String?
+  status         ReportStatus       @default(NHAP)
+  sourceFile     String?
+  createdById    String
+  createdBy      User               @relation("CapNuocCreator", fields: [createdById], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([createdById])
+  @@map("report_cap_nuoc")
+}
+
+// ── BIỂU MẪU 07: Bãi đỗ xe ─────────────────────────────────────────────────
+model ReportBaiDoXe {
+  id              String             @id @default(cuid())
+  wardId          String
+  ward            AdministrativeUnit @relation("WardReportBaiDoXe", fields: [wardId], references: [id])
+  year            Int
+  stt             String?
+  tenBai          String             // Tên bãi đỗ xe (bắt buộc)
+  diaDiem         String?            // Địa điểm
+  dienTichM2      Float?             // Diện tích (m²)
+  soViTriDo       Int?               // Số vị trí đỗ (chỗ)
+  coTramSacDien   Boolean?           // Trạm sạc xe điện (true/false)
+  ghiChu          String?
+  status          ReportStatus       @default(NHAP)
+  sourceFile      String?
+  createdById     String
+  createdBy       User               @relation("BaiDoXeCreator", fields: [createdById], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([wardId, year, status])
+  @@index([createdById])
+  @@map("report_bai_do_xe")
+}
+
+// ─── DỮ LIỆU BÁO CÁO PHƯỜNG/XÃ (Legacy JSON — giữ lại để tương thích) ──────
+
+enum WardReportCategory {
+  DUONG           // Đường giao thông
+  DIEN_CHIEU_SANG // Điện chiếu sáng
+  CAY_XANH        // Cây xanh
+  CONG_VIEN       // Công viên
+  DIEN_TONG_HOP   // Điện tổng hợp
+  THOAT_NUOC_BC   // Thoát nước
+  CAP_NUOC_BC     // Cấp nước
+  KHAC            // Khác
+}
+
+enum WardReportStatus {
+  NHAP        // Bản nháp
+  CHINH_THUC  // Chính thức / Đã xác nhận
+}
+
+model WardReport {
+  id          String               @id @default(cuid())
+  wardId      String?
+  ward        AdministrativeUnit?  @relation("WardReports", fields: [wardId], references: [id])
+  year        Int
+  month       Int?                 // null = cả năm
+  category    WardReportCategory
+  sheetName   String?              // Tên sheet gốc trong Excel
+  columns     Json                 // String[] — tên các cột
+  rows        Json                 // (string|number|null)[][] — dữ liệu
+  sourceFile  String?              // Tên file Excel gốc
+  notes       String?
+  status      WardReportStatus     @default(NHAP)
+  createdById String
+  createdBy   User                 @relation("WardReportCreator", fields: [createdById], references: [id])
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([wardId])
+  @@index([year, category])
+  @@index([status])
+  @@index([createdById])
+  @@map("ward_reports")
+}
+
+// ─── CẤU HÌNH CƠ QUAN ────────────────────────────────────────────────────────
+
+model FacilityConfig {
+  id             String   @id @default(cuid())
+  coQuanCapTren  String   @default("")
+  tenCoQuan      String   @default("")
+  tenDonVi       String   @default("")
+  diaChi         String   @default("")
+  dienThoai      String   @default("")
+  email          String   @default("")
+  website        String   @default("")
+  logo           String?
+  updatedAt      DateTime @updatedAt
+
+  @@map("facility_config")
+}
+
+// ============================================================
+//  VĂN PHÒNG SỞ — Hồ sơ nhân sự & lương (Commit 2)
+//  Hồ sơ gốc dùng lại bảng can_bo; các bảng dưới lưu lịch sử & cấu hình.
+// ============================================================
+
+enum LoaiNangLuong {
+  THUONG_XUYEN   // Nâng lương thường xuyên
+  TRUOC_HAN      // Nâng lương trước thời hạn
+  DOT_XUAT       // Nâng lương đột xuất
+  VUOT_KHUNG     // Phụ cấp thâm niên vượt khung
+  KHAC
+}
+
+/// Lịch sử lương — mỗi lần thay đổi bậc/hệ số/phụ cấp của cán bộ
+model OfficeSalaryHistory {
+  id            String        @id @default(cuid())
+  canBoId       String
+  canBo         CanBo         @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+
+  loai          LoaiNangLuong @default(THUONG_XUYEN)
+  bacLuong      Int?                                  // Bậc lương
+  heSoLuong     Float                                 // Hệ số lương tại thời điểm hưởng
+  phuCapChucVu  Float?                                // Phụ cấp chức vụ
+  vuotKhung     Float?                                // % thâm niên vượt khung
+  ngayHuong     DateTime      @db.Date                // Ngày được hưởng
+  ngayNangTiep  DateTime?     @db.Date                // Dự kiến ngày nâng lương kế tiếp
+  soQuyetDinh   String?                               // Số QĐ lương
+  ngayQuyetDinh DateTime?     @db.Date
+  ghiChu        String?
+
+  createdById   String?
+  createdBy     User?         @relation("OfficeSalaryCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([canBoId])
+  @@index([ngayHuong])
+  @@index([loai])
+  @@map("office_salary_history")
+}
+
+/// Quá trình công tác — đơn vị/chức vụ theo thời gian
+model OfficeWorkHistory {
+  id            String    @id @default(cuid())
+  canBoId       String
+  canBo         CanBo     @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+
+  tuNgay        DateTime  @db.Date
+  denNgay       DateTime? @db.Date                    // NULL = hiện tại
+  donVi         String                                // Tên đơn vị công tác
+  chucVu        String?                               // Chức vụ tại đơn vị
+  noiDung       String?                               // Mô tả quá trình/nhiệm vụ
+  soQuyetDinh   String?
+  ghiChu        String?
+
+  createdById   String?
+  createdBy     User?     @relation("OfficeWorkCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([canBoId])
+  @@index([tuNgay])
+  @@map("office_work_history")
+}
+
+/// Cấu hình quy tắc nâng lương — KHÔNG hard-code điều kiện pháp lý vào code.
+/// Văn phòng cập nhật khi văn bản thay đổi.
+model OfficeSalaryRule {
+  id                       String    @id @default(cuid())
+  ma                       String    @unique          // VD: CC_A1, VC_LOAI_A
+  ten                      String
+  loaiCanBo                String?                     // Công chức / Viên chức / NLĐ
+  nhomNgach                String?                     // Nhóm ngạch / chức danh nghề nghiệp
+  soNamGiuBac              Int?                        // Số năm giữ bậc để nâng thường xuyên
+  soThangGiuBac            Int?                        // Hoặc tính theo tháng (cán bộ loại C…)
+  bacToiDa                 Int?                        // Bậc cuối của ngạch
+  heSoVuotKhungBatDau      Float?                      // % vượt khung khi đạt bậc cuối
+  phanTramVuotKhungMoiNam  Float?                      // % cộng thêm mỗi năm vượt khung
+  vanBanCanCu              String?                     // Số/tên văn bản căn cứ
+  hieuLucTuNgay            DateTime? @db.Date
+  hieuLucDenNgay           DateTime? @db.Date
+  isActive                 Boolean   @default(true)
+  moTa                     String?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  @@index([isActive])
+  @@map("office_salary_rules")
+}
+
+// ============================================================
+//  VĂN PHÒNG SỞ — Thi đua, khen thưởng, đánh giá, kỷ luật (Commit 3)
+//  Hồ sơ gốc dùng lại can_bo; các bảng dưới lưu thành tích & quá trình.
+// ============================================================
+
+enum LoaiKhenThuong {
+  DANH_HIEU   // Danh hiệu thi đua (LĐTT, CSTĐ cơ sở...)
+  HINH_THUC   // Hình thức khen thưởng (Giấy khen, Bằng khen...)
+}
+
+/// Danh mục danh hiệu / hình thức khen thưởng — config, KHÔNG hard-code vào code.
+model OfficeRewardTitle {
+  id        String         @id @default(cuid())
+  ma        String         @unique
+  ten       String
+  loai      LoaiKhenThuong @default(DANH_HIEU)
+  capKhen   String?        // Cấp khen: Cơ sở / Tỉnh / Bộ / Nhà nước
+  thuTu     Int            @default(0)
+  isActive  Boolean        @default(true)
+  moTa      String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  rewardRecords OfficeRewardRecord[]
+
+  @@index([isActive])
+  @@index([loai])
+  @@map("office_reward_titles")
+}
+
+/// Đợt / phong trào thi đua
+model OfficeEmulationMovement {
+  id          String    @id @default(cuid())
+  ten         String
+  nam         Int
+  capPhatDong String?   // Cấp phát động (Sở / Tỉnh / Bộ...)
+  tuNgay      DateTime? @db.Date
+  denNgay     DateTime? @db.Date
+  moTa        String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  rewardRecords OfficeRewardRecord[]
+
+  @@index([nam])
+  @@index([isActive])
+  @@map("office_emulation_movements")
+}
+
+/// Khen thưởng / danh hiệu cán bộ đã đạt
+model OfficeRewardRecord {
+  id              String   @id @default(cuid())
+  canBoId         String
+  canBo           CanBo    @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+  rewardTitleId   String?
+  rewardTitle     OfficeRewardTitle?       @relation(fields: [rewardTitleId], references: [id], onDelete: SetNull)
+  movementId      String?
+  movement        OfficeEmulationMovement? @relation(fields: [movementId], references: [id], onDelete: SetNull)
+
+  nam             Int
+  danhHieu        String?   // Snapshot tên danh hiệu (khi không chọn từ danh mục)
+  capKhen         String?
+  soQuyetDinh     String?
+  ngayQuyetDinh   DateTime? @db.Date
+  coQuanQuyetDinh String?
+  thanhTich       String?   // Tóm tắt thành tích
+  ghiChu          String?
+
+  createdById     String?
+  createdBy       User?     @relation("OfficeRewardCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([canBoId])
+  @@index([nam])
+  @@index([rewardTitleId])
+  @@index([movementId])
+  @@map("office_reward_records")
+}
+
+/// Khen thưởng / danh hiệu TẬP THỂ (đơn vị). toChucId NULL nếu đơn vị đã giải thể.
+model OfficeCollectiveRewardRecord {
+  id              String   @id @default(cuid())
+  toChucId        String?   // liên kết tới đơn vị trong cây tổ chức; null = đơn vị đã giải thể
+  tenTapThe       String    // tên tập thể theo QĐ (luôn lưu, kể cả đơn vị đã giải thể; "còn tồn tại" suy động từ toChucId ⇒ to_chuc)
+  rewardTitleId   String?
+  movementId      String?
+
+  nam             Int
+  danhHieu        String?
+  capKhen         String?
+  soQuyetDinh     String?
+  ngayQuyetDinh   DateTime? @db.Date
+  coQuanQuyetDinh String?
+  thanhTich       String?
+  ghiChu          String?
+
+  createdById     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([nam])
+  @@index([toChucId])
+  @@map("office_collective_reward_records")
+}
+
+enum MucXepLoai {
+  HOAN_THANH_XUAT_SAC_NHIEM_VU
+  HOAN_THANH_TOT_NHIEM_VU
+  HOAN_THANH_NHIEM_VU
+  KHONG_HOAN_THANH_NHIEM_VU
+}
+
+/// Đánh giá, xếp loại chất lượng hằng năm
+model OfficeAnnualEvaluation {
+  id              String     @id @default(cuid())
+  canBoId         String
+  canBo           CanBo      @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+  nam             Int
+  mucXepLoai      MucXepLoai
+  laChienSiThiDua Boolean    @default(false)  // Đạt CSTĐ cơ sở năm này
+  soQuyetDinh     String?
+  ngayQuyetDinh   DateTime?  @db.Date
+  ghiChu          String?
+
+  createdById     String?
+  createdBy       User?      @relation("OfficeEvalCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@unique([canBoId, nam])
+  @@index([nam])
+  @@map("office_annual_evaluations")
+}
+
+enum HinhThucKyLuat {
+  KHIEN_TRACH
+  CANH_CAO
+  HA_BAC_LUONG
+  GIANG_CHUC
+  CACH_CHUC
+  BUOC_THOI_VIEC
+  KHAC
+}
+
+/// Kỷ luật & kéo dài thời gian nâng lương (menu 11)
+model OfficeDisciplineRecord {
+  id                     String        @id @default(cuid())
+  canBoId                String
+  canBo                  CanBo         @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+  hinhThuc               HinhThucKyLuat
+  lyDo                   String?
+  tuNgay                 DateTime      @db.Date
+  denNgay                DateTime?     @db.Date
+  soThangKeoDaiNangLuong Int?          // Số tháng kéo dài nâng lương (nếu có)
+  soQuyetDinh            String?
+  ngayQuyetDinh          DateTime?     @db.Date
+  ghiChu                 String?
+
+  createdById            String?
+  createdBy              User?         @relation("OfficeDisciplineCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  @@index([canBoId])
+  @@map("office_discipline_records")
+}
+
+// ============================================================
+//  VĂN PHÒNG SỞ — Quy trình rà soát nâng lương (Commit 4)
+//  Sinh danh sách đến hạn → rà soát (đủ/chưa đủ/cần kiểm tra) → trình → duyệt → ban hành.
+//  Hệ thống KHÔNG tự quyết định nâng lương; chỉ hỗ trợ quy trình + lưu vết.
+// ============================================================
+
+enum TrangThaiRaSoatLuong {
+  DU_KIEN      // Dự kiến (mới sinh từ danh sách đến hạn)
+  DANG_RA_SOAT // Văn phòng đang rà soát
+  CHO_DUYET    // Đã trình, chờ lãnh đạo duyệt
+  DA_DUYET     // Lãnh đạo đã duyệt
+  DA_BAN_HANH  // Đã ban hành QĐ nâng lương (đã ghi lịch sử lương)
+  TU_CHOI      // Không duyệt / dừng
+}
+
+enum KetLuanRaSoat {
+  DU_DIEU_KIEN      // Đủ điều kiện
+  CHUA_DU_DIEU_KIEN // Chưa đủ — cần bổ sung
+  CAN_KIEM_TRA      // Cần kiểm tra thêm
+}
+
+/// Hồ sơ rà soát nâng lương của 1 cán bộ trong 1 đợt
+model OfficeSalaryReviewCase {
+  id            String        @id @default(cuid())
+  canBoId       String
+  canBo         CanBo         @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+
+  loai          LoaiNangLuong @default(THUONG_XUYEN)
+  namRaSoat     Int                                    // Năm/đợt rà soát
+  dotRaSoat     String?                                // Mô tả đợt (vd "Quý II/2025")
+  ngayDenHan    DateTime?     @db.Date                 // Mốc nâng lương kế tiếp tại thời điểm sinh
+
+  heSoHienTai   Float?
+  bacHienTai    Int?
+  heSoDeXuat    Float?                                 // Hệ số dự kiến sau nâng (Văn phòng đề xuất)
+  bacDeXuat     Int?
+  ngayHuongMoi  DateTime?     @db.Date                 // Ngày hưởng lương mới (khi ban hành)
+
+  trangThai     TrangThaiRaSoatLuong @default(DU_KIEN)
+  ketLuanRaSoat KetLuanRaSoat?
+  noiDungRaSoat String?                                // Ghi chú rà soát ngạch/bậc/thời gian giữ bậc/đánh giá/kỷ luật
+  canCuPhapLy   String?                                // Số/tên văn bản căn cứ
+
+  nguoiRaSoatId String?
+  nguoiRaSoat   User?         @relation("SalaryCaseReviewer", fields: [nguoiRaSoatId], references: [id], onDelete: SetNull)
+  ngayRaSoat    DateTime?
+  nguoiDuyetId  String?
+  nguoiDuyet    User?         @relation("SalaryCaseApprover", fields: [nguoiDuyetId], references: [id], onDelete: SetNull)
+  ngayDuyet     DateTime?
+
+  soQuyetDinh   String?                                // Số QĐ nâng lương (khi ban hành)
+  ngayQuyetDinh DateTime?     @db.Date
+  ghiChu        String?
+
+  createdById   String?
+  createdBy     User?         @relation("SalaryCaseCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  generatedDocuments OfficeGeneratedDocument[]
+
+  @@unique([canBoId, namRaSoat, loai])
+  @@index([trangThai])
+  @@index([namRaSoat])
+  @@index([canBoId])
+  @@map("office_salary_review_cases")
+}
+
+enum LoaiVanBanVPS {
+  QD_NANG_LUONG   // Quyết định nâng bậc lương
+  QD_KHEN_THUONG  // Quyết định khen thưởng
+  QD_KY_LUAT      // Quyết định kỷ luật
+  THONG_BAO       // Thông báo
+  TB_NGHI_HUU     // Thông báo nghỉ hưu (trước 6 tháng — NĐ 46/2010)
+  QD_NGHI_HUU     // Quyết định nghỉ hưu (trước 3 tháng — NĐ 46/2010)
+  KHAC
+}
+
+/// Lưu vết văn bản đã sinh (bất biến) — văn bản ban hành lưu nguyên bản .docx
+model OfficeGeneratedDocument {
+  id           String        @id @default(cuid())
+  loaiVanBan   LoaiVanBanVPS @default(QD_NANG_LUONG)
+
+  canBoId      String?
+  canBo        CanBo?        @relation(fields: [canBoId], references: [id], onDelete: SetNull)
+  reviewCaseId String?
+  reviewCase   OfficeSalaryReviewCase? @relation(fields: [reviewCaseId], references: [id], onDelete: SetNull)
+
+  soVanBan     String?
+  tieuDe       String
+  fileName     String
+  noiDung      Bytes                                   // Nội dung .docx (immutable)
+
+  createdById  String?
+  createdBy    User?         @relation("OfficeDocCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime      @default(now())
+
+  @@index([loaiVanBan])
+  @@index([canBoId])
+  @@index([createdAt])
+  @@map("office_generated_documents")
+}
+
+// ─── VĂN PHÒNG SỞ: QUẢN LÝ NGHỈ PHÉP (toàn Sở) ──────────────────────────────
+
+enum LoaiNghiPhep {
+  PHEP_NAM      // Nghỉ phép năm
+  OM            // Nghỉ ốm
+  THAI_SAN      // Nghỉ thai sản
+  KHONG_LUONG   // Nghỉ không hưởng lương
+  VIEC_RIENG    // Nghỉ việc riêng có hưởng lương (cưới, tang...)
+  BU            // Nghỉ bù
+  KHAC
+}
+
+enum TrangThaiNghiPhep {
+  CHO_DUYET        // (legacy) Chờ duyệt
+  DA_DUYET         // (legacy) Đã duyệt
+  CHO_TRUONG_PHONG // Chờ Trưởng phòng duyệt
+  CHO_LANH_DAO_SO  // Chờ Lãnh đạo Sở ký
+  CHO_VAN_PHONG    // Chờ Văn phòng Sở xem xét / vào sổ
+  CHO_TAI_CHINH    // Chờ Phòng KH-TC cho ứng lương
+  HOAN_TAT         // Hoàn tất
+  TU_CHOI          // Từ chối
+  DA_HUY           // Đã huỷ
+}
+
+/// Đơn nghỉ phép — áp dụng cho cán bộ TOÀN SỞ (không chỉ Văn phòng Sở)
+model OfficeLeaveRequest {
+  id           String            @id @default(cuid())
+  canBoId      String
+  canBo        CanBo             @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+
+  loaiNghi     LoaiNghiPhep      @default(PHEP_NAM)
+  tuNgay       DateTime          @db.Date
+  denNgay      DateTime          @db.Date
+  soNgay       Float                                   // Số ngày nghỉ (cho phép 0.5)
+  lyDo         String?
+  trangThai    TrangThaiNghiPhep @default(CHO_TRUONG_PHONG)
+
+  // Mẫu đơn
+  nguoiBanGiao    String?                              // Người nhận bàn giao công việc
+  noiNghi         String?                              // Nơi nghỉ / địa chỉ liên hệ
+  dienThoaiLienHe String?
+  deNghiUngLuong  Boolean        @default(false)       // Người làm đơn đề nghị ứng lương
+  soTienUng       Float?                               // KH-TC nhập khi cho ứng
+
+  // (legacy) Duyệt 1 bước — giữ để tương thích dữ liệu cũ
+  nguoiDuyetId String?                                 // users.id (scalar)
+  ngayDuyet    DateTime?
+  ghiChuDuyet  String?
+
+  // Cấp 1 — Trưởng phòng
+  tpDuyetId    String?
+  tpNgay       DateTime?
+  tpYKien      String?
+  // Cấp 2 — Lãnh đạo Sở ký
+  ldsKyId      String?
+  ldsNgay      DateTime?
+  ldsYKien     String?
+  // Cấp 3 — Văn phòng Sở xem xét / vào sổ
+  vpsId        String?
+  vpsNgay      DateTime?
+  vpsYKien     String?
+  // Cấp 4 — Phòng KH-TC cho ứng lương
+  khtcId       String?
+  khtcNgay     DateTime?
+  khtcYKien    String?
+
+  // Từ chối
+  tuChoiCap    String?                                 // Cấp từ chối: TRUONG_PHONG / LANH_DAO_SO / VAN_PHONG / TAI_CHINH
+  ghiChuTuChoi String?
+
+  // Snapshot định mức phép năm lúc tạo (để in đơn & lưu vết)
+  dinhMucPhep  Float?
+  daNghiTruoc  Float?
+
+  createdById  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  signatures   OfficeLeaveSignature[]
+
+  @@index([canBoId])
+  @@index([trangThai])
+  @@index([tuNgay])
+  @@map("office_leave_requests")
+}
+
+/// Bản PDF đơn nghỉ phép đã ký số của từng cấp (chữ ký chồng dần qua các cấp).
+model OfficeLeaveSignature {
+  id             String   @id @default(cuid())
+  leaveRequestId String
+  leaveRequest   OfficeLeaveRequest @relation(fields: [leaveRequestId], references: [id], onDelete: Cascade)
+
+  capCode        String                 // TRUONG_PHONG / VAN_PHONG / LANH_DAO_SO / TAI_CHINH
+  nguoiKyId      String?                // users.id
+  fileName       String
+  fileData       Bytes                  // PDF đã ký (tích luỹ chữ ký các cấp trước)
+  soChuKy        Int      @default(0)   // số chữ ký số phát hiện trong file
+  signerCN       String?                // CN người ký cấp này
+  signerSerial   String?
+  signingTime    DateTime?
+  hopLe          Boolean  @default(false)
+  ghiChuKiemTra  String?
+  createdAt      DateTime @default(now())
+
+  @@index([leaveRequestId])
+  @@map("office_leave_signatures")
+}
+
+// ─── MODULE 9: CẤP PHÉP, CHẤP THUẬN KẾT CẤU HẠ TẦNG ĐƯỜNG BỘ ─────────────────
+// Tham chiếu tổ chức/cán bộ/phường-xã bằng cột id thuần (scalar) + tên rút gọn
+// để cô lập migration trong phạm vi các bảng mới, không sửa các model dùng chung.
+
+/// Đối tượng đề nghị: tổ chức hoặc cá nhân
+enum ApplicantType {
+  TO_CHUC   // Tổ chức / doanh nghiệp / chủ đầu tư
+  CA_NHAN   // Cá nhân
+}
+
+/// Trạng thái xử lý dùng chung cho hồ sơ cấp phép đường bộ (Workflow 9.3)
+enum RoadPermitStatus {
+  TAO_MOI            // Tạo mới (nháp)
+  DA_TIEP_NHAN       // Đã tiếp nhận
+  CHO_BO_SUNG        // Chờ bổ sung
+  KIEM_TRA_HO_SO     // Đang kiểm tra hồ sơ
+  KIEM_TRA_GIS       // Đang kiểm tra GIS / hiện trường
+  DANG_THAM_DINH     // Đang thẩm định
+  DE_NGHI_CAP        // Đề nghị chấp thuận / cấp phép
+  DA_CAP_PHEP        // Đã chấp thuận / đã cấp phép
+  TU_CHOI            // Không chấp thuận / từ chối
+  DANG_THI_CONG      // Đang thi công
+  HOAN_THANH         // Hoàn thành / đã nghiệm thu
+  HET_HAN            // Hết hạn
+  THU_HOI            // Thu hồi / huỷ
+}
+
+/// Loại giấy phép xe quá khổ, quá tải
+enum OversizedPermitType {
+  QUA_KHO       // Quá khổ giới hạn
+  QUA_TAI       // Quá tải trọng
+  BANH_XICH     // Xe bánh xích
+  SIEU_TRUONG   // Hàng siêu trường
+  SIEU_TRONG    // Hàng siêu trọng
+}
+
+/// Loại đấu nối vào đường bộ
+enum ConnectionType {
+  CHINH_THUC    // Đấu nối chính thức
+  TAM_THOI      // Đấu nối tạm thời
+}
+
+/// Giai đoạn xử lý hồ sơ đấu nối
+enum ConnectionStage {
+  CHAP_THUAN_VI_TRI    // Chấp thuận vị trí đấu nối
+  CHAP_THUAN_THIET_KE  // Chấp thuận thiết kế nút giao
+  CAP_PHEP_THI_CONG    // Cấp phép thi công
+}
+
+/// Cấp quản lý / loại đường
+enum RoadClass {
+  QUOC_LO       // Quốc lộ
+  DUONG_TINH    // Đường tỉnh
+  DUONG_HUYEN   // Đường huyện
+  DUONG_DO_THI  // Đường đô thị
+  DUONG_XA      // Đường xã
+  DUONG_CHUYEN_DUNG // Đường chuyên dùng
+}
+
+/// Phương tiện trong hồ sơ cấp phép (đăng ký dùng lại nhiều lần)
+model PermitVehicle {
+  id              String   @id @default(cuid())
+  plateNumber     String   @unique                // Biển số
+  ownerName       String                          // Chủ xe
+  brand           String?                          // Nhãn hiệu
+  vehicleType     String?                          // Loại xe
+  axleCount       Int?                             // Số trục
+  designLoadTon   Float?                           // Tải trọng thiết kế (tấn)
+  registeredLoadTon Float?                         // Tải trọng đăng kiểm (tấn)
+  lengthM         Float?                           // Dài (m)
+  widthM          Float?                           // Rộng (m)
+  heightM         Float?                           // Cao (m)
+  techSpecs       String?                          // Thông số kỹ thuật khác
+  inspectionDocs  String[] @default([])            // Hồ sơ đăng kiểm (đường dẫn)
+  images          String[] @default([])            // Ảnh phương tiện
+  note            String?
+
+  createdById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  permits         OversizedVehiclePermit[]
+
+  @@index([ownerName])
+  @@map("permit_vehicles")
+}
+
+/// Hồ sơ cấp giấy phép lưu hành xe quá khổ, quá tải (9.1)
+model OversizedVehiclePermit {
+  id              String              @id @default(cuid())
+  fileCode        String              @unique          // Mã hồ sơ
+  permitType      OversizedPermitType @default(QUA_TAI)
+  status          RoadPermitStatus    @default(TAO_MOI)
+
+  // Đối tượng đề nghị
+  applicantType   ApplicantType       @default(TO_CHUC)
+  applicantName   String                                // Tên tổ chức/cá nhân
+  applicantOrgId  String?                               // to_chuc.id nếu là tổ chức nội bộ
+  applicantPhone  String?
+  applicantAddress String?
+
+  // Phương tiện
+  vehicleId       String?
+  vehicle         PermitVehicle?      @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  // Hàng hoá & tải trọng thực tế khai báo
+  cargoType       String?                               // Loại hàng
+  totalWeightTon  Float?                                // Tổng trọng lượng xe + hàng (tấn)
+  axleLoadTon     Float?                                // Tải trọng trục lớn nhất (tấn)
+  overallLengthM  Float?                                // Kích thước bao ngoài - dài
+  overallWidthM   Float?
+  overallHeightM  Float?
+
+  // Lưu hành
+  travelFrom      String?                               // Điểm đầu tuyến lưu hành
+  travelTo        String?                               // Điểm cuối
+  validFrom       DateTime?                             // Thời gian lưu hành từ
+  validTo         DateTime?                             // đến
+
+  // Thẩm định
+  needEscort      Boolean             @default(false)   // Cần xe dẫn đường/hộ tống
+  appraisalNote   String?                               // Ý kiến thẩm định / xử lý
+  supplementNote  String?                               // Yêu cầu bổ sung
+
+  // Giấy phép phát hành
+  permitNumber    String?                               // Số giấy phép
+  issuedAt        DateTime?                             // Ngày cấp
+  permitValidTo   DateTime?                             // Thời hạn
+  conditions      String?                               // Điều kiện lưu hành, ATGT
+  pdfPath         String?                               // File PDF giấy phép
+  qrData          String?                               // Dữ liệu QR
+
+  attachments     String[]            @default([])      // Hồ sơ đính kèm
+  wardId          String?                               // Địa bàn (administrative_units.id)
+  createdById     String?
+  appraisedById   String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  routes          PermitRoute[]
+  statusLogs      RoadPermitStatusLog[]
+
+  @@index([status])
+  @@index([permitType])
+  @@index([createdAt])
+  @@map("oversized_vehicle_permits")
+}
+
+/// Đoạn tuyến lưu hành GIS gắn với 1 hồ sơ xe quá khổ/quá tải (9.1)
+model PermitRoute {
+  id              String   @id @default(cuid())
+  permitId        String
+  permit          OversizedVehiclePermit @relation(fields: [permitId], references: [id], onDelete: Cascade)
+
+  sequence        Int      @default(1)               // Thứ tự đoạn
+  roadName        String                              // Tên tuyến / đoạn tuyến
+  roadClass       RoadClass?
+  fromKm          Float?                              // Lý trình đầu (Km)
+  toKm            Float?                              // Lý trình cuối (Km)
+  geojson         Json?                               // Hình học đoạn tuyến (LineString)
+
+  // Yếu tố hạn chế dọc tuyến
+  bridgeTunnelNote String?                            // Cầu/cống/hầm/nút giao
+  weakSegmentNote  String?                            // Đường yếu / khu vực hạn chế tải trọng
+  turningRadiusM   Float?                             // Bán kính quay đầu
+  roadWidthM       Float?                             // Chiều rộng mặt đường
+  clearanceHeightM Float?                             // Chiều cao tĩnh không
+  warning          String?                            // Cảnh báo tuyến không phù hợp
+
+  createdAt       DateTime @default(now())
+
+  @@index([permitId])
+  @@map("permit_routes")
+}
+
+/// Hồ sơ đấu nối / nút giao / cấp phép thi công đường bộ (9.2)
+model RoadConnectionApplication {
+  id              String           @id @default(cuid())
+  fileCode        String           @unique
+  connectionType  ConnectionType   @default(CHINH_THUC)
+  stage           ConnectionStage  @default(CHAP_THUAN_VI_TRI)
+  status          RoadPermitStatus @default(TAO_MOI)
+
+  // Đối tượng
+  applicantType   ApplicantType    @default(TO_CHUC)
+  applicantName   String                              // Tổ chức/cá nhân/chủ đầu tư
+  applicantOrgId  String?
+  applicantPhone  String?
+  projectName     String?                             // Dự án / công trình
+
+  // Vị trí
+  roadName        String?                             // Tuyến đường
+  roadClass       RoadClass?
+  km              Float?                               // Lý trình
+  latitude        Float?
+  longitude       Float?
+  wardId          String?                              // Địa bàn
+
+  purpose         String?                              // Mục đích đấu nối
+  designNote      String?                              // Thiết kế
+  trafficPlan     String?                              // Phương án tổ chức giao thông
+  safetyDocs      String?                              // Hồ sơ ATGT
+  restorationNote String?                              // Hoàn trả / bảo vệ hạ tầng
+
+  appraisalNote   String?
+  supplementNote  String?
+
+  attachments     String[]         @default([])
+  createdById     String?
+  appraisedById   String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  locations       RoadConnectionLocation[]
+  inspections     RoadConnectionInspection[]
+  permits         RoadConnectionPermit[]
+  statusLogs      RoadPermitStatusLog[]
+
+  @@index([status])
+  @@index([connectionType])
+  @@index([stage])
+  @@index([createdAt])
+  @@map("road_connection_applications")
+}
+
+/// Vị trí GIS đấu nối gắn với hồ sơ (9.2)
+model RoadConnectionLocation {
+  id              String   @id @default(cuid())
+  applicationId   String
+  application     RoadConnectionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  label           String?                            // Mô tả vị trí / nút giao
+  km              Float?                             // Lý trình
+  latitude        Float?
+  longitude       Float?
+  geojson         Json?                              // Hình học (Point/Polygon)
+
+  // Cảnh báo chồng lấn (lưu danh sách mã cảnh báo)
+  overlapWarnings String[] @default([])              // hành lang, vỉa hè, lòng đường, thoát nước, cây xanh, chiếu sáng, biển báo, hạ tầng ngầm
+  note            String?
+
+  createdAt       DateTime @default(now())
+
+  @@index([applicationId])
+  @@map("road_connection_locations")
+}
+
+/// Phiếu thẩm định / xử lý hồ sơ đấu nối (9.2)
+model RoadConnectionInspection {
+  id              String   @id @default(cuid())
+  applicationId   String
+  application     RoadConnectionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  inspectionType  String                              // tiếp nhận / kiểm tra thành phần / kiểm tra GIS / thẩm định ...
+  result          String?                             // Kết quả / ý kiến
+  inspectedById   String?
+  inspectedAt     DateTime @default(now())
+  attachments     String[] @default([])
+
+  @@index([applicationId])
+  @@map("road_connection_inspections")
+}
+
+/// Văn bản chấp thuận / giấy phép thi công đầu ra của hồ sơ đấu nối (9.2)
+model RoadConnectionPermit {
+  id              String           @id @default(cuid())
+  applicationId   String
+  application     RoadConnectionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  stage           ConnectionStage  @default(CHAP_THUAN_VI_TRI)
+  permitNumber    String?                             // Số văn bản
+  issuedAt        DateTime?
+  validTo         DateTime?
+  conditions      String?
+  pdfPath         String?
+  createdAt       DateTime         @default(now())
+
+  @@index([applicationId])
+  @@map("road_connection_permits")
+}
+
+/// Căn cứ pháp lý cho cấp phép đường bộ (9.3) — kiểm tra hiệu lực
+model RoadLegalReference {
+  id              String   @id @default(cuid())
+  code            String                              // Số hiệu văn bản
+  title           String                              // Trích yếu
+  documentType    String?                             // Loại văn bản (Luật, NĐ, TT...)
+  issuedDate      DateTime?
+  effectiveDate   DateTime?
+  expiryDate      DateTime?                           // Hết hiệu lực (null = còn hiệu lực)
+  isActive        Boolean  @default(true)
+  scope           String?                             // Phạm vi áp dụng
+  url             String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("road_legal_references")
+}
+
+/// Lưu vết chuyển trạng thái hồ sơ cấp phép đường bộ (dùng chung 2 loại hồ sơ)
+model RoadPermitStatusLog {
+  id              String   @id @default(cuid())
+  fromStatus      RoadPermitStatus?
+  toStatus        RoadPermitStatus
+  note            String?
+  changedById     String?
+  changedAt       DateTime @default(now())
+
+  oversizedPermitId String?
+  oversizedPermit   OversizedVehiclePermit? @relation(fields: [oversizedPermitId], references: [id], onDelete: Cascade)
+  connectionApplicationId String?
+  connectionApplication   RoadConnectionApplication? @relation(fields: [connectionApplicationId], references: [id], onDelete: Cascade)
+
+  @@index([oversizedPermitId])
+  @@index([connectionApplicationId])
+  @@map("road_permit_status_logs")
+}
+
+// ─── CHẤM CÔNG LÀM THÊM GIỜ (theo phòng ban / tháng) ────────────────────────
+// Tham chiếu tổ chức/cán bộ bằng id thuần (scalar) để cô lập migration, không
+// sửa các model dùng chung (ToChuc/CanBo). Nhập TỔNG giờ/người theo 4 loại:
+// ngày thường, thứ Bảy, Chủ nhật, làm đêm. Trần 200 giờ/người/năm (BLLĐ 2019 Đ.107).
+
+/// Bảng chấm công làm thêm giờ của 1 phòng trong 1 tháng.
+model OvertimeTimesheet {
+  id              String   @id @default(cuid())
+  toChucId        String                          // Phòng/đơn vị (to_chuc.id)
+  tenPhong        String                          // Snapshot tên phòng (in văn bản)
+  thang           Int                             // 1..12
+  nam             Int
+  tuNgay          DateTime  @db.Date              // Thời gian làm thêm: từ ngày
+  denNgay         DateTime  @db.Date              // đến ngày
+  ngayKy          DateTime? @db.Date              // Ngày ký (tự né Thứ Bảy/Chủ nhật)
+  diaDiem         String?                         // Địa điểm làm thêm
+  lyDo            String?                         // Lý do làm thêm (nhiều dòng "+")
+  nguoiChamCong   String?                         // Họ tên người chấm công
+  truongPhong     String?                         // Họ tên Trưởng phòng ký
+  lanhDaoSo       String?                         // Họ tên Lãnh đạo Sở phê duyệt
+  chucDanhLanhDao String?                         // VD: Phó Giám đốc
+  ghiChu          String?
+
+  // Quy trình ký số: NHAP → CHO_TP → CHO_LD → CHO_VT → CHO_KHTC → HOAN_TAT (hoặc TU_CHOI)
+  trangThai         String  @default("NHAP")
+  chuKyChamCong     Bytes?                         // Ảnh chữ ký người chấm công (không ký số)
+  chuKyChamCongMime String?
+  tuChoiCap         String?
+  ghiChuTuChoi      String?
+
+  createdById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  entries         OvertimeEntry[]
+  signatures      OvertimeSignature[]
+
+  @@unique([toChucId, thang, nam])
+  @@index([nam])
+  @@index([toChucId])
+  @@map("overtime_timesheets")
+}
+
+/// Bản PDF đã ký số của từng cấp (chữ ký chồng dần qua các cấp) — bảng chấm công làm thêm.
+model OvertimeSignature {
+  id            String   @id @default(cuid())
+  timesheetId   String
+  timesheet     OvertimeTimesheet @relation(fields: [timesheetId], references: [id], onDelete: Cascade)
+
+  capCode       String                 // TRUONG_PHONG / LANH_DAO_SO / VAN_THU / TAI_CHINH
+  nguoiKyId     String?
+  fileName      String
+  fileData      Bytes                  // PDF đã ký (tích luỹ chữ ký các cấp trước)
+  soChuKy       Int      @default(0)
+  signerCN      String?
+  signerSerial  String?
+  signingTime   DateTime?
+  hopLe         Boolean  @default(false)
+  ghiChuKiemTra String?
+  ghiChu        String?
+  createdAt     DateTime @default(now())
+
+  @@index([timesheetId])
+  @@map("overtime_signatures")
+}
+
+/// 1 dòng = 1 người trong bảng chấm công (tổng giờ theo 4 loại).
+model OvertimeEntry {
+  id          String   @id @default(cuid())
+  timesheetId String
+  timesheet   OvertimeTimesheet @relation(fields: [timesheetId], references: [id], onDelete: Cascade)
+
+  canBoId     String?                             // can_bo.id (scalar, có thể null nếu nhập tay)
+  hoTen       String
+  chucVu      String?
+  thuTu       Int      @default(0)
+
+  // Giờ làm thêm CHI TIẾT theo từng ngày: { "1": 4, "2": 0, ... } (key = ngày trong tháng)
+  gioNgay     Json     @default("{}")
+  // (Cũ — không dùng nữa, giữ để tương thích dữ liệu) gộp theo loại
+  gioThuong   Float    @default(0)                // Giờ làm thêm ngày thường (150%)
+  gioT7       Float    @default(0)                // Giờ thứ Bảy (200%)
+  gioCN       Float    @default(0)                // Giờ Chủ nhật / lễ (200–300%)
+  gioDem      Float    @default(0)                // Giờ làm đêm (phụ trội 30%)
+  ghiChu      String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([timesheetId])
+  @@index([canBoId])
+  @@map("overtime_entries")
+}
+
+// ─── MODULE BIM/AIM (migration 023) ─────────────────────────────────────────
+// Căn cứ: QĐ 258/QĐ-TTg, NĐ 175/2024/NĐ-CP, QĐ 348 & 347/QĐ-BXD, ISO 19650.
+// Thiết kế: C:\Troly\HTKT\Thiet_Ke_Module_BIM_AIM_Theo_Phap_Ly_VN.md
+
+/// Mô hình BIM — 1 công trình có thể nhiều mô hình theo bộ môn (discipline).
+model BimModel {
+  id                  String    @id @default(cuid())
+  maMoHinh            String    @unique              // BIM-2026-0001
+  ten                 String
+  moTa                String?
+  discipline          String    @default("TONG_HOP") // KIEN_TRUC/KET_CAU/CO_DIEN/HA_TANG_GIAO_THONG/CAP_THOAT_NUOC/CHIEU_SANG/TONG_HOP
+  projectId           String?                        // FK mềm → projects
+  assetId             String?                        // FK mềm → assets
+  soGiayPhep          String?
+  soQuyetDinhThamDinh String?
+  capCongTrinh        String?                        // CAP_DAC_BIET/CAP_I/CAP_II/CAP_III/CAP_IV
+  nguonVon            String?                        // DAU_TU_CONG/VON_NN/PPP/VON_KHAC
+  batBuocBim          Boolean   @default(false)      // thuộc diện QĐ 258/QĐ-TTg
+  wardId              String?
+  diaChi              String?
+  latitude            Float?
+  longitude           Float?
+  dataStatus          String    @default("verified")
+  sourceSystem        String    @default("QLHTKT")
+  metadata            Json?
+  createdById         String?
+  updatedById         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  versions    BimModelVersion[]
+  viewPerms   BimViewPermission[]
+
+  @@index([projectId])
+  @@index([wardId])
+  @@index([capCongTrinh])
+  @@map("bim_models")
+}
+
+/// Phiên bản mô hình — vòng đời CDE theo ISO 19650: SHARED → PUBLISHED → ARCHIVED.
+model BimModelVersion {
+  id            String    @id @default(cuid())
+  modelId       String
+  model         BimModel  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  versionNo     Int
+  maContainer   String                              // QT-SXD-BIM-2026-0001-V03
+  stage         String                              // NCTKT/NCKT_TKCS/TK_KY_THUAT/TK_BAN_VE_THI_CONG/HOAN_CONG
+  lodChinh      String                              // LOD_100..LOD_500
+  cdeStatus     String    @default("SHARED")        // SHARED/PUBLISHED/ARCHIVED
+  ghiChuNop     String?
+  nguoiNopTen   String?
+  nguoiNopDonVi String?                             // đơn vị tư vấn lập mô hình
+  ngayTiepNhan  DateTime  @default(now())
+  publishedById String?
+  publishedAt   DateTime?
+  archivedAt    DateTime?
+  archiveReason String?
+  metadata      Json?
+  createdById   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  files              BimFile[]
+  consistencyReviews BimConsistencyReview[]
+
+  @@unique([modelId, versionNo])
+  @@index([cdeStatus])
+  @@map("bim_model_versions")
+}
+
+/// Tệp BIM — định dạng gốc + IFC 4.0 song song, ≤500MB/file (NĐ 175/2024).
+model BimFile {
+  id            String    @id @default(cuid())
+  versionId     String
+  version       BimModelVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  kind          String                              // GOC/IFC/PHU_TRO
+  tenFile       String
+  dinhDang      String                              // ifc/rvt/dgn/pln/bcf/pdf...
+  schemaVersion String?                             // IFC4/IFC4X3/IFC2X3
+  dungLuongByte BigInt
+  sha256        String                              // toàn vẹn pháp lý — file là căn cứ thẩm định
+  storagePath   String                              // private, stream qua API có kiểm quyền
+  uploadedById  String?
+  metadata      Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  validationChecks BimValidationCheck[]
+
+  @@index([versionId])
+  @@map("bim_files")
+}
+
+/// Kết quả kiểm tra hợp lệ tự động khi tiếp nhận tệp (NĐ 175/2024).
+model BimValidationCheck {
+  id        String   @id @default(cuid())
+  fileId    String
+  file      BimFile  @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  checkCode String                                  // FILE_SIZE_500MB/IFC_SCHEMA_VALID/HAS_GEOLOCATION/HAS_GEOMETRY_3D/HAS_MAIN_DIMENSIONS/HAS_PROJECT_INFO
+  ketQua    String                                  // PASS/FAIL/WARNING
+  chiTiet   Json?
+  checkedAt DateTime @default(now())
+
+  @@index([fileId])
+  @@map("bim_validation_checks")
+}
+
+/// Đánh giá tính nhất quán mô hình ↔ tính toán/thiết kế — bắt buộc cấp I/đặc biệt.
+model BimConsistencyReview {
+  id             String   @id @default(cuid())
+  versionId      String
+  version        BimModelVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  nguoiDanhGiaId String
+  noiDung        String
+  ketLuan        String                             // NHAT_QUAN/KHONG_NHAT_QUAN/NHAT_QUAN_CO_DIEU_KIEN
+  yeuCauBoSung   String?
+  vanBanSo       String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([versionId])
+  @@map("bim_consistency_reviews")
+}
+
+/// Phân quyền xem/tải mô hình — theo role, phòng (to_chuc) hoặc cá nhân.
+model BimViewPermission {
+  id          String   @id @default(cuid())
+  modelId     String
+  model       BimModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  roleId      String?
+  toChucId    String?
+  userId      String?
+  quyen       String   @default("VIEW")             // VIEW/DOWNLOAD/MANAGE
+  grantedById String?
+  createdAt   DateTime @default(now())
+
+  @@index([modelId])
+  @@map("bim_view_permissions")
+}
+
+// ─── TRA CỨU TÀI LIỆU (RAG) ──────────────────────────────────────────────────
+
+/// Tài liệu nạp vào kho tra cứu (PDF/Word/dán text). DDL: 024_rag_tai_lieu.sql.
+model TaiLieu {
+  id          String         @id @default(cuid())
+  tieuDe      String
+  loai        String         @default("KHAC") // VB_PHAP_LUAT/QUY_TRINH/HUONG_DAN/BAO_CAO/BIEU_MAU/KHAC
+  nguon       String? // tên file gốc hoặc URL
+  moTa        String?
+  phamVi      String         @default("NOI_BO_SO") // CONG_KHAI/NOI_BO_SO
+  soChunk     Int            @default(0)
+  soKyTu      Int            @default(0)
+  trangThai   String         @default("dang_xu_ly") // dang_xu_ly/san_sang/loi
+  ghiChuLoi   String?
+  metadata    Json?
+  createdById String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+  chunks      TaiLieuChunk[]
+
+  @@index([phamVi])
+  @@index([loai])
+  @@map("tai_lieu")
+}
+
+/// Đoạn văn bản + vector nhúng. Cột embedding kiểu vector(1536) (pgvector) —
+/// Prisma không hiểu kiểu vector nên dùng Unsupported; thao tác vector qua $queryRaw.
+model TaiLieuChunk {
+  id         String                       @id @default(cuid())
+  taiLieuId  String
+  taiLieu    TaiLieu                      @relation(fields: [taiLieuId], references: [id], onDelete: Cascade)
+  chunkIndex Int
+  noiDung    String
+  embedding  Unsupported("vector(1536)")?
+  soToken    Int?
+  viTri      String?
+  createdAt  DateTime                     @default(now())
+
+  @@index([taiLieuId])
+  @@map("tai_lieu_chunk")
+}
+
+// ─── QUẢN LÝ CÔNG VIỆC PHÒNG/BAN (dùng chung 11 phòng theo QĐ 331) ───────────
+// Lõi 1 bảng cho mọi phòng (toChucId), + loại việc cấu hình theo phòng kèm
+// trường động (fieldSchema/customFields JSONB) → mỗi phòng tự mở rộng KHÔNG
+// cần migration. Liên thông mềm với Project/WorkOrder/Incident đã có.
+
+enum CongViecTrangThai {
+  MOI            // Mới / chưa bắt đầu
+  DANG_LAM       // Đang thực hiện
+  TAM_DUNG       // Tạm dừng
+  CHO_DUYET      // Chờ duyệt / nghiệm thu
+  HOAN_THANH     // Hoàn thành
+  HUY            // Huỷ
+}
+
+enum CongViecUuTien {
+  THAP
+  TRUNG_BINH
+  CAO
+  KHAN_CAP
+}
+
+enum CongViecVaiTro {
+  CHU_TRI        // Chủ trì
+  PHOI_HOP       // Phối hợp
+  THEO_DOI       // Theo dõi / giám sát
+}
+
+enum CongViecNhatKyLoai {
+  TAO
+  DOI_TRANG_THAI
+  CAP_NHAT_TIEN_DO
+  BINH_LUAN
+  GIAO_VIEC
+  DINH_KEM
+  KHAC
+}
+
+// Loại công việc — cấu hình theo từng phòng (toChucId NULL = dùng chung).
+// fieldSchema: mảng định nghĩa trường động [{name,label,type,required,options}].
+model CongViecLoai {
+  id          String     @id @default(cuid())
+  toChucId    String?
+  toChuc      ToChuc?    @relation(fields: [toChucId], references: [id])
+  ten         String
+  moTa        String?
+  mauSac      String?
+  fieldSchema Json?
+  thuTu       Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  congViecs   CongViec[]
+
+  @@index([toChucId])
+  @@map("cong_viec_loai")
+}
+
+model CongViec {
+  id              String            @id @default(cuid())
+  maCongViec      String            @unique          // CV-2026-000001
+  tieuDe          String
+  moTa            String?
+  // Phòng sở hữu việc — scope "việc của phòng mình"
+  toChucId        String
+  toChuc          ToChuc            @relation(fields: [toChucId], references: [id])
+  loaiId          String?
+  loai            CongViecLoai?     @relation(fields: [loaiId], references: [id])
+  trangThai       CongViecTrangThai @default(MOI)
+  uuTien          CongViecUuTien    @default(TRUNG_BINH)
+  tienDo          Int               @default(0)      // 0..100 (%)
+  // Người liên quan (tài khoản đăng nhập)
+  nguoiGiaoId     String?
+  nguoiGiao       User?             @relation("CongViecNguoiGiao", fields: [nguoiGiaoId], references: [id])
+  nguoiPhuTrachId String?
+  nguoiPhuTrach   User?             @relation("CongViecNguoiPhuTrach", fields: [nguoiPhuTrachId], references: [id])
+  // Thời gian
+  ngayBatDau      DateTime?         @db.Date
+  ngayHetHan      DateTime?         @db.Date
+  ngayHoanThanh   DateTime?
+  // Phân cấp việc cha → việc con
+  congViecChaId   String?
+  congViecCha     CongViec?         @relation("CongViecCon", fields: [congViecChaId], references: [id])
+  congViecCons    CongViec[]        @relation("CongViecCon")
+  // Liên thông module hiện trường (FK mềm, không ràng buộc cứng)
+  duAnId          String?
+  workOrderId     String?
+  incidentId      String?
+  // Dữ liệu động + đính kèm
+  customFields    Json?
+  dinhKem         String[]          @default([])
+  ghiChu          String?
+  // Khoá chống trùng khi việc được TỰ SINH từ định mức định kỳ (NULL = việc thường)
+  dinhKyKey       String?           @unique
+  createdById     String
+  createdBy       User              @relation("CongViecCreatedBy", fields: [createdById], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+
+  thanhViens      CongViecThanhVien[]
+  nhatKys         CongViecNhatKy[]
+  checkLists      CongViecCheckList[]
+
+  @@index([toChucId])
+  @@index([trangThai])
+  @@index([ngayHetHan])
+  @@index([nguoiPhuTrachId])
+  @@index([congViecChaId])
+  @@index([loaiId])
+  @@index([nguoiGiaoId])
+  @@index([createdById])
+  @@map("cong_viec")
+}
+
+model CongViecThanhVien {
+  id         String         @id @default(cuid())
+  congViecId String
+  congViec   CongViec       @relation(fields: [congViecId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User           @relation("CongViecThanhVienUser", fields: [userId], references: [id])
+  vaiTro     CongViecVaiTro @default(PHOI_HOP)
+  createdAt  DateTime       @default(now())
+
+  @@unique([congViecId, userId])
+  @@index([userId])
+  @@map("cong_viec_thanh_vien")
+}
+
+model CongViecNhatKy {
+  id         String             @id @default(cuid())
+  congViecId String
+  congViec   CongViec           @relation(fields: [congViecId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?              @relation("CongViecNhatKyUser", fields: [userId], references: [id])
+  loai       CongViecNhatKyLoai @default(BINH_LUAN)
+  noiDung    String?
+  giaTriCu   String?
+  giaTriMoi  String?
+  createdAt  DateTime           @default(now())
+
+  @@index([congViecId])
+  @@index([userId])
+  @@map("cong_viec_nhat_ky")
+}
+
+model CongViecCheckList {
+  id         String   @id @default(cuid())
+  congViecId String
+  congViec   CongViec @relation(fields: [congViecId], references: [id], onDelete: Cascade)
+  noiDung    String
+  hoanThanh  Boolean  @default(false)
+  thuTu      Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([congViecId])
+  @@map("cong_viec_check_list")
+}
+
+// Lịch công tác cá nhân — mỗi người tự tạo; congKhai=true thì cả phòng cùng xem.
+// loai/mauSac dùng String (không enum native) để tránh lỗi cast khi ghi.
+model LichCaNhan {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation("LichCaNhanUser", fields: [userId], references: [id])
+  toChucId  String?
+  toChuc    ToChuc?   @relation(fields: [toChucId], references: [id])
+  tieuDe    String
+  moTa      String?
+  diaDiem   String?
+  loai      String    @default("KHAC")  // HOP|CONG_TAC|TRUC|NGHI|KHAC
+  mauSac    String?
+  batDau    DateTime
+  ketThuc   DateTime?
+  congKhai  Boolean   @default(false)   // chia sẻ cho cả phòng (toChucId)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId])
+  @@index([toChucId])
+  @@index([batDau])
+  @@map("lich_ca_nhan")
+}
+
+// Hồ sơ nghiệp vụ động — dùng chung mọi phòng (QĐ 331). Trường riêng từng lĩnh vực
+// lưu trong customFields (jsonb) theo schema ở lib/nghiep-vu/schema.ts. Cô lập theo toChucId.
+model NghiepVuBanGhi {
+  id           String    @id @default(cuid())
+  linhVuc      String                            // key lĩnh vực = path sau /dashboard/
+  toChucId     String?
+  toChuc       ToChuc?   @relation(fields: [toChucId], references: [id])
+  maBanGhi     String    @unique                  // NV-YYYY-NNNNNN
+  tieuDe       String
+  trangThai    String    @default("MOI")          // MOI|DANG_XU_LY|HOAN_THANH|HUY (text)
+  diaBan       String?
+  ngayGhiNhan  DateTime?
+  ghiChu       String?
+  customFields Json                               // dữ liệu động theo schema lĩnh vực
+  createdById  String?
+  createdBy    User?     @relation("NghiepVuCreatedBy", fields: [createdById], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  @@index([linhVuc])
+  @@index([toChucId])
+  @@index([linhVuc, toChucId])
+  @@index([createdById])
+  @@map("nghiep_vu_ban_ghi")
+}
+
+// ── PHÂN CÔNG ĐỘNG & BÁO CÁO ĐỊNH KỲ (mig 028) ─────────────────────────────
+// Bảng độc lập (không khai báo quan hệ Prisma tới User/ToChuc để tránh sửa model
+// User đồ sộ); tên người/phòng resolve bằng truy vấn riêng. Scope theo toChucId.
+
+// Ai phụ trách lĩnh vực nào — sửa được, đổi người (làm thay) bất cứ lúc nào.
+model PhanCongLinhVuc {
+  id              String   @id @default(cuid())
+  toChucId        String
+  linhVucKey      String
+  linhVucTen      String
+  nguoiPhuTrachId String?
+  nguoiPhoiHopIds String[] @default([])
+  ghiChu          String?
+  thuTu           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([toChucId, linhVucKey])
+  @@index([toChucId])
+  @@index([nguoiPhuTrachId])
+  @@map("phan_cong_linh_vuc")
+}
+
+// Mẫu công việc lặp lại để TỰ SINH theo kỳ (báo cáo tháng/quý/năm).
+model PhanCongDinhKy {
+  id              String   @id @default(cuid())
+  toChucId        String
+  ten             String
+  moTa            String?
+  tanSuat         String   @default("THANG")        // THANG|QUY|SAU_THANG|NAM
+  phamVi          String   @default("MOI_LINH_VUC") // MOI_LINH_VUC|CA_NHAN
+  nguoiPhuTrachId String?
+  loaiId          String?
+  uuTien          String   @default("TRUNG_BINH")
+  soNgayHetHan    Int      @default(5)
+  thuTu           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([toChucId])
+  @@map("phan_cong_dinh_ky")
+}
+
+// ─── DỰ ÁN ĐƯỜNG SẮT TỐC ĐỘ CAO BẮC-NAM (GPMB & TĐC Quảng Trị) ──────────
+
+enum DuAnThanhPhanLoai {
+  TAI_DINH_CU
+  NGHIA_TRANG
+  BOI_THUONG_HO_TRO
+  DI_DOI_HTKT
+  KHAC
+}
+
+model DsDuAnGpmb {
+  id              String    @id @default(cuid())
+  stt             Int
+  chuDauTu        String
+  tenDuAn         String
+  maDuAn          String?   @unique
+  noiMoTK         String?
+  maHieuKBNN      String?
+  soTaiKhoan      String?
+
+  wardId          String?
+  ward            AdministrativeUnit? @relation("DsGpmbWard", fields: [wardId], references: [id])
+  toChucId        String?
+  toChuc          ToChuc?   @relation("DsGpmbToChuc", fields: [toChucId], references: [id])
+
+  keHoach2628          Float?  @default(0)
+  tongNhuCau           Float?  @default(0)
+  tongNhuCauTDC        Float?  @default(0)
+  tongNhuCauBT         Float?  @default(0)
+
+  vanBanLienQuan  String?
+  ghiChu          String?
+  congViecId      String?
+  projectId       String?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  thanhPhans      DsDuAnThanhPhan[]
+  keHoachVons     DsKeHoachVon[]
+  lienHes         DsLienHe[]
+
+  @@index([wardId])
+  @@index([toChucId])
+  @@map("ds_du_an_gpmb")
+}
+
+model DsDuAnThanhPhan {
+  id              String    @id @default(cuid())
+  duAnGpmbId      String
+  duAnGpmb        DsDuAnGpmb @relation(fields: [duAnGpmbId], references: [id], onDelete: Cascade)
+  stt             Int
+  tenDuAn         String
+  loaiDuAn        DuAnThanhPhanLoai @default(KHAC)
+  soBoTMDT        Float?
+  chuDauTu        String?
+  nguoiQDDauTu    String?
+
+  soLuongKhuTDC     Int?
+  tmDtKhuTDC        Float?
+  soLuongNghiaTrang Int?
+  tmDtNghiaTrang    Float?
+
+  ghiChu          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([duAnGpmbId])
+  @@index([loaiDuAn])
+  @@map("ds_du_an_thanh_phan")
+}
+
+model DsKeHoachVon {
+  id                    String    @id @default(cuid())
+  duAnGpmbId            String
+  duAnGpmb              DsDuAnGpmb @relation(fields: [duAnGpmbId], references: [id], onDelete: Cascade)
+  nam                   Int
+
+  daBoTri               Float?    @default(0)
+  giaiNgan              Float?    @default(0)
+  daHuyDuToan           Float?    @default(0)
+  tongKH                Float?    @default(0)
+  khuTDC_NT             Float?    @default(0)
+  boiThuongHT           Float?    @default(0)
+  deNghiDieuChinhGiam   Float?    @default(0)
+  giaiNganKHV           Float?    @default(0)
+
+  ghiChu                String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([duAnGpmbId, nam])
+  @@index([nam])
+  @@map("ds_ke_hoach_von")
+}
+
+model DsLienHe {
+  id              String    @id @default(cuid())
+  duAnGpmbId      String?
+  duAnGpmb        DsDuAnGpmb? @relation(fields: [duAnGpmbId], references: [id], onDelete: SetNull)
+  donVi           String
+  hoTen           String?
+  chucVu          String?
+  dienThoai       String?
+  ghiChu          String?
+  createdAt       DateTime  @default(now())
+
+  @@index([duAnGpmbId])
+  @@index([donVi])
+  @@map("ds_lien_he")
+}

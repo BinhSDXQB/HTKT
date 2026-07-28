@@ -1,0 +1,78 @@
+19141|cmpq4pebw0007ekumx1exnfot|Xã Bố Trạch
+19147|cmpq4pec00009ekum0btmrtnz|Xã Thượng Trạch
+19159|cmpq4pec5000dekumh3ks9rlv|Xã Đông Trạch
+19204|cmpq4pecz000uekum0vt8ul5p|Xã Trường Sơn
+19225|cmpq4pedb0011ekum3lwelw0i|Xã Ninh Châu
+19237|cmpq4pedh0016ekumku42gbi5|Xã Trường Ninh
+19249|cmpq4pedm001aekumne9psrmr|Xã Lệ Thủy
+19255|cmpq4pedn001cekumsqfl12xv|Xã Cam Hồng
+19288|cmpq4pee3001nekumtj2bspti|Xã Sen Ngư
+19291|cmpq4pee4001oekumm44t68w0|Xã Tân Mỹ
+19198|cmpq4pecv000sekum23ixnse4|Xã Nam Trạch
+19207|cmpq4ped1000vekumjloetxpx|Xã Quảng Ninh
+19246|cmpq4pedk0019ekumyzzul9eg|Xã Lệ Ninh
+19309|cmpq4peee001vekumz3z5zh29|Xã Trường Phú
+18859|cmpq5ktec00060guma13ykbic|Phường Đồng Thuận
+19432|cmpq4peh20033ekumr6hy6zkk|Xã Lao Bảo
+18901|cmpq5kteo000e0gum3puh6zr4|Xã Minh Hóa
+18904|cmpq5kteq000f0gumynpnv4z5|Xã Dân Hóa
+18919|cmpq5kter000g0gumugkogltz|Xã Tân Thành
+19366|cmpq4pega002fekumxy8y70dl|Xã Bến Quan
+19372|cmpq4pegc002hekumd2dnjfla|Xã Vĩnh Hoàng
+18922|cmpq5ktes000h0gumkeldu9ww|Xã Kim Điền
+18943|cmpq5ktet000i0gum3ixdt1mt|Xã Kim Phú
+18952|cmpq5ktex000k0gum3g82kspl|Xã Tuyên Sơn
+18958|cmpq5ktey000l0gum8xcvj0sd|Xã Tuyên Lâm
+19405|cmpq4pego002tekumad198d7y|Xã Vĩnh Thủy
+18985|cmpq5ktez000m0gum55jfyk8j|Xã Tuyên Phú
+18991|cmpq5ktf0000n0gumy7a5ot72|Xã Tuyên Bình
+18997|cmpq5ktf1000o0gum3k3m60vo|Xã Tuyên Hóa
+19021|cmpq5ktf3000p0gum75jza7bp|Xã Phú Trạch
+19030|cmpq5ktf4000q0gumnmj4righ|Xã Trung Thuận
+19033|cmpq5ktf5000r0gumsd6kkngp|Xã Hòa Trạch
+19051|cmpq5ktf6000s0gumll2de3nt|Xã Tân Gianh
+19318|cmpq4peei001yekumyknapdm1|Xã Kim Ngân
+19435|cmpq4peh30034ekum4uzq4yvb|Xã Hướng Lập
+19441|cmpq4peh50036ekum7kp8764c|Xã Hướng Phùng
+19462|cmpq4pehf003dekumpx1bhpga|Xã Tân Lập
+19483|cmpq4pehp003lekumg43x16vh|Xã A Dơi
+19489|cmpq4pehu003nekumh9bkuslw|Xã Lìa
+19495|cmpq4pehy003pekumcyvwara0|Xã Gio Linh
+19501|cmpq4pei4003rekum9zktrugk|Xã Bến Hải
+18871|cmpq5ktef00070gumpth7z9wl|Phường Đồng Sơn
+18880|cmpq5kteg00080gumgrszty7w|Phường Đồng Hới
+18949|cmpq5kteu000j0gum8a1q7tiv|Xã Đồng Lề
+19009|cmpq5ktei00090gum438p1s8y|Phường Ba Đồn
+19066|cmpq5ktej000a0gumn3sba1s6|Phường Bắc Gianh
+19333|cmpq4pefm0023ekumwkdzu9c0|Phường Đông Hà
+19351|cmpq4peg00029ekumy60ycm2n|Phường Nam Đông Hà
+19360|cmpq4peg6002cekumzxocofzb|Phường Quảng Trị
+19363|cmpq4peg8002eekumv6pwjw0s|Xã Vĩnh Linh
+19414|cmpq4pegs002wekum86tsvojk|Xã Cửa Tùng
+19429|cmpq4peh10032ekum0w7pc7o1|Xã Khe Sanh
+19057|cmpq5ktf7000t0gum1206r3v1|Xã Quảng Trạch
+19111|cmpq5ktgj000w0gumyegz9vpw|Xã Hoàn Lão
+19126|cmpq5ktgk000x0gum0h65abwm|Xã Bắc Trạch
+19537|cmpq5kthr001t0gum68r7metk|Xã Cồn Tiên
+19564|cmpq5kthu001v0gumcidullqk|Xã Đakrông
+19567|cmpq5ktj5001w0gumayihpx4b|Xã Ba Lòng
+19588|cmpq5ktj8001x0gumd7tw2bae|Xã Tà Rụt
+19594|cmpq5ktjb001y0gums75egwlc|Xã La Lay
+19603|cmpq5ktjf00200gumrec16yz4|Xã Hiếu Giang
+19639|cmpq5ktji00220gum5iwd2km3|Xã Nam Cửa Việt
+19645|cmpq5ktjk00230gumtyi6sza3|Xã Triệu Bình
+19654|cmpq5ktjl00240gum2fjybjzn|Xã Triệu Cơ
+19669|cmpq5ktjn00250gumu5ya210s|Xã Ái Tử
+19699|cmpq5ktjp00270gumcp6slnxc|Xã Vĩnh Định
+19702|cmpq5ktjr00280gumevk7elzy|Xã Hải Lăng
+19735|cmpq5ktjs00290gum25lcebqv|Xã Nam Hải Lăng
+19741|cmpq5ktjt002a0gum325mic62|Xã Mỹ Thủy
+19742|cmpq5ktjw002b0gumk3kj0x4i|Đặc khu Cồn Cỏ
+19075|cmpq5ktgd000u0gum7mhxpbr3|Xã Nam Ba Đồn
+19093|cmpq5ktgg000v0gumprncqqi2|Xã Nam Gianh
+19138|cmpq5ktgm000y0gumdyoao0xs|Xã Phong Nha
+19496|cmpq5kthp001r0gumk4pb4j4z|Xã Cửa Việt
+19555|cmpq5kths001u0gum1atbphww|Xã Hướng Hiệp
+19597|cmpq5ktjd001z0gumfg0dhtnv|Xã Cam Lộ
+19624|cmpq5ktjg00210gumapjjsw8e|Xã Triệu Phong
+19681|cmpq5ktjo00260gumzuc52v3r|Xã Diên Sanh

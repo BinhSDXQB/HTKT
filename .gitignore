@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+app/.next/
+app/out/
+app/dist/
+app/build/
+.next/
+
+# Environment variables (NEVER commit)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.cache/
+temp/
+tmp/
+
+# Backup & temp
+backup/
+backups/
+*.bak
+*.tmp
+
+# PM2
+.pm2/
+
+# Editor backup
+*~
+*.orig
+
+# Large files
+*.iso
+*.zip
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini

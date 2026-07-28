@@ -1,0 +1,125 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "station",
+        "name": "Ga Đông Hà",
+        "loai": "Ga hành khách",
+        "viTri": "Phía Tây TP. Đông Hà, gần trục đường Điện Biên Phủ",
+        "tinh": "Quảng Trị",
+        "trangThai": "Quy hoạch",
+        "icon": "station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.066675,
+          16.811356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "landmark",
+        "name": "Vượt sông Thạch Hãn",
+        "description": "Cách cầu đường sắt hiện tại ~3.5 km về phía thượng lưu",
+        "icon": "bridge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.097275,
+          16.769482
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "landmark",
+        "name": "Khu vực gần Thánh địa La Vang",
+        "description": "Tuyến cách thánh địa La Vang ~2 km về phía Tây",
+        "icon": "landmark"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.20126,
+          16.670901
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "landmark",
+        "name": "Vượt sông Ô Lâu",
+        "description": "Ranh giới Quảng Trị – Thừa Thiên Huế",
+        "icon": "bridge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.516339,
+          16.557871
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "station",
+        "name": "Ga Đồng Hới",
+        "loai": "Ga hành khách (tỉnh lân cận)",
+        "viTri": "Xã Nghĩa Ninh, ~4.58 km Tây Nam TP. Đồng Hới",
+        "tinh": "Quảng Bình",
+        "trangThai": "Quy hoạch",
+        "icon": "station-neighbor"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.581257,
+          17.448036
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "station",
+        "name": "Ga Huế",
+        "loai": "Ga hành khách (tỉnh lân cận)",
+        "viTri": "Xã Phú Mỹ, huyện Phú Vang",
+        "tinh": "Thừa Thiên Huế",
+        "trangThai": "Quy hoạch",
+        "icon": "station-neighbor"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.710106,
+          16.437248
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "layerType": "notice",
+        "name": "Tim tuyến ĐSTĐC cần lấy từ hồ sơ thiết kế chính thức của Ban QLDA Đường sắt",
+        "description": "Ranh GPMB xem tại lớp gpmb_dstdc trong tuyen-duong-quang-tri.geojson (dữ liệu khảo sát thực tế)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.067348,
+          16.81072
+        ]
+      }
+    }
+  ]
+}
