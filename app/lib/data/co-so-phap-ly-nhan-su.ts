@@ -265,23 +265,36 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         ],
       },
       {
+        soHieu: 'Nghị định 170/2025/NĐ-CP',
+        ngayBanHanh: '30/6/2025',
+        hieuLucTu: '01/7/2025',
+        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý công chức — THAY THẾ Nghị định 46/2010 về thủ tục nghỉ hưu.',
+        dieuKhoan: [
+          'Điều 61: Thẩm quyền, thời điểm nghỉ hưu.',
+          'Điều 62: TRƯỚC 06 THÁNG tính đến thời điểm nghỉ hưu, người có thẩm quyền cho nghỉ hưu phải ra THÔNG BÁO bằng văn bản về thời điểm nghỉ hưu để công chức biết — theo MẪU SỐ 2 ban hành kèm theo Nghị định.',
+          'Điều 63 khoản 1: TRƯỚC 03 THÁNG tính đến thời điểm nghỉ hưu, người có thẩm quyền ra QUYẾT ĐỊNH nghỉ hưu — theo MẪU SỐ 3 ban hành kèm theo Nghị định.',
+          'Điều 63 khoản 2: Căn cứ quyết định nghỉ hưu, cơ quan quản lý công chức phối hợp với tổ chức bảo hiểm xã hội làm thủ tục cho công chức được hưởng chế độ.',
+          'Điều 71 khoản 2 điểm b: Nghị định 46/2010/NĐ-CP HẾT HIỆU LỰC kể từ ngày Nghị định này có hiệu lực (01/7/2025).',
+        ],
+      },
+      {
         soHieu: 'Nghị định 46/2010/NĐ-CP',
         ngayBanHanh: '27/4/2010',
         hieuLucTu: '01/7/2010',
-        canhBao: '⚠️ CẦN KIỂM CHỨNG GẤP — nghi đã bị thay thế. ĐÃ XÁC MINH (tra cứu 20/8/2026): '
-          + 'Nghị định 170/2025/NĐ-CP ban hành 30/6/2025, HIỆU LỰC 01/7/2025, quy định về tuyển dụng, '
-          + 'sử dụng và quản lý công chức — TRONG ĐÓ CÓ thông báo và quyết định nghỉ hưu công chức, '
-          + 'tức trùng phạm vi điều chỉnh với Nghị định 46/2010. Ngoài ra Luật CBCC 2008 (văn bản mà '
-          + 'NĐ 46/2010 hướng dẫn) đã bị Luật CBCC 2025 thay từ 01/7/2025. '
-          + 'CHƯA XÁC MINH ĐƯỢC điều khoản bãi bỏ cụ thể: cần đọc Chương Điều khoản thi hành của '
-          + 'NĐ 170/2025 (bản ký số 170nd.signed.pdf trên vanban.chinhphu.vn) hoặc hỏi Sở Nội vụ. '
-          + 'ĐÂY ĐANG LÀ CĂN CỨ trong Thông báo/Quyết định nghỉ hưu do hệ thống sinh — '
-          + 'Văn phòng Sở PHẢI đối chiếu TRƯỚC KHI TRÌNH KÝ.',
-        trichYeu: 'Quy định về thôi việc và thủ tục nghỉ hưu đối với công chức.',
+        hieuLucDen: '30/6/2025 (hết hiệu lực TỪ 01/7/2025)',
+        thayTheBoi: 'Nghị định 170/2025/NĐ-CP (Điều 61, 62, 63)',
+        canhBao: 'ĐÃ XÁC MINH DỨT ĐIỂM ngày 20/8/2026 từ chính văn bản gốc trong kho tài liệu của Sở '
+          + '(170_2025_ND-CP_663212.docx). Nguyên văn Điều 71 khoản 2: "Các văn bản quy phạm pháp luật '
+          + 'sau đây hết hiệu lực kể từ ngày Nghị định này có hiệu lực thi hành: … b) Nghị định số '
+          + '46/2010/NĐ-CP ngày 27 tháng 4 năm 2010 của Chính phủ quy định về thôi việc và thủ tục nghỉ '
+          + 'hưu đối với công chức". Dùng Nghị định 170/2025/NĐ-CP thay thế. LƯU Ý: Thông báo nghỉ hưu '
+          + 'phải theo Mẫu số 2 và Quyết định nghỉ hưu theo Mẫu số 3 ban hành kèm NĐ 170/2025 — Văn phòng '
+          + 'Sở cần đối chiếu biểu mẫu hệ thống đang sinh với hai mẫu này.',
+        trichYeu: 'Quy định về thôi việc và thủ tục nghỉ hưu đối với công chức (ĐÃ HẾT HIỆU LỰC — chỉ để đối chiếu lịch sử).',
         dieuKhoan: [
-          'Điều 9 khoản 1: Thời điểm nghỉ hưu là ngày 01 của tháng liền kề sau tháng công chức đủ tuổi nghỉ hưu.',
-          'Điều 9 khoản 3: TRƯỚC 06 THÁNG tính đến thời điểm nghỉ hưu, cơ quan ra THÔNG BÁO bằng văn bản về thời điểm nghỉ hưu để chuẩn bị người thay thế.',
-          'Điều 9 khoản 4: TRƯỚC 03 THÁNG tính đến thời điểm nghỉ hưu, cơ quan ra QUYẾT ĐỊNH nghỉ hưu.',
+          'Điều 9 khoản 1: Thời điểm nghỉ hưu là ngày 01 của tháng liền kề sau tháng công chức đủ tuổi nghỉ hưu. (Nay: Điều 61 NĐ 170/2025)',
+          'Điều 9 khoản 3: TRƯỚC 06 THÁNG ra THÔNG BÁO nghỉ hưu. (Nay: Điều 62 NĐ 170/2025, theo Mẫu số 2)',
+          'Điều 9 khoản 4: TRƯỚC 03 THÁNG ra QUYẾT ĐỊNH nghỉ hưu. (Nay: Điều 63 NĐ 170/2025, theo Mẫu số 3)',
         ],
       },
     ],

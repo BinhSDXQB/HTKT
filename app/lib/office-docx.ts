@@ -300,21 +300,20 @@ export function buildVuotKhungDecisionDocx(input: VuotKhungDecisionInput): Promi
 // ───────────────────────── Nghỉ hưu (Thông báo & Quyết định) ─────────────────────────
 // Căn cứ pháp lý mặc định cho thủ tục nghỉ hưu công chức (NĐ 46/2010, NĐ 135/2020).
 //
-// ⚠️ CẢNH BÁO CĂN CỨ PHÁP LÝ (rà soát 19/8/2026):
-//   Tra cứu 20/8/2026 — ĐÃ XÁC MINH: NĐ 170/2025/NĐ-CP ban hành 30/6/2025, hiệu lực
-//   01/7/2025, quy định về tuyển dụng, sử dụng và quản lý công chức — TRONG ĐÓ CÓ thông
-//   báo và quyết định nghỉ hưu, tức TRÙNG PHẠM VI điều chỉnh với NĐ 46/2010. Luật CBCC
-//   2008 (văn bản mà NĐ 46/2010 hướng dẫn) cũng đã bị Luật CBCC 2025 thay từ 01/7/2025.
-//   CHƯA XÁC MINH ĐƯỢC điều khoản bãi bỏ cụ thể — cần đọc Chương Điều khoản thi hành của
-//   NĐ 170/2025 (bản ký số 170nd.signed.pdf trên vanban.chinhphu.vn) hoặc hỏi Sở Nội vụ.
-//   Khối căn cứ này đi thẳng vào Thông báo/Quyết định nghỉ hưu do lãnh đạo KÝ, nên
-//   Văn phòng Sở PHẢI đối chiếu bản chính thức trước khi trình ký, và cập nhật tại đây
-//   ngay khi có kết luận. Xem thêm lib/data/co-so-phap-ly-nhan-su.ts (mục nghỉ hưu).
+// ĐÃ SỬA CĂN CỨ (20/8/2026) — trước đây khối này viện dẫn NĐ 46/2010/NĐ-CP.
+//   Xác minh từ chính văn bản gốc trong kho tài liệu của Sở (170_2025_ND-CP_663212.docx):
+//   Điều 71 khoản 2 điểm b NĐ 170/2025/NĐ-CP ghi rõ NĐ 46/2010 HẾT HIỆU LỰC kể từ ngày
+//   NĐ 170/2025 có hiệu lực (01/7/2025). Nay dùng NĐ 170/2025 làm căn cứ.
+//
+//   ⚠️ VIỆC CÒN LẠI CỦA VĂN PHÒNG SỞ: NĐ 170/2025 ban hành kèm MẪU SỐ 2 (Thông báo
+//   nghỉ hưu — Điều 62) và MẪU SỐ 3 (Quyết định nghỉ hưu — Điều 63). Cần đối chiếu
+//   biểu mẫu hệ thống đang sinh với hai mẫu này. Các văn bản ĐÃ KÝ trước 20/8/2026
+//   mang căn cứ NĐ 46/2010 — Văn phòng Sở xem xét có cần đính chính hay không.
 const CAN_CU_NGHI_HUU = [
   'Căn cứ Bộ luật Lao động ngày 20/11/2019;',
   'Căn cứ Luật Bảo hiểm xã hội;',
   'Căn cứ Nghị định số 135/2020/NĐ-CP ngày 18/11/2020 của Chính phủ quy định về tuổi nghỉ hưu;',
-  'Căn cứ Nghị định số 46/2010/NĐ-CP ngày 27/4/2010 của Chính phủ quy định về thôi việc và thủ tục nghỉ hưu đối với công chức;',
+  'Căn cứ Nghị định số 170/2025/NĐ-CP ngày 30/6/2025 của Chính phủ quy định về tuyển dụng, sử dụng và quản lý công chức;',
   'Căn cứ Quyết định số 07/2025/QĐ-UBND ngày 18/8/2025 của UBND tỉnh Quảng Trị ban hành quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Sở Xây dựng tỉnh Quảng Trị;',
 ].join('\n')
 

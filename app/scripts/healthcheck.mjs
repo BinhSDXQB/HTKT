@@ -157,17 +157,33 @@ async function kiemPhapLy() {
 
 // ── 9. Chatbot (tuỳ chọn — gọi OpenAI, tốn token) ───────────────────────────
 async function kiemChatbot() {
-  try {
-    const { execSync } = await import('node:child_process')
-    const out = execSync('node scripts/smoke-chatbot.mjs', { cwd: root, encoding: 'utf8', timeout: 900000 })
-    const m = out.match(/TỔNG:\s*(\d+)\s*đạt\s*\/\s*(\d+)\s*không đạt/)
-    const dat = m ? Number(m[1]) : 0
-    const khong = m ? Number(m[2]) : -1
-    ghi('Chất lượng trả lời chatbot', khong === 0, `${dat} đạt / ${khong} không đạt`, khong)
-  } catch (e) {
-    const m = String(e.stdout || '').match(/TỔNG:\s*(\d+)\s*đạt\s*\/\s*(\d+)\s*không đạt/)
-    ghi('Chất lượng trả lời chatbot', false, m ? `${m[1]} đạt / ${m[2]} KHÔNG đạt` : `không chạy được: ${e.message.slice(0, 60)}`)
+  // Kiểm thử LLM KHÔNG TẤT ĐỊNH: cùng câu hỏi có thể lúc đạt lúc không. Đã gặp thật
+  // ngày 20/8/2026 — chạy lần 1 báo 8/9, chạy lại ngay sau đó 9/9. Nếu không chạy lại
+  // trước khi kết luận thì tác vụ hằng ngày sẽ gửi cảnh báo giả.
+  const { execSync } = await import('node:child_process')
+  const chay = () => {
+    try {
+      const out = execSync('node scripts/smoke-chatbot.mjs', { cwd: root, encoding: 'utf8', timeout: 900000 })
+      return String(out)
+    } catch (e) { return String(e.stdout || '') }
   }
+  const doc = (out) => {
+    const m = out.match(/TỔNG:\s*(\d+)\s*đạt\s*\/\s*(\d+)\s*không đạt/)
+    return m ? { dat: Number(m[1]), khong: Number(m[2]) } : null
+  }
+
+  let kq = doc(chay())
+  let lanHai = null
+  if (!kq || kq.khong > 0) {
+    log('   (chatbot có câu không đạt — chạy lại một lần để loại trừ hỏng ngẫu nhiên)')
+    lanHai = doc(chay())
+  }
+  const cuoi = lanHai ?? kq
+  if (!cuoi) { ghi('Chất lượng trả lời chatbot', false, 'không đọc được kết quả kiểm thử'); return }
+  ghi('Chất lượng trả lời chatbot', cuoi.khong === 0,
+    `${cuoi.dat} đạt / ${cuoi.khong} không đạt` +
+    (lanHai ? ` (lần 1: ${kq ? kq.dat + '/' + (kq.dat + kq.khong) : 'lỗi'} — đã chạy lại)` : ''),
+    cuoi.khong)
 }
 
 async function mintCookie(c) {
