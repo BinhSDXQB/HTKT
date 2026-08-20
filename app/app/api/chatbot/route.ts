@@ -6,6 +6,7 @@ import { requireAuth, isOfficeLeader, canManageSalary, canManageCanBo, canAccess
 import { searchTaiLieu } from '@/lib/rag/search'
 import { hasPermission, MODULES } from '@/lib/permissions'
 import { timPhapLy, formatPhapLyMuc } from '@/lib/data/co-so-phap-ly-nhan-su'
+import { logAction } from '@/lib/audit'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
@@ -1574,6 +1575,47 @@ async function getLearnedKnowledge(question: string, isWardUser: boolean): Promi
 
 // ── API Route ─────────────────────────────────────────────────────────────────
 
+// ── BẢO VỆ DỮ LIỆU CÁ NHÂN TRONG NHẬT KÝ CHATBOT ────────────────────────────
+// Bảng chatbot_logs sinh ra để phân tích CHẤT LƯỢNG trả lời, không phải để lưu
+// dữ liệu định danh. Nhưng tool ho_so_can_bo trả về CCCD và tim_can_bo trả về số
+// điện thoại, nên câu trả lời lưu nguyên văn là đưa dữ liệu cá nhân vào một bảng
+// khác mục đích (kiểm tra 20/8/2026: 1 lượt chứa CCCD thật, 8 lượt chứa SĐT).
+//
+// Nay che trước khi lưu — log vẫn đủ dùng để phân tích, mà không giữ định danh.
+// Việc AI ĐÃ TRUY CẬP dữ liệu nhạy cảm được ghi riêng vào audit_logs (VIEW_SENSITIVE),
+// đúng chỗ dành cho dấu vết truy cập.
+
+/** Danh sách tool trả về dữ liệu cá nhân nhạy cảm (CCCD, lương, ngày sinh). */
+const TOOL_NHAY_CAM = new Set([
+  'ho_so_can_bo', 'xem_luong_can_bo', 'cap_nhat_luong_can_bo', 'them_can_bo',
+  'luong_cua_toi', 'xep_hang_nhan_su', 'len_luong_thang_nay', 'thong_ke_nang_luong',
+  'du_thao_qd_nang_luong', 'tim_can_bo', 'tra_cuu_lanh_dao_xa', 'luu_lanh_dao_xa',
+])
+
+/**
+ * Che CCCD và số điện thoại trong văn bản trước khi ghi nhật ký.
+ * Giữ vài ký tự đầu/cuối để người phân tích vẫn đối chiếu được khi thật sự cần.
+ *
+ * PHẢI xử lý cả DẤU PHÂN CÁCH: hồ sơ thật lưu SĐT dạng "0913.018.002",
+ * "0983 995 715" — bản che đầu chỉ bắt chữ số liền nên đã bỏ sót 8 bản ghi
+ * (phát hiện khi kiểm chứng 20/8/2026).
+ */
+function cheDuLieuNhayCam(text: string): string {
+  // Số điện thoại: 0 + 9 chữ số, cho phép . - hoặc khoảng trắng xen giữa
+  let ra = text.replace(/(?<![\d])0[\d][\d](?:[\s.\-]?\d){7}(?![\d])/g, (m) => {
+    const so = m.replace(/\D/g, '')
+    if (so.length !== 10) return m
+    return `${so.slice(0, 3)}*****${so.slice(-2)}`
+  })
+  // CCCD/CMND 12 chữ số, cũng cho phép dấu phân cách
+  ra = ra.replace(/(?<![\d])\d{4}(?:[\s.\-]?\d){8}(?![\d])/g, (m) => {
+    const so = m.replace(/\D/g, '')
+    if (so.length !== 12) return m
+    return `${so.slice(0, 4)}******${so.slice(-2)}`
+  })
+  return ra
+}
+
 /**
  * GHI NHẬN CÂU HỎI — luôn lưu lại mọi lượt hỏi, kể cả khi trả lời thất bại.
  * Trước đây chỉ lưu khi model trả lời thành công, nên các câu hỏi gây lỗi hoặc
@@ -1592,8 +1634,8 @@ async function ghiNhanCauHoi(opts: {
       data: {
         userId: opts.userId,
         isWardUser: opts.isWardUser,
-        question: opts.question.slice(0, 4000),
-        answer: opts.answer.slice(0, 8000),
+        question: cheDuLieuNhayCam(opts.question).slice(0, 4000),
+        answer: cheDuLieuNhayCam(opts.answer).slice(0, 8000),
         toolsUsed: opts.toolsUsed,
       },
     })
@@ -1765,6 +1807,21 @@ export async function POST(req: NextRequest) {
           answer: reply,
           toolsUsed: toolsUsedInSession,
         })
+
+        // DẤU VẾT TRUY CẬP DỮ LIỆU CÁ NHÂN: chatbot có thể trả về CCCD, hệ số lương,
+        // ngày sinh. Nhật ký chatbot chỉ để phân tích chất lượng (và đã che định danh),
+        // nên việc AI đã đọc dữ liệu nhạy cảm phải ghi vào audit_logs — đúng chỗ dành
+        // cho dấu vết truy cập, phục vụ tra "ai đã xem dữ liệu của ai".
+        const toolNhayCam = [...new Set(toolsUsedInSession.filter((t) => TOOL_NHAY_CAM.has(t)))]
+        if (toolNhayCam.length > 0) {
+          await logAction({
+            userId: user.id,
+            action: 'VIEW_SENSITIVE',
+            module: 'chatbot',
+            targetType: 'CanBo',
+            detail: `Chatbot truy cập dữ liệu cá nhân qua tool: ${toolNhayCam.join(', ')} · câu hỏi: ${question.slice(0, 160)}`,
+          }).catch(() => {})
+        }
 
         return NextResponse.json({ reply, logId })
       }
