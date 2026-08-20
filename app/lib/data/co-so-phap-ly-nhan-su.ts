@@ -268,11 +268,15 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 46/2010/NĐ-CP',
         ngayBanHanh: '27/4/2010',
         hieuLucTu: '01/7/2010',
-        canhBao: '⚠️ CẦN KIỂM CHỨNG GẤP — có nguồn nêu Nghị định này đã hết hiệu lực từ 01/7/2025 '
-          + '(bị Nghị định 170/2025/NĐ-CP thay, cùng đợt Luật CBCC 2025). Hệ thống CHƯA xác minh được '
-          + 'vì cả hai văn bản chưa có trong kho tài liệu. Đây đang là CĂN CỨ trong Thông báo/Quyết định '
-          + 'nghỉ hưu do hệ thống sinh (lib/office-docx.ts) — Văn phòng Sở phải đối chiếu bản chính thức '
-          + 'TRƯỚC KHI TRÌNH KÝ.',
+        canhBao: '⚠️ CẦN KIỂM CHỨNG GẤP — nghi đã bị thay thế. ĐÃ XÁC MINH (tra cứu 20/8/2026): '
+          + 'Nghị định 170/2025/NĐ-CP ban hành 30/6/2025, HIỆU LỰC 01/7/2025, quy định về tuyển dụng, '
+          + 'sử dụng và quản lý công chức — TRONG ĐÓ CÓ thông báo và quyết định nghỉ hưu công chức, '
+          + 'tức trùng phạm vi điều chỉnh với Nghị định 46/2010. Ngoài ra Luật CBCC 2008 (văn bản mà '
+          + 'NĐ 46/2010 hướng dẫn) đã bị Luật CBCC 2025 thay từ 01/7/2025. '
+          + 'CHƯA XÁC MINH ĐƯỢC điều khoản bãi bỏ cụ thể: cần đọc Chương Điều khoản thi hành của '
+          + 'NĐ 170/2025 (bản ký số 170nd.signed.pdf trên vanban.chinhphu.vn) hoặc hỏi Sở Nội vụ. '
+          + 'ĐÂY ĐANG LÀ CĂN CỨ trong Thông báo/Quyết định nghỉ hưu do hệ thống sinh — '
+          + 'Văn phòng Sở PHẢI đối chiếu TRƯỚC KHI TRÌNH KÝ.',
         trichYeu: 'Quy định về thôi việc và thủ tục nghỉ hưu đối với công chức.',
         dieuKhoan: [
           'Điều 9 khoản 1: Thời điểm nghỉ hưu là ngày 01 của tháng liền kề sau tháng công chức đủ tuổi nghỉ hưu.',
