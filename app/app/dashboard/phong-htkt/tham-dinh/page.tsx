@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ChevronRight, ClipboardCheck } from 'lucide-react'
+import { ChevronRight, ClipboardCheck, FolderSearch } from 'lucide-react'
 import { ThamDinhTabs } from '@/components/phong-htkt/tham-dinh-tabs'
 
 export const dynamic = 'force-dynamic'
@@ -23,6 +23,21 @@ export default function ThamDinhPage() {
             Theo Luật Xây dựng 135/2025/QH15 & Nghị định 217/2026/NĐ-CP (hiệu lực 01/7/2026, thay NĐ 175/2024)
           </p>
         </div>
+      </div>
+
+      <div className="mb-5 rounded-xl border border-cyan-200 bg-cyan-50 p-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-cyan-900">Kiểm kê hồ sơ từ thư mục dự án</p>
+          <p className="text-xs text-cyan-800 mt-0.5">
+            Đọc tờ trình, thuyết minh, bản vẽ, dự toán trong thư mục và đối chiếu với thành phần hồ sơ của quy trình.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/phong-htkt/tham-dinh/ho-so"
+          className="h-9 px-4 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium inline-flex items-center gap-2 shrink-0"
+        >
+          <FolderSearch className="w-4 h-4" />Mở công cụ
+        </Link>
       </div>
 
       <ThamDinhTabs />

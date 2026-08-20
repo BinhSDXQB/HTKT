@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
+  // pdfjs-dist nap worker theo duong dan tuong doi luc chay. Neu de Next bundle vao
+  // server thi hong: "Setting up fake worker failed: Cannot find module" — moi lan
+  // boc chu tu PDF qua API deu loi (ca /api/tai-lieu lan cong cu tham dinh ho so).
+  serverExternalPackages: ['pdfjs-dist'],
   experimental: {
     // Máy 6GB RAM: hạn chế worker + bật chế độ tiết kiệm bộ nhớ webpack để build không OOM
     cpus: 1,
