@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { updateUserAction } from '@/app/actions/users'
+import { ToChucSelect, type ToChucChon } from '@/components/cai-dat/to-chuc-select'
 
 type Role = { id: string; name: string; displayName: string }
 type User = {
@@ -14,10 +15,13 @@ type User = {
   email: string
   phone: string | null
   isActive: boolean
+  toChucId?: string | null
   role: Role
 }
 
-export function EditUserForm({ user, roles, isAdmin = false }: { user: User; roles: Role[]; isAdmin?: boolean }) {
+export function EditUserForm({
+  user, roles, toChucs, isAdmin = false,
+}: { user: User; roles: Role[]; toChucs: ToChucChon[]; isAdmin?: boolean }) {
   const [state, formAction, isPending] = useActionState(updateUserAction, null)
 
   if (!isAdmin) {
@@ -41,8 +45,17 @@ export function EditUserForm({ user, roles, isAdmin = false }: { user: User; rol
             {state?.fieldErrors?.name && <p className="text-xs text-red-600">{state.fieldErrors.name[0]}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-slate-700">Email *</Label>
-            <Input name="email" type="email" placeholder="email@example.com" className="h-9" defaultValue={user.email} />
+            <Label className="text-sm font-medium text-slate-700">Tên đăng nhập (số CCCD) *</Label>
+            <Input
+              name="email"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={64}
+              placeholder="VD: 044090012345"
+              className="h-9"
+              defaultValue={user.email}
+            />
             {state?.fieldErrors?.email && <p className="text-xs text-red-600">{state.fieldErrors.email[0]}</p>}
           </div>
         </div>
@@ -60,6 +73,8 @@ export function EditUserForm({ user, roles, isAdmin = false }: { user: User; rol
             <Input name="phone" placeholder="0xxx" className="h-9" defaultValue={user.phone ?? ''} />
           </div>
         </div>
+
+        <ToChucSelect danhSach={toChucs} defaultValue={user.toChucId ?? null} />
 
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-slate-700">Mật khẩu (để trống nếu không đổi)</Label>

@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createUserAction } from '@/app/actions/users'
+import { ToChucSelect, type ToChucChon } from '@/components/cai-dat/to-chuc-select'
 
 type Role = { id: string; name: string; displayName: string }
 
-export function NewUserForm({ roles }: { roles: Role[] }) {
+export function NewUserForm({ roles, toChucs }: { roles: Role[]; toChucs: ToChucChon[] }) {
   const [state, formAction, isPending] = useActionState(createUserAction, null)
 
   return (
@@ -24,8 +25,17 @@ export function NewUserForm({ roles }: { roles: Role[] }) {
             {state?.fieldErrors?.name && <p className="text-xs text-red-600">{state.fieldErrors.name[0]}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-slate-700">Email *</Label>
-            <Input name="email" type="email" placeholder="email@example.com" className="h-9" />
+            <Label className="text-sm font-medium text-slate-700">Tên đăng nhập (số CCCD) *</Label>
+            <Input
+              name="email"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={64}
+              placeholder="VD: 044090012345"
+              className="h-9"
+            />
+            <p className="text-xs text-slate-500">Nhập số CCCD 12 chữ số. Tài khoản quản trị có thể dùng email.</p>
             {state?.fieldErrors?.email && <p className="text-xs text-red-600">{state.fieldErrors.email[0]}</p>}
           </div>
         </div>
@@ -43,6 +53,8 @@ export function NewUserForm({ roles }: { roles: Role[] }) {
             <Input name="phone" placeholder="0xxx" className="h-9" />
           </div>
         </div>
+        <ToChucSelect danhSach={toChucs} />
+
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-slate-700">Mật khẩu *</Label>
           <Input name="password" type="password" placeholder="Tối thiểu 8 ký tự" className="h-9" />

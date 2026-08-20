@@ -7,11 +7,23 @@ import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 import { logAction } from '@/lib/audit'
+import { kiemTraTenDangNhap } from '@/lib/ten-dang-nhap'
+
+// TEN DANG NHAP = SO CCCD (xem lib/ten-dang-nhap.ts). Truoc day dung .email()
+// nen khong the them nguoi dung bang so CCCD.
+const tenDangNhapField = z.string().superRefine((v, ctx) => {
+  const kq = kiemTraTenDangNhap(v)
+  if (!kq.ok) ctx.addIssue({ code: z.ZodIssueCode.custom, message: kq.loi })
+}).transform((v) => {
+  const kq = kiemTraTenDangNhap(v)
+  return kq.ok ? kq.giaTri : v
+})
 
 const UserSchema = z.object({
   name:     z.string().min(1, { message: 'Vui lòng nhập họ tên' }),
-  email:    z.string().email({ message: 'Email không hợp lệ' }),
+  email:    tenDangNhapField,
   roleId:   z.string().min(1, { message: 'Vui lòng chọn vai trò' }),
+  toChucId: z.string().optional(),
   phone:    z.string().optional(),
   password: z.string().min(8, { message: 'Mật khẩu tối thiểu 8 ký tự' }),
 })
@@ -19,8 +31,9 @@ const UserSchema = z.object({
 const UpdateUserSchema = z.object({
   userId:   z.string().min(1),
   name:     z.string().min(1, { message: 'Vui lòng nhập họ tên' }),
-  email:    z.string().email({ message: 'Email không hợp lệ' }),
+  email:    tenDangNhapField,
   roleId:   z.string().min(1, { message: 'Vui lòng chọn vai trò' }),
+  toChucId: z.string().optional(),
   phone:    z.string().optional(),
   password: z.string().min(8, { message: 'Mật khẩu tối thiểu 8 ký tự' }).optional(),
   isActive: z.boolean().optional(),
@@ -39,11 +52,29 @@ export async function createUserAction(prevState: UserFormState, formData: FormD
 
   const d = parsed.data
   const existing = await db.user.findUnique({ where: { email: d.email } })
-  if (existing) return { error: `Email "${d.email}" đã được sử dụng` }
+  if (existing) return { error: `Tên đăng nhập "${d.email}" đã được sử dụng` }
+
+  // Gan don vi: departmentCode (quyet dinh menu + quyen module) duoc SUY DONG tu
+  // to_chuc.ma. Khong gan toChucId thi tai khoan khong vao duoc chuc nang phong nao.
+  if (d.toChucId) {
+    // Chi nhan don vi CAP 2 thuoc So (dung pham vi o chon hien thi). Kiem ca o day
+    // vi client co the POST thang toChucId cua "So Xay dung" cap 1 hoac UBND phuong/xa.
+    const tc = await db.toChuc.findFirst({
+      where: {
+        id: d.toChucId, isActive: true, cap: 2,
+        loai: { in: ['LANH_DAO_SO', 'VAN_PHONG', 'PHONG', 'BAN', 'DON_VI_TRUC_THUOC'] },
+      },
+      select: { id: true },
+    })
+    if (!tc) return { error: 'Phòng/đơn vị không hợp lệ hoặc đã ngừng hoạt động' }
+  }
 
   const hashed = await bcrypt.hash(d.password, 12)
   const user = await db.user.create({
-    data: { name: d.name, email: d.email, roleId: d.roleId, phone: d.phone || null, password: hashed, isActive: true },
+    data: {
+      name: d.name, email: d.email, roleId: d.roleId, phone: d.phone || null,
+      toChucId: d.toChucId || null, password: hashed, isActive: true,
+    },
   })
 
   await logAction({ userId: admin.id, action: 'CREATE', module: 'admin', targetId: user.id, targetType: 'User', detail: `Tạo tài khoản: ${user.email}` })
@@ -64,9 +95,25 @@ export async function updateUserAction(prevState: UserFormState, formData: FormD
   if (!user) return { error: 'Người dùng không tồn tại' }
 
   const existing = await db.user.findUnique({ where: { email: d.email } })
-  if (existing && existing.id !== d.userId) return { error: `Email "${d.email}" đã được sử dụng` }
+  if (existing && existing.id !== d.userId) return { error: `Tên đăng nhập "${d.email}" đã được sử dụng` }
 
-  const updateData: any = { name: d.name, email: d.email, roleId: d.roleId, phone: d.phone || null, isActive: d.isActive ?? true }
+  if (d.toChucId) {
+    // Chi nhan don vi CAP 2 thuoc So (dung pham vi o chon hien thi). Kiem ca o day
+    // vi client co the POST thang toChucId cua "So Xay dung" cap 1 hoac UBND phuong/xa.
+    const tc = await db.toChuc.findFirst({
+      where: {
+        id: d.toChucId, isActive: true, cap: 2,
+        loai: { in: ['LANH_DAO_SO', 'VAN_PHONG', 'PHONG', 'BAN', 'DON_VI_TRUC_THUOC'] },
+      },
+      select: { id: true },
+    })
+    if (!tc) return { error: 'Phòng/đơn vị không hợp lệ hoặc đã ngừng hoạt động' }
+  }
+
+  const updateData: any = {
+    name: d.name, email: d.email, roleId: d.roleId, phone: d.phone || null,
+    toChucId: d.toChucId || null, isActive: d.isActive ?? true,
+  }
   if (d.password) {
     updateData.password = await bcrypt.hash(d.password, 12)
   }

@@ -19,6 +19,13 @@ export default async function UserEditPage({ params }: { params: Promise<{ id: s
   if (!userData) notFound()
 
   const roles = await db.role.findMany({ orderBy: { name: 'asc' } })
+  // Chi lay don vi cap 2 dang hoat dong: Lanh dao So / Van phong / Phong chuyen mon /
+  // Don vi truc thuoc (trung tam, ban, vien, truong).
+  const toChucs = await db.toChuc.findMany({
+    where: { isActive: true, cap: 2 },
+    select: { id: true, ten: true, tenVietTat: true, loai: true },
+    orderBy: [{ loai: 'asc' }, { thuTu: 'asc' }],
+  })
 
   return (
     <div className="max-w-lg space-y-5">
@@ -29,7 +36,7 @@ export default async function UserEditPage({ params }: { params: Promise<{ id: s
         <ChevronRight className="w-3.5 h-3.5" /><span className="text-slate-700 font-medium">Sửa</span>
       </nav>
       <div><h1 className="text-xl font-bold text-slate-800">Sửa người dùng</h1></div>
-      <EditUserForm user={userData} roles={roles} isAdmin={isAdmin} />
+      <EditUserForm user={userData} roles={roles} toChucs={toChucs} isAdmin={isAdmin} />
     </div>
   )
 }
