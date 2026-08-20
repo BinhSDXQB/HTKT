@@ -8,7 +8,7 @@ import {
   buildRetirementNoticeDocx, buildRetirementDecisionDocx,
 } from '@/lib/office-docx'
 import { streamDocx } from '@/lib/office-doc-store'
-import { tinhNgayNghiHuu } from '@/lib/nghi-huu'
+import { thoiDiemNghiHuu } from '@/lib/nghi-huu'
 
 // Sinh văn bản (dự thảo) cho 1 cán bộ, LƯU VẾT vào Kho văn bản đã sinh rồi trả file tải về.
 // Mỗi (cán bộ × loại) chỉ giữ 1 bản dự thảo mới nhất (soVanBan = null) để kho không bị trùng.
@@ -83,7 +83,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       })
     }
   } else {
-    const ngayNghiHuu = cb.ngayVeHuu ?? tinhNgayNghiHuu(cb.ngaySinh, cb.gioiTinh as 'NAM' | 'NU' | null)
+    // Lấy thời điểm nghỉ hưu ĐÃ ĐƯỢC QUYẾT ĐỊNH LÙI nếu có (NĐ 170/2025 Điều 61),
+    // ngược lại dùng ngày DỰ KIẾN do máy tính và nêu rõ trong tiêu đề bản dự thảo.
+    const td = thoiDiemNghiHuu(cb)
+    const ngayNghiHuu = td.ngay
+    const ghiChuMoc = td.laDuKien ? ' (ngày nghỉ hưu DỰ KIẾN — cần đối chiếu trước khi trình ký)' : ''
+    // Không chèn chữ "dự kiến" vào THÂN văn bản: Mẫu số 2/3 là mẫu bắt buộc, thêm
+    // chữ vào là sai mẫu. Cảnh báo đặt ở TÊN TỆP và tiêu đề bản lưu trong kho.
+    const hauTo = td.laDuKien ? '_NGAY_DU_KIEN' : ''
     const common = {
       soVanBan: '...../...-SXD', hoTen: cb.hoTen, ngaySinh: cb.ngaySinh, chucDanh, donVi,
       ngach: cb.ngachHienHuong, maNgach: cb.maNgach, bac: cb.bacLuong, heSo: cb.heSoLuong,
@@ -98,12 +105,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       noiCuTruSauNghiHuu: null,
     }
     if (loai === 'tb_nghi_huu') {
-      fileName = `DuThao_Thong_bao_nghi_huu_${safeName}.docx`
-      tieuDe = `Dự thảo Thông báo nghỉ hưu — ${cb.hoTen}`
+      fileName = `DuThao_Thong_bao_nghi_huu_${safeName}${hauTo}.docx`
+      tieuDe = `Dự thảo Thông báo nghỉ hưu — ${cb.hoTen}${ghiChuMoc}`
       buf = await buildRetirementNoticeDocx({ ...common, soVanBan: '...../TB-SXD' })
     } else {
-      fileName = `DuThao_QD_nghi_huu_${safeName}.docx`
-      tieuDe = `Dự thảo Quyết định nghỉ hưu — ${cb.hoTen}`
+      fileName = `DuThao_QD_nghi_huu_${safeName}${hauTo}.docx`
+      tieuDe = `Dự thảo Quyết định nghỉ hưu — ${cb.hoTen}${ghiChuMoc}`
       buf = await buildRetirementDecisionDocx({ ...common, soVanBan: '...../QĐ-SXD' })
     }
   }

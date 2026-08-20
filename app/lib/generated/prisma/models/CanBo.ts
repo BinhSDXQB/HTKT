@@ -71,6 +71,9 @@ export type CanBoMinAggregateOutputType = {
   ngayBoNhiemGanNhat: Date | null
   ngayBoNhiemTiepTheo: Date | null
   ngayVeHuu: Date | null
+  ngayNghiHuuLui: Date | null
+  truongHopLui: string | null
+  vanBanLuiNghiHuu: string | null
   maNgach: string | null
   bacLuong: number | null
   ngachHienHuong: string | null
@@ -138,6 +141,9 @@ export type CanBoMaxAggregateOutputType = {
   ngayBoNhiemGanNhat: Date | null
   ngayBoNhiemTiepTheo: Date | null
   ngayVeHuu: Date | null
+  ngayNghiHuuLui: Date | null
+  truongHopLui: string | null
+  vanBanLuiNghiHuu: string | null
   maNgach: string | null
   bacLuong: number | null
   ngachHienHuong: string | null
@@ -205,6 +211,9 @@ export type CanBoCountAggregateOutputType = {
   ngayBoNhiemGanNhat: number
   ngayBoNhiemTiepTheo: number
   ngayVeHuu: number
+  ngayNghiHuuLui: number
+  truongHopLui: number
+  vanBanLuiNghiHuu: number
   maNgach: number
   bacLuong: number
   ngachHienHuong: number
@@ -288,6 +297,9 @@ export type CanBoMinAggregateInputType = {
   ngayBoNhiemGanNhat?: true
   ngayBoNhiemTiepTheo?: true
   ngayVeHuu?: true
+  ngayNghiHuuLui?: true
+  truongHopLui?: true
+  vanBanLuiNghiHuu?: true
   maNgach?: true
   bacLuong?: true
   ngachHienHuong?: true
@@ -355,6 +367,9 @@ export type CanBoMaxAggregateInputType = {
   ngayBoNhiemGanNhat?: true
   ngayBoNhiemTiepTheo?: true
   ngayVeHuu?: true
+  ngayNghiHuuLui?: true
+  truongHopLui?: true
+  vanBanLuiNghiHuu?: true
   maNgach?: true
   bacLuong?: true
   ngachHienHuong?: true
@@ -422,6 +437,9 @@ export type CanBoCountAggregateInputType = {
   ngayBoNhiemGanNhat?: true
   ngayBoNhiemTiepTheo?: true
   ngayVeHuu?: true
+  ngayNghiHuuLui?: true
+  truongHopLui?: true
+  vanBanLuiNghiHuu?: true
   maNgach?: true
   bacLuong?: true
   ngachHienHuong?: true
@@ -576,6 +594,9 @@ export type CanBoGroupByOutputType = {
   ngayBoNhiemGanNhat: Date | null
   ngayBoNhiemTiepTheo: Date | null
   ngayVeHuu: Date | null
+  ngayNghiHuuLui: Date | null
+  truongHopLui: string | null
+  vanBanLuiNghiHuu: string | null
   maNgach: string | null
   bacLuong: number | null
   ngachHienHuong: string | null
@@ -666,6 +687,9 @@ export type CanBoWhereInput = {
   ngayBoNhiemGanNhat?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
   ngayVeHuu?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
+  ngayNghiHuuLui?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
+  truongHopLui?: Prisma.StringNullableFilter<"CanBo"> | string | null
+  vanBanLuiNghiHuu?: Prisma.StringNullableFilter<"CanBo"> | string | null
   maNgach?: Prisma.StringNullableFilter<"CanBo"> | string | null
   bacLuong?: Prisma.IntNullableFilter<"CanBo"> | number | null
   ngachHienHuong?: Prisma.StringNullableFilter<"CanBo"> | string | null
@@ -745,6 +769,9 @@ export type CanBoOrderByWithRelationInput = {
   ngayBoNhiemGanNhat?: Prisma.SortOrderInput | Prisma.SortOrder
   ngayBoNhiemTiepTheo?: Prisma.SortOrderInput | Prisma.SortOrder
   ngayVeHuu?: Prisma.SortOrderInput | Prisma.SortOrder
+  ngayNghiHuuLui?: Prisma.SortOrderInput | Prisma.SortOrder
+  truongHopLui?: Prisma.SortOrderInput | Prisma.SortOrder
+  vanBanLuiNghiHuu?: Prisma.SortOrderInput | Prisma.SortOrder
   maNgach?: Prisma.SortOrderInput | Prisma.SortOrder
   bacLuong?: Prisma.SortOrderInput | Prisma.SortOrder
   ngachHienHuong?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -828,6 +855,9 @@ export type CanBoWhereUniqueInput = Prisma.AtLeast<{
   ngayBoNhiemGanNhat?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
   ngayVeHuu?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
+  ngayNghiHuuLui?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
+  truongHopLui?: Prisma.StringNullableFilter<"CanBo"> | string | null
+  vanBanLuiNghiHuu?: Prisma.StringNullableFilter<"CanBo"> | string | null
   maNgach?: Prisma.StringNullableFilter<"CanBo"> | string | null
   bacLuong?: Prisma.IntNullableFilter<"CanBo"> | number | null
   ngachHienHuong?: Prisma.StringNullableFilter<"CanBo"> | string | null
@@ -906,6 +936,9 @@ export type CanBoOrderByWithAggregationInput = {
   ngayBoNhiemGanNhat?: Prisma.SortOrderInput | Prisma.SortOrder
   ngayBoNhiemTiepTheo?: Prisma.SortOrderInput | Prisma.SortOrder
   ngayVeHuu?: Prisma.SortOrderInput | Prisma.SortOrder
+  ngayNghiHuuLui?: Prisma.SortOrderInput | Prisma.SortOrder
+  truongHopLui?: Prisma.SortOrderInput | Prisma.SortOrder
+  vanBanLuiNghiHuu?: Prisma.SortOrderInput | Prisma.SortOrder
   maNgach?: Prisma.SortOrderInput | Prisma.SortOrder
   bacLuong?: Prisma.SortOrderInput | Prisma.SortOrder
   ngachHienHuong?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -981,6 +1014,9 @@ export type CanBoScalarWhereWithAggregatesInput = {
   ngayBoNhiemGanNhat?: Prisma.DateTimeNullableWithAggregatesFilter<"CanBo"> | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.DateTimeNullableWithAggregatesFilter<"CanBo"> | Date | string | null
   ngayVeHuu?: Prisma.DateTimeNullableWithAggregatesFilter<"CanBo"> | Date | string | null
+  ngayNghiHuuLui?: Prisma.DateTimeNullableWithAggregatesFilter<"CanBo"> | Date | string | null
+  truongHopLui?: Prisma.StringNullableWithAggregatesFilter<"CanBo"> | string | null
+  vanBanLuiNghiHuu?: Prisma.StringNullableWithAggregatesFilter<"CanBo"> | string | null
   maNgach?: Prisma.StringNullableWithAggregatesFilter<"CanBo"> | string | null
   bacLuong?: Prisma.IntNullableWithAggregatesFilter<"CanBo"> | number | null
   ngachHienHuong?: Prisma.StringNullableWithAggregatesFilter<"CanBo"> | string | null
@@ -1048,6 +1084,9 @@ export type CanBoCreateInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -1124,6 +1163,9 @@ export type CanBoUncheckedCreateInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -1200,6 +1242,9 @@ export type CanBoUpdateInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1276,6 +1321,9 @@ export type CanBoUncheckedUpdateInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1352,6 +1400,9 @@ export type CanBoCreateManyInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -1419,6 +1470,9 @@ export type CanBoUpdateManyMutationInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1483,6 +1537,9 @@ export type CanBoUncheckedUpdateManyInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1570,6 +1627,9 @@ export type CanBoCountOrderByAggregateInput = {
   ngayBoNhiemGanNhat?: Prisma.SortOrder
   ngayBoNhiemTiepTheo?: Prisma.SortOrder
   ngayVeHuu?: Prisma.SortOrder
+  ngayNghiHuuLui?: Prisma.SortOrder
+  truongHopLui?: Prisma.SortOrder
+  vanBanLuiNghiHuu?: Prisma.SortOrder
   maNgach?: Prisma.SortOrder
   bacLuong?: Prisma.SortOrder
   ngachHienHuong?: Prisma.SortOrder
@@ -1644,6 +1704,9 @@ export type CanBoMaxOrderByAggregateInput = {
   ngayBoNhiemGanNhat?: Prisma.SortOrder
   ngayBoNhiemTiepTheo?: Prisma.SortOrder
   ngayVeHuu?: Prisma.SortOrder
+  ngayNghiHuuLui?: Prisma.SortOrder
+  truongHopLui?: Prisma.SortOrder
+  vanBanLuiNghiHuu?: Prisma.SortOrder
   maNgach?: Prisma.SortOrder
   bacLuong?: Prisma.SortOrder
   ngachHienHuong?: Prisma.SortOrder
@@ -1711,6 +1774,9 @@ export type CanBoMinOrderByAggregateInput = {
   ngayBoNhiemGanNhat?: Prisma.SortOrder
   ngayBoNhiemTiepTheo?: Prisma.SortOrder
   ngayVeHuu?: Prisma.SortOrder
+  ngayNghiHuuLui?: Prisma.SortOrder
+  truongHopLui?: Prisma.SortOrder
+  vanBanLuiNghiHuu?: Prisma.SortOrder
   maNgach?: Prisma.SortOrder
   bacLuong?: Prisma.SortOrder
   ngachHienHuong?: Prisma.SortOrder
@@ -2037,6 +2103,9 @@ export type CanBoCreateWithoutUserInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2112,6 +2181,9 @@ export type CanBoUncheckedCreateWithoutUserInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2203,6 +2275,9 @@ export type CanBoUpdateWithoutUserInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2278,6 +2353,9 @@ export type CanBoUncheckedUpdateWithoutUserInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2353,6 +2431,9 @@ export type CanBoCreateWithoutToChucInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2428,6 +2509,9 @@ export type CanBoUncheckedCreateWithoutToChucInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2532,6 +2616,9 @@ export type CanBoScalarWhereInput = {
   ngayBoNhiemGanNhat?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
   ngayVeHuu?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
+  ngayNghiHuuLui?: Prisma.DateTimeNullableFilter<"CanBo"> | Date | string | null
+  truongHopLui?: Prisma.StringNullableFilter<"CanBo"> | string | null
+  vanBanLuiNghiHuu?: Prisma.StringNullableFilter<"CanBo"> | string | null
   maNgach?: Prisma.StringNullableFilter<"CanBo"> | string | null
   bacLuong?: Prisma.IntNullableFilter<"CanBo"> | number | null
   ngachHienHuong?: Prisma.StringNullableFilter<"CanBo"> | string | null
@@ -2599,6 +2686,9 @@ export type CanBoCreateWithoutChucDanhInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2674,6 +2764,9 @@ export type CanBoUncheckedCreateWithoutChucDanhInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2775,6 +2868,9 @@ export type CanBoCreateWithoutPhanCongsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2850,6 +2946,9 @@ export type CanBoUncheckedCreateWithoutPhanCongsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -2941,6 +3040,9 @@ export type CanBoUpdateWithoutPhanCongsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3016,6 +3118,9 @@ export type CanBoUncheckedUpdateWithoutPhanCongsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3091,6 +3196,9 @@ export type CanBoCreateWithoutSalaryHistoryInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -3166,6 +3274,9 @@ export type CanBoUncheckedCreateWithoutSalaryHistoryInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -3257,6 +3368,9 @@ export type CanBoUpdateWithoutSalaryHistoryInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3332,6 +3446,9 @@ export type CanBoUncheckedUpdateWithoutSalaryHistoryInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3407,6 +3524,9 @@ export type CanBoCreateWithoutWorkHistoryInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -3482,6 +3602,9 @@ export type CanBoUncheckedCreateWithoutWorkHistoryInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -3573,6 +3696,9 @@ export type CanBoUpdateWithoutWorkHistoryInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3648,6 +3774,9 @@ export type CanBoUncheckedUpdateWithoutWorkHistoryInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3723,6 +3852,9 @@ export type CanBoCreateWithoutRewardRecordsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -3798,6 +3930,9 @@ export type CanBoUncheckedCreateWithoutRewardRecordsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -3889,6 +4024,9 @@ export type CanBoUpdateWithoutRewardRecordsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3964,6 +4102,9 @@ export type CanBoUncheckedUpdateWithoutRewardRecordsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4039,6 +4180,9 @@ export type CanBoCreateWithoutAnnualEvaluationsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -4114,6 +4258,9 @@ export type CanBoUncheckedCreateWithoutAnnualEvaluationsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -4205,6 +4352,9 @@ export type CanBoUpdateWithoutAnnualEvaluationsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4280,6 +4430,9 @@ export type CanBoUncheckedUpdateWithoutAnnualEvaluationsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4355,6 +4508,9 @@ export type CanBoCreateWithoutDisciplineRecordsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -4430,6 +4586,9 @@ export type CanBoUncheckedCreateWithoutDisciplineRecordsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -4521,6 +4680,9 @@ export type CanBoUpdateWithoutDisciplineRecordsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4596,6 +4758,9 @@ export type CanBoUncheckedUpdateWithoutDisciplineRecordsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4671,6 +4836,9 @@ export type CanBoCreateWithoutSalaryReviewCasesInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -4746,6 +4914,9 @@ export type CanBoUncheckedCreateWithoutSalaryReviewCasesInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -4837,6 +5008,9 @@ export type CanBoUpdateWithoutSalaryReviewCasesInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4912,6 +5086,9 @@ export type CanBoUncheckedUpdateWithoutSalaryReviewCasesInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4987,6 +5164,9 @@ export type CanBoCreateWithoutGeneratedDocumentsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -5062,6 +5242,9 @@ export type CanBoUncheckedCreateWithoutGeneratedDocumentsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -5153,6 +5336,9 @@ export type CanBoUpdateWithoutGeneratedDocumentsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5228,6 +5414,9 @@ export type CanBoUncheckedUpdateWithoutGeneratedDocumentsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5303,6 +5492,9 @@ export type CanBoCreateWithoutLeaveRequestsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -5378,6 +5570,9 @@ export type CanBoUncheckedCreateWithoutLeaveRequestsInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -5469,6 +5664,9 @@ export type CanBoUpdateWithoutLeaveRequestsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5544,6 +5742,9 @@ export type CanBoUncheckedUpdateWithoutLeaveRequestsInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5619,6 +5820,9 @@ export type CanBoCreateManyToChucInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -5685,6 +5889,9 @@ export type CanBoUpdateWithoutToChucInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5760,6 +5967,9 @@ export type CanBoUncheckedUpdateWithoutToChucInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5835,6 +6045,9 @@ export type CanBoUncheckedUpdateManyWithoutToChucInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5901,6 +6114,9 @@ export type CanBoCreateManyChucDanhInput = {
   ngayBoNhiemGanNhat?: Date | string | null
   ngayBoNhiemTiepTheo?: Date | string | null
   ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
   maNgach?: string | null
   bacLuong?: number | null
   ngachHienHuong?: string | null
@@ -5967,6 +6183,9 @@ export type CanBoUpdateWithoutChucDanhInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6042,6 +6261,9 @@ export type CanBoUncheckedUpdateWithoutChucDanhInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6117,6 +6339,9 @@ export type CanBoUncheckedUpdateManyWithoutChucDanhInput = {
   ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6286,6 +6511,9 @@ export type CanBoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   ngayBoNhiemGanNhat?: boolean
   ngayBoNhiemTiepTheo?: boolean
   ngayVeHuu?: boolean
+  ngayNghiHuuLui?: boolean
+  truongHopLui?: boolean
+  vanBanLuiNghiHuu?: boolean
   maNgach?: boolean
   bacLuong?: boolean
   ngachHienHuong?: boolean
@@ -6366,6 +6594,9 @@ export type CanBoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   ngayBoNhiemGanNhat?: boolean
   ngayBoNhiemTiepTheo?: boolean
   ngayVeHuu?: boolean
+  ngayNghiHuuLui?: boolean
+  truongHopLui?: boolean
+  vanBanLuiNghiHuu?: boolean
   maNgach?: boolean
   bacLuong?: boolean
   ngachHienHuong?: boolean
@@ -6436,6 +6667,9 @@ export type CanBoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   ngayBoNhiemGanNhat?: boolean
   ngayBoNhiemTiepTheo?: boolean
   ngayVeHuu?: boolean
+  ngayNghiHuuLui?: boolean
+  truongHopLui?: boolean
+  vanBanLuiNghiHuu?: boolean
   maNgach?: boolean
   bacLuong?: boolean
   ngachHienHuong?: boolean
@@ -6506,6 +6740,9 @@ export type CanBoSelectScalar = {
   ngayBoNhiemGanNhat?: boolean
   ngayBoNhiemTiepTheo?: boolean
   ngayVeHuu?: boolean
+  ngayNghiHuuLui?: boolean
+  truongHopLui?: boolean
+  vanBanLuiNghiHuu?: boolean
   maNgach?: boolean
   bacLuong?: boolean
   ngachHienHuong?: boolean
@@ -6542,7 +6779,7 @@ export type CanBoSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CanBoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cccd" | "hoTen" | "chucVu" | "phongBan" | "email" | "soDienThoai" | "ngaySinh" | "heSoLuong" | "phuCap" | "vuotKhung" | "ngayNangLuong" | "ngayNangLuongKeTiep" | "gioiTinh" | "queQuanTruoc" | "queQuanSau" | "noiOTruoc" | "noiOHienNay" | "quangTriCuRa" | "doiTuong" | "viTriViecLam" | "loaiHopDong" | "ngayKetThucHopDong" | "loaiHinh" | "ngayVaoBienChe" | "ngayVaoCongChucCoQuanNN" | "boNhiemLanDau" | "ngayBoNhiemGanNhat" | "ngayBoNhiemTiepTheo" | "ngayVeHuu" | "maNgach" | "bacLuong" | "ngachHienHuong" | "ngayBoNhiemNgach" | "trinhDoChuyenMon" | "chuyenNganh" | "namTotNghiep" | "heDaoTao" | "trinhDoQLNN" | "namDaoTaoQLNN" | "trinhDoLLCT" | "namDaoTaoLLCT" | "trinhDoNgoaiNgu" | "namDaoTaoNgoaiNgu" | "trinhDoTinHoc" | "namDaoTaoTinHoc" | "namDaoTaoCapPhong" | "namDaoTaoCapSo" | "qpAn" | "namDaoTaoQPAN" | "soTheDang" | "ngayKetNapDang" | "ngayVaoDangChinhThuc" | "chiBo" | "maSoBHXH" | "ngayThamGiaBHXH" | "maSoThue" | "trangThai" | "ghiChu" | "toChucId" | "chucDanhId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["canBo"]>
+export type CanBoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cccd" | "hoTen" | "chucVu" | "phongBan" | "email" | "soDienThoai" | "ngaySinh" | "heSoLuong" | "phuCap" | "vuotKhung" | "ngayNangLuong" | "ngayNangLuongKeTiep" | "gioiTinh" | "queQuanTruoc" | "queQuanSau" | "noiOTruoc" | "noiOHienNay" | "quangTriCuRa" | "doiTuong" | "viTriViecLam" | "loaiHopDong" | "ngayKetThucHopDong" | "loaiHinh" | "ngayVaoBienChe" | "ngayVaoCongChucCoQuanNN" | "boNhiemLanDau" | "ngayBoNhiemGanNhat" | "ngayBoNhiemTiepTheo" | "ngayVeHuu" | "ngayNghiHuuLui" | "truongHopLui" | "vanBanLuiNghiHuu" | "maNgach" | "bacLuong" | "ngachHienHuong" | "ngayBoNhiemNgach" | "trinhDoChuyenMon" | "chuyenNganh" | "namTotNghiep" | "heDaoTao" | "trinhDoQLNN" | "namDaoTaoQLNN" | "trinhDoLLCT" | "namDaoTaoLLCT" | "trinhDoNgoaiNgu" | "namDaoTaoNgoaiNgu" | "trinhDoTinHoc" | "namDaoTaoTinHoc" | "namDaoTaoCapPhong" | "namDaoTaoCapSo" | "qpAn" | "namDaoTaoQPAN" | "soTheDang" | "ngayKetNapDang" | "ngayVaoDangChinhThuc" | "chiBo" | "maSoBHXH" | "ngayThamGiaBHXH" | "maSoThue" | "trangThai" | "ghiChu" | "toChucId" | "chucDanhId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["canBo"]>
 export type CanBoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   toChuc?: boolean | Prisma.CanBo$toChucArgs<ExtArgs>
   chucDanh?: boolean | Prisma.CanBo$chucDanhArgs<ExtArgs>
@@ -6616,6 +6853,9 @@ export type $CanBoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     ngayBoNhiemGanNhat: Date | null
     ngayBoNhiemTiepTheo: Date | null
     ngayVeHuu: Date | null
+    ngayNghiHuuLui: Date | null
+    truongHopLui: string | null
+    vanBanLuiNghiHuu: string | null
     maNgach: string | null
     bacLuong: number | null
     ngachHienHuong: string | null
@@ -7115,6 +7355,9 @@ export interface CanBoFieldRefs {
   readonly ngayBoNhiemGanNhat: Prisma.FieldRef<"CanBo", 'DateTime'>
   readonly ngayBoNhiemTiepTheo: Prisma.FieldRef<"CanBo", 'DateTime'>
   readonly ngayVeHuu: Prisma.FieldRef<"CanBo", 'DateTime'>
+  readonly ngayNghiHuuLui: Prisma.FieldRef<"CanBo", 'DateTime'>
+  readonly truongHopLui: Prisma.FieldRef<"CanBo", 'String'>
+  readonly vanBanLuiNghiHuu: Prisma.FieldRef<"CanBo", 'String'>
   readonly maNgach: Prisma.FieldRef<"CanBo", 'String'>
   readonly bacLuong: Prisma.FieldRef<"CanBo", 'Int'>
   readonly ngachHienHuong: Prisma.FieldRef<"CanBo", 'String'>

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requireOfficeAccess, canViewOfficeSensitive, isOfficeLeader, canManageCanBo, isLeadership } from '@/lib/auth'
 import { DeptLeaderToggle } from '@/components/van-phong-so/dept-leader-toggle'
-import { tuoiNghiHuuLabel } from '@/lib/nghi-huu'
+import { tuoiNghiHuuLabel, TRUONG_HOP_LUI, type MaTruongHopLui } from '@/lib/nghi-huu'
 import { hasPermission, MODULES } from '@/lib/permissions'
 import { logSensitiveView } from '@/app/actions/office'
 import { db } from '@/lib/db'
@@ -128,7 +128,19 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
     { label: 'Bổ nhiệm lần đầu', value: cb.boNhiemLanDau ?? '—' },
     { label: 'Bổ nhiệm gần nhất', value: fmtDate(cb.ngayBoNhiemGanNhat) },
     { label: 'Bổ nhiệm tiếp theo (+5 năm)', value: fmtDate(cb.ngayBoNhiemTiepTheo) },
-    { label: `Ngày về hưu (${tuoiNghiHuuLabel(cb.ngaySinh, cb.gioiTinh) ?? 'NĐ 135/2020'})`, value: fmtDate(cb.ngayVeHuu) },
+    // Ngày này do máy TÍNH theo NĐ 135/2020 — ghi rõ "dự kiến" để không ai chép thẳng
+    // vào Thông báo/Quyết định nghỉ hưu mà chưa đối chiếu.
+    { label: `Ngày nghỉ hưu dự kiến (${tuoiNghiHuuLabel(cb.ngaySinh, cb.gioiTinh) ?? 'NĐ 135/2020'})`, value: fmtDate(cb.ngayVeHuu) },
+    ...(cb.ngayNghiHuuLui ? [
+      { label: 'Lùi thời điểm nghỉ hưu (NĐ 170/2025 Điều 61)', value: fmtDate(cb.ngayNghiHuuLui) },
+      {
+        label: 'Trường hợp lùi',
+        value: cb.truongHopLui
+          ? `${cb.truongHopLui} — ${TRUONG_HOP_LUI[cb.truongHopLui as MaTruongHopLui]?.moTa ?? ''} (tối đa ${TRUONG_HOP_LUI[cb.truongHopLui as MaTruongHopLui]?.tranThang} tháng)`
+          : '—',
+      },
+      { label: 'Văn bản quyết định lùi', value: cb.vanBanLuiNghiHuu ?? '—' },
+    ] : []),
     { label: 'Ghi chú', value: cb.ghiChu ?? '—' },
   ]
 

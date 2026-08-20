@@ -8,7 +8,7 @@ import { requireOfficeAccess, canManageCanBo } from '@/lib/auth'
 import { MODULES } from '@/lib/permissions'
 import { logAction } from '@/lib/audit'
 import { convertQueQuan } from '@/lib/que-quan'
-import { tinhNgayNghiHuu } from '@/lib/nghi-huu'
+import { tinhNgayNghiHuu, TRUONG_HOP_LUI, hanLuiToiDa, type MaTruongHopLui } from '@/lib/nghi-huu'
 import type { OfficeFormState } from './office'
 
 // Hồ sơ cán bộ đầy đủ theo biểu QLNS 53 cột — thêm/sửa/xoá (gate: canManageCanBo)
@@ -28,6 +28,7 @@ const ProfileSchema = z.object({
   doiTuong: z.enum(['CONG_CHUC', 'VIEN_CHUC', 'NGUOI_LAO_DONG', '']).optional(),
   viTriViecLam: opt, loaiHopDong: opt, ngayKetThucHopDong: opt,
   loaiHinh: opt, ngayVaoBienChe: opt, boNhiemLanDau: opt, ngayBoNhiemGanNhat: opt,
+  ngayNghiHuuLui: opt, truongHopLui: z.enum(['A', 'B', 'C', '']).optional(), vanBanLuiNghiHuu: opt,
   maNgach: opt, bacLuong: opt, heSoLuong: opt, phuCap: opt, vuotKhung: opt,
   ngayNangLuong: opt, ngachHienHuong: opt, ngayBoNhiemNgach: opt,
   trinhDoChuyenMon: opt, chuyenNganh: opt, namTotNghiep: opt, heDaoTao: opt,
@@ -76,6 +77,47 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
   const ngayBoNhiemGanNhat = d(f.ngayBoNhiemGanNhat)
   const ngayNangLuong = d(f.ngayNangLuong)
 
+  // ── Lùi thời điểm nghỉ hưu (NĐ 170/2025 Điều 61 khoản 3–5) ──
+  // Ngày nghỉ hưu DỰ KIẾN vẫn do máy tính; ba trường dưới ghi QUYẾT ĐỊNH lùi và
+  // phải nằm trong trần của từng trường hợp. CSDL cũng có CHECK tương ứng
+  // (migration 045) — kiểm ở đây để báo lỗi tử tế thay vì ném lỗi Postgres.
+  const ngayVeHuuDuKien = tinhNgayNghiHuu(ngaySinh, gioiTinh)
+  const truongHopLui = f.truongHopLui === '' ? null : (f.truongHopLui ?? null)
+  const ngayNghiHuuLui = d(f.ngayNghiHuuLui)
+  const vanBanLuiNghiHuu = s(f.vanBanLuiNghiHuu)
+
+  // Đây là QUYẾT ĐỊNH của người có thẩm quyền, không phải trường khai báo thường.
+  // Nếu biểu mẫu gọi tới KHÔNG mang nhóm trường này (form rút gọn, form cũ, gọi từ
+  // nơi khác) thì GIỮ NGUYÊN giá trị đang có, tuyệt đối không ghi đè bằng null.
+  const coNhomLui = formData.has('truongHopLui') || formData.has('ngayNghiHuuLui')
+
+  if (coNhomLui && (ngayNghiHuuLui || truongHopLui)) {
+    if (!ngayNghiHuuLui) {
+      return { fieldErrors: { ngayNghiHuuLui: ['Đã chọn trường hợp lùi thì phải nhập thời điểm nghỉ hưu sau khi lùi'] } }
+    }
+    if (!truongHopLui) {
+      return { fieldErrors: { ngayNghiHuuLui: ['Chọn trường hợp lùi theo NĐ 170/2025 Điều 61 khoản 3'] } }
+    }
+    if (!vanBanLuiNghiHuu) {
+      return { fieldErrors: { vanBanLuiNghiHuu: ['Việc lùi phải do người có thẩm quyền quyết định — nhập số, ngày văn bản'] } }
+    }
+    if (!ngayVeHuuDuKien) {
+      return { fieldErrors: { ngayNghiHuuLui: ['Chưa đủ ngày sinh và giới tính để tính ngày nghỉ hưu dự kiến, không xét lùi được'] } }
+    }
+    if (ngayNghiHuuLui <= ngayVeHuuDuKien) {
+      return { fieldErrors: { ngayNghiHuuLui: ['Thời điểm lùi phải SAU ngày nghỉ hưu dự kiến'] } }
+    }
+    const han = hanLuiToiDa(ngayVeHuuDuKien, truongHopLui)
+    if (han && ngayNghiHuuLui > han) {
+      const th = TRUONG_HOP_LUI[truongHopLui as MaTruongHopLui]
+      return {
+        fieldErrors: {
+          ngayNghiHuuLui: [`Trường hợp ${truongHopLui} chỉ được lùi tối đa ${th.tranThang} tháng — muộn nhất là ${han.toLocaleDateString('vi-VN')}`],
+        },
+      }
+    }
+  }
+
   const data = {
     hoTen: f.hoTen.trim(),
     gioiTinh, ngaySinh,
@@ -97,7 +139,9 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
     boNhiemLanDau: s(f.boNhiemLanDau),
     ngayBoNhiemGanNhat,
     ngayBoNhiemTiepTheo: addYears(ngayBoNhiemGanNhat, 5),          // = Q + 5 năm
-    ngayVeHuu: tinhNgayNghiHuu(ngaySinh, gioiTinh),                 // NĐ 135/2020
+    ngayVeHuu: ngayVeHuuDuKien,                                     // DỰ KIẾN — NĐ 135/2020
+    // Chỉ ghi khi biểu mẫu thật sự mang nhóm trường này (xem coNhomLui ở trên).
+    ...(coNhomLui ? { ngayNghiHuuLui, truongHopLui, vanBanLuiNghiHuu } : {}), // NĐ 170/2025 Điều 61
     maNgach: s(f.maNgach),
     bacLuong: n(f.bacLuong) != null ? Math.round(n(f.bacLuong) as number) : null,
     heSoLuong: n(f.heSoLuong),
@@ -138,7 +182,10 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
 
   let id = s(f.canBoId)
   if (id) {
-    const old = await db.canBo.findUnique({ where: { id }, select: { cccd: true, userId: true, hoTen: true } })
+    const old = await db.canBo.findUnique({
+      where: { id },
+      select: { cccd: true, userId: true, hoTen: true, ngayNghiHuuLui: true, truongHopLui: true, vanBanLuiNghiHuu: true },
+    })
     if (!old) return { error: 'Không tìm thấy hồ sơ cán bộ.' }
     const newCccd = cccd ?? old.cccd
     if (newCccd !== old.cccd) {
@@ -155,6 +202,25 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
       userId: user.id, action: 'UPDATE', module: MODULES.OFFICE,
       targetId: id, targetType: 'CanBo', detail: `Cập nhật hồ sơ cán bộ ${data.hoTen}`,
     })
+    // Lùi thời điểm nghỉ hưu là QUYẾT ĐỊNH của người có thẩm quyền (NĐ 170/2025
+    // Điều 61 khoản 5) và làm đổi mốc ghi trong Thông báo/Quyết định nghỉ hưu →
+    // ghi vết riêng, nêu rõ trước/sau, không lẫn vào log sửa hồ sơ chung.
+    const doiMoc = coNhomLui && (
+      old.ngayNghiHuuLui?.getTime() !== ngayNghiHuuLui?.getTime() ||
+      old.truongHopLui !== truongHopLui ||
+      old.vanBanLuiNghiHuu !== vanBanLuiNghiHuu
+    )
+    if (doiMoc) {
+      const moTa = (ngay: Date | null, th: string | null, vb: string | null) =>
+        ngay ? `${ngay.toLocaleDateString('vi-VN')} (TH ${th}, VB ${vb})` : 'không lùi'
+      await logAction({
+        userId: user.id, action: 'UPDATE', module: MODULES.OFFICE,
+        targetId: id, targetType: 'CanBo',
+        detail: `Lùi thời điểm nghỉ hưu ${data.hoTen}: `
+          + `${moTa(old.ngayNghiHuuLui, old.truongHopLui, old.vanBanLuiNghiHuu)} → `
+          + `${moTa(ngayNghiHuuLui, truongHopLui, vanBanLuiNghiHuu)}`,
+      })
+    }
   } else {
     if (!cccd) return { fieldErrors: { cccd: ['Nhập số CCCD (12 số) khi tạo hồ sơ mới'] } }
     const trung = await db.canBo.findUnique({ where: { cccd } })

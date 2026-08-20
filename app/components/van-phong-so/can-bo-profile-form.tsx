@@ -17,6 +17,7 @@ export interface CanBoDefaults {
   queQuanTruoc?: string; queQuanSau?: string; noiOTruoc?: string; noiOHienNay?: string; quangTriCuRa?: string
   doiTuong?: string; viTriViecLam?: string; loaiHopDong?: string; ngayKetThucHopDong?: string
   loaiHinh?: string; ngayVaoBienChe?: string; boNhiemLanDau?: string; ngayBoNhiemGanNhat?: string
+  ngayVeHuu?: string; ngayNghiHuuLui?: string; truongHopLui?: string; vanBanLuiNghiHuu?: string
   maNgach?: string; bacLuong?: string; heSoLuong?: string; phuCap?: string; vuotKhung?: string
   ngayNangLuong?: string; ngachHienHuong?: string; ngayBoNhiemNgach?: string
   trinhDoChuyenMon?: string; chuyenNganh?: string; namTotNghiep?: string; heDaoTao?: string
@@ -196,6 +197,25 @@ export function CanBoProfileForm({ defaults, toChucOptions, chucDanhOptions }: {
         </Field>
         <Field label="Ngày bổ nhiệm gần nhất (tiếp theo tự +5 năm)">
           <Input name="ngayBoNhiemGanNhat" type="date" defaultValue={defaults.ngayBoNhiemGanNhat} className="h-9" />
+        </Field>
+        {/* Ngày nghỉ hưu dự kiến do máy tính, KHÔNG cho sửa tay. Muốn đổi thời điểm
+            nghỉ hưu thì phải qua quyết định lùi (NĐ 170/2025 Điều 61) ở ba ô dưới. */}
+        <Field label="Ngày nghỉ hưu dự kiến (máy tự tính theo NĐ 135/2020)">
+          <Input value={defaults.ngayVeHuu ?? ''} type="date" disabled readOnly className="h-9 bg-slate-50 text-slate-500" />
+        </Field>
+        <Field label="Lùi thời điểm nghỉ hưu — trường hợp (NĐ 170/2025 Điều 61 khoản 3)" span={2}>
+          <select name="truongHopLui" defaultValue={defaults.truongHopLui ?? ''} className={cls}>
+            <option value="">— Không lùi —</option>
+            <option value="A">A · tối đa 01 tháng — trùng nghỉ Tết; thân nhân từ trần/mất tích; thiên tai, địch hoạ, hoả hoạn</option>
+            <option value="B">B · tối đa 03 tháng — bệnh nặng hoặc tai nạn, có giấy xác nhận của bệnh viện</option>
+            <option value="C">C · tối đa 06 tháng — điều trị bệnh cần chữa trị dài ngày, có giấy xác nhận của bệnh viện</option>
+          </select>
+        </Field>
+        <Field label="Thời điểm nghỉ hưu sau khi lùi" error={fe?.ngayNghiHuuLui}>
+          <Input name="ngayNghiHuuLui" type="date" defaultValue={defaults.ngayNghiHuuLui} className="h-9" />
+        </Field>
+        <Field label="Văn bản quyết định lùi (số, ngày)" error={fe?.vanBanLuiNghiHuu}>
+          <Input name="vanBanLuiNghiHuu" defaultValue={defaults.vanBanLuiNghiHuu} className="h-9" placeholder="VD: 123/QĐ-SXD ngày 10/9/2026" />
         </Field>
         <Field label="Trạng thái">
           <select name="trangThai" defaultValue={defaults.trangThai ?? 'DANG_CONG_TAC'} className={cls}>

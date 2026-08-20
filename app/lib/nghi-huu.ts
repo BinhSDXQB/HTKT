@@ -34,6 +34,70 @@ export function tinhNgayNghiHuu(ngaySinh: Date | null | undefined, gioiTinh: Gio
   return new Date(Date.UTC(ngaySinh.getUTCFullYear(), ngaySinh.getUTCMonth() + thang + 1, 1))
 }
 
+// ───────────── Lùi thời điểm nghỉ hưu — NĐ 170/2025/NĐ-CP, Điều 61 khoản 3–5 ─────────────
+// Nguyên văn khoản 3 (bản gốc trong kho tài liệu của Sở):
+//   a) Không quá 01 tháng: trùng ngày nghỉ Tết Nguyên đán; vợ/chồng, bố, mẹ (vợ/chồng),
+//      con từ trần hoặc bị Toà án tuyên bố mất tích; bản thân và gia đình bị thiệt hại
+//      do thiên tai, địch hoạ, hoả hoạn.
+//   b) Không quá 03 tháng: bị bệnh nặng hoặc bị tai nạn có giấy xác nhận của bệnh viện.
+//   c) Không quá 06 tháng: đang điều trị bệnh thuộc danh mục bệnh cần chữa trị dài ngày
+//      do Bộ Y tế ban hành, có giấy xác nhận của bệnh viện.
+// Khoản 4: thuộc nhiều trường hợp thì chỉ áp dụng MỘT trường hợp có thời gian lùi nhiều nhất.
+// Khoản 5: người có thẩm quyền cho nghỉ hưu QUYẾT ĐỊNH việc lùi.
+export const TRUONG_HOP_LUI = {
+  A: { tranThang: 1, moTa: 'Trùng nghỉ Tết Nguyên đán; thân nhân từ trần/mất tích; thiệt hại do thiên tai, địch hoạ, hoả hoạn' },
+  B: { tranThang: 3, moTa: 'Bị bệnh nặng hoặc bị tai nạn, có giấy xác nhận của bệnh viện' },
+  C: { tranThang: 6, moTa: 'Điều trị bệnh thuộc danh mục cần chữa trị dài ngày, có giấy xác nhận của bệnh viện' },
+} as const
+
+export type MaTruongHopLui = keyof typeof TRUONG_HOP_LUI
+
+/** Ngày muộn nhất được phép lùi tới, theo trần của từng trường hợp. */
+export function hanLuiToiDa(ngayDuKien: Date | null | undefined, truongHop: string | null | undefined): Date | null {
+  if (!ngayDuKien) return null
+  const th = TRUONG_HOP_LUI[truongHop as MaTruongHopLui]
+  if (!th) return null
+  return new Date(Date.UTC(ngayDuKien.getUTCFullYear(), ngayDuKien.getUTCMonth() + th.tranThang, ngayDuKien.getUTCDate()))
+}
+
+type HoSoNghiHuu = {
+  ngaySinh?: Date | null
+  gioiTinh?: string | null
+  ngayVeHuu?: Date | null
+  ngayNghiHuuLui?: Date | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
+}
+
+/**
+ * Thời điểm nghỉ hưu dùng để HIỂN THỊ và SINH VĂN BẢN.
+ *
+ * Phân biệt rõ hai nguồn, vì đây là chỗ dễ ghi sai vào Thông báo/Quyết định nghỉ hưu:
+ *   - DU_KIEN: ngày do máy tính theo NĐ 135/2020, CHƯA phải quyết định của ai.
+ *   - DA_LUI:  thời điểm người có thẩm quyền đã quyết định lùi (NĐ 170/2025 Điều 61).
+ */
+export function thoiDiemNghiHuu(cb: HoSoNghiHuu): {
+  ngay: Date | null
+  laDuKien: boolean
+  nguon: 'DU_KIEN' | 'DA_LUI'
+  ngayDuKien: Date | null
+  truongHop: MaTruongHopLui | null
+} {
+  const gioiTinh = (cb.gioiTinh === 'NAM' || cb.gioiTinh === 'NU' ? cb.gioiTinh : null) as GioiTinhInput
+  // Cột ngayVeHuu trong CSDL cũng là giá trị máy tính; nếu trống thì tính lại tại chỗ.
+  const ngayDuKien = cb.ngayVeHuu ?? tinhNgayNghiHuu(cb.ngaySinh, gioiTinh)
+  if (cb.ngayNghiHuuLui) {
+    return {
+      ngay: cb.ngayNghiHuuLui,
+      laDuKien: false,
+      nguon: 'DA_LUI',
+      ngayDuKien,
+      truongHop: (cb.truongHopLui as MaTruongHopLui) ?? null,
+    }
+  }
+  return { ngay: ngayDuKien, laDuKien: true, nguon: 'DU_KIEN', ngayDuKien, truongHop: null }
+}
+
 /** Nhãn tuổi nghỉ hưu dạng "62 tuổi" / "60 tuổi 9 tháng" để hiển thị. */
 export function tuoiNghiHuuLabel(ngaySinh: Date | null | undefined, gioiTinh: GioiTinhInput): string | null {
   if (!ngaySinh || !gioiTinh) return null

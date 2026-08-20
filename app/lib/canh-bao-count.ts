@@ -9,7 +9,7 @@ import { classifyRetireAlert } from './nghi-huu-alert'
 import { classifySalaryAlert } from './salary-alert'
 import { huongLuongNgachBac } from './luong'
 import { classifyContractAlert } from './hop-dong-alert'
-import { tinhNgayNghiHuu } from './nghi-huu'
+import { thoiDiemNghiHuu } from './nghi-huu'
 
 // Đếm SỐ NGƯỜI cần xử lý (có ≥1 cảnh báo) — khớp các nhóm ở trang
 // /dashboard/van-phong-so/canh-bao. Chỉ 1 query + lọc bằng hàm thuần (≈157 cán bộ).
@@ -21,7 +21,7 @@ async function computeCount(includeSensitive: boolean): Promise<number> {
 
   let n = 0
   for (const cb of list) {
-    const veHuu = cb.ngayVeHuu ?? tinhNgayNghiHuu(cb.ngaySinh, cb.gioiTinh as 'NAM' | 'NU' | null)
+    const veHuu = thoiDiemNghiHuu(cb).ngay
     const flagged =
       // Thiếu giấy tờ hồ sơ cá nhân cần bổ sung
       missingRequiredChoCanhBao(cb).length > 0 ||

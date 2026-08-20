@@ -1566,7 +1566,14 @@ model CanBo {
   boNhiemLanDau        String?                    // P: Bổ nhiệm lần đầu (text kèm ghi chú)
   ngayBoNhiemGanNhat   DateTime? @db.Date         // Q
   ngayBoNhiemTiepTheo  DateTime? @db.Date         // R = Q + 5 năm
-  ngayVeHuu            DateTime? @db.Date         // S
+  ngayVeHuu            DateTime? @db.Date         // S — ngày nghỉ hưu DỰ KIẾN (máy tính theo NĐ 135/2020)
+
+  // ── Lùi thời điểm nghỉ hưu — NĐ 170/2025 Điều 61 khoản 3–5 (migration 045) ──
+  // ngayVeHuu ở trên là ngày máy TÍNH. Ba cột dưới ghi QUYẾT ĐỊNH lùi của người có
+  // thẩm quyền; nơi nào hiển thị/sinh văn bản thì lấy ngày lùi nếu có.
+  ngayNghiHuuLui   DateTime? @db.Date             // Thời điểm nghỉ hưu sau khi lùi
+  truongHopLui     String?                        // A ≤1 tháng · B ≤3 tháng · C ≤6 tháng
+  vanBanLuiNghiHuu String?                        // Số, ngày văn bản quyết định lùi
 
   // ── Ngạch, bậc (cột T, U, AB, AC) ──
   maNgach          String?                        // T: VD 01.001

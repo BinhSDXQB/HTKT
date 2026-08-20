@@ -13,7 +13,7 @@ import { huongLuongNgachBac } from '@/lib/luong'
 import { classifyContractAlert } from '@/lib/hop-dong-alert'
 import { DOI_TUONG_NHAN_SU_LABEL, doiTuongBadgeClass } from '@/lib/office-labels'
 import { CO_SO_PHAP_LY } from '@/lib/data/co-so-phap-ly-nhan-su'
-import { tinhNgayNghiHuu } from '@/lib/nghi-huu'
+import { thoiDiemNghiHuu } from '@/lib/nghi-huu'
 import { GuiCanhBaoTelegramButton } from '@/components/van-phong-so/gui-canh-bao-telegram-button'
 import {
   Briefcase, ChevronRight, TriangleAlert, FileWarning, Wallet, CalendarClock,
@@ -63,8 +63,8 @@ export default async function CanhBaoPage() {
   const nghiHuu = list
     .filter((cb) => cb.doiTuong !== 'NGUOI_LAO_DONG')
     .map((cb) => {
-      const veHuu = cb.ngayVeHuu ?? tinhNgayNghiHuu(cb.ngaySinh, cb.gioiTinh as 'NAM' | 'NU' | null)
-      return { cb, alert: classifyRetireAlert(veHuu) }
+      const td = thoiDiemNghiHuu(cb)
+      return { cb, td, alert: classifyRetireAlert(td.ngay) }
     })
     .filter((x) => x.alert.bucket !== null)
     .sort((a, b) => (a.alert.daysLeft ?? 0) - (b.alert.daysLeft ?? 0))
@@ -264,7 +264,7 @@ export default async function CanhBaoPage() {
           <Empty text="Không có cán bộ đến mốc thông báo/quyết định nghỉ hưu." />
         ) : (
           <div className="space-y-2">
-            {nghiHuu.map(({ cb, alert }) => (
+            {nghiHuu.map(({ cb, td, alert }) => (
               <div key={cb.id} className="rounded-lg border border-slate-200 p-3">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -274,7 +274,18 @@ export default async function CanhBaoPage() {
                       {alert.label}
                     </span>
                   </div>
-                  <span className="text-xs text-slate-500">Nghỉ hưu: <b className="text-slate-700">{fmtDate(alert.ngayVeHuu)}</b></span>
+                  {/* Phân biệt ngày MÁY TÍNH với thời điểm đã được quyết định lùi —
+                      Thông báo/Quyết định nghỉ hưu ghi theo mốc này nên không được lẫn. */}
+                  <span className="text-xs text-slate-500">
+                    Nghỉ hưu: <b className="text-slate-700">{fmtDate(alert.ngayVeHuu)}</b>
+                    {td.laDuKien ? (
+                      <span className="ml-1.5 text-[11px] font-medium text-slate-500 border border-slate-200 bg-slate-50 rounded px-1.5 py-0.5">dự kiến</span>
+                    ) : (
+                      <span className="ml-1.5 text-[11px] font-medium text-teal-800 border border-teal-200 bg-teal-50 rounded px-1.5 py-0.5">
+                        đã lùi (TH {td.truongHop}) · dự kiến {fmtDate(td.ngayDuKien)}
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div className="mt-1.5 text-xs text-slate-600 grid sm:grid-cols-3 gap-x-4 gap-y-0.5">
                   <span>Hạn Thông báo (−6 th): <b>{fmtDate(alert.ngayRaThongBao)}</b></span>
