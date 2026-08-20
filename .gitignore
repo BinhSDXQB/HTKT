@@ -64,3 +64,6 @@ app/.next-staging/
 app/.next-old/
 .next-staging/
 .next-old/
+
+# Ket qua healthcheck sinh moi lan chay (gia tri la so sanh cuc bo, khong phai lich su git)
+app/healthcheck-logs/
