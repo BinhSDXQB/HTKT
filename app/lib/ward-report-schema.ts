@@ -28,97 +28,174 @@ export const SHEET_BIEU_MAU: Record<string, string> = {
   'Bãi đổ xe':                'BIỂU MẪU 07 — Bãi đỗ xe',
 }
 
-/** Định nghĩa đầy đủ từng cột theo từng sheet — đúng vị trí (A=0,B=1,...) */
+/** Định nghĩa đầy đủ từng cột theo từng sheet — đúng vị trí (A=0,B=1,...).
+ *  `field` = tên trường camelCase trong model Prisma (Report*), là cầu nối
+ *  giữa tên hiển thị (name) và cột DB. Form nhập liệu + import đều dùng `field`
+ *  làm khoá để tránh lệch tên-hiển-thị ↔ tên-cột-DB. */
 export type ColumnDef = {
   index: number     // Vị trí cột (0-based)
-  name: string      // Tên cột trong file
+  field: string     // Tên trường camelCase trong model Prisma
+  name: string      // Tên cột trong file / nhãn hiển thị
   unit?: string     // Đơn vị tính
   required: boolean // Bắt buộc
-  type: 'text' | 'number' | 'year' // Kiểu dữ liệu
+  type: 'text' | 'number' | 'integer' | 'year' | 'boolean' // Kiểu dữ liệu
+  // 'integer' = cột đếm (Prisma Int) → ép số nguyên, tránh đẩy Float vào Int gây lỗi.
 }
 
 export const SHEET_COLUMNS: Record<string, ColumnDef[]> = {
   'DUONG GT (T)': [
-    { index: 0,  name: 'STT',                      required: true,  type: 'text'   },
-    { index: 1,  name: 'Tên đường',                 required: true,  type: 'text'   },
-    { index: 2,  name: 'Điểm đầu (Lý trình)',       required: false, type: 'text'   },
-    { index: 3,  name: 'Điểm cuối (Lý trình)',      required: false, type: 'text'   },
-    { index: 4,  name: 'Chiều dài tuyến',           unit: 'km',      required: false, type: 'number' },
-    { index: 5,  name: 'Nền đường',                 unit: 'm',       required: false, type: 'number' },
-    { index: 6,  name: 'Mặt đường',                 unit: 'm',       required: false, type: 'number' },
-    { index: 7,  name: 'Hè trái',                   unit: 'm',       required: false, type: 'number' },
-    { index: 8,  name: 'Hè phải',                   unit: 'm',       required: false, type: 'number' },
-    { index: 9,  name: 'Giải phân cách',            unit: 'm',       required: false, type: 'number' },
-    { index: 10, name: 'Kết cấu mặt đường',         required: false, type: 'text'   },
-    { index: 11, name: 'Ghi chú',                   required: false, type: 'text'   },
+    { index: 0,  field: 'stt',           name: 'STT',                      required: true,  type: 'text'   },
+    { index: 1,  field: 'tenDuong',      name: 'Tên đường',                 required: true,  type: 'text'   },
+    { index: 2,  field: 'diemDau',       name: 'Điểm đầu (Lý trình)',       required: false, type: 'text'   },
+    { index: 3,  field: 'diemCuoi',      name: 'Điểm cuối (Lý trình)',      required: false, type: 'text'   },
+    { index: 4,  field: 'chieuDaiKm',    name: 'Chiều dài tuyến',           unit: 'km',      required: false, type: 'number' },
+    { index: 5,  field: 'nenM',          name: 'Nền đường',                 unit: 'm',       required: false, type: 'number' },
+    { index: 6,  field: 'matM',          name: 'Mặt đường',                 unit: 'm',       required: false, type: 'number' },
+    { index: 7,  field: 'heTraiM',       name: 'Hè trái',                   unit: 'm',       required: false, type: 'number' },
+    { index: 8,  field: 'hePhaiM',       name: 'Hè phải',                   unit: 'm',       required: false, type: 'number' },
+    { index: 9,  field: 'giaiPhanCachM', name: 'Giải phân cách',            unit: 'm',       required: false, type: 'number' },
+    { index: 10, field: 'ketCauMat',     name: 'Kết cấu mặt đường',         required: false, type: 'text'   },
+    { index: 11, field: 'ghiChu',        name: 'Ghi chú',                   required: false, type: 'text'   },
   ],
 
   'ĐIện chiếu sáng': [
-    { index: 0, name: 'STT',                        required: true,  type: 'text'   },
-    { index: 1, name: 'Tuyến đường',                required: true,  type: 'text'   },
-    { index: 2, name: 'Chiều dài chiếu sáng',       unit: 'km',      required: false, type: 'number' },
-    { index: 3, name: 'Số cột đèn toàn tuyến',      unit: 'cột',     required: false, type: 'number' },
-    { index: 4, name: 'Loại đèn',                   required: true,  type: 'text'   },
-    { index: 5, name: 'Công suất',                  unit: 'W',       required: false, type: 'number' },
-    { index: 6, name: 'Chiếu sáng 1 bên/2 bên',    required: false, type: 'text'   },
-    { index: 7, name: 'Năm đầu tư',                 required: false, type: 'year'   },
-    { index: 8, name: 'Ghi chú',                    required: false, type: 'text'   },
+    { index: 0, field: 'stt',           name: 'STT',                        required: true,  type: 'text'   },
+    { index: 1, field: 'tuyenDuong',    name: 'Tuyến đường',                required: true,  type: 'text'   },
+    { index: 2, field: 'chieuDaiCSKm',  name: 'Chiều dài chiếu sáng',       unit: 'km',      required: false, type: 'number' },
+    { index: 3, field: 'soColDen',      name: 'Số cột đèn toàn tuyến',      unit: 'cột',     required: false, type: 'integer' },
+    { index: 4, field: 'loaiDen',       name: 'Loại đèn',                   required: true,  type: 'text'   },
+    { index: 5, field: 'congSuatW',     name: 'Công suất',                  unit: 'W',       required: false, type: 'number' },
+    { index: 6, field: 'chieuSangPhia', name: 'Chiếu sáng 1 bên/2 bên',    required: false, type: 'text'   },
+    { index: 7, field: 'namDauTu',      name: 'Năm đầu tư',                 required: false, type: 'year'   },
+    { index: 8, field: 'ghiChu',        name: 'Ghi chú',                    required: false, type: 'text'   },
   ],
 
   'Thoát nước mưa và thải': [
-    { index: 0, name: 'STT',                        required: true,  type: 'text'   },
-    { index: 1, name: 'Tuyến',                      required: true,  type: 'text'   },
-    { index: 2, name: 'Điểm đầu',                   required: false, type: 'text'   },
-    { index: 3, name: 'Điểm cuối',                  required: false, type: 'text'   },
-    { index: 4, name: 'Loại nước (mưa/thải)',       required: false, type: 'text'   },
-    { index: 5, name: 'Tổng chiều dài tuyến',       unit: 'm',       required: false, type: 'number' },
-    { index: 6, name: '1 phía/2 phía',              required: false, type: 'text'   },
-    { index: 7, name: 'Cống (kích thước)',           required: false, type: 'text'   },
-    { index: 8, name: 'Năm đưa vào sử dụng',        required: false, type: 'year'   },
-    { index: 9, name: 'Ghi chú',                    required: false, type: 'text'   },
+    { index: 0, field: 'stt',           name: 'STT',                        required: true,  type: 'text'   },
+    { index: 1, field: 'tuyen',         name: 'Tuyến',                      required: true,  type: 'text'   },
+    { index: 2, field: 'diemDau',       name: 'Điểm đầu',                   required: false, type: 'text'   },
+    { index: 3, field: 'diemCuoi',      name: 'Điểm cuối',                  required: false, type: 'text'   },
+    { index: 4, field: 'loaiNuoc',      name: 'Loại nước (mưa/thải)',       required: false, type: 'text'   },
+    { index: 5, field: 'chieuDaiM',     name: 'Tổng chiều dài tuyến',       unit: 'm',       required: false, type: 'number' },
+    { index: 6, field: 'chieuSangPhia', name: '1 phía/2 phía',              required: false, type: 'text'   },
+    { index: 7, field: 'kichThuocCong', name: 'Cống (kích thước)',           required: false, type: 'text'   },
+    { index: 8, field: 'namSuDung',     name: 'Năm đưa vào sử dụng',        required: false, type: 'year'   },
+    { index: 9, field: 'ghiChu',        name: 'Ghi chú',                    required: false, type: 'text'   },
   ],
 
   'cây xanh': [
-    { index: 0, name: 'STT',                        required: true,  type: 'text'   },
-    { index: 1, name: 'Tuyến',                      required: true,  type: 'text'   },
-    { index: 2, name: 'Điểm đầu',                   required: false, type: 'text'   },
-    { index: 3, name: 'Điểm cuối',                  required: false, type: 'text'   },
-    { index: 4, name: 'Số lượng cây',               unit: 'cây',     required: false, type: 'number' },
-    { index: 5, name: '1 phía/2 phía',              required: false, type: 'text'   },
-    { index: 6, name: 'Chủng loại cây',             required: false, type: 'text'   },
-    { index: 7, name: 'Ghi chú',                    required: false, type: 'text'   },
+    { index: 0, field: 'stt',           name: 'STT',                        required: true,  type: 'text'   },
+    { index: 1, field: 'tuyen',         name: 'Tuyến',                      required: true,  type: 'text'   },
+    { index: 2, field: 'diemDau',       name: 'Điểm đầu',                   required: false, type: 'text'   },
+    { index: 3, field: 'diemCuoi',      name: 'Điểm cuối',                  required: false, type: 'text'   },
+    { index: 4, field: 'soLuongCay',    name: 'Số lượng cây',               unit: 'cây',     required: false, type: 'integer' },
+    { index: 5, field: 'chieuSangPhia', name: '1 phía/2 phía',              required: false, type: 'text'   },
+    { index: 6, field: 'chungLoaiCay',  name: 'Chủng loại cây',             required: false, type: 'text'   },
+    { index: 7, field: 'ghiChu',        name: 'Ghi chú',                    required: false, type: 'text'   },
   ],
 
   'Công viên': [
-    { index: 0, name: 'STT',                        required: true,  type: 'text'   },
-    { index: 1, name: 'Tên công viên/quảng trường', required: true,  type: 'text'   },
-    { index: 2, name: 'Vị trí',                     required: false, type: 'text'   },
-    { index: 3, name: 'Diện tích',                  unit: 'm²',      required: false, type: 'number' },
-    { index: 4, name: 'Diện tích thảm cỏ',          unit: 'm²',      required: false, type: 'number' },
-    { index: 5, name: 'Số lượng cây',               unit: 'cây',     required: false, type: 'number' },
-    { index: 6, name: 'Chủng loại cây',             required: false, type: 'text'   },
-    { index: 7, name: 'Ghi chú',                    required: false, type: 'text'   },
+    { index: 0, field: 'stt',              name: 'STT',                        required: true,  type: 'text'   },
+    { index: 1, field: 'tenCongVien',      name: 'Tên công viên/quảng trường', required: true,  type: 'text'   },
+    { index: 2, field: 'viTri',            name: 'Vị trí',                     required: false, type: 'text'   },
+    { index: 3, field: 'dienTichM2',       name: 'Diện tích',                  unit: 'm²',      required: false, type: 'number' },
+    { index: 4, field: 'dienTichThamCoM2', name: 'Diện tích thảm cỏ',          unit: 'm²',      required: false, type: 'number' },
+    { index: 5, field: 'soLuongCay',       name: 'Số lượng cây',               unit: 'cây',     required: false, type: 'integer' },
+    { index: 6, field: 'chungLoaiCay',     name: 'Chủng loại cây',             required: false, type: 'text'   },
+    { index: 7, field: 'ghiChu',           name: 'Ghi chú',                    required: false, type: 'text'   },
   ],
 
   'Cấp nước': [
-    { index: 0, name: 'STT',                        required: true,  type: 'text'   },
-    { index: 1, name: 'Tuyến đường',                required: true,  type: 'text'   },
-    { index: 2, name: 'Địa chỉ',                    required: false, type: 'text'   },
-    { index: 3, name: 'Số hộ gia đình',             unit: 'hộ',      required: false, type: 'number' },
-    { index: 4, name: 'Hiện trạng sử dụng nước',    required: false, type: 'text'   },
-    { index: 5, name: 'Dự kiến nguồn nước',         required: false, type: 'text'   },
-    { index: 6, name: 'Ghi chú',                    required: false, type: 'text'   },
+    { index: 0, field: 'stt',          name: 'STT',                        required: true,  type: 'text'   },
+    { index: 1, field: 'tuyenDuong',   name: 'Tuyến đường',                required: true,  type: 'text'   },
+    { index: 2, field: 'diaChi',       name: 'Địa chỉ',                    required: false, type: 'text'   },
+    { index: 3, field: 'soHoGiaDinh',  name: 'Số hộ gia đình',             unit: 'hộ',      required: false, type: 'integer' },
+    { index: 4, field: 'hienTrang',    name: 'Hiện trạng sử dụng nước',    required: false, type: 'text'   },
+    { index: 5, field: 'duKienNguon',  name: 'Dự kiến nguồn nước',         required: false, type: 'text'   },
+    { index: 6, field: 'ghiChu',       name: 'Ghi chú',                    required: false, type: 'text'   },
   ],
 
   'Bãi đổ xe': [
-    { index: 0, name: 'STT',                        required: true,  type: 'text'   },
-    { index: 1, name: 'Bãi đỗ xe',                  required: true,  type: 'text'   },
-    { index: 2, name: 'Địa điểm',                   required: false, type: 'text'   },
-    { index: 3, name: 'Diện tích',                  unit: 'm²',      required: false, type: 'number' },
-    { index: 4, name: 'Số vị trí đỗ',              unit: 'chỗ',     required: false, type: 'number' },
-    { index: 5, name: 'Trạm sạc xe điện',           required: false, type: 'text'   },
-    { index: 6, name: 'Ghi chú',                    required: false, type: 'text'   },
+    { index: 0, field: 'stt',           name: 'STT',                        required: true,  type: 'text'    },
+    { index: 1, field: 'tenBai',        name: 'Bãi đỗ xe',                  required: true,  type: 'text'    },
+    { index: 2, field: 'diaDiem',       name: 'Địa điểm',                   required: false, type: 'text'    },
+    { index: 3, field: 'dienTichM2',    name: 'Diện tích',                  unit: 'm²',      required: false, type: 'number'  },
+    { index: 4, field: 'soViTriDo',     name: 'Số vị trí đỗ',              unit: 'chỗ',     required: false, type: 'integer' },
+    { index: 5, field: 'coTramSacDien', name: 'Trạm sạc xe điện',           required: false, type: 'boolean' },
+    { index: 6, field: 'ghiChu',        name: 'Ghi chú',                    required: false, type: 'text'    },
   ],
+}
+
+// ─── ĐỊNH TUYẾN NHẬP LIỆU TRỰC TUYẾN (7 biểu mẫu) ────────────────────────────
+// Token route (dùng trong URL /dashboard/bao-cao/nhap-lieu/<token>) → model Prisma
+// + tên sheet. TÁCH khỏi enum WardReportCategory (legacy) để không cần migration:
+// enum legacy không có BAI_DO_XE nên parking vẫn lưu 'KHAC' ở bảng ward_reports,
+// còn CRUD trực tuyến định tuyến qua các map dưới đây (đủ cả 7 biểu mẫu).
+
+/** Token route → tên model Prisma (client dùng db[model]) */
+export const CATEGORY_MODEL: Record<string, string> = {
+  DUONG:           'reportDuong',
+  DIEN_CHIEU_SANG: 'reportDienCS',
+  THOAT_NUOC_BC:   'reportThoatNuoc',
+  CAY_XANH:        'reportCayXanh',
+  CONG_VIEN:       'reportCongVien',
+  CAP_NUOC_BC:     'reportCapNuoc',
+  BAI_DO_XE:       'reportBaiDoXe',
+}
+
+/** Token route → tên sheet chuẩn (để tra SHEET_COLUMNS / SHEET_BIEU_MAU) */
+export const CATEGORY_SHEET: Record<string, string> = {
+  DUONG:           'DUONG GT (T)',
+  DIEN_CHIEU_SANG: 'ĐIện chiếu sáng',
+  THOAT_NUOC_BC:   'Thoát nước mưa và thải',
+  CAY_XANH:        'cây xanh',
+  CONG_VIEN:       'Công viên',
+  CAP_NUOC_BC:     'Cấp nước',
+  BAI_DO_XE:       'Bãi đổ xe',
+}
+
+/** Thứ tự hiển thị các biểu mẫu trong trang chọn nhập liệu */
+export const CATEGORY_ORDER = [
+  'DUONG', 'DIEN_CHIEU_SANG', 'THOAT_NUOC_BC', 'CAY_XANH', 'CONG_VIEN', 'CAP_NUOC_BC', 'BAI_DO_XE',
+] as const
+
+/** Các trường toạ độ theo token (điểm đầu–cuối, hoặc 1 điểm trung tâm). */
+export const CATEGORY_COORDS: Record<string, 'startEnd' | 'center' | 'none'> = {
+  DUONG:           'startEnd',
+  THOAT_NUOC_BC:   'startEnd',
+  CAY_XANH:        'startEnd',
+  DIEN_CHIEU_SANG: 'center',
+  CONG_VIEN:       'center',
+  CAP_NUOC_BC:     'none',
+  BAI_DO_XE:       'none',
+}
+
+/** Lấy danh sách cột (ColumnDef) cho một token route. */
+export function columnsForCategory(category: string): ColumnDef[] {
+  const sheet = CATEGORY_SHEET[category]
+  return sheet ? (SHEET_COLUMNS[sheet] ?? []) : []
+}
+
+/** Cột nhập/hiển thị trực tuyến: bỏ STT vì đã tự đánh số theo thứ tự bản ghi. */
+export function editableColumns(category: string): ColumnDef[] {
+  return columnsForCategory(category).filter((c) => c.field !== 'stt')
+}
+
+/** Chuyển giá trị 1 ô theo kiểu cột về giá trị lưu DB (number|boolean|string|null). */
+export function coerceCellValue(type: ColumnDef['type'], raw: unknown): unknown {
+  if (raw === '' || raw === undefined) return null
+  if (raw === null) return null
+  if (type === 'number' || type === 'integer' || type === 'year') {
+    const n = typeof raw === 'number' ? raw : parseFloat(String(raw).replace(/,/g, ''))
+    if (isNaN(n)) return null
+    // integer/year → cột Prisma Int: làm tròn để không đẩy Float vào Int.
+    return type === 'number' ? n : Math.round(n)
+  }
+  if (type === 'boolean') {
+    if (typeof raw === 'boolean') return raw
+    return /^(có|true|1|x)$/i.test(String(raw).trim())
+  }
+  return String(raw)
 }
 
 /** Cột bắt buộc để validate */

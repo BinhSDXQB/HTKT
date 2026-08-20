@@ -199,7 +199,7 @@ async function seedAdministrativeUnits() {
     { code: '18919', name: 'Xã Tân Thành' },
     { code: '18922', name: 'Xã Kim Điền' },
     { code: '18943', name: 'Xã Kim Phú' },
-    { code: '18949', name: 'Xã Đồng Lề' },
+    { code: '18949', name: 'Xã Đồng Lê' },
     { code: '18952', name: 'Xã Tuyên Sơn' },
     { code: '18958', name: 'Xã Tuyên Lâm' },
     { code: '18985', name: 'Xã Tuyên Phú' },

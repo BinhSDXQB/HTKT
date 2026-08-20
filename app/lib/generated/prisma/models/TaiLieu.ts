@@ -47,6 +47,9 @@ export type TaiLieuMinAggregateOutputType = {
   soKyTu: number | null
   trangThai: string | null
   ghiChuLoi: string | null
+  tinhTrangHieuLuc: string | null
+  thayTheBoi: string | null
+  ghiChuHieuLuc: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,6 +67,9 @@ export type TaiLieuMaxAggregateOutputType = {
   soKyTu: number | null
   trangThai: string | null
   ghiChuLoi: string | null
+  tinhTrangHieuLuc: string | null
+  thayTheBoi: string | null
+  ghiChuHieuLuc: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -81,6 +87,9 @@ export type TaiLieuCountAggregateOutputType = {
   soKyTu: number
   trangThai: number
   ghiChuLoi: number
+  tinhTrangHieuLuc: number
+  thayTheBoi: number
+  ghiChuHieuLuc: number
   metadata: number
   createdById: number
   createdAt: number
@@ -111,6 +120,9 @@ export type TaiLieuMinAggregateInputType = {
   soKyTu?: true
   trangThai?: true
   ghiChuLoi?: true
+  tinhTrangHieuLuc?: true
+  thayTheBoi?: true
+  ghiChuHieuLuc?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -128,6 +140,9 @@ export type TaiLieuMaxAggregateInputType = {
   soKyTu?: true
   trangThai?: true
   ghiChuLoi?: true
+  tinhTrangHieuLuc?: true
+  thayTheBoi?: true
+  ghiChuHieuLuc?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -145,6 +160,9 @@ export type TaiLieuCountAggregateInputType = {
   soKyTu?: true
   trangThai?: true
   ghiChuLoi?: true
+  tinhTrangHieuLuc?: true
+  thayTheBoi?: true
+  ghiChuHieuLuc?: true
   metadata?: true
   createdById?: true
   createdAt?: true
@@ -250,6 +268,9 @@ export type TaiLieuGroupByOutputType = {
   soKyTu: number
   trangThai: string
   ghiChuLoi: string | null
+  tinhTrangHieuLuc: string
+  thayTheBoi: string | null
+  ghiChuHieuLuc: string | null
   metadata: runtime.JsonValue | null
   createdById: string | null
   createdAt: Date
@@ -291,6 +312,9 @@ export type TaiLieuWhereInput = {
   soKyTu?: Prisma.IntFilter<"TaiLieu"> | number
   trangThai?: Prisma.StringFilter<"TaiLieu"> | string
   ghiChuLoi?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
+  tinhTrangHieuLuc?: Prisma.StringFilter<"TaiLieu"> | string
+  thayTheBoi?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
+  ghiChuHieuLuc?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
   metadata?: Prisma.JsonNullableFilter<"TaiLieu">
   createdById?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TaiLieu"> | Date | string
@@ -310,6 +334,9 @@ export type TaiLieuOrderByWithRelationInput = {
   soKyTu?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
   ghiChuLoi?: Prisma.SortOrderInput | Prisma.SortOrder
+  tinhTrangHieuLuc?: Prisma.SortOrder
+  thayTheBoi?: Prisma.SortOrderInput | Prisma.SortOrder
+  ghiChuHieuLuc?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -332,6 +359,9 @@ export type TaiLieuWhereUniqueInput = Prisma.AtLeast<{
   soKyTu?: Prisma.IntFilter<"TaiLieu"> | number
   trangThai?: Prisma.StringFilter<"TaiLieu"> | string
   ghiChuLoi?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
+  tinhTrangHieuLuc?: Prisma.StringFilter<"TaiLieu"> | string
+  thayTheBoi?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
+  ghiChuHieuLuc?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
   metadata?: Prisma.JsonNullableFilter<"TaiLieu">
   createdById?: Prisma.StringNullableFilter<"TaiLieu"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TaiLieu"> | Date | string
@@ -351,6 +381,9 @@ export type TaiLieuOrderByWithAggregationInput = {
   soKyTu?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
   ghiChuLoi?: Prisma.SortOrderInput | Prisma.SortOrder
+  tinhTrangHieuLuc?: Prisma.SortOrder
+  thayTheBoi?: Prisma.SortOrderInput | Prisma.SortOrder
+  ghiChuHieuLuc?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -377,6 +410,9 @@ export type TaiLieuScalarWhereWithAggregatesInput = {
   soKyTu?: Prisma.IntWithAggregatesFilter<"TaiLieu"> | number
   trangThai?: Prisma.StringWithAggregatesFilter<"TaiLieu"> | string
   ghiChuLoi?: Prisma.StringNullableWithAggregatesFilter<"TaiLieu"> | string | null
+  tinhTrangHieuLuc?: Prisma.StringWithAggregatesFilter<"TaiLieu"> | string
+  thayTheBoi?: Prisma.StringNullableWithAggregatesFilter<"TaiLieu"> | string | null
+  ghiChuHieuLuc?: Prisma.StringNullableWithAggregatesFilter<"TaiLieu"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"TaiLieu">
   createdById?: Prisma.StringNullableWithAggregatesFilter<"TaiLieu"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TaiLieu"> | Date | string
@@ -395,6 +431,9 @@ export type TaiLieuCreateInput = {
   soKyTu?: number
   trangThai?: string
   ghiChuLoi?: string | null
+  tinhTrangHieuLuc?: string
+  thayTheBoi?: string | null
+  ghiChuHieuLuc?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: string | null
   createdAt?: Date | string
@@ -414,6 +453,9 @@ export type TaiLieuUncheckedCreateInput = {
   soKyTu?: number
   trangThai?: string
   ghiChuLoi?: string | null
+  tinhTrangHieuLuc?: string
+  thayTheBoi?: string | null
+  ghiChuHieuLuc?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: string | null
   createdAt?: Date | string
@@ -433,6 +475,9 @@ export type TaiLieuUpdateInput = {
   soKyTu?: Prisma.IntFieldUpdateOperationsInput | number
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
   ghiChuLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinhTrangHieuLuc?: Prisma.StringFieldUpdateOperationsInput | string
+  thayTheBoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghiChuHieuLuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -452,6 +497,9 @@ export type TaiLieuUncheckedUpdateInput = {
   soKyTu?: Prisma.IntFieldUpdateOperationsInput | number
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
   ghiChuLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinhTrangHieuLuc?: Prisma.StringFieldUpdateOperationsInput | string
+  thayTheBoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghiChuHieuLuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,6 +519,9 @@ export type TaiLieuCreateManyInput = {
   soKyTu?: number
   trangThai?: string
   ghiChuLoi?: string | null
+  tinhTrangHieuLuc?: string
+  thayTheBoi?: string | null
+  ghiChuHieuLuc?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: string | null
   createdAt?: Date | string
@@ -489,6 +540,9 @@ export type TaiLieuUpdateManyMutationInput = {
   soKyTu?: Prisma.IntFieldUpdateOperationsInput | number
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
   ghiChuLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinhTrangHieuLuc?: Prisma.StringFieldUpdateOperationsInput | string
+  thayTheBoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghiChuHieuLuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -507,6 +561,9 @@ export type TaiLieuUncheckedUpdateManyInput = {
   soKyTu?: Prisma.IntFieldUpdateOperationsInput | number
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
   ghiChuLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinhTrangHieuLuc?: Prisma.StringFieldUpdateOperationsInput | string
+  thayTheBoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghiChuHieuLuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -525,6 +582,9 @@ export type TaiLieuCountOrderByAggregateInput = {
   soKyTu?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
   ghiChuLoi?: Prisma.SortOrder
+  tinhTrangHieuLuc?: Prisma.SortOrder
+  thayTheBoi?: Prisma.SortOrder
+  ghiChuHieuLuc?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -548,6 +608,9 @@ export type TaiLieuMaxOrderByAggregateInput = {
   soKyTu?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
   ghiChuLoi?: Prisma.SortOrder
+  tinhTrangHieuLuc?: Prisma.SortOrder
+  thayTheBoi?: Prisma.SortOrder
+  ghiChuHieuLuc?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -565,6 +628,9 @@ export type TaiLieuMinOrderByAggregateInput = {
   soKyTu?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
   ghiChuLoi?: Prisma.SortOrder
+  tinhTrangHieuLuc?: Prisma.SortOrder
+  thayTheBoi?: Prisma.SortOrder
+  ghiChuHieuLuc?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -606,6 +672,9 @@ export type TaiLieuCreateWithoutChunksInput = {
   soKyTu?: number
   trangThai?: string
   ghiChuLoi?: string | null
+  tinhTrangHieuLuc?: string
+  thayTheBoi?: string | null
+  ghiChuHieuLuc?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: string | null
   createdAt?: Date | string
@@ -624,6 +693,9 @@ export type TaiLieuUncheckedCreateWithoutChunksInput = {
   soKyTu?: number
   trangThai?: string
   ghiChuLoi?: string | null
+  tinhTrangHieuLuc?: string
+  thayTheBoi?: string | null
+  ghiChuHieuLuc?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: string | null
   createdAt?: Date | string
@@ -658,6 +730,9 @@ export type TaiLieuUpdateWithoutChunksInput = {
   soKyTu?: Prisma.IntFieldUpdateOperationsInput | number
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
   ghiChuLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinhTrangHieuLuc?: Prisma.StringFieldUpdateOperationsInput | string
+  thayTheBoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghiChuHieuLuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -676,6 +751,9 @@ export type TaiLieuUncheckedUpdateWithoutChunksInput = {
   soKyTu?: Prisma.IntFieldUpdateOperationsInput | number
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
   ghiChuLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinhTrangHieuLuc?: Prisma.StringFieldUpdateOperationsInput | string
+  thayTheBoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghiChuHieuLuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -725,6 +803,9 @@ export type TaiLieuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   soKyTu?: boolean
   trangThai?: boolean
   ghiChuLoi?: boolean
+  tinhTrangHieuLuc?: boolean
+  thayTheBoi?: boolean
+  ghiChuHieuLuc?: boolean
   metadata?: boolean
   createdById?: boolean
   createdAt?: boolean
@@ -745,6 +826,9 @@ export type TaiLieuSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   soKyTu?: boolean
   trangThai?: boolean
   ghiChuLoi?: boolean
+  tinhTrangHieuLuc?: boolean
+  thayTheBoi?: boolean
+  ghiChuHieuLuc?: boolean
   metadata?: boolean
   createdById?: boolean
   createdAt?: boolean
@@ -763,6 +847,9 @@ export type TaiLieuSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   soKyTu?: boolean
   trangThai?: boolean
   ghiChuLoi?: boolean
+  tinhTrangHieuLuc?: boolean
+  thayTheBoi?: boolean
+  ghiChuHieuLuc?: boolean
   metadata?: boolean
   createdById?: boolean
   createdAt?: boolean
@@ -781,6 +868,9 @@ export type TaiLieuSelectScalar = {
   soKyTu?: boolean
   trangThai?: boolean
   ghiChuLoi?: boolean
+  tinhTrangHieuLuc?: boolean
+  thayTheBoi?: boolean
+  ghiChuHieuLuc?: boolean
   metadata?: boolean
   createdById?: boolean
   createdAt?: boolean
@@ -788,7 +878,7 @@ export type TaiLieuSelectScalar = {
   deletedAt?: boolean
 }
 
-export type TaiLieuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tieuDe" | "loai" | "nguon" | "moTa" | "phamVi" | "soChunk" | "soKyTu" | "trangThai" | "ghiChuLoi" | "metadata" | "createdById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["taiLieu"]>
+export type TaiLieuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tieuDe" | "loai" | "nguon" | "moTa" | "phamVi" | "soChunk" | "soKyTu" | "trangThai" | "ghiChuLoi" | "tinhTrangHieuLuc" | "thayTheBoi" | "ghiChuHieuLuc" | "metadata" | "createdById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["taiLieu"]>
 export type TaiLieuInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chunks?: boolean | Prisma.TaiLieu$chunksArgs<ExtArgs>
   _count?: boolean | Prisma.TaiLieuCountOutputTypeDefaultArgs<ExtArgs>
@@ -812,6 +902,9 @@ export type $TaiLieuPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     soKyTu: number
     trangThai: string
     ghiChuLoi: string | null
+    tinhTrangHieuLuc: string
+    thayTheBoi: string | null
+    ghiChuHieuLuc: string | null
     metadata: runtime.JsonValue | null
     createdById: string | null
     createdAt: Date
@@ -1251,6 +1344,9 @@ export interface TaiLieuFieldRefs {
   readonly soKyTu: Prisma.FieldRef<"TaiLieu", 'Int'>
   readonly trangThai: Prisma.FieldRef<"TaiLieu", 'String'>
   readonly ghiChuLoi: Prisma.FieldRef<"TaiLieu", 'String'>
+  readonly tinhTrangHieuLuc: Prisma.FieldRef<"TaiLieu", 'String'>
+  readonly thayTheBoi: Prisma.FieldRef<"TaiLieu", 'String'>
+  readonly ghiChuHieuLuc: Prisma.FieldRef<"TaiLieu", 'String'>
   readonly metadata: Prisma.FieldRef<"TaiLieu", 'Json'>
   readonly createdById: Prisma.FieldRef<"TaiLieu", 'String'>
   readonly createdAt: Prisma.FieldRef<"TaiLieu", 'DateTime'>

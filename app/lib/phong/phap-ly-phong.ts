@@ -246,17 +246,26 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
       ]},
       { key: 'iso-cchc', ten: 'ISO & Cải cách hành chính', vanBan: [
         { loai: 'Quyết định', soHieu: '19/2014/QĐ-TTg', ten: 'Áp dụng Hệ thống quản lý chất lượng theo TCVN ISO 9001 vào hoạt động của cơ quan hành chính nhà nước', trongTam: true },
-        { loai: 'QCVN', soHieu: 'TCVN ISO 9001:2015', ten: 'Hệ thống quản lý chất lượng — Các yêu cầu' },
-        { loai: 'Quyết định', soHieu: 'Nghị quyết 76/NQ-CP', ten: 'Chương trình tổng thể cải cách hành chính nhà nước giai đoạn 2021–2030' },
+        { loai: 'TCVN', soHieu: 'TCVN ISO 9001:2015', ten: 'Hệ thống quản lý chất lượng — Các yêu cầu' },
+        { loai: 'Nghị quyết', soHieu: 'Nghị quyết 76/NQ-CP', ten: 'Chương trình tổng thể cải cách hành chính nhà nước giai đoạn 2021–2030' },
       ]},
       { key: 'chuyen-doi-so', ten: 'Chuyển đổi số & Đề án 06', vanBan: [
+        { loai: 'Luật', soHieu: '148/2025/QH15', ten: 'Luật Chuyển đổi số',
+          hieuLuc: 'QH thông qua 11/12/2025 · hiệu lực 01/7/2026',
+          ghiChu: 'Luật ĐẦU TIÊN điều chỉnh toàn diện chuyển đổi số (8 chương, 48 điều): nguyên tắc, chính sách '
+            + 'chuyển đổi số; phát triển chính phủ số, kinh tế số, xã hội số; dữ liệu số; nền tảng số; '
+            + 'bảo đảm an toàn thông tin, an ninh mạng.', trongTam: true },
         { loai: 'Luật', soHieu: '20/2023/QH15', ten: 'Luật Giao dịch điện tử', hieuLuc: 'Hiệu lực 01/7/2024', trongTam: true },
         { loai: 'Luật', soHieu: '60/2024/QH15', ten: 'Luật Dữ liệu', hieuLuc: 'Hiệu lực 01/7/2025' },
         { loai: 'Quyết định', soHieu: '06/QĐ-TTg', ten: 'Đề án phát triển ứng dụng dữ liệu dân cư, định danh và xác thực điện tử (Đề án 06)' },
       ]},
       { key: 'hanh-chinh-quan-tri', ten: 'Hành chính – Quản trị, tài sản công', vanBan: [
         { loai: 'Luật', soHieu: '15/2017/QH14', ten: 'Luật Quản lý, sử dụng tài sản công', trongTam: true },
-        { loai: 'Nghị định', soHieu: '151/2017/NĐ-CP (sửa đổi 114/2024/NĐ-CP)', ten: 'Quy định chi tiết Luật Quản lý, sử dụng tài sản công' },
+        { loai: 'Nghị định', soHieu: '186/2025/NĐ-CP', ten: 'Quy định chi tiết một số điều của Luật Quản lý, sử dụng tài sản công',
+          hieuLuc: 'Ban hành & hiệu lực 01/7/2025',
+          ghiChu: 'THAY NĐ 151/2017/NĐ-CP (và các NĐ sửa đổi, gồm 114/2024/NĐ-CP). '
+            + 'Giao, mua sắm, thuê, khai thác, vận hành, chuyển đổi công năng, xử lý tài sản công; '
+            + 'sử dụng tài sản công vào KD/cho thuê/liên doanh; quản lý nguồn thu từ khai thác, xử lý tài sản công.', trongTam: true },
       ]},
     ],
   },
@@ -291,8 +300,9 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
         { loai: 'Nghị định', soHieu: '214/2025/NĐ-CP', ten: 'Chi tiết Luật Đấu thầu — lựa chọn nhà thầu',
           ghiChu: 'Thay NĐ 24/2024/NĐ-CP. Trình tự đấu thầu qua mạng, hồ sơ mời thầu, '
             + 'đánh giá HSDT, thương thảo hợp đồng, ưu đãi nhà thầu.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '23/2024/NĐ-CP', ten: 'Lựa chọn nhà đầu tư thực hiện dự án có sử dụng đất',
-          ghiChu: 'Áp dụng cho dự án khu ĐT, nhà ở, hạ tầng, thương mại dịch vụ.' },
+        { loai: 'Nghị định', soHieu: '115/2024/NĐ-CP', ten: 'Chi tiết Luật Đấu thầu về lựa chọn nhà đầu tư thực hiện dự án đầu tư có sử dụng đất',
+          ghiChu: 'Ban hành 16/9/2024. Áp dụng cho dự án khu ĐT, nhà ở, hạ tầng, thương mại dịch vụ có sử dụng đất. '
+            + '(NĐ 23/2024/NĐ-CP là lựa chọn nhà đầu tư dự án phải đấu thầu theo pháp luật quản lý ngành, lĩnh vực — phạm vi khác.)' },
       ]},
       { key: 'ke-hoach-von', ten: 'Kế hoạch vốn & dự toán', vanBan: [
         { loai: 'Luật', soHieu: '58/2024/QH15', ten: 'Luật Đầu tư công — kế hoạch vốn',
@@ -443,7 +453,7 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
         { loai: 'Luật', soHieu: '95/2025/QH15', ten: 'Luật Đường sắt', hieuLuc: 'Hiệu lực 01/01/2026',
           ghiChu: 'QH thông qua 27/6/2025; thay Luật Đường sắt 2017. '
             + 'Kết cấu hạ tầng đường sắt, ga đường sắt, đầu tư bảo trì đường sắt.' },
-        { loai: 'Luật', soHieu: '08/2017/QH14', ten: 'Luật Giao thông đường thủy nội địa (hợp nhất)',
+        { loai: 'Luật', soHieu: '23/2004/QH11 (sửa đổi 48/2014/QH13)', ten: 'Luật Giao thông đường thủy nội địa',
           ghiChu: 'Kết cấu hạ tầng đường thủy nội địa: luồng, tuyến, cảng bến, phao tiêu.' },
         { loai: 'Thông tư', soHieu: '21/2026/TT-BXD', ten: 'Quản lý kết cấu hạ tầng đường thủy nội địa',
           hieuLuc: 'Ban hành 15/5/2026 · hiệu lực 01/7/2026',
@@ -470,12 +480,10 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
           hieuLuc: 'Hiệu lực 01/01/2025 · NĐ 218/2026 sửa đổi từ 10/8/2026',
           ghiChu: 'Thay NĐ 10/2020. Điều 25–31: bến xe khách, bãi đỗ xe, trạm dừng nghỉ '
             + '— điều kiện hoạt động, phân loại, quy mô.', trongTam: true },
-        { loai: 'Luật', soHieu: '08/2017/QH14', ten: 'Luật GTĐTNĐ — quản lý cảng, bến thủy nội địa',
+        { loai: 'Luật', soHieu: '23/2004/QH11 (sửa đổi 48/2014/QH13)', ten: 'Luật GTĐTNĐ — quản lý cảng, bến thủy nội địa',
           ghiChu: 'Chương IV: cảng, bến thủy nội địa — phân loại, công bố hoạt động, an toàn.' },
       ]},
-      { key: 'pha-do-nong-thon-moi', ten: 'Phá dỡ tàu biển & nông thôn mới', vanBan: [
-        { loai: 'Nghị định', soHieu: '82/2019/NĐ-CP', ten: 'Nhập khẩu, phá dỡ tàu biển đã qua sử dụng',
-          ghiChu: 'Điều kiện cơ sở phá dỡ tàu biển, trình tự cấp phép nhập khẩu tàu biển phá dỡ.' },
+      { key: 'pha-do-nong-thon-moi', ten: 'Giao thông nông thôn mới', vanBan: [
         { loai: 'Quyết định', soHieu: 'QĐ 318/QĐ-TTg + bộ tiêu chí NTM', ten: 'Tiêu chí giao thông trong xây dựng nông thôn mới',
           ghiChu: 'Tiêu chí đường giao thông xã, thôn: tỷ lệ cứng hoá, bảo trì, an toàn; '
             + 'phối hợp đánh giá đạt tiêu chí NTM/NTM nâng cao.' },
@@ -487,7 +495,7 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
   'phong-qlhd-xd': {
     ma: 'PHONG_QLHD_XD', ten: 'Phòng Quản lý hoạt động xây dựng', baseHref: '/dashboard/phong-qlhd-xd', color: 'indigo',
     moTaPhong: 'Cấp phép xây dựng; quản lý trật tự xây dựng; thẩm định dự án dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở; chứng chỉ hành nghề; thí nghiệm chuyên ngành.',
-    chung: [LUAT_XD_2025, ND_217_2026, ND_207_2026, ND_212_2026, ND_30_2020],
+    chung: [LUAT_XD_2025, LUAT_QHDT_NT, ND_217_2026, ND_207_2026, ND_212_2026, ND_30_2020],
     linhVuc: [
       { key: 'cap-phep-xay-dung', ten: 'Cấp phép xây dựng', vanBan: [
         { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 43–50: giấy phép xây dựng',
@@ -609,6 +617,10 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
             + 'lắp đặt thiết bị, thí nghiệm, sửa chữa – bảo dưỡng, sử dụng vật liệu, chi phí QLDA – tư vấn.', trongTam: true },
       ]},
       { key: 'cong-bo-gia-vlxd', ten: 'Công bố giá vật liệu xây dựng', vanBan: [
+        { loai: 'Luật', soHieu: '16/2023/QH15', ten: 'Luật Giá', hieuLuc: 'Hiệu lực 01/7/2024',
+          ghiChu: 'Nền quản lý giá. LƯU Ý: giá VLXD KHÔNG thuộc danh mục Nhà nước định giá/bình ổn — '
+            + 'Sở XD khảo sát, công bố giá VLXD địa phương định kỳ theo pháp luật quản lý chi phí ĐTXD (NĐ 206/2026), '
+            + 'không áp cơ chế định giá nhà nước.', trongTam: true },
         { loai: 'Nghị định', soHieu: '206/2026/NĐ-CP', ten: 'Quản lý chi phí — giá VLXD, công bố giá',
           ghiChu: 'Sở XD tham mưu UBND tỉnh công bố giá VLXD địa phương hằng tháng/quý. '
             + 'Giá VLXD là cơ sở lập dự toán, xác định giá gói thầu, điều chỉnh hợp đồng. '
@@ -636,8 +648,16 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
           ghiChu: 'Thay Luật Khoáng sản 2010. Điều 6: phân nhóm khoáng sản (nhóm IV: khoáng sản '
             + 'làm VLXD thông thường — cát, sỏi, đá XD). '
             + 'Điều 27: cấp phép khai thác; Điều 42: quản lý hoạt động khai thác khoáng sản.', trongTam: true },
+        { loai: 'Luật', soHieu: '05/2007/QH12 (sửa đổi 78/2025/QH15)', ten: 'Luật Chất lượng sản phẩm, hàng hóa',
+          hieuLuc: 'Luật sửa đổi 78/2025/QH15 hiệu lực 01/01/2026',
+          ghiChu: 'Nền quản lý chất lượng sản phẩm, hàng hóa VLXD; phân loại nhóm 2 (có khả năng gây mất an toàn). '
+            + 'Luật 78/2025 chi tiết bởi NĐ 37/2026/NĐ-CP.', trongTam: true },
+        { loai: 'Luật', soHieu: '68/2006/QH11 (sửa đổi 70/2025/QH15)', ten: 'Luật Tiêu chuẩn và quy chuẩn kỹ thuật',
+          hieuLuc: 'Luật sửa đổi 70/2025/QH15 hiệu lực 01/01/2026',
+          ghiChu: 'Nền cho hệ thống TCVN/QCVN áp dụng với VLXD (căn cứ ban hành, công bố hợp chuẩn, hợp quy).' },
         { loai: 'QCVN', soHieu: 'QCVN 16:2023/BXD', ten: 'Sản phẩm, hàng hóa vật liệu xây dựng',
-          ghiChu: 'Hợp quy, chứng nhận chất lượng sản phẩm VLXD trước khi lưu thông, sử dụng.' },
+          ghiChu: 'Hợp quy, chứng nhận chất lượng sản phẩm VLXD trước khi lưu thông, sử dụng. '
+            + 'Đối chiếu TT 41/2026/TT-BXD (hiệu lực 01/7/2026) về phạm vi quản lý chất lượng VLXD.' },
       ]},
     ],
   },
@@ -675,9 +695,9 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
             + 'Dự kiến trình QH khoá XVI — sẽ thay NĐ 11/2013.' },
       ]},
       { key: 'phan-loai-do-thi', ten: 'Phân loại đô thị', vanBan: [
-        { loai: 'Quyết định', soHieu: 'NQ 111/2025/UBTVQH15', ten: 'Nghị quyết về phân loại đô thị',
+        { loai: 'Nghị quyết', soHieu: '111/2025/UBTVQH15', ten: 'Nghị quyết về phân loại đô thị',
           hieuLuc: 'Ban hành 24/12/2025 · hiệu lực 01/01/2026',
-          ghiChu: 'THAY NQ 1210/2016 và NQ 26/2022. 6 loại đô thị (đặc biệt, I–V); '
+          ghiChu: 'THAY NQ 1210/2016 và NQ 26/2022. Còn 4 loại đô thị (đặc biệt, I, II, III — BỎ loại IV, V) từ 01/01/2026; '
             + '3 nhóm tiêu chí mới: vai trò – vị trí, điều kiện phát triển KT-XH, quy mô – mật độ – hạ tầng; '
             + 'phù hợp mô hình chính quyền 2 cấp sau sáp nhập ĐVHC.', trongTam: true },
         { loai: 'Nghị định', soHieu: '35/2026/NĐ-CP', ten: 'Chi tiết NQ 111/2025 — hồ sơ, trình tự công nhận loại đô thị',
@@ -757,19 +777,31 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
     ],
     linhVuc: [
       { key: 'dang-kiem-duong-thuy', ten: 'Đăng ký – đăng kiểm phương tiện đường thủy nội địa', vanBan: [
-        { loai: 'Luật', soHieu: '08/2017/QH14 (hợp nhất)', ten: 'Luật GTĐTNĐ — đăng ký, đăng kiểm phương tiện thủy nội địa',
+        { loai: 'Luật', soHieu: '23/2004/QH11 (sửa đổi 48/2014/QH13; hợp nhất 56/VBHN-VPQH 2026)', ten: 'Luật GTĐTNĐ — đăng ký, đăng kiểm phương tiện thủy nội địa',
           ghiChu: 'Điều 24–26: đăng ký phương tiện thủy nội địa — thẩm quyền Sở GTVT/XD. '
             + 'Điều 27–29: đăng kiểm — an toàn kỹ thuật, bảo vệ MT, trung tâm đăng kiểm. '
             + 'Điều 30: giấy chứng nhận an toàn kỹ thuật phương tiện.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '128/2018/NĐ-CP', ten: 'Chi tiết thi hành Luật GTĐTNĐ — phương tiện thủy',
-          ghiChu: 'Trình tự đăng ký, xoá đăng ký phương tiện thủy nội địa; '
-            + 'phân cấp: Sở GTVT/XD cấp tỉnh đăng ký phương tiện.' },
+        { loai: 'Nghị định', soHieu: '123/2026/NĐ-CP', ten: 'Quy định chi tiết Luật Giao thông đường thủy nội địa',
+          hieuLuc: 'Hiệu lực 2026',
+          ghiChu: 'Chi tiết Luật GTĐTNĐ (thay/hợp nhất các NĐ cũ về đường thủy). '
+            + 'Đăng ký phương tiện thủy nội địa: phân cấp Sở XD cấp tỉnh; điều kiện KD vận tải đường thủy.' },
+        { loai: 'Thông tư', soHieu: '28/2026/TT-BXD', ten: 'Quy định về đăng kiểm phương tiện thủy nội địa',
+          hieuLuc: 'Hiệu lực 2026',
+          ghiChu: 'Trình tự, hồ sơ đăng kiểm an toàn kỹ thuật & bảo vệ môi trường phương tiện thủy nội địa; '
+            + 'chứng nhận, tem kiểm định phương tiện thủy.' },
         { loai: 'Thông tư', soHieu: '43/2026/TT-BXD', ten: 'Đăng kiểm viên phương tiện thủy nội địa và nhân viên nghiệp vụ kiểm tra',
           hieuLuc: 'Ban hành 29/6/2026',
           ghiChu: 'Tiêu chuẩn, tập huấn, công nhận đăng kiểm viên phương tiện thủy nội địa.' },
+      ]},
+      { key: 'dang-kiem-xe-co-gioi', ten: 'Đăng kiểm xe cơ giới, xe máy chuyên dùng', vanBan: [
+        { loai: 'Nghị định', soHieu: '89/2026/NĐ-CP', ten: 'Điều kiện kinh doanh dịch vụ kiểm định xe cơ giới; tổ chức, hoạt động của cơ sở đăng kiểm; niên hạn sử dụng của xe cơ giới',
+          hieuLuc: 'Hiệu lực 01/7/2026',
+          ghiChu: 'Điều kiện cơ sở đăng kiểm (diện tích, dây chuyền, tối thiểu 02 đăng kiểm viên; lãnh đạo bộ phận kiểm định ≥ 60 tháng kinh nghiệm). '
+            + 'KHÔNG áp dụng cho hoạt động thuộc Bộ Quốc phòng, Bộ Công an. '
+            + 'Cơ quan QLNN cấp tỉnh (Sở XD) quản lý, kiểm tra hoạt động cơ sở đăng kiểm trên địa bàn.', trongTam: true },
         { loai: 'Thông tư', soHieu: '30/2026/TT-BXD', ten: 'Kiểm định xe cơ giới, xe máy chuyên dùng; kiểm định khí thải mô tô, xe máy',
           hieuLuc: 'Ban hành 15/6/2026 · hiệu lực 01/7/2026',
-          ghiChu: 'Trình tự kiểm định, miễn kiểm định lần đầu; chứng nhận cải tạo; '
+          ghiChu: 'Trình tự kiểm định, miễn kiểm định lần đầu; chứng nhận xe cải tạo; '
             + 'phương tiện chưa nộp phạt VPGT bị cập nhật lên hệ thống đăng kiểm. '
             + 'Kèm TT 49/2026/TT-BXD: danh mục hàng hóa rủi ro lĩnh vực GTVT.' },
       ]},
@@ -841,6 +873,11 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
         ghiChu: 'Hướng dẫn Luật 47/2024 về trình tự lập, thẩm định, phê duyệt quy hoạch; '
           + 'nội dung hồ sơ QH; quy cách bản vẽ; lấy ý kiến cộng đồng dân cư; '
           + 'công bố, cung cấp thông tin QH; quản lý mốc giới QH.', trongTam: true },
+      { loai: 'Thông tư', soHieu: '16/2025/TT-BXD (sửa đổi 43/2025/TT-BXD)', ten: 'Quy định chi tiết một số điều của Luật Quy hoạch đô thị và nông thôn',
+        hieuLuc: 'TT 16/2025 ban hành 30/6/2025 · TT 43/2025 (09/12/2025) sửa đổi — bắt buộc hồ sơ điện tử từ 09/12/2025',
+        ghiChu: 'Hướng dẫn nội dung, hồ sơ nhiệm vụ & đồ án quy hoạch. '
+          + 'TT 43/2025 sửa Điều 2: hồ sơ QH gồm hồ sơ GIẤY (đóng dấu) + hồ sơ ĐIỆN TỬ '
+          + '(CSDL số cơ bản, CSDL số pháp lý, CSDL số địa lý GIS).', trongTam: true },
       QCVN_01_2021,
       ND_30_2020,
     ],
@@ -858,14 +895,15 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
           ghiChu: 'Điều 31: thẩm quyền thẩm định QH (Sở XD thẩm định QH phân khu, chi tiết theo phân cấp). '
             + 'Điều 32: nội dung thẩm định (sự phù hợp QH cấp trên, QCVN, đánh giá tác động). '
             + 'Điều 33: thời hạn thẩm định (QH chung ≤ 25 ngày, phân khu ≤ 20 ngày, chi tiết ≤ 15 ngày). '
-            + 'Điều 35–38: phê duyệt — UBND tỉnh phê duyệt QH chung đô thị loại III–V, QH nông thôn.', trongTam: true },
+            + 'Điều 35–38: phê duyệt — UBND tỉnh phê duyệt QH chung đô thị loại III (trở xuống theo phân cấp), QH nông thôn.', trongTam: true },
         { loai: 'Nghị định', soHieu: '178/2025/NĐ-CP', ten: 'Chi tiết thẩm định QH — hồ sơ, trình tự',
           ghiChu: 'Hồ sơ trình thẩm định; quy cách bản vẽ QH; lấy ý kiến phối hợp các sở ngành; '
             + 'nội dung nhiệm vụ QH cần phê duyệt trước khi lập đồ án.', trongTam: true },
-        { loai: 'Quyết định', soHieu: '18/2025/QĐ-TTg', ten: 'Chi tiết một số nội dung Luật QHĐT-NT',
-          hieuLuc: 'Ban hành 28/6/2025',
-          ghiChu: 'Quy định chi tiết các nội dung QH giao Chính phủ hướng dẫn: '
-            + 'tỷ lệ bản đồ, phạm vi ranh giới, đánh giá môi trường chiến lược.' },
+        { loai: 'Quyết định', soHieu: '18/2025/QĐ-TTg', ten: 'Trình tự, thủ tục phê duyệt điều chỉnh cục bộ QHĐT-NT thuộc thẩm quyền Thủ tướng, do UBND tỉnh tổ chức lập',
+          hieuLuc: 'Ban hành 28/6/2025 · hiệu lực 01/7/2025',
+          ghiChu: 'Áp dụng khi điều chỉnh CỤC BỘ quy hoạch (đô thị/nông thôn) vốn do Thủ tướng phê duyệt: '
+            + 'UBND cấp tỉnh lập hồ sơ (hoặc phân cấp cơ quan chuyên môn), thẩm định, phê duyệt và công bố công khai '
+            + 'toàn bộ nội dung điều chỉnh (trừ nội dung QP-AN, bí mật nhà nước).' },
         ND_206_2026,
       ]},
       { key: 'thiet-ke-do-thi', ten: 'Thiết kế đô thị', vanBan: [
@@ -919,12 +957,13 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
           + 'Chương VI (Điều 55–70): quản lý sử dụng nhà ở — bảo hành, bảo trì, cải tạo, phá dỡ. '
           + 'Chương VII (Điều 71–80): giao dịch nhà ở — mua bán, cho thuê, cho ở nhờ, thừa kế.', trongTam: true },
       { loai: 'Luật', soHieu: '29/2023/QH15', ten: 'Luật Kinh doanh bất động sản', hieuLuc: 'Hiệu lực 01/8/2024',
-        ghiChu: 'Thay Luật KD BĐS 2014. '
-          + 'Chương II (Điều 6–18): kinh doanh BĐS — điều kiện, vốn pháp định, bảo lãnh nhà ở. '
-          + 'Điều 8: điều kiện tổ chức KD BĐS (vốn ≥ 50 tỷ, pháp nhân). '
-          + 'Chương III (Điều 19–35): kinh doanh quyền sử dụng đất. '
-          + 'Chương IV (Điều 36–48): dịch vụ BĐS — môi giới, sàn giao dịch, tư vấn, quản lý. '
-          + 'Điều 37: điều kiện hành nghề môi giới BĐS — chứng chỉ do Sở XD cấp.', trongTam: true },
+        ghiChu: 'Thay Luật KD BĐS 2014 (hiệu lực sớm 01/8/2024 theo Luật 43/2024/QH15). '
+          + 'Điều kiện tổ chức/cá nhân KD BĐS: BỎ mức vốn pháp định cố định của luật cũ; '
+          + 'chủ đầu tư dự án phải bảo đảm TỶ LỆ VỐN CHỦ SỞ HỮU theo pháp luật đất đai (20%/15%). '
+          + 'Kinh doanh nhà ở/công trình hình thành trong tương lai: đặt cọc ≤ 5% giá bán/thuê mua. '
+          + 'Dịch vụ BĐS — môi giới, sàn giao dịch, tư vấn, quản lý: '
+          + 'giao dịch qua sàn KHÔNG bắt buộc (Nhà nước khuyến khích). '
+          + 'Môi giới: cá nhân phải có chứng chỉ hành nghề (do Sở XD tổ chức thi, cấp) và hành nghề trong một doanh nghiệp.', trongTam: true },
       { loai: 'Luật', soHieu: '31/2024/QH15', ten: 'Luật Đất đai', hieuLuc: 'Hiệu lực 01/8/2024',
         ghiChu: 'Liên quan quyền sử dụng đất gắn liền nhà ở, BĐS. '
           + 'Điều 153: bảng giá đất; Điều 159: giá đất cụ thể. '
@@ -947,6 +986,11 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
           hieuLuc: 'Ban hành 09/2/2026 · hiệu lực ngay',
           ghiChu: 'Sửa đồng loạt NĐ 95/2024, 96/2024, 100/2024: chuẩn hoá, công khai quy trình mua/thuê NƠXH '
             + 'trên hệ thống thông tin nhà ở; CĐT công bố thông tin dự án trong 30 ngày kể từ khởi công.', trongTam: true },
+        { loai: 'Nghị định', soHieu: '98/2024/NĐ-CP', ten: 'Chi tiết Luật Nhà ở về cải tạo, xây dựng lại nhà chung cư',
+          hieuLuc: 'Ban hành 25/7/2024 · hiệu lực 01/8/2024',
+          ghiChu: 'Thay NĐ 69/2021/NĐ-CP. Kiểm định, đánh giá chất lượng chung cư; lập, phê duyệt kế hoạch cải tạo; '
+            + 'lựa chọn chủ đầu tư dự án cải tạo, xây dựng lại; phương án bồi thường, tái định cư (hệ số K). '
+            + 'Sở XD tham mưu UBND tỉnh ban hành kế hoạch cải tạo chung cư cũ trên địa bàn.', trongTam: true },
       ]},
       { key: 'nha-o-xa-hoi', ten: 'Nhà ở xã hội, nhà công vụ', vanBan: [
         { loai: 'Nghị định', soHieu: '100/2024/NĐ-CP (sửa đổi 54/2026, 136/2026)', ten: 'Phát triển và quản lý nhà ở xã hội',
@@ -975,10 +1019,11 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
       ]},
       { key: 'thi-truong-bds', ten: 'Quản lý thị trường BĐS & chứng chỉ môi giới', vanBan: [
         { loai: 'Luật', soHieu: '29/2023/QH15', ten: 'Luật KD BĐS — thị trường BĐS',
-          ghiChu: 'Điều 6: nguyên tắc KD BĐS — công khai, minh bạch. '
-            + 'Điều 8: điều kiện KD BĐS (pháp nhân, vốn ≥ 50 tỷ, không nợ xấu). '
-            + 'Điều 36: sàn giao dịch BĐS — giao dịch BĐS hình thành trong tương lai phải qua sàn. '
-            + 'Điều 37: điều kiện hành nghề môi giới BĐS — chứng chỉ hành nghề do Sở XD cấp.', trongTam: true },
+          ghiChu: 'Nguyên tắc KD BĐS — công khai, minh bạch. '
+            + 'Điều kiện KD BĐS: thành lập doanh nghiệp/HTX; BỎ vốn pháp định cố định — chủ đầu tư dự án bảo đảm '
+            + 'tỷ lệ vốn chủ sở hữu theo pháp luật đất đai. '
+            + 'Sàn giao dịch BĐS: giao dịch qua sàn KHÔNG bắt buộc (khuyến khích), sàn phải công khai thông tin. '
+            + 'Môi giới BĐS: cá nhân phải có chứng chỉ hành nghề do Sở XD tổ chức thi, cấp; hành nghề trong một doanh nghiệp.', trongTam: true },
         { loai: 'Nghị định', soHieu: '96/2024/NĐ-CP (sửa đổi 54/2026)', ten: 'Chi tiết Luật KD BĐS — điều kiện KD, chứng chỉ môi giới',
           ghiChu: 'Điều 4–7: hồ sơ, trình tự cấp chứng chỉ hành nghề môi giới BĐS. '
             + 'Điều 8: nội dung sát hạch (pháp luật BĐS + nghiệp vụ môi giới). '

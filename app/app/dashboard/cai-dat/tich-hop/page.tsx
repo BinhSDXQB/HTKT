@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { getIntegrationConfig, HTKT_DOMAINS } from '@/lib/congdanso-client'
 import { db } from '@/lib/db'
@@ -15,7 +16,8 @@ const DOMAIN_LABEL: Record<string, string> = {
 }
 
 export default async function TichHopPage() {
-  await requireAuth()
+  const user = await requireAuth()
+  if (user.role?.name !== 'admin') redirect('/forbidden')
   const cfg = await getIntegrationConfig()
 
   const logs = await db.integrationLog.findMany({

@@ -4,7 +4,9 @@ import { saveIntegrationConfig } from '@/lib/congdanso-client'
 import { revalidatePath } from 'next/cache'
 
 export async function POST(req: Request) {
-  try { await requireAuth() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+  let user
+  try { user = await requireAuth() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+  if (user.role?.name !== 'admin') return NextResponse.json({ error: 'Chỉ quản trị viên mới được cấu hình tích hợp' }, { status: 403 })
 
   const body = await req.json()
   await saveIntegrationConfig({

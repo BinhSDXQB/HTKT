@@ -3,12 +3,13 @@ import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ChevronRight, Settings, Users } from 'lucide-react'
 import { EditUserForm } from '@/components/cai-dat/edit-user-form'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 export default async function UserEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await requireAuth()
   const isAdmin = user.role?.name === 'admin'
+  if (!isAdmin) redirect('/forbidden')
 
   const userData = await db.user.findUnique({
     where: { id },

@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Plus, Pencil, Trash2, X, Loader2, AlertTriangle } from 'lucide-react'
-import { addWardReportRow, updateWardReportRow, deleteWardReportRow } from '@/app/actions/ward-report-entry'
-import { SHEET_COLUMNS, SHEET_STANDARD } from '@/lib/ward-report-schema'
+import { Plus, Pencil, Trash2, X, Loader2, AlertTriangle, Copy, CopyPlus } from 'lucide-react'
+import { addWardReportRow, updateWardReportRow, deleteWardReportRow, copyWardReportYear } from '@/app/actions/ward-report-entry'
+import { editableColumns, CATEGORY_COORDS, coerceCellValue } from '@/lib/ward-report-schema'
 import { CoordPicker } from '@/components/bao-tri/coord-picker'
 
 type Props = {
@@ -35,18 +35,19 @@ function Toast({ msg, ok, onClose }: { msg: string; ok: boolean; onClose: () => 
 }
 
 export default function WardEntryForm({ category, wardId, year, entries, canEdit }: Props) {
-  const [modal, setModal] = useState<'form' | 'del' | null>(null)
+  const [modal, setModal] = useState<'form' | 'del' | 'copy' | null>(null)
   const [editing, setEditing] = useState<any>(null)
   const [form, setForm] = useState<FormData>({})
   const [delTarget, setDelTarget] = useState<any>(null)
+  const [copyFromYear, setCopyFromYear] = useState<number>(year - 1)
   const [toast, setToast] = useState<{ ok: boolean; msg: string } | null>(null)
   const [pending, startT] = useTransition()
 
-  const sheetName = Object.keys(SHEET_STANDARD).find(k => SHEET_STANDARD[k] === category) || ''
-  const columns = SHEET_COLUMNS[sheetName] || []
-  const hasCoordFields = ['DUONG', 'DIEN_CHIEU_SANG', 'THOAT_NUOC_BC', 'CAY_XANH', 'CONG_VIEN'].includes(category)
-  const hasStartEndCoords = ['DUONG', 'THOAT_NUOC_BC', 'CAY_XANH'].includes(category)
-  const hasCenterCoord = ['DIEN_CHIEU_SANG', 'CONG_VIEN'].includes(category)
+  const columns = editableColumns(category)
+  const coordKind = CATEGORY_COORDS[category] ?? 'none'
+  const hasStartEndCoords = coordKind === 'startEnd'
+  const hasCenterCoord = coordKind === 'center'
+  const hasCoordFields = coordKind !== 'none'
 
   const showToast = (ok: boolean, msg: string) => {
     setToast({ ok, msg })
@@ -65,9 +66,35 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
     setModal('form')
   }
 
+  const openDuplicate = (entry: Record<string, unknown>) => {
+    // Nhân bản: mở modal THÊM với dữ liệu dòng nguồn (bỏ id/metadata → tạo mới).
+    setEditing(null)
+    const { id, createdAt, updatedAt, ...rest } = entry
+    void id; void createdAt; void updatedAt
+    setForm({ ...rest })
+    setModal('form')
+  }
+
   const openDel = (entry: any) => {
     setDelTarget(entry)
     setModal('del')
+  }
+
+  const openCopy = () => {
+    setCopyFromYear(year - 1)
+    setModal('copy')
+  }
+
+  const handleCopyYear = () => {
+    startT(async () => {
+      const res = await copyWardReportYear({ category, wardId, fromYear: copyFromYear, toYear: year })
+      if (res.ok) {
+        showToast(true, `Đã sao chép ${res.count ?? 0} dòng từ năm ${copyFromYear}.`)
+        closeModal()
+      } else {
+        showToast(false, res.error ?? 'Lỗi sao chép.')
+      }
+    })
   }
 
   const closeModal = () => {
@@ -79,11 +106,10 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }))
   const numOrNull = (s: string) => s === '' ? null : Number(s)
 
-  const handleSubmit = () => {
-    const requiredCols = columns.filter(c => c.required).map(c => c.name)
-    const missingCol = requiredCols.find(col => !form[col] || form[col] === '')
-    if (missingCol) {
-      showToast(false, `Vui lòng nhập: ${missingCol}`)
+  const handleSubmit = (keepOpen = false) => {
+    const missing = columns.find(c => c.required && (form[c.field] === undefined || form[c.field] === null || form[c.field] === ''))
+    if (missing) {
+      showToast(false, `Vui lòng nhập: ${missing.name}`)
       return
     }
 
@@ -102,14 +128,10 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
             }
           : undefined
 
-      const rowData = { ...form }
-      delete rowData.id
-      delete rowData.toaDoDauLat
-      delete rowData.toaDoDauLng
-      delete rowData.toaDoCuoiLat
-      delete rowData.toaDoCuoiLng
-      delete rowData.toaDoLat
-      delete rowData.toaDoLng
+      // Dựng rowData CHỈ từ các cột khai báo (khoá = field camelCase = trường Prisma),
+      // ép kiểu theo type → không rò rỉ metadata DB (id/createdAt/wardId…) khi sửa.
+      const rowData: Record<string, unknown> = {}
+      for (const c of columns) rowData[c.field] = coerceCellValue(c.type, form[c.field])
 
       if (editing) {
         const res = await updateWardReportRow({
@@ -134,7 +156,9 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
         })
         if (res.ok) {
           showToast(true, 'Đã thêm dữ liệu.')
-          closeModal()
+          // "Lưu & thêm tiếp": giữ modal, reset form để nhập dòng kế tiếp.
+          if (keepOpen) setForm({})
+          else closeModal()
         } else {
           showToast(false, res.error ?? 'Lỗi thêm dữ liệu.')
         }
@@ -160,15 +184,25 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
 
   return (
     <>
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         {canEdit && (
-          <button
-            onClick={openAdd}
-            className="flex items-center gap-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Thêm hàng
-          </button>
+          <>
+            <button
+              onClick={openAdd}
+              className="flex items-center gap-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Thêm hàng
+            </button>
+            <button
+              onClick={openCopy}
+              className="flex items-center gap-2 text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 px-4 py-2 rounded-lg transition-colors"
+              title={`Sao chép toàn bộ dữ liệu từ năm ${year - 1} sang năm ${year}`}
+            >
+              <CopyPlus className="w-4 h-4" />
+              Sao chép năm trước
+            </button>
+          </>
         )}
       </div>
 
@@ -179,7 +213,7 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
               <tr>
                 <th className="text-center font-semibold px-2 py-2 w-[40px]">STT</th>
                 {columns.map((col, idx) => (
-                  <th key={idx} className={`font-semibold px-2 py-2 ${col.type === 'number' ? 'text-center' : 'text-left'}`}>
+                  <th key={idx} className={`font-semibold px-2 py-2 ${col.type === 'number' || col.type === 'integer' ? 'text-center' : 'text-left'}`}>
                     {col.name}
                     {col.unit && <span className="text-xs">({col.unit})</span>}
                   </th>
@@ -192,11 +226,19 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
               {entries.map((entry, idx) => (
                 <tr key={entry.id} className="hover:bg-slate-50">
                   <td className="px-2 py-2.5 text-center font-medium text-slate-800">{idx + 1}</td>
-                  {columns.map((col, cidx) => (
-                    <td key={cidx} className={`px-2 py-2.5 text-slate-700 ${col.type === 'number' ? 'text-center' : ''}`}>
-                      {entry[col.name] ?? '—'}
-                    </td>
-                  ))}
+                  {columns.map((col, cidx) => {
+                    const v = entry[col.field]
+                    const isNumeric = col.type === 'number' || col.type === 'integer'
+                    const display = col.type === 'boolean'
+                      ? (v === true ? 'Có' : v === false ? 'Không' : '—')
+                      : (v === null || v === undefined || v === '' ? '—'
+                        : isNumeric && typeof v === 'number' ? v.toLocaleString('vi-VN') : String(v))
+                    return (
+                      <td key={cidx} className={`px-2 py-2.5 text-slate-700 ${isNumeric ? 'text-center' : ''}`}>
+                        {display}
+                      </td>
+                    )
+                  })}
                   {hasCoordFields && (
                     <td className="px-2 py-2.5 text-center">
                       {hasStartEndCoords && entry.toaDoDauLat && entry.toaDoDauLng && entry.toaDoCuoiLat && entry.toaDoCuoiLng
@@ -215,6 +257,13 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
                           title="Sửa"
                         >
                           <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => openDuplicate(entry)}
+                          className="p-1.5 rounded text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                          title="Nhân bản dòng này"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => openDel(entry)}
@@ -261,24 +310,24 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
               {columns.map((col, idx) => (
                 <div key={idx}>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    {col.name}
+                    {col.name}{col.unit && <span className="font-normal text-slate-400"> ({col.unit})</span>}
                     {col.required && <span className="text-rose-500">*</span>}
                   </label>
                   {col.type === 'text' && (
                     <input
                       type="text"
-                      value={(form[col.name] ?? '') as string}
-                      onChange={e => set(col.name, e.target.value)}
+                      value={(form[col.field] ?? '') as string}
+                      onChange={e => set(col.field, e.target.value)}
                       className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   )}
-                  {col.type === 'number' && (
+                  {(col.type === 'number' || col.type === 'integer') && (
                     <input
                       type="number"
-                      step="0.01"
+                      step={col.type === 'integer' ? '1' : '0.01'}
                       min="0"
-                      value={(form[col.name] ?? '') as string | number}
-                      onChange={e => set(col.name, numOrNull(e.target.value))}
+                      value={(form[col.field] ?? '') as string | number}
+                      onChange={e => set(col.field, numOrNull(e.target.value))}
                       className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   )}
@@ -287,10 +336,21 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
                       type="number"
                       min="2000"
                       max="2100"
-                      value={(form[col.name] ?? '') as string | number}
-                      onChange={e => set(col.name, numOrNull(e.target.value))}
+                      value={(form[col.field] ?? '') as string | number}
+                      onChange={e => set(col.field, numOrNull(e.target.value))}
                       className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
+                  )}
+                  {col.type === 'boolean' && (
+                    <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={form[col.field] === true}
+                        onChange={e => set(col.field, e.target.checked)}
+                        className="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span className="text-sm text-slate-600">Có</span>
+                    </label>
                   )}
                 </div>
               ))}
@@ -341,7 +401,15 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
               <button onClick={closeModal} disabled={pending} className="px-4 py-2 text-sm text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50">
                 Huỷ
               </button>
-              <button onClick={handleSubmit} disabled={pending}
+              {!editing && (
+                <button onClick={() => handleSubmit(true)} disabled={pending}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-emerald-700 border border-emerald-300 bg-white hover:bg-emerald-50 rounded-lg transition-colors disabled:opacity-60"
+                  title="Lưu dòng này và tiếp tục nhập dòng mới">
+                  <Plus className="w-4 h-4" />
+                  Lưu & thêm tiếp
+                </button>
+              )}
+              <button onClick={() => handleSubmit(false)} disabled={pending}
                 className="flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors disabled:opacity-60">
                 {pending && <Loader2 className="w-4 h-4 animate-spin" />}
                 {editing ? 'Lưu thay đổi' : 'Thêm dữ liệu'}
@@ -372,6 +440,51 @@ export default function WardEntryForm({ category, wardId, year, entries, canEdit
                 className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg disabled:opacity-60">
                 {pending && <Loader2 className="w-4 h-4 animate-spin" />}
                 Xoá
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Copy-year Modal */}
+      {modal === 'copy' && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40" onClick={e => { if (e.target === e.currentTarget) closeModal() }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
+                <CopyPlus className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <h2 className="font-bold text-slate-900">Sao chép dữ liệu từ năm trước</h2>
+                <p className="text-sm text-slate-500">Chép toàn bộ dòng sang năm {year} (trạng thái Nháp).</p>
+              </div>
+            </div>
+
+            <label className="block">
+              <span className="block text-sm font-semibold text-slate-700 mb-1">Năm nguồn</span>
+              <input
+                type="number"
+                min="2000"
+                max={year - 1}
+                value={copyFromYear}
+                onChange={e => setCopyFromYear(Number(e.target.value))}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </label>
+
+            <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+              <span>Thao tác THÊM MỚI các dòng — dữ liệu năm {year} hiện có vẫn được giữ nguyên (có thể tạo trùng nếu chạy nhiều lần).</span>
+            </div>
+
+            <div className="flex gap-3 justify-end">
+              <button onClick={closeModal} disabled={pending} className="px-4 py-2 text-sm text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-50">
+                Huỷ
+              </button>
+              <button onClick={handleCopyYear} disabled={pending || copyFromYear >= year}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg disabled:opacity-60">
+                {pending && <Loader2 className="w-4 h-4 animate-spin" />}
+                Sao chép
               </button>
             </div>
           </div>

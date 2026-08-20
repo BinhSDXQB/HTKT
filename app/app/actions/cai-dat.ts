@@ -20,6 +20,7 @@ export type ConfigFormState = { error?: string; success?: string } | null
 
 export async function saveFacilityConfigAction(prevState: ConfigFormState, formData: FormData): Promise<ConfigFormState> {
   const user = await requireAuth()
+  if (user.role?.name !== 'admin') return { error: 'Chỉ quản trị viên mới được cập nhật cấu hình cơ quan' }
   const raw = Object.fromEntries(formData.entries())
   const parsed = ConfigSchema.safeParse(raw)
   if (!parsed.success) return { error: 'Dữ liệu không hợp lệ' }

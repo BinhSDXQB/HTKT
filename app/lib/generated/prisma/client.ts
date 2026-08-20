@@ -312,6 +312,16 @@ export type ReportBaiDoXe = Prisma.ReportBaiDoXeModel
  */
 export type WardReport = Prisma.WardReportModel
 /**
+ * Model WardGisLength
+ * 
+ */
+export type WardGisLength = Prisma.WardGisLengthModel
+/**
+ * Model WardKhaiBao
+ * 
+ */
+export type WardKhaiBao = Prisma.WardKhaiBaoModel
+/**
  * Model FacilityConfig
  * 
  */
@@ -548,3 +558,163 @@ export type DsKeHoachVon = Prisma.DsKeHoachVonModel
  * 
  */
 export type DsLienHe = Prisma.DsLienHeModel
+/**
+ * Model httt_dinh_danh
+ * 
+ */
+export type httt_dinh_danh = Prisma.httt_dinh_danhModel
+/**
+ * Model httt_dong_bo_log
+ * 
+ */
+export type httt_dong_bo_log = Prisma.httt_dong_bo_logModel
+/**
+ * Model httt_nang_luc_ca_nhan
+ * 
+ */
+export type httt_nang_luc_ca_nhan = Prisma.httt_nang_luc_ca_nhanModel
+/**
+ * Model httt_nang_luc_to_chuc
+ * 
+ */
+export type httt_nang_luc_to_chuc = Prisma.httt_nang_luc_to_chucModel
+/**
+ * Model qd72_administrative_unit_assignments
+ * 
+ */
+export type qd72_administrative_unit_assignments = Prisma.qd72_administrative_unit_assignmentsModel
+/**
+ * Model qd72_attachments
+ * 
+ */
+export type qd72_attachments = Prisma.qd72_attachmentsModel
+/**
+ * Model qd72_clearance_measurements
+ * 
+ */
+export type qd72_clearance_measurements = Prisma.qd72_clearance_measurementsModel
+/**
+ * Model qd72_comments
+ * 
+ */
+export type qd72_comments = Prisma.qd72_commentsModel
+/**
+ * Model qd72_fire_hydrants
+ * 
+ */
+export type qd72_fire_hydrants = Prisma.qd72_fire_hydrantsModel
+/**
+ * Model qd72_fire_parking_areas
+ * 
+ */
+export type qd72_fire_parking_areas = Prisma.qd72_fire_parking_areasModel
+/**
+ * Model qd72_legal_documents
+ * 
+ */
+export type qd72_legal_documents = Prisma.qd72_legal_documentsModel
+/**
+ * Model qd72_overhead_utility_lines
+ * 
+ */
+export type qd72_overhead_utility_lines = Prisma.qd72_overhead_utility_linesModel
+/**
+ * Model qd72_passing_bays
+ * 
+ */
+export type qd72_passing_bays = Prisma.qd72_passing_baysModel
+/**
+ * Model qd72_public_lighting_assets
+ * 
+ */
+export type qd72_public_lighting_assets = Prisma.qd72_public_lighting_assetsModel
+/**
+ * Model qd72_renovation_plans
+ * 
+ */
+export type qd72_renovation_plans = Prisma.qd72_renovation_plansModel
+/**
+ * Model qd72_renovation_tasks
+ * 
+ */
+export type qd72_renovation_tasks = Prisma.qd72_renovation_tasksModel
+/**
+ * Model qd72_road_obstacles
+ * 
+ */
+export type qd72_road_obstacles = Prisma.qd72_road_obstaclesModel
+/**
+ * Model qd72_road_segments
+ * 
+ */
+export type qd72_road_segments = Prisma.qd72_road_segmentsModel
+/**
+ * Model qd72_shared_technical_infrastructure
+ * 
+ */
+export type qd72_shared_technical_infrastructure = Prisma.qd72_shared_technical_infrastructureModel
+/**
+ * Model qd72_survey_cases
+ * 
+ */
+export type qd72_survey_cases = Prisma.qd72_survey_casesModel
+/**
+ * Model qd72_technical_rules
+ * 
+ */
+export type qd72_technical_rules = Prisma.qd72_technical_rulesModel
+/**
+ * Model qd72_undergrounding_proposals
+ * 
+ */
+export type qd72_undergrounding_proposals = Prisma.qd72_undergrounding_proposalsModel
+/**
+ * Model qd72_urban_areas
+ * 
+ */
+export type qd72_urban_areas = Prisma.qd72_urban_areasModel
+/**
+ * Model qd72_utility_crossings
+ * 
+ */
+export type qd72_utility_crossings = Prisma.qd72_utility_crossingsModel
+/**
+ * Model qd72_utility_owners
+ * 
+ */
+export type qd72_utility_owners = Prisma.qd72_utility_ownersModel
+/**
+ * Model qd72_utility_poles
+ * 
+ */
+export type qd72_utility_poles = Prisma.qd72_utility_polesModel
+/**
+ * Model qd72_verification_items
+ * 
+ */
+export type qd72_verification_items = Prisma.qd72_verification_itemsModel
+/**
+ * Model qd72_verification_records
+ * 
+ */
+export type qd72_verification_records = Prisma.qd72_verification_recordsModel
+/**
+ * Model qd72_water_intake_points
+ * 
+ */
+export type qd72_water_intake_points = Prisma.qd72_water_intake_pointsModel
+/**
+ * Model qd72_water_sources
+ * 
+ */
+export type qd72_water_sources = Prisma.qd72_water_sourcesModel
+/**
+ * Model qd72_water_test_results
+ * 
+ */
+export type qd72_water_test_results = Prisma.qd72_water_test_resultsModel
+/**
+ * Model qd72_workflow_history
+ * 
+ */
+export type qd72_workflow_history = Prisma.qd72_workflow_historyModel

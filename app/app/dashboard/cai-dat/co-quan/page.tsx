@@ -1,11 +1,13 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ChevronRight, Settings, Building2 } from 'lucide-react'
 import { FacilityConfigForm } from '@/components/cai-dat/facility-config-form'
 
 export default async function CoQuanPage() {
-  await requireAuth()
+  const user = await requireAuth()
+  if (user.role?.name !== 'admin') redirect('/forbidden')
   const config = await db.facilityConfig.findFirst()
 
   return (

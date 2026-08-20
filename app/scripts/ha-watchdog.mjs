@@ -12,7 +12,6 @@
  * - Graceful degradation
  */
 
-import axios from 'axios'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs'
@@ -60,11 +59,15 @@ function log(level, message) {
  */
 async function healthCheck() {
   try {
-    const response = await axios.get(CONFIG.healthCheckUrl, {
-      timeout: CONFIG.timeout,
-      validateStatus: (status) => status === 200,
-    })
-    return { success: true, status: response.status }
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout)
+    const response = await fetch(CONFIG.healthCheckUrl, { signal: controller.signal })
+    clearTimeout(timeoutId)
+    if (response.status === 200) {
+      return { success: true, status: response.status }
+    } else {
+      return { success: false, error: `HTTP ${response.status}` }
+    }
   } catch (error) {
     return { success: false, error: error.message }
   }
@@ -75,11 +78,15 @@ async function healthCheck() {
  */
 async function websiteCheck() {
   try {
-    const response = await axios.get(CONFIG.websiteUrl, {
-      timeout: CONFIG.timeout,
-      validateStatus: (status) => status === 200,
-    })
-    return { success: true, status: response.status }
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout)
+    const response = await fetch(CONFIG.websiteUrl, { signal: controller.signal })
+    clearTimeout(timeoutId)
+    if (response.status === 200) {
+      return { success: true, status: response.status }
+    } else {
+      return { success: false, error: `HTTP ${response.status}` }
+    }
   } catch (error) {
     return { success: false, error: error.message }
   }
@@ -96,11 +103,19 @@ async function sendTelegramAlert(message) {
 
   try {
     const url = `https://api.telegram.org/bot${CONFIG.telegramToken}/sendMessage`
-    await axios.post(url, {
-      chat_id: CONFIG.telegramChatId,
-      text: `🚨 QL-HTKT Alert\n\n${message}`,
-      parse_mode: 'HTML',
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CONFIG.telegramChatId,
+        text: `🚨 QL-HTKT Alert\n\n${message}`,
+        parse_mode: 'HTML',
+      }),
+      signal: controller.signal,
     })
+    clearTimeout(timeoutId)
     log('INFO', 'Telegram alert sent')
   } catch (error) {
     log('ERROR', `Telegram alert failed: ${error.message}`)

@@ -167,6 +167,9 @@ model AdministrativeUnit {
   reportCongVien  ReportCongVien[] @relation("WardReportCongVien")
   reportCapNuoc   ReportCapNuoc[]  @relation("WardReportCapNuoc")
   reportBaiDoXe   ReportBaiDoXe[]  @relation("WardReportBaiDoXe")
+  wardGisLength   WardGisLength?   @relation("WardGisLength")
+  wardKhaiBao     WardKhaiBao[]    @relation("WardKhaiBao")
+  nghiepVuBanGhis NghiepVuBanGhi[] @relation("NghiepVuWard")   // hồ sơ nghiệp vụ theo địa bàn (mig 044)
   // Mạng lưới hạ tầng
   denChieuSang    DenChieuSang[]       @relation("DenWard")
   cayXanh         CayXanhDuong[]       @relation("CayWard")
@@ -1890,6 +1893,43 @@ model WardReport {
   @@map("ward_reports")
 }
 
+// ─── ĐỐI SOÁT GIS — nguồn thứ 3 (chiều dài hình học tuyến trong ranh đơn vị) ──
+// Làm mới khi lớp bản đồ tuyến-duong thay đổi (hiếm). Nguồn: gis_do_chieu_dai.py.
+// Đối soát LIVE: API cộng report_* (động) rồi so với các cột dưới đây.
+model WardGisLength {
+  id               String             @id @default(cuid())
+  wardId           String             @unique
+  ward             AdministrativeUnit @relation("WardGisLength", fields: [wardId], references: [id], onDelete: Cascade)
+  duongDiaPhuongKm Float              @default(0) // đường chỉ có tên (địa phương/đô thị) — gần khai báo xã/phường
+  duongHuyenKm     Float              @default(0)
+  duongTinhKm      Float              @default(0)
+  quocLoKm         Float              @default(0)
+  caoTocKm         Float              @default(0)
+  tongKm           Float              @default(0) // tổng toàn mạng đường trong ranh
+  nguon            String?
+  updatedAt        DateTime           @updatedAt
+
+  @@map("ward_gis_length")
+}
+
+// ─── SỐ ĐƠN VỊ TỰ KHAI (từ dòng TỔNG báo cáo gốc) — để đối soát đủ 3 nguồn ───
+model WardKhaiBao {
+  id        String             @id @default(cuid())
+  wardId    String
+  ward      AdministrativeUnit @relation("WardKhaiBao", fields: [wardId], references: [id], onDelete: Cascade)
+  year      Int
+  linhVuc   String             // 'DUONG' | 'DIEN_CS' | 'THOAT_NUOC' | ...
+  chiTieu   String             // 'chieuDaiKm' | 'soColDen' | 'chieuDaiM' | ...
+  giaTri    Float
+  donVi     String?            // km | cột | m | cây | m2 | hộ
+  ghiChu    String?
+  updatedAt DateTime           @updatedAt
+
+  @@unique([wardId, year, linhVuc, chiTieu])
+  @@index([year, linhVuc])
+  @@map("ward_khai_bao")
+}
+
 // ─── CẤU HÌNH CƠ QUAN ────────────────────────────────────────────────────────
 
 model FacilityConfig {
@@ -2948,6 +2988,15 @@ model TaiLieu {
   soKyTu      Int            @default(0)
   trangThai   String         @default("dang_xu_ly") // dang_xu_ly/san_sang/loi
   ghiChuLoi   String?
+
+  // ── Tình trạng hiệu lực pháp lý (mig 043) ──────────────────────────────────
+  // Đồng bộ từ prisma/hieu-luc-vbpl.json bằng scripts/sync-hieu-luc-tai-lieu.mjs.
+  // RAG dùng để CẢNH BÁO khi đoạn trích đến từ văn bản đã hết hiệu lực, tránh
+  // chatbot viện dẫn văn bản cũ làm căn cứ hiện hành.
+  tinhTrangHieuLuc String      @default("can_kiem_chung") // con_hieu_luc/het_hieu_luc/du_thao/can_kiem_chung
+  thayTheBoi       String?                                // số hiệu văn bản thay thế
+  ghiChuHieuLuc    String?
+
   metadata    Json?
   createdById String?
   createdAt   DateTime       @default(now())
@@ -2957,6 +3006,7 @@ model TaiLieu {
 
   @@index([phamVi])
   @@index([loai])
+  @@index([tinhTrangHieuLuc])
   @@map("tai_lieu")
 }
 
@@ -3172,6 +3222,11 @@ model NghiepVuBanGhi {
   maBanGhi     String    @unique                  // NV-YYYY-NNNNNN
   tieuDe       String
   trangThai    String    @default("MOI")          // MOI|DANG_XU_LY|HOAN_THANH|HUY (text)
+
+  // Địa bàn: wardId là NGUỒN LIÊN KẾT (mig 044); diaBan chỉ là nhãn hiển thị giữ
+  // lại từ dữ liệu cũ. Đổi tên/sáp nhập phường xã không làm đứt liên kết nữa.
+  wardId       String?
+  ward         AdministrativeUnit? @relation("NghiepVuWard", fields: [wardId], references: [id])
   diaBan       String?
   ngayGhiNhan  DateTime?
   ghiChu       String?
@@ -3186,6 +3241,7 @@ model NghiepVuBanGhi {
   @@index([toChucId])
   @@index([linhVuc, toChucId])
   @@index([createdById])
+  @@index([wardId])
   @@map("nghiep_vu_ban_ghi")
 }
 
@@ -3344,4 +3400,688 @@ model DsLienHe {
   @@index([duAnGpmbId])
   @@index([donVi])
   @@map("ds_lien_he")
+}
+
+// ===== MODELS QĐ72 + Liên thông HĐXD (mig 037-040) — bảng độc lập, không quan hệ tới User/ToChuc/AdministrativeUnit =====
+model httt_dinh_danh {
+  id                    String                  @id @default(dbgenerated("(gen_random_uuid())::text"))
+  loai_doi_tuong        String
+  ma_dinh_danh          String?
+  loai_ma               String                  @default("CHUOI_KY_TU")
+  bang_local            String?
+  id_local              String?
+  trang_thai_dong_bo    String                  @default("CHUA_KHOI_TAO")
+  la_du_lieu_mo         Boolean                 @default(false)
+  thoi_diem_khoi_tao    DateTime?               @db.Timestamptz(6)
+  thoi_diem_dong_bo     DateTime?               @db.Timestamptz(6)
+  phan_hoi_httt         Json?
+  ghi_chu               String?
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
+  httt_dong_bo_log      httt_dong_bo_log[]
+  httt_nang_luc_ca_nhan httt_nang_luc_ca_nhan[]
+  httt_nang_luc_to_chuc httt_nang_luc_to_chuc[]
+
+  @@unique([loai_doi_tuong, ma_dinh_danh])
+  @@index([bang_local, id_local], map: "idx_httt_dd_local")
+  @@index([trang_thai_dong_bo], map: "idx_httt_dd_trang_thai")
+}
+
+model httt_dong_bo_log {
+  id             String          @id @default(dbgenerated("(gen_random_uuid())::text"))
+  dinh_danh_id   String?
+  hanh_dong      String
+  ket_qua        String          @default("CHO")
+  thong_diep     String?
+  payload        Json?
+  nguoi_id       String?
+  thoi_diem      DateTime        @default(now()) @db.Timestamptz(6)
+  httt_dinh_danh httt_dinh_danh? @relation(fields: [dinh_danh_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([dinh_danh_id], map: "idx_httt_log_dd")
+}
+
+model httt_nang_luc_ca_nhan {
+  id                   String          @id @default(dbgenerated("(gen_random_uuid())::text"))
+  dinh_danh_id         String?
+  ma_dinh_danh         String?
+  loai_ma              String          @default("SO_DINH_DANH_CN")
+  ho_ten               String
+  quoc_tich            String?
+  linh_vuc_hanh_nghe   String?
+  hang_chung_chi       String?
+  thoi_han_chung_chi   DateTime?       @db.Date
+  co_so_dao_tao        String?
+  trinh_do_chuyen_mon  String?
+  so_chung_chi         String?
+  loai_cap             String?
+  ly_do_cap            String?
+  quyet_dinh_cap       String?
+  co_quan_cap          String?
+  ngay_cap             DateTime?       @db.Date
+  trang_thai           String          @default("HIEU_LUC")
+  ket_qua_dien_tu_path String?
+  truong_bo_sung       Json            @default("{}")
+  to_chuc_id           String?
+  created_by_id        String?
+  created_at           DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime        @default(now()) @db.Timestamptz(6)
+  deleted_at           DateTime?       @db.Timestamptz(6)
+  httt_dinh_danh       httt_dinh_danh? @relation(fields: [dinh_danh_id], references: [id], onUpdate: NoAction)
+
+  @@index([linh_vuc_hanh_nghe], map: "idx_httt_nlcn_linhvuc")
+  @@index([ma_dinh_danh], map: "idx_httt_nlcn_ma")
+  @@index([to_chuc_id], map: "idx_httt_nlcn_to_chuc")
+}
+
+model httt_nang_luc_to_chuc {
+  id                    String          @id @default(dbgenerated("(gen_random_uuid())::text"))
+  dinh_danh_id          String?
+  ma_so_dn              String?
+  ten_nha_thau          String
+  linh_vuc              String?
+  hang                  String?
+  so_chung_chi_nang_luc String?
+  co_quan_cap           String?
+  ngay_cap              DateTime?       @db.Date
+  thoi_han              DateTime?       @db.Date
+  trang_thai            String          @default("HIEU_LUC")
+  ket_qua_dien_tu_path  String?
+  thong_tin_nang_luc    Json            @default("{}")
+  truong_bo_sung        Json            @default("{}")
+  to_chuc_id            String?
+  created_by_id         String?
+  created_at            DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime        @default(now()) @db.Timestamptz(6)
+  deleted_at            DateTime?       @db.Timestamptz(6)
+  httt_dinh_danh        httt_dinh_danh? @relation(fields: [dinh_danh_id], references: [id], onUpdate: NoAction)
+
+  @@index([ma_so_dn], map: "idx_httt_nltc_ma")
+  @@index([to_chuc_id], map: "idx_httt_nltc_to_chuc")
+}
+
+model qd72_administrative_unit_assignments {
+  id                   String               @id @default(dbgenerated("(gen_random_uuid())::text"))
+  don_vi_hanh_chinh_id String?
+  to_chuc_id           String?
+  vai_tro              String?
+  owner_id             String?
+  ghi_chu              String?
+  created_at           DateTime             @default(now()) @db.Timestamptz(6)
+  qd72_utility_owners  qd72_utility_owners? @relation(fields: [owner_id], references: [id], onUpdate: NoAction)
+
+  @@unique([don_vi_hanh_chinh_id, to_chuc_id, vai_tro], map: "qd72_administrative_unit_assi_don_vi_hanh_chinh_id_to_chuc__key")
+}
+
+model qd72_attachments {
+  id                String             @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id    String?
+  doi_tuong_loai    String?
+  doi_tuong_id      String?
+  ten_file          String
+  dinh_dang         String?
+  dung_luong_byte   BigInt?
+  sha256            String?
+  storage_path      String
+  loai              String?
+  gps_lat           Decimal?           @db.Decimal
+  gps_lng           Decimal?           @db.Decimal
+  chup_luc          DateTime?          @db.Timestamptz(6)
+  ghi_chu           String?
+  uploaded_by_id    String?
+  created_at        DateTime           @default(now()) @db.Timestamptz(6)
+  deleted_at        DateTime?          @db.Timestamptz(6)
+  qd72_survey_cases qd72_survey_cases? @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([survey_case_id], map: "idx_qd72_attach_case")
+  @@index([doi_tuong_loai, doi_tuong_id], map: "idx_qd72_attach_doi_tuong")
+}
+
+model qd72_clearance_measurements {
+  id                String             @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id    String?
+  doi_tuong_loai    String?
+  doi_tuong_id      String?
+  nguon             String             @default("XA_KHAI")
+  gia_tri_m         Decimal?           @db.Decimal
+  vi_tri_do         String?
+  thiet_bi_do       String?
+  nguoi_do          String?
+  ngay_gio_do       DateTime?          @db.Timestamptz(6)
+  dieu_kien         String?
+  geometry          Json?
+  tam_lat           Decimal?           @db.Decimal
+  tam_lng           Decimal?           @db.Decimal
+  chi_tiet          Json               @default("{}")
+  created_by_id     String?
+  created_at        DateTime           @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases qd72_survey_cases? @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([survey_case_id], map: "idx_qd72_clearance_case")
+}
+
+model qd72_comments {
+  id                String             @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id    String?
+  doi_tuong_loai    String?
+  doi_tuong_id      String?
+  noi_dung          String
+  nguoi_id          String?
+  created_at        DateTime           @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases qd72_survey_cases? @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_fire_hydrants {
+  id                 String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id     String?
+  water_source_id    String?
+  ma                 String?
+  tinh_trang         String?
+  cach_mep_duong_m   Decimal?            @db.Decimal
+  cach_tuong_m       Decimal?            @db.Decimal
+  geometry           Json?
+  tam_lat            Decimal?            @db.Decimal
+  tam_lng            Decimal?            @db.Decimal
+  chi_tiet           Json                @default("{}")
+  created_at         DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases  qd72_survey_cases?  @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qd72_water_sources qd72_water_sources? @relation(fields: [water_source_id], references: [id], onUpdate: NoAction)
+}
+
+model qd72_fire_parking_areas {
+  id                String             @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id    String?
+  ma                String?
+  ten               String?
+  dien_tich_m2      Decimal?           @db.Decimal
+  do_doc            String?
+  geometry          Json?
+  tam_lat           Decimal?           @db.Decimal
+  tam_lng           Decimal?           @db.Decimal
+  chi_tiet          Json               @default("{}")
+  created_at        DateTime           @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases qd72_survey_cases? @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_legal_documents {
+  id                         String                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ma_van_ban                 String                 @unique
+  loai                       String
+  so_hieu                    String
+  ten                        String
+  co_quan_ban_hanh           String?
+  ngay_ban_hanh              DateTime?              @db.Date
+  ngay_hieu_luc              DateTime?              @db.Date
+  ngay_het_hieu_luc          DateTime?              @db.Date
+  la_van_ban_goc             Boolean                @default(true)
+  sua_doi_cho_id             String?
+  trang_thai                 String                 @default("HIEU_LUC")
+  ghi_chu_ra_soat            String?
+  nguon_url                  String?
+  created_at                 DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime               @default(now()) @db.Timestamptz(6)
+  qd72_legal_documents       qd72_legal_documents?  @relation("qd72_legal_documentsToqd72_legal_documents", fields: [sua_doi_cho_id], references: [id], onUpdate: NoAction)
+  other_qd72_legal_documents qd72_legal_documents[] @relation("qd72_legal_documentsToqd72_legal_documents")
+  qd72_technical_rules       qd72_technical_rules[]
+
+  @@index([loai], map: "idx_qd72_legal_loai")
+  @@index([trang_thai], map: "idx_qd72_legal_trang_thai")
+}
+
+model qd72_overhead_utility_lines {
+  id                            String                          @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id                String?
+  don_vi_hanh_chinh_id          String?
+  ma                            String?
+  loai_doi_tuong                String
+  ten_tuyen                     String?
+  owner_id                      String?
+  chu_so_huu_text               String?
+  trang_thai_chu_so_huu         String?                         @default("CHUA_XAC_DINH")
+  don_vi_van_hanh               String?
+  cao_diem_thap_nhat_m          Decimal?                        @db.Decimal
+  chay_doc_hay_cat_ngang        String?
+  do_vong_quan_sat              String?
+  co_can_tro_xe_cc              Boolean?
+  tinh_trang_su_dung            String?
+  geometry                      Json?
+  tam_lat                       Decimal?                        @db.Decimal
+  tam_lng                       Decimal?                        @db.Decimal
+  chi_tiet                      Json                            @default("{}")
+  created_by_id                 String?
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(6)
+  qd72_utility_owners           qd72_utility_owners?            @relation(fields: [owner_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases             qd72_survey_cases?              @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qd72_undergrounding_proposals qd72_undergrounding_proposals[]
+  qd72_utility_crossings        qd72_utility_crossings[]
+
+  @@index([survey_case_id], map: "idx_qd72_lines_case")
+  @@index([owner_id], map: "idx_qd72_lines_owner")
+}
+
+model qd72_passing_bays {
+  id                 String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id     String?
+  road_segment_id    String?
+  ma                 String?
+  chieu_dai_m        Decimal?            @db.Decimal
+  chieu_rong_m       Decimal?            @db.Decimal
+  geometry           Json?
+  tam_lat            Decimal?            @db.Decimal
+  tam_lng            Decimal?            @db.Decimal
+  chi_tiet           Json                @default("{}")
+  created_at         DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_road_segments qd72_road_segments? @relation(fields: [road_segment_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases  qd72_survey_cases?  @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_public_lighting_assets {
+  id                  String               @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id      String?
+  ma                  String?
+  loai                String?
+  owner_id            String?
+  tinh_trang          String?
+  geometry            Json?
+  tam_lat             Decimal?             @db.Decimal
+  tam_lng             Decimal?             @db.Decimal
+  chi_tiet            Json                 @default("{}")
+  created_at          DateTime             @default(now()) @db.Timestamptz(6)
+  qd72_utility_owners qd72_utility_owners? @relation(fields: [owner_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases   qd72_survey_cases?   @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_renovation_plans {
+  id                    String                  @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id        String?
+  don_vi_hanh_chinh_id  String?
+  ma                    String?
+  van_de_ton_tai        String?
+  can_cu_xac_dinh       String?
+  giai_phap             String?
+  nhom_giai_phap        String?
+  muc_uu_tien           String?
+  co_quan_chu_tri       String?
+  don_vi_phoi_hop       String?
+  chu_so_huu_ct         String?
+  nguon_von             String?
+  kinh_phi              Decimal?                @db.Decimal
+  nam_thuc_hien         Int?
+  tien_do               String?
+  geometry              Json?
+  tam_lat               Decimal?                @db.Decimal
+  tam_lng               Decimal?                @db.Decimal
+  chi_tiet              Json                    @default("{}")
+  created_by_id         String?
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases     qd72_survey_cases?      @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qd72_renovation_tasks qd72_renovation_tasks[]
+
+  @@index([survey_case_id], map: "idx_qd72_plan_case")
+}
+
+model qd72_renovation_tasks {
+  id                    String                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  plan_id               String?
+  ma                    String?
+  ten                   String?
+  loai_cong_viec        String?
+  khoi_luong            String?
+  ngay_bat_dau          DateTime?              @db.Date
+  ngay_hoan_thanh_dk    DateTime?              @db.Date
+  tien_do_pct           Decimal?               @db.Decimal
+  trang_thai            String?
+  chi_tiet              Json                   @default("{}")
+  created_at            DateTime               @default(now()) @db.Timestamptz(6)
+  qd72_renovation_plans qd72_renovation_plans? @relation(fields: [plan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_road_obstacles {
+  id                 String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id     String?
+  road_segment_id    String?
+  ma                 String?
+  loai               String?
+  mo_ta              String?
+  cao_m              Decimal?            @db.Decimal
+  geometry           Json?
+  tam_lat            Decimal?            @db.Decimal
+  tam_lng            Decimal?            @db.Decimal
+  chi_tiet           Json                @default("{}")
+  created_at         DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_road_segments qd72_road_segments? @relation(fields: [road_segment_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases  qd72_survey_cases?  @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_road_segments {
+  id                     String                   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id         String?
+  don_vi_hanh_chinh_id   String?
+  ma                     String?
+  ten                    String
+  diem_dau               String?
+  diem_cuoi              String?
+  chieu_dai_m            Decimal?                 @db.Decimal
+  rong_thong_thuy_min_m  Decimal?                 @db.Decimal
+  cao_thong_thuy_min_m   Decimal?                 @db.Decimal
+  do_doc_max             String?
+  loai_mat_duong         String?
+  tinh_trang_mat_duong   String?
+  chiu_tai               String?
+  la_duong_cut           Boolean?
+  chieu_dai_cut_m        Decimal?                 @db.Decimal
+  co_diem_quay_xe        Boolean?
+  geometry               Json?
+  tam_lat                Decimal?                 @db.Decimal
+  tam_lng                Decimal?                 @db.Decimal
+  chi_tiet               Json                     @default("{}")
+  de_xuat_chinh_trang    String?
+  created_by_id          String?
+  created_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  qd72_passing_bays      qd72_passing_bays[]
+  qd72_road_obstacles    qd72_road_obstacles[]
+  qd72_survey_cases      qd72_survey_cases?       @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qd72_utility_crossings qd72_utility_crossings[]
+
+  @@index([survey_case_id], map: "idx_qd72_road_case")
+}
+
+model qd72_shared_technical_infrastructure {
+  id                   String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id       String?
+  don_vi_hanh_chinh_id String?
+  ma                   String?
+  loai                 String?
+  chieu_dai_m          Decimal?            @db.Decimal
+  con_du_phong         Boolean?
+  geometry             Json?
+  tam_lat              Decimal?            @db.Decimal
+  tam_lng              Decimal?            @db.Decimal
+  chi_tiet             Json                @default("{}")
+  created_at           DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases    qd72_survey_cases?  @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_survey_cases {
+  id                                            String                                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ma                                            String?                                @unique
+  ten                                           String
+  don_vi_hanh_chinh_id                          String?
+  to_chuc_id                                    String?
+  trang_thai                                    String                                 @default("DRAFT")
+  nhom_danh_gia                                 String?
+  ngay_khao_sat                                 DateTime?                              @db.Date
+  thanh_phan_khao_sat                           String?
+  mo_ta                                         String?
+  chi_tiet                                      Json                                   @default("{}")
+  phien_ban                                     Int                                    @default(1)
+  created_by_id                                 String?
+  updated_by_id                                 String?
+  verified_by_id                                String?
+  created_at                                    DateTime                               @default(now()) @db.Timestamptz(6)
+  updated_at                                    DateTime                               @default(now()) @db.Timestamptz(6)
+  verified_at                                   DateTime?                              @db.Timestamptz(6)
+  ly_do_dieu_chinh                              String?
+  qd72_attachments                              qd72_attachments[]
+  qd72_clearance_measurements                   qd72_clearance_measurements[]
+  qd72_comments                                 qd72_comments[]
+  qd72_fire_hydrants                            qd72_fire_hydrants[]
+  qd72_fire_parking_areas                       qd72_fire_parking_areas[]
+  qd72_overhead_utility_lines                   qd72_overhead_utility_lines[]
+  qd72_passing_bays                             qd72_passing_bays[]
+  qd72_public_lighting_assets                   qd72_public_lighting_assets[]
+  qd72_renovation_plans                         qd72_renovation_plans[]
+  qd72_road_obstacles                           qd72_road_obstacles[]
+  qd72_road_segments                            qd72_road_segments[]
+  qd72_shared_technical_infrastructure          qd72_shared_technical_infrastructure[]
+  qd72_undergrounding_proposals                 qd72_undergrounding_proposals[]
+  qd72_urban_areas                              qd72_urban_areas[]
+  qd72_utility_crossings                        qd72_utility_crossings[]
+  qd72_utility_poles                            qd72_utility_poles[]
+  qd72_verification_records                     qd72_verification_records[]
+  qd72_water_sources                            qd72_water_sources[]
+  qd72_workflow_history                         qd72_workflow_history[]
+
+  @@index([don_vi_hanh_chinh_id], map: "idx_qd72_cases_dvhc")
+  @@index([trang_thai], map: "idx_qd72_cases_trang_thai")
+}
+
+model qd72_technical_rules {
+  id                      String                    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ma_tieu_chi             String                    @unique
+  nhom                    String
+  ten                     String
+  gia_tri                 Decimal?                  @db.Decimal
+  gia_tri_text            String?
+  toan_tu                 String                    @default(">=")
+  don_vi                  String?
+  legal_document_id       String?
+  dieu_khoan              String?
+  ngay_hieu_luc           DateTime?                 @db.Date
+  ngay_het_hieu_luc       DateTime?                 @db.Date
+  phien_ban               String                    @default("1.0")
+  trang_thai              String                    @default("ACTIVE")
+  ghi_chu                 String?
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  qd72_legal_documents    qd72_legal_documents?     @relation(fields: [legal_document_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  qd72_verification_items qd72_verification_items[]
+
+  @@index([nhom], map: "idx_qd72_rules_nhom")
+  @@index([trang_thai], map: "idx_qd72_rules_trang_thai")
+}
+
+model qd72_undergrounding_proposals {
+  id                          String                       @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id              String?
+  line_id                     String?
+  ma                          String?
+  cac_phuong_an               Json                         @default("[]")
+  don_vi_chu_tri              String?
+  don_vi_phoi_hop             String?
+  khoi_luong                  String?
+  chieu_dai_xu_ly_m           Decimal?                     @db.Decimal
+  so_cot_diem                 Int?
+  kinh_phi                    Decimal?                     @db.Decimal
+  nguon_von                   String?
+  muc_uu_tien                 String?
+  y_kien_chuyen_nganh         String?
+  chi_tiet                    Json                         @default("{}")
+  created_by_id               String?
+  created_at                  DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at                  DateTime                     @default(now()) @db.Timestamptz(6)
+  qd72_overhead_utility_lines qd72_overhead_utility_lines? @relation(fields: [line_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases           qd72_survey_cases?           @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_urban_areas {
+  id                   String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id       String?
+  don_vi_hanh_chinh_id String?
+  ma                   String?
+  ten                  String
+  thon_to_dan_pho      String?
+  can_cu_xac_dinh      String?
+  so_van_ban_cong_nhan String?
+  ngay_van_ban         DateTime?           @db.Date
+  dien_tich_ha         Decimal?            @db.Decimal
+  dan_so               Int?
+  so_ho                Int?
+  so_cong_trinh        Int?
+  so_ct_tu_3_tang      Int?
+  so_cs_nguy_hiem_chay Int?
+  geometry             Json?
+  tam_lat              Decimal?            @db.Decimal
+  tam_lng              Decimal?            @db.Decimal
+  chi_tiet             Json                @default("{}")
+  created_by_id        String?
+  created_at           DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases    qd72_survey_cases?  @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([survey_case_id], map: "idx_qd72_urban_case")
+}
+
+model qd72_utility_crossings {
+  id                          String                       @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id              String?
+  line_id                     String?
+  road_segment_id             String?
+  ma                          String?
+  cao_thong_thuy_m            Decimal?                     @db.Decimal
+  geometry                    Json?
+  tam_lat                     Decimal?                     @db.Decimal
+  tam_lng                     Decimal?                     @db.Decimal
+  chi_tiet                    Json                         @default("{}")
+  created_at                  DateTime                     @default(now()) @db.Timestamptz(6)
+  qd72_overhead_utility_lines qd72_overhead_utility_lines? @relation(fields: [line_id], references: [id], onUpdate: NoAction)
+  qd72_road_segments          qd72_road_segments?          @relation(fields: [road_segment_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases           qd72_survey_cases?           @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_utility_owners {
+  id                                   String                                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ma                                   String?                                @unique
+  ten                                  String
+  loai                                 String?
+  to_chuc_id                           String?
+  dien_thoai                           String?
+  email                                String?
+  ghi_chu                              String?
+  created_at                           DateTime                               @default(now()) @db.Timestamptz(6)
+  updated_at                           DateTime                               @default(now()) @db.Timestamptz(6)
+  qd72_administrative_unit_assignments qd72_administrative_unit_assignments[]
+  qd72_overhead_utility_lines          qd72_overhead_utility_lines[]
+  qd72_public_lighting_assets          qd72_public_lighting_assets[]
+  qd72_utility_poles                   qd72_utility_poles[]
+}
+
+model qd72_utility_poles {
+  id                  String               @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id      String?
+  ma                  String?
+  so_hieu             String?
+  loai_cot            String?
+  dung_chung          Boolean?
+  owner_id            String?
+  tinh_trang          String?
+  geometry            Json?
+  tam_lat             Decimal?             @db.Decimal
+  tam_lng             Decimal?             @db.Decimal
+  chi_tiet            Json                 @default("{}")
+  created_at          DateTime             @default(now()) @db.Timestamptz(6)
+  qd72_utility_owners qd72_utility_owners? @relation(fields: [owner_id], references: [id], onUpdate: NoAction)
+  qd72_survey_cases   qd72_survey_cases?   @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_verification_items {
+  id                        String                     @id @default(dbgenerated("(gen_random_uuid())::text"))
+  verification_id           String?
+  technical_rule_id         String?
+  doi_tuong_loai            String?
+  doi_tuong_id              String?
+  gia_tri_xa_khai           Decimal?                   @db.Decimal
+  gia_tri_do_lai            Decimal?                   @db.Decimal
+  ket_qua                   String                     @default("CHUA_DU_DU_LIEU")
+  don_vi_xac_minh           String?
+  y_kien                    String?
+  chi_tiet                  Json                       @default("{}")
+  created_at                DateTime                   @default(now()) @db.Timestamptz(6)
+  qd72_technical_rules      qd72_technical_rules?      @relation(fields: [technical_rule_id], references: [id], onUpdate: NoAction)
+  qd72_verification_records qd72_verification_records? @relation(fields: [verification_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([verification_id], map: "idx_qd72_verif_items_rec")
+}
+
+model qd72_verification_records {
+  id                      String                    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id          String?
+  ma                      String?
+  ngay_xac_minh           DateTime?                 @db.Date
+  thanh_phan              Json                      @default("[]")
+  noi_dung                String?
+  trang_thai              String?                   @default("DRAFT")
+  chi_tiet                Json                      @default("{}")
+  created_by_id           String?
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  qd72_verification_items qd72_verification_items[]
+  qd72_survey_cases       qd72_survey_cases?        @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_water_intake_points {
+  id                 String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  water_source_id    String?
+  ma                 String?
+  loai               String?
+  so_xe_dong_thoi    Int?
+  geometry           Json?
+  tam_lat            Decimal?            @db.Decimal
+  tam_lng            Decimal?            @db.Decimal
+  chi_tiet           Json                @default("{}")
+  created_at         DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_water_sources qd72_water_sources? @relation(fields: [water_source_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_water_sources {
+  id                       String                     @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id           String?
+  don_vi_hanh_chinh_id     String?
+  ma                       String?
+  loai_nguon               String?
+  ten                      String?
+  dia_chi                  String?
+  don_vi_quan_ly           String?
+  tinh_trang               String?
+  duong_kinh_ong_dn        Decimal?                   @db.Decimal
+  mang_vong_hay_cut        String?
+  chieu_dai_cut_m          Decimal?                   @db.Decimal
+  dung_tich_m3             Decimal?                   @db.Decimal
+  geometry                 Json?
+  tam_lat                  Decimal?                   @db.Decimal
+  tam_lng                  Decimal?                   @db.Decimal
+  chi_tiet                 Json                       @default("{}")
+  de_xuat_sua_chua         String?
+  created_by_id            String?
+  created_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  qd72_fire_hydrants       qd72_fire_hydrants[]
+  qd72_water_intake_points qd72_water_intake_points[]
+  qd72_survey_cases        qd72_survey_cases?         @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  qd72_water_test_results  qd72_water_test_results[]
+
+  @@index([survey_case_id], map: "idx_qd72_water_case")
+}
+
+model qd72_water_test_results {
+  id                 String              @id @default(dbgenerated("(gen_random_uuid())::text"))
+  water_source_id    String?
+  nguon              String              @default("XA_KHAI")
+  luu_luong_ls       Decimal?            @db.Decimal
+  ap_luc_du_m        Decimal?            @db.Decimal
+  thoi_diem_do       DateTime?           @db.Timestamptz(6)
+  thiet_bi_do        String?
+  nguoi_don_vi_do    String?
+  bien_ban           String?
+  chi_tiet           Json                @default("{}")
+  created_by_id      String?
+  created_at         DateTime            @default(now()) @db.Timestamptz(6)
+  qd72_water_sources qd72_water_sources? @relation(fields: [water_source_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model qd72_workflow_history {
+  id                 String             @id @default(dbgenerated("(gen_random_uuid())::text"))
+  survey_case_id     String?
+  trang_thai_cu      String?
+  trang_thai_moi     String
+  y_kien             String?
+  tai_lieu           Json               @default("[]")
+  nguoi_thuc_hien_id String?
+  thoi_diem          DateTime           @default(now()) @db.Timestamptz(6)
+  qd72_survey_cases  qd72_survey_cases? @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([survey_case_id], map: "idx_qd72_wf_case")
 }

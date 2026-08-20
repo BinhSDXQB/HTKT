@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {
   Building2, Droplets, Waves, TreePine, Lightbulb, Landmark, Route, Network, Share2, ChevronRight,
-  Gavel, ClipboardCheck, FileText, Users, BarChart3, Map, CalendarCheck,
+  Gavel, ClipboardCheck, FileText, Users, BarChart3, Map, CalendarCheck, FileBarChart,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -12,6 +12,7 @@ const nghiepVu = [
   { label: 'Báo cáo định kỳ', desc: 'Thống kê công việc tháng/quý/năm theo người & lĩnh vực', icon: BarChart3, href: '/dashboard/phong-htkt/bao-cao' },
   { label: 'Đơn vị hành chính', desc: 'Diện tích – dân số 78 phường/xã/đặc khu (NQ 1680)', icon: Map, href: '/dashboard/phong-htkt/don-vi-hanh-chinh' },
   { label: 'Kế hoạch kiểm tra QLNN', desc: 'Ma trận phân loại công trình, nội dung & tần suất kiểm tra theo lĩnh vực, quy mô', icon: CalendarCheck, href: '/dashboard/phong-htkt/ke-hoach-kiem-tra' },
+  { label: 'Báo cáo NQ 06 (mục 4.1)', desc: 'Rút số tự động hạ tầng kỹ thuật cơ bản: tỷ lệ đường nhựa/BT hóa, cấp nước — khử trùng nguồn phường + Trung tâm', icon: FileBarChart, href: '/dashboard/phong-htkt/bao-cao-nq06' },
   { label: 'Cơ sở pháp lý', desc: 'Danh mục Luật, Nghị định, Thông tư, QCVN theo lĩnh vực', icon: Gavel, href: '/dashboard/phong-htkt/phap-ly' },
   { label: 'Quy trình thẩm định', desc: 'Thẩm định BCNCKT/BCKTKT/thiết kế, kiểm tra nghiệm thu — từng bước', icon: ClipboardCheck, href: '/dashboard/phong-htkt/tham-dinh' },
   { label: 'Công tác tham mưu', desc: 'Nội dung tham mưu & sản phẩm theo lĩnh vực; công việc thường xuyên', icon: Lightbulb, href: '/dashboard/phong-htkt/tham-muu' },

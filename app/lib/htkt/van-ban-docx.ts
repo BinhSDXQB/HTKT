@@ -376,6 +376,43 @@ function buildBienBanKiemTra(i: VanBanInput): Paragraph[] {
   ]
 }
 
+// ───────── Báo cáo kết quả thẩm tra (dự toán, đấu thầu, quyết toán, chi phí) ─────────
+function buildBaoCaoThamTra(i: VanBanInput): Paragraph[] {
+  const noiNhan = i.noiNhan?.length ? i.noiNhan : ['- Như trên;', '- Lưu: VT.']
+  return [
+    ...buildHeading(i.soVanBan, i.ngay),
+    center([run('BÁO CÁO', { bold: true })], 40),
+    center([run(i.trichYeu || 'KẾT QUẢ THẨM TRA', { bold: true })], 240),
+    ...(i.canCu?.length ? canCuParas(i.canCu) : []),
+    ...(i.tenDuAn ? [justify([run(`Đối tượng thẩm tra: ${i.tenDuAn}.`)], 120)] : []),
+    ...(i.tenChuDauTu ? [justify([run(`Đơn vị trình: ${i.tenChuDauTu}.`)], 120)] : []),
+    center([run('KẾT QUẢ THẨM TRA:', { bold: true })], 120),
+    ...bodyParas(i.noiDung),
+    justify([run(i.ketQua === 'khong_chap_thuan'
+      ? `Kết luận: Không đủ điều kiện. Lý do: ${i.lyDo || PH}`
+      : i.ketQua === 'yeu_cau_bo_sung'
+        ? `Kết luận: Đề nghị bổ sung, hoàn thiện: ${i.lyDo || PH}`
+        : 'Kết luận: Đủ điều kiện trình cấp có thẩm quyền xem xét, phê duyệt.')], 120),
+    ...buildSigning(i.nguoiKyChucDanh || 'GIÁM ĐỐC', i.nguoiKyHoTen, noiNhan),
+  ]
+}
+
+// ───────── Văn bản chấp thuận / cấp phép (xét đề nghị của tổ chức, cá nhân) ─────────
+function buildVanBanChapThuan(i: VanBanInput): Paragraph[] {
+  const noiNhan = i.noiNhan?.length ? i.noiNhan : ['- Như trên;', '- Lưu: VT.']
+  return [
+    ...buildHeading(i.soVanBan, i.ngay, i.trichYeu ?? `Chấp thuận ${PH}`),
+    ...(i.kinhGui ? [center([run(`Kính gửi: ${i.kinhGui}.`, { bold: true })], 200)] : [center([run(`Kính gửi: ${PH}.`, { bold: true })], 200)]),
+    ...(i.canCu?.length ? canCuParas(i.canCu) : []),
+    justify([run(`Xét đề nghị của ${i.tenChuDauTu || PH}${i.tenDuAn ? ` về việc ${i.tenDuAn}` : ''}, ${TEN_CO_QUAN} có ý kiến như sau:`)], 120),
+    ...bodyParas(i.noiDung),
+    justify([run(i.ketQua === 'khong_chap_thuan'
+      ? `${TEN_CO_QUAN} chưa chấp thuận đề nghị nêu trên. Lý do: ${i.lyDo || PH}./.`
+      : `${TEN_CO_QUAN} chấp thuận đề nghị nêu trên; đề nghị tổ chức, cá nhân thực hiện theo đúng quy định./.`)], 120),
+    ...buildSigning(i.nguoiKyChucDanh || 'GIÁM ĐỐC', i.nguoiKyHoTen, noiNhan),
+  ]
+}
+
 const BUILDERS: Record<string, (i: VanBanInput) => Paragraph[]> = {
   'to-trinh': buildToTrinh,
   'cong-van': buildCongVan,
@@ -390,6 +427,8 @@ const BUILDERS: Record<string, (i: VanBanInput) => Paragraph[]> = {
   'thong-bao-tham-dinh-thiet-ke': buildThongBaoThamDinhThietKe,
   'chap-thuan-nghiem-thu': buildChapThuanNghiemThu,
   'bien-ban-kiem-tra': buildBienBanKiemTra,
+  'bao-cao-tham-tra': buildBaoCaoThamTra,
+  'van-ban-chap-thuan': buildVanBanChapThuan,
 }
 
 export async function buildVanBanDocx(loai: string, input: VanBanInput = {}): Promise<Buffer> {
@@ -413,4 +452,6 @@ export const TEN_FILE_MAU: Record<string, string> = {
   'thong-bao-tham-dinh-thiet-ke': 'Mau_Thong_bao_KQ_tham_dinh_Thiet_ke',
   'chap-thuan-nghiem-thu': 'Mau_Chap_thuan_ket_qua_Nghiem_thu',
   'bien-ban-kiem-tra': 'Mau_Bien_ban_Kiem_tra',
+  'bao-cao-tham-tra': 'Mau_Bao_cao_Ket_qua_Tham_tra',
+  'van-ban-chap-thuan': 'Mau_Van_ban_Chap_thuan',
 }

@@ -314,10 +314,16 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const popup = useRef<maplibregl.Popup | null>(null)
+  const hoverPopup = useRef<maplibregl.Popup | null>(null)   // tooltip khi rê chuột (tách khỏi popup click)
+  const hoverKeyRef = useRef<string>('')                     // tên đối tượng đang hover — throttle, tránh giật
   const wardMarkers = useRef<maplibregl.Marker[]>([])
 
   // Các state cho tính năng nâng cấp GIS từ Bando_QT
   const [showBoundaries, setShowBoundaries] = useState(false)
+  // Lop (a): canh bao so hoa - to mau ranh don vi theo muc do doi soat GIS
+  const [showSoHoa, setShowSoHoa] = useState(false)
+  const [soHoaLoaded, setSoHoaLoaded] = useState(false)
+  const soHoaPromise = useRef<Promise<void> | null>(null)
   const [hoveredCommune, setHoveredCommune] = useState<any>(null)
   const [clickedCoord, setClickedCoord] = useState<{ lat: number; lng: number } | null>(null)
   // Toạ độ con trỏ ghi thẳng vào DOM (ref) — tránh re-render toàn component 60 lần/giây khi di chuột
@@ -514,6 +520,43 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
       if (m.getSource('infra-qt')) return
       const res = await fetch('/data/tuyen-duong-quang-tri.geojson')
       const geojson = await res.json()
+
+      // ── ENRICH "đơn vị quản lý" cho tuyến do Trung tâm bảo trì quản lý ──────
+      // Khớp theo tên chuẩn hoá (NFC + thường + gộp khoảng trắng) rồi gắn thẳng
+      // vào thuộc tính feature TRƯỚC addSource (Codex: tránh render lại 4173 feature).
+      try {
+        const ttRes = await fetch('/api/htkt/trung-tam-bao-tri')
+        if (ttRes.ok) {
+          const tt = await ttRes.json()
+          const norm = (s: string) => (s || '').normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim()
+          const map: Record<string, { matCat?: number | null; matCatQH?: number | null; ketCau?: string | null }> = {}
+          for (const r of tt.roads ?? []) map[r.khoa] = { matCat: r.matCat, matCatQH: r.matCatQH, ketCau: r.ketCau }
+          for (const f of geojson.features ?? []) {
+            if (f.properties?.layer !== 'road' || !f.properties?.name) continue
+            const info = map[norm(f.properties.name)]
+            if (info) {
+              f.properties.donViQuanLy = tt.donViQuanLy
+              if (info.matCat != null) f.properties.matCatHT = info.matCat
+              if (info.matCatQH != null) f.properties.matCatQH = info.matCatQH
+            }
+          }
+          // Nguồn điểm trạm xử lý nước thải (có thể rỗng — sẽ ẩn, không lỗi)
+          if (!m.getSource('tram-xlnt')) {
+            m.addSource('tram-xlnt', {
+              type: 'geojson',
+              data: {
+                type: 'FeatureCollection',
+                features: (tt.tram ?? []).map((t: { ten: string; lat: number; lng: number; donViQuanLy: string | null; congSuat: number | null; diaChi: string | null }) => ({
+                  type: 'Feature',
+                  geometry: { type: 'Point', coordinates: [t.lng, t.lat] },
+                  properties: { ten: t.ten, donViQuanLy: t.donViQuanLy, congSuat: t.congSuat, diaChi: t.diaChi },
+                })),
+              },
+            })
+          }
+        }
+      } catch { /* API chưa sẵn — bỏ qua, bản đồ vẫn chạy */ }
+
       infraGeojsonRef.current = geojson
       setRoadCount(geojson.features?.filter((f: { properties: { layer: string } }) => f.properties.layer === 'road').length ?? 0)
       setInfraLoaded(true)
@@ -568,6 +611,39 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
           layout: { visibility: 'none', 'symbol-placement': 'line', 'text-field': ['get', 'name'], 'text-size': ['interpolate', ['linear'], ['zoom'], 12, 9, 16, 13], 'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'], 'text-offset': [0, 0.8], 'text-max-angle': 20, 'symbol-spacing': 250 },
           paint: { 'text-color': '#334155', 'text-halo-color': '#fff', 'text-halo-width': 1.5 },
           minzoom: 11,
+        })
+      }
+
+      // ── HIGHLIGHT tuyến do TRUNG TÂM BẢO TRÌ quản lý ───────────────────
+      m.addLayer({
+        id: 'road-trungtam-glow', type: 'line', source: 'infra-qt',
+        filter: ['all', ['==', ['get', 'layer'], 'road'], ['has', 'donViQuanLy']],
+        paint: {
+          'line-color': '#0d9488',
+          'line-width': ['interpolate', ['linear'], ['zoom'], 8, 4, 12, 7, 16, 11],
+          'line-opacity': 0.35, 'line-blur': 1.5,
+        },
+        layout: { visibility: 'none', 'line-cap': 'round' },
+      })
+
+      // ── TRẠM XỬ LÝ NƯỚC THẢI (điểm) ────────────────────────────────────
+      if (m.getSource('tram-xlnt')) {
+        m.addLayer({
+          id: 'tram-xlnt-point', type: 'circle', source: 'tram-xlnt',
+          paint: {
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 14, 10],
+            'circle-color': '#0ea5e9', 'circle-stroke-width': 2, 'circle-stroke-color': '#fff',
+          },
+          layout: { visibility: 'none' },
+        })
+        m.addLayer({
+          id: 'tram-xlnt-label', type: 'symbol', source: 'tram-xlnt',
+          layout: {
+            'text-field': ['get', 'ten'], 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top',
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'], visibility: 'none',
+          },
+          paint: { 'text-color': '#075985', 'text-halo-color': '#fff', 'text-halo-width': 2 },
+          minzoom: 9,
         })
       }
 
@@ -676,6 +752,10 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
         // Chiều dài
         if (len > 0) html += ROW('Chiều dài đoạn', formatLength(len))
 
+        // Mặt cắt (từ dữ liệu Trung tâm bảo trì, nếu tuyến được quản lý)
+        if (p.matCatHT) html += ROW('Mặt cắt hiện trạng', `${p.matCatHT} m`)
+        if (p.matCatQH) html += ROW('Mặt cắt quy hoạch', `${p.matCatQH} m`)
+
         // Mặt cắt ngang
         const mcn: string[] = []
         if (p.lanes && p.lanes !== '') mcn.push(`${p.lanes} làn xe`)
@@ -699,6 +779,9 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
         // Cầu / hầm
         if (p.bridge && p.bridge !== '' && p.bridge !== 'no') html += ROW('Công trình', 'Cầu')
         if (p.tunnel && p.tunnel !== '' && p.tunnel !== 'no') html += ROW('Công trình', 'Hầm')
+
+        // Đơn vị quản lý (tuyến do Trung tâm bảo trì quản lý)
+        if (p.donViQuanLy) html += ROW('Đơn vị quản lý', `<b style="color:#0d9488">${p.donViQuanLy}</b>`)
 
         html += `</table></div>`
         return html
@@ -786,6 +869,34 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
         m.on('mouseenter', id, () => { m.getCanvas().style.cursor = 'pointer' })
         m.on('mouseleave', id, () => { m.getCanvas().style.cursor = '' })
       })
+
+      // ── HOVER TOOLTIP: tên đường / tên trạm XLNT + ĐƠN VỊ QUẢN LÝ ──────
+      const escHtml = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (ch) =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch] as string))
+      const showHover = (e: maplibregl.MapLayerMouseEvent, kind: 'road' | 'tram') => {
+        const f = e.features?.[0]; if (!f) return
+        const p = (f.properties ?? {}) as Record<string, unknown>
+        const ten = kind === 'tram' ? (p.ten || 'Trạm xử lý nước thải') : (p.name || 'Đường không tên')
+        const key = kind + '|' + ten
+        if (key === hoverKeyRef.current) { hoverPopup.current?.setLngLat(e.lngLat); return } // throttle chống giật
+        hoverKeyRef.current = key
+        let body = `<div style="font-weight:700;font-size:12px;color:${kind === 'tram' ? '#075985' : '#1e40af'}">${kind === 'tram' ? '🏭 ' : '🛣️ '}${escHtml(ten)}</div>`
+        if (kind === 'tram' && p.congSuat) body += `<div style="font-size:10px;color:#475569">Công suất: ${escHtml(p.congSuat)} m³/ngày</div>`
+        if (p.donViQuanLy) body += `<div style="font-size:10px;color:#0d9488;font-weight:600;margin-top:2px">🏛️ ${escHtml(p.donViQuanLy)}</div>`
+        hoverPopup.current?.remove()
+        hoverPopup.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 10 })
+          .setLngLat(e.lngLat).setHTML(`<div style="font-family:system-ui,sans-serif;padding:2px 0">${body}</div>`).addTo(m)
+      }
+      const hideHover = () => { hoverKeyRef.current = ''; hoverPopup.current?.remove(); hoverPopup.current = null }
+      const roadHoverLayers = [...ROAD_SUB_DEFS.map(s => `road-${s.key}-line`), 'road-trungtam-glow']
+      roadHoverLayers.forEach((id) => {
+        m.on('mousemove', id, (e) => showHover(e, 'road'))
+        m.on('mouseleave', id, hideHover)
+      })
+      if (m.getLayer('tram-xlnt-point')) {
+        m.on('mousemove', 'tram-xlnt-point', (e) => showHover(e, 'tram'))
+        m.on('mouseleave', 'tram-xlnt-point', hideHover)
+      }
     } catch { /* GeoJSON not found */ }
   }, [])
 
@@ -821,6 +932,10 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
       const vis = globalOn && (sub[k] ?? false)
       const ids = [`road-${k}-casing`, `road-${k}-line`, `road-${k}-ref`, `road-${k}-name`]
       ids.forEach(id => { if (m.getLayer(id)) m.setLayoutProperty(id, 'visibility', vis ? 'visible' : 'none') })
+    }
+    // Highlight tuyến Trung tâm quản lý + trạm XLNT bật/tắt cùng lớp Đường bộ
+    for (const id of ['road-trungtam-glow', 'tram-xlnt-point', 'tram-xlnt-label']) {
+      if (m.getLayer(id)) m.setLayoutProperty(id, 'visibility', globalOn ? 'visible' : 'none')
     }
   }
 
@@ -1439,6 +1554,88 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
       }
     }
   }, [showBoundaries, boundariesLoaded, ensureBoundaries, mapReady])
+
+  // ── (a) LỚP CẢNH BÁO SỐ HÓA ──────────────────────────────────────────
+  // Tô màu ranh đơn vị theo mức độ đối soát GIS (đỏ=nghiêm trọng … xanh=đạt)
+  // để chuyên viên/xã phường khoanh vùng cần rà soát & cập nhật bản đồ.
+  const loadSoHoa = useCallback(async (m: maplibregl.Map) => {
+    if (m.getSource('canh-bao-so-hoa')) return
+    try {
+      // Nguồn ĐỘNG: tính live từ DB (report_duong + ward_gis_length + ward_khai_bao).
+      // Sửa dữ liệu nhập là bản đồ tự đổi màu — không còn file tĩnh.
+      const res = await fetch('/api/gis/canh-bao-so-hoa')
+      if (!res.ok) return
+      const geojson = await res.json()
+      m.addSource('canh-bao-so-hoa', { type: 'geojson', data: geojson })
+
+      m.addLayer({
+        id: 'sohoa-fill', type: 'fill', source: 'canh-bao-so-hoa',
+        paint: { 'fill-color': ['get', 'mau'], 'fill-opacity': 0.45 },
+        layout: { visibility: 'none' },
+      })
+      m.addLayer({
+        id: 'sohoa-line', type: 'line', source: 'canh-bao-so-hoa',
+        paint: { 'line-color': ['get', 'mau'], 'line-width': ['interpolate', ['linear'], ['zoom'], 8, 1.2, 14, 2.4], 'line-opacity': 0.95 },
+        layout: { visibility: 'none' },
+      })
+      m.addLayer({
+        id: 'sohoa-label', type: 'symbol', source: 'canh-bao-so-hoa',
+        layout: {
+          'text-field': ['get', 'donVi'],
+          'text-size': ['interpolate', ['linear'], ['zoom'], 9, 9, 13, 12],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-anchor': 'center', 'visibility': 'none',
+        },
+        paint: { 'text-color': '#1e293b', 'text-halo-color': '#fff', 'text-halo-width': 1.6 },
+        minzoom: 8,
+      })
+
+      const ROW = (l: string, v: string) => `<tr><td style="color:#64748b;padding:2px 10px 2px 0;font-size:11px;white-space:nowrap">${l}</td><td style="font-weight:600;font-size:11px">${v}</td></tr>`
+      m.on('click', 'sohoa-fill', (e) => {
+        const f = e.features?.[0]; if (!f) return
+        const p = f.properties as Record<string, string | number>
+        try {
+          const bb = typeof p.bbox === 'string' ? JSON.parse(p.bbox) : p.bbox
+          if (Array.isArray(bb) && bb.length === 4) m.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: 60, maxZoom: 13, duration: 700 })
+        } catch { /* ignore */ }
+        popup.current?.remove()
+        popup.current = new maplibregl.Popup({ maxWidth: '400px' }).setLngLat(e.lngLat).setHTML(`
+          <div style="font-family:system-ui,sans-serif;padding:4px 0">
+            <div style="font-weight:700;font-size:14px;color:#0f172a;margin-bottom:2px">🗺️ ${p.donVi}</div>
+            <div style="display:inline-block;background:${p.mau}22;color:${p.mau};padding:1px 8px;border-radius:999px;font-size:10px;font-weight:800;margin-bottom:8px">${p.mucDo}</div>
+            <table style="border-collapse:collapse;width:100%">
+              ${ROW('Chi tiết kê khai', `${p.chiTiet ?? '—'} km`)}
+              ${ROW('Đơn vị tự khai', `${p.khaiBao ?? '—'} km`)}
+              ${ROW('GIS đường địa phương', `${p.gisDiaPhuong ?? '—'} km`)}
+              ${ROW('GIS tổng mạng', `${p.gisTong ?? '—'} km`)}
+              ${ROW('Chênh so với bản đồ', `<b style="color:${p.mau}">${p.thieuSoVoiBanDo} km</b>`)}
+            </table>
+            <div style="margin-top:8px;padding:6px 8px;background:#f8fafc;border-left:3px solid ${p.mau};border-radius:4px;font-size:11px;color:#334155">${p.nhanDinh}</div>
+            <div style="margin-top:6px;padding:6px 8px;background:#fffbeb;border-left:3px solid #f59e0b;border-radius:4px;font-size:11px;color:#78350f"><b>Đề nghị:</b> ${p.deNghi}</div>
+          </div>`).addTo(m)
+      })
+      m.on('mouseenter', 'sohoa-fill', () => { m.getCanvas().style.cursor = 'pointer' })
+      m.on('mouseleave', 'sohoa-fill', () => { m.getCanvas().style.cursor = '' })
+      setSoHoaLoaded(true)
+    } catch { /* GeoJSON chưa được sinh — bỏ qua */ }
+  }, [])
+
+  const ensureSoHoa = useCallback((m: maplibregl.Map, then: () => void) => {
+    if (m.getSource('canh-bao-so-hoa')) { then(); return }
+    if (!soHoaPromise.current) soHoaPromise.current = loadSoHoa(m)
+    soHoaPromise.current.then(then)
+  }, [loadSoHoa])
+
+  useEffect(() => {
+    const m = map.current
+    if (!m || !mapReady) return
+    const L = ['sohoa-fill', 'sohoa-line', 'sohoa-label']
+    if (showSoHoa) {
+      ensureSoHoa(m, () => { L.forEach(id => { if (m.getLayer(id)) m.setLayoutProperty(id, 'visibility', 'visible') }) })
+    } else if (soHoaLoaded) {
+      L.forEach(id => { if (m.getLayer(id)) m.setLayoutProperty(id, 'visibility', 'none') })
+    }
+  }, [showSoHoa, soHoaLoaded, ensureSoHoa, mapReady])
 
   const runRailImpactAnalysis = useCallback(async () => {
     // Đánh số lần chạy — lần mới hơn (đổi bề rộng, đổi file) tự huỷ lần cũ tại các điểm nhả luồng
@@ -2059,6 +2256,26 @@ export function MapClient({ domain, assetTypeId, centerLat = 17.10, centerLng = 
           >
             🗺️ Ranh giới xã/phường
           </button>
+
+          {/* (a) Cảnh báo số hóa — tô màu ranh theo mức độ đối soát GIS */}
+          <button
+            onClick={() => setShowSoHoa(!showSoHoa)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl shadow-lg border text-xs font-semibold transition-colors ${showSoHoa ? 'bg-rose-800 text-white border-rose-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-rose-50'}`}
+          >
+            🚩 Cảnh báo số hóa
+          </button>
+          {showSoHoa && (
+            <div className="bg-white rounded-xl shadow-lg border px-3 py-2 text-[11px] text-slate-600">
+              <p className="font-semibold text-slate-700 mb-1">Mức độ (chiều dài kê khai vs bản đồ)</p>
+              <div className="flex flex-col gap-0.5">
+                <span className="flex items-center gap-1.5"><i className="w-3 h-3 rounded-sm inline-block" style={{ background: '#ef4444' }}></i> Nghiêm trọng — kê vượt xa bản đồ</span>
+                <span className="flex items-center gap-1.5"><i className="w-3 h-3 rounded-sm inline-block" style={{ background: '#f97316' }}></i> Cảnh báo — cần rà soát/số hóa</span>
+                <span className="flex items-center gap-1.5"><i className="w-3 h-3 rounded-sm inline-block" style={{ background: '#eab308' }}></i> Lưu ý — nghi kê thiếu</span>
+                <span className="flex items-center gap-1.5"><i className="w-3 h-3 rounded-sm inline-block" style={{ background: '#22c55e' }}></i> Đạt — khớp bản đồ</span>
+              </div>
+              <p className="mt-1 text-[10px] text-slate-400 italic">Bấm vào xã/phường để xem đề nghị điều chỉnh</p>
+            </div>
+          )}
 
           {/* Phân tích GPMB ĐSTĐC toggle */}
           <button

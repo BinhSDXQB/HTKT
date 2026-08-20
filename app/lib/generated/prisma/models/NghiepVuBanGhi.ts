@@ -31,6 +31,7 @@ export type NghiepVuBanGhiMinAggregateOutputType = {
   maBanGhi: string | null
   tieuDe: string | null
   trangThai: string | null
+  wardId: string | null
   diaBan: string | null
   ngayGhiNhan: Date | null
   ghiChu: string | null
@@ -47,6 +48,7 @@ export type NghiepVuBanGhiMaxAggregateOutputType = {
   maBanGhi: string | null
   tieuDe: string | null
   trangThai: string | null
+  wardId: string | null
   diaBan: string | null
   ngayGhiNhan: Date | null
   ghiChu: string | null
@@ -63,6 +65,7 @@ export type NghiepVuBanGhiCountAggregateOutputType = {
   maBanGhi: number
   tieuDe: number
   trangThai: number
+  wardId: number
   diaBan: number
   ngayGhiNhan: number
   ghiChu: number
@@ -82,6 +85,7 @@ export type NghiepVuBanGhiMinAggregateInputType = {
   maBanGhi?: true
   tieuDe?: true
   trangThai?: true
+  wardId?: true
   diaBan?: true
   ngayGhiNhan?: true
   ghiChu?: true
@@ -98,6 +102,7 @@ export type NghiepVuBanGhiMaxAggregateInputType = {
   maBanGhi?: true
   tieuDe?: true
   trangThai?: true
+  wardId?: true
   diaBan?: true
   ngayGhiNhan?: true
   ghiChu?: true
@@ -114,6 +119,7 @@ export type NghiepVuBanGhiCountAggregateInputType = {
   maBanGhi?: true
   tieuDe?: true
   trangThai?: true
+  wardId?: true
   diaBan?: true
   ngayGhiNhan?: true
   ghiChu?: true
@@ -204,6 +210,7 @@ export type NghiepVuBanGhiGroupByOutputType = {
   maBanGhi: string
   tieuDe: string
   trangThai: string
+  wardId: string | null
   diaBan: string | null
   ngayGhiNhan: Date | null
   ghiChu: string | null
@@ -242,6 +249,7 @@ export type NghiepVuBanGhiWhereInput = {
   maBanGhi?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
   tieuDe?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
   trangThai?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
+  wardId?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   diaBan?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   ngayGhiNhan?: Prisma.DateTimeNullableFilter<"NghiepVuBanGhi"> | Date | string | null
   ghiChu?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
@@ -251,6 +259,7 @@ export type NghiepVuBanGhiWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"NghiepVuBanGhi"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"NghiepVuBanGhi"> | Date | string | null
   toChuc?: Prisma.XOR<Prisma.ToChucNullableScalarRelationFilter, Prisma.ToChucWhereInput> | null
+  ward?: Prisma.XOR<Prisma.AdministrativeUnitNullableScalarRelationFilter, Prisma.AdministrativeUnitWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -261,6 +270,7 @@ export type NghiepVuBanGhiOrderByWithRelationInput = {
   maBanGhi?: Prisma.SortOrder
   tieuDe?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
+  wardId?: Prisma.SortOrderInput | Prisma.SortOrder
   diaBan?: Prisma.SortOrderInput | Prisma.SortOrder
   ngayGhiNhan?: Prisma.SortOrderInput | Prisma.SortOrder
   ghiChu?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -270,6 +280,7 @@ export type NghiepVuBanGhiOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   toChuc?: Prisma.ToChucOrderByWithRelationInput
+  ward?: Prisma.AdministrativeUnitOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -283,6 +294,7 @@ export type NghiepVuBanGhiWhereUniqueInput = Prisma.AtLeast<{
   toChucId?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   tieuDe?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
   trangThai?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
+  wardId?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   diaBan?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   ngayGhiNhan?: Prisma.DateTimeNullableFilter<"NghiepVuBanGhi"> | Date | string | null
   ghiChu?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
@@ -292,6 +304,7 @@ export type NghiepVuBanGhiWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"NghiepVuBanGhi"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"NghiepVuBanGhi"> | Date | string | null
   toChuc?: Prisma.XOR<Prisma.ToChucNullableScalarRelationFilter, Prisma.ToChucWhereInput> | null
+  ward?: Prisma.XOR<Prisma.AdministrativeUnitNullableScalarRelationFilter, Prisma.AdministrativeUnitWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "maBanGhi">
 
@@ -302,6 +315,7 @@ export type NghiepVuBanGhiOrderByWithAggregationInput = {
   maBanGhi?: Prisma.SortOrder
   tieuDe?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
+  wardId?: Prisma.SortOrderInput | Prisma.SortOrder
   diaBan?: Prisma.SortOrderInput | Prisma.SortOrder
   ngayGhiNhan?: Prisma.SortOrderInput | Prisma.SortOrder
   ghiChu?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -325,6 +339,7 @@ export type NghiepVuBanGhiScalarWhereWithAggregatesInput = {
   maBanGhi?: Prisma.StringWithAggregatesFilter<"NghiepVuBanGhi"> | string
   tieuDe?: Prisma.StringWithAggregatesFilter<"NghiepVuBanGhi"> | string
   trangThai?: Prisma.StringWithAggregatesFilter<"NghiepVuBanGhi"> | string
+  wardId?: Prisma.StringNullableWithAggregatesFilter<"NghiepVuBanGhi"> | string | null
   diaBan?: Prisma.StringNullableWithAggregatesFilter<"NghiepVuBanGhi"> | string | null
   ngayGhiNhan?: Prisma.DateTimeNullableWithAggregatesFilter<"NghiepVuBanGhi"> | Date | string | null
   ghiChu?: Prisma.StringNullableWithAggregatesFilter<"NghiepVuBanGhi"> | string | null
@@ -349,6 +364,7 @@ export type NghiepVuBanGhiCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   toChuc?: Prisma.ToChucCreateNestedOneWithoutNghiepVuBanGhisInput
+  ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutNghiepVuBanGhisInput
   createdBy?: Prisma.UserCreateNestedOneWithoutNghiepVuTaoInput
 }
 
@@ -359,6 +375,7 @@ export type NghiepVuBanGhiUncheckedCreateInput = {
   maBanGhi: string
   tieuDe: string
   trangThai?: string
+  wardId?: string | null
   diaBan?: string | null
   ngayGhiNhan?: Date | string | null
   ghiChu?: string | null
@@ -383,6 +400,7 @@ export type NghiepVuBanGhiUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   toChuc?: Prisma.ToChucUpdateOneWithoutNghiepVuBanGhisNestedInput
+  ward?: Prisma.AdministrativeUnitUpdateOneWithoutNghiepVuBanGhisNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutNghiepVuTaoNestedInput
 }
 
@@ -393,6 +411,7 @@ export type NghiepVuBanGhiUncheckedUpdateInput = {
   maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
   tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -410,6 +429,7 @@ export type NghiepVuBanGhiCreateManyInput = {
   maBanGhi: string
   tieuDe: string
   trangThai?: string
+  wardId?: string | null
   diaBan?: string | null
   ngayGhiNhan?: Date | string | null
   ghiChu?: string | null
@@ -442,6 +462,7 @@ export type NghiepVuBanGhiUncheckedUpdateManyInput = {
   maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
   tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -469,6 +490,7 @@ export type NghiepVuBanGhiCountOrderByAggregateInput = {
   maBanGhi?: Prisma.SortOrder
   tieuDe?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
+  wardId?: Prisma.SortOrder
   diaBan?: Prisma.SortOrder
   ngayGhiNhan?: Prisma.SortOrder
   ghiChu?: Prisma.SortOrder
@@ -486,6 +508,7 @@ export type NghiepVuBanGhiMaxOrderByAggregateInput = {
   maBanGhi?: Prisma.SortOrder
   tieuDe?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
+  wardId?: Prisma.SortOrder
   diaBan?: Prisma.SortOrder
   ngayGhiNhan?: Prisma.SortOrder
   ghiChu?: Prisma.SortOrder
@@ -502,6 +525,7 @@ export type NghiepVuBanGhiMinOrderByAggregateInput = {
   maBanGhi?: Prisma.SortOrder
   tieuDe?: Prisma.SortOrder
   trangThai?: Prisma.SortOrder
+  wardId?: Prisma.SortOrder
   diaBan?: Prisma.SortOrder
   ngayGhiNhan?: Prisma.SortOrder
   ghiChu?: Prisma.SortOrder
@@ -550,6 +574,48 @@ export type NghiepVuBanGhiUncheckedUpdateManyWithoutCreatedByNestedInput = {
   connect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
   update?: Prisma.NghiepVuBanGhiUpdateWithWhereUniqueWithoutCreatedByInput | Prisma.NghiepVuBanGhiUpdateWithWhereUniqueWithoutCreatedByInput[]
   updateMany?: Prisma.NghiepVuBanGhiUpdateManyWithWhereWithoutCreatedByInput | Prisma.NghiepVuBanGhiUpdateManyWithWhereWithoutCreatedByInput[]
+  deleteMany?: Prisma.NghiepVuBanGhiScalarWhereInput | Prisma.NghiepVuBanGhiScalarWhereInput[]
+}
+
+export type NghiepVuBanGhiCreateNestedManyWithoutWardInput = {
+  create?: Prisma.XOR<Prisma.NghiepVuBanGhiCreateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput> | Prisma.NghiepVuBanGhiCreateWithoutWardInput[] | Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput[]
+  connectOrCreate?: Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput | Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput[]
+  createMany?: Prisma.NghiepVuBanGhiCreateManyWardInputEnvelope
+  connect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+}
+
+export type NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput = {
+  create?: Prisma.XOR<Prisma.NghiepVuBanGhiCreateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput> | Prisma.NghiepVuBanGhiCreateWithoutWardInput[] | Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput[]
+  connectOrCreate?: Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput | Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput[]
+  createMany?: Prisma.NghiepVuBanGhiCreateManyWardInputEnvelope
+  connect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+}
+
+export type NghiepVuBanGhiUpdateManyWithoutWardNestedInput = {
+  create?: Prisma.XOR<Prisma.NghiepVuBanGhiCreateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput> | Prisma.NghiepVuBanGhiCreateWithoutWardInput[] | Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput[]
+  connectOrCreate?: Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput | Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput[]
+  upsert?: Prisma.NghiepVuBanGhiUpsertWithWhereUniqueWithoutWardInput | Prisma.NghiepVuBanGhiUpsertWithWhereUniqueWithoutWardInput[]
+  createMany?: Prisma.NghiepVuBanGhiCreateManyWardInputEnvelope
+  set?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  disconnect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  delete?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  connect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  update?: Prisma.NghiepVuBanGhiUpdateWithWhereUniqueWithoutWardInput | Prisma.NghiepVuBanGhiUpdateWithWhereUniqueWithoutWardInput[]
+  updateMany?: Prisma.NghiepVuBanGhiUpdateManyWithWhereWithoutWardInput | Prisma.NghiepVuBanGhiUpdateManyWithWhereWithoutWardInput[]
+  deleteMany?: Prisma.NghiepVuBanGhiScalarWhereInput | Prisma.NghiepVuBanGhiScalarWhereInput[]
+}
+
+export type NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput = {
+  create?: Prisma.XOR<Prisma.NghiepVuBanGhiCreateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput> | Prisma.NghiepVuBanGhiCreateWithoutWardInput[] | Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput[]
+  connectOrCreate?: Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput | Prisma.NghiepVuBanGhiCreateOrConnectWithoutWardInput[]
+  upsert?: Prisma.NghiepVuBanGhiUpsertWithWhereUniqueWithoutWardInput | Prisma.NghiepVuBanGhiUpsertWithWhereUniqueWithoutWardInput[]
+  createMany?: Prisma.NghiepVuBanGhiCreateManyWardInputEnvelope
+  set?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  disconnect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  delete?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  connect?: Prisma.NghiepVuBanGhiWhereUniqueInput | Prisma.NghiepVuBanGhiWhereUniqueInput[]
+  update?: Prisma.NghiepVuBanGhiUpdateWithWhereUniqueWithoutWardInput | Prisma.NghiepVuBanGhiUpdateWithWhereUniqueWithoutWardInput[]
+  updateMany?: Prisma.NghiepVuBanGhiUpdateManyWithWhereWithoutWardInput | Prisma.NghiepVuBanGhiUpdateManyWithWhereWithoutWardInput[]
   deleteMany?: Prisma.NghiepVuBanGhiScalarWhereInput | Prisma.NghiepVuBanGhiScalarWhereInput[]
 }
 
@@ -609,6 +675,7 @@ export type NghiepVuBanGhiCreateWithoutCreatedByInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   toChuc?: Prisma.ToChucCreateNestedOneWithoutNghiepVuBanGhisInput
+  ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutNghiepVuBanGhisInput
 }
 
 export type NghiepVuBanGhiUncheckedCreateWithoutCreatedByInput = {
@@ -618,6 +685,7 @@ export type NghiepVuBanGhiUncheckedCreateWithoutCreatedByInput = {
   maBanGhi: string
   tieuDe: string
   trangThai?: string
+  wardId?: string | null
   diaBan?: string | null
   ngayGhiNhan?: Date | string | null
   ghiChu?: string | null
@@ -663,6 +731,7 @@ export type NghiepVuBanGhiScalarWhereInput = {
   maBanGhi?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
   tieuDe?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
   trangThai?: Prisma.StringFilter<"NghiepVuBanGhi"> | string
+  wardId?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   diaBan?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
   ngayGhiNhan?: Prisma.DateTimeNullableFilter<"NghiepVuBanGhi"> | Date | string | null
   ghiChu?: Prisma.StringNullableFilter<"NghiepVuBanGhi"> | string | null
@@ -671,6 +740,66 @@ export type NghiepVuBanGhiScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"NghiepVuBanGhi"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"NghiepVuBanGhi"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"NghiepVuBanGhi"> | Date | string | null
+}
+
+export type NghiepVuBanGhiCreateWithoutWardInput = {
+  id?: string
+  linhVuc: string
+  maBanGhi: string
+  tieuDe: string
+  trangThai?: string
+  diaBan?: string | null
+  ngayGhiNhan?: Date | string | null
+  ghiChu?: string | null
+  customFields: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  toChuc?: Prisma.ToChucCreateNestedOneWithoutNghiepVuBanGhisInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutNghiepVuTaoInput
+}
+
+export type NghiepVuBanGhiUncheckedCreateWithoutWardInput = {
+  id?: string
+  linhVuc: string
+  toChucId?: string | null
+  maBanGhi: string
+  tieuDe: string
+  trangThai?: string
+  diaBan?: string | null
+  ngayGhiNhan?: Date | string | null
+  ghiChu?: string | null
+  customFields: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type NghiepVuBanGhiCreateOrConnectWithoutWardInput = {
+  where: Prisma.NghiepVuBanGhiWhereUniqueInput
+  create: Prisma.XOR<Prisma.NghiepVuBanGhiCreateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput>
+}
+
+export type NghiepVuBanGhiCreateManyWardInputEnvelope = {
+  data: Prisma.NghiepVuBanGhiCreateManyWardInput | Prisma.NghiepVuBanGhiCreateManyWardInput[]
+  skipDuplicates?: boolean
+}
+
+export type NghiepVuBanGhiUpsertWithWhereUniqueWithoutWardInput = {
+  where: Prisma.NghiepVuBanGhiWhereUniqueInput
+  update: Prisma.XOR<Prisma.NghiepVuBanGhiUpdateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedUpdateWithoutWardInput>
+  create: Prisma.XOR<Prisma.NghiepVuBanGhiCreateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedCreateWithoutWardInput>
+}
+
+export type NghiepVuBanGhiUpdateWithWhereUniqueWithoutWardInput = {
+  where: Prisma.NghiepVuBanGhiWhereUniqueInput
+  data: Prisma.XOR<Prisma.NghiepVuBanGhiUpdateWithoutWardInput, Prisma.NghiepVuBanGhiUncheckedUpdateWithoutWardInput>
+}
+
+export type NghiepVuBanGhiUpdateManyWithWhereWithoutWardInput = {
+  where: Prisma.NghiepVuBanGhiScalarWhereInput
+  data: Prisma.XOR<Prisma.NghiepVuBanGhiUpdateManyMutationInput, Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardInput>
 }
 
 export type NghiepVuBanGhiCreateWithoutToChucInput = {
@@ -686,6 +815,7 @@ export type NghiepVuBanGhiCreateWithoutToChucInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutNghiepVuBanGhisInput
   createdBy?: Prisma.UserCreateNestedOneWithoutNghiepVuTaoInput
 }
 
@@ -695,6 +825,7 @@ export type NghiepVuBanGhiUncheckedCreateWithoutToChucInput = {
   maBanGhi: string
   tieuDe: string
   trangThai?: string
+  wardId?: string | null
   diaBan?: string | null
   ngayGhiNhan?: Date | string | null
   ghiChu?: string | null
@@ -738,6 +869,7 @@ export type NghiepVuBanGhiCreateManyCreatedByInput = {
   maBanGhi: string
   tieuDe: string
   trangThai?: string
+  wardId?: string | null
   diaBan?: string | null
   ngayGhiNhan?: Date | string | null
   ghiChu?: string | null
@@ -761,6 +893,7 @@ export type NghiepVuBanGhiUpdateWithoutCreatedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   toChuc?: Prisma.ToChucUpdateOneWithoutNghiepVuBanGhisNestedInput
+  ward?: Prisma.AdministrativeUnitUpdateOneWithoutNghiepVuBanGhisNestedInput
 }
 
 export type NghiepVuBanGhiUncheckedUpdateWithoutCreatedByInput = {
@@ -770,6 +903,7 @@ export type NghiepVuBanGhiUncheckedUpdateWithoutCreatedByInput = {
   maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
   tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -786,10 +920,79 @@ export type NghiepVuBanGhiUncheckedUpdateManyWithoutCreatedByInput = {
   maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
   tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type NghiepVuBanGhiCreateManyWardInput = {
+  id?: string
+  linhVuc: string
+  toChucId?: string | null
+  maBanGhi: string
+  tieuDe: string
+  trangThai?: string
+  diaBan?: string | null
+  ngayGhiNhan?: Date | string | null
+  ghiChu?: string | null
+  customFields: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type NghiepVuBanGhiUpdateWithoutWardInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linhVuc?: Prisma.StringFieldUpdateOperationsInput | string
+  maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
+  tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
+  trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  toChuc?: Prisma.ToChucUpdateOneWithoutNghiepVuBanGhisNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutNghiepVuTaoNestedInput
+}
+
+export type NghiepVuBanGhiUncheckedUpdateWithoutWardInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linhVuc?: Prisma.StringFieldUpdateOperationsInput | string
+  toChucId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
+  tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
+  trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type NghiepVuBanGhiUncheckedUpdateManyWithoutWardInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  linhVuc?: Prisma.StringFieldUpdateOperationsInput | string
+  toChucId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
+  tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
+  trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -801,6 +1004,7 @@ export type NghiepVuBanGhiCreateManyToChucInput = {
   maBanGhi: string
   tieuDe: string
   trangThai?: string
+  wardId?: string | null
   diaBan?: string | null
   ngayGhiNhan?: Date | string | null
   ghiChu?: string | null
@@ -824,6 +1028,7 @@ export type NghiepVuBanGhiUpdateWithoutToChucInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ward?: Prisma.AdministrativeUnitUpdateOneWithoutNghiepVuBanGhisNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutNghiepVuTaoNestedInput
 }
 
@@ -833,6 +1038,7 @@ export type NghiepVuBanGhiUncheckedUpdateWithoutToChucInput = {
   maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
   tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -849,6 +1055,7 @@ export type NghiepVuBanGhiUncheckedUpdateManyWithoutToChucInput = {
   maBanGhi?: Prisma.StringFieldUpdateOperationsInput | string
   tieuDe?: Prisma.StringFieldUpdateOperationsInput | string
   trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diaBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ngayGhiNhan?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -868,6 +1075,7 @@ export type NghiepVuBanGhiSelect<ExtArgs extends runtime.Types.Extensions.Intern
   maBanGhi?: boolean
   tieuDe?: boolean
   trangThai?: boolean
+  wardId?: boolean
   diaBan?: boolean
   ngayGhiNhan?: boolean
   ghiChu?: boolean
@@ -877,6 +1085,7 @@ export type NghiepVuBanGhiSelect<ExtArgs extends runtime.Types.Extensions.Intern
   updatedAt?: boolean
   deletedAt?: boolean
   toChuc?: boolean | Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>
+  ward?: boolean | Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>
   createdBy?: boolean | Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["nghiepVuBanGhi"]>
 
@@ -887,6 +1096,7 @@ export type NghiepVuBanGhiSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   maBanGhi?: boolean
   tieuDe?: boolean
   trangThai?: boolean
+  wardId?: boolean
   diaBan?: boolean
   ngayGhiNhan?: boolean
   ghiChu?: boolean
@@ -896,6 +1106,7 @@ export type NghiepVuBanGhiSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   updatedAt?: boolean
   deletedAt?: boolean
   toChuc?: boolean | Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>
+  ward?: boolean | Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>
   createdBy?: boolean | Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["nghiepVuBanGhi"]>
 
@@ -906,6 +1117,7 @@ export type NghiepVuBanGhiSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   maBanGhi?: boolean
   tieuDe?: boolean
   trangThai?: boolean
+  wardId?: boolean
   diaBan?: boolean
   ngayGhiNhan?: boolean
   ghiChu?: boolean
@@ -915,6 +1127,7 @@ export type NghiepVuBanGhiSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   updatedAt?: boolean
   deletedAt?: boolean
   toChuc?: boolean | Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>
+  ward?: boolean | Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>
   createdBy?: boolean | Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["nghiepVuBanGhi"]>
 
@@ -925,6 +1138,7 @@ export type NghiepVuBanGhiSelectScalar = {
   maBanGhi?: boolean
   tieuDe?: boolean
   trangThai?: boolean
+  wardId?: boolean
   diaBan?: boolean
   ngayGhiNhan?: boolean
   ghiChu?: boolean
@@ -935,17 +1149,20 @@ export type NghiepVuBanGhiSelectScalar = {
   deletedAt?: boolean
 }
 
-export type NghiepVuBanGhiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "linhVuc" | "toChucId" | "maBanGhi" | "tieuDe" | "trangThai" | "diaBan" | "ngayGhiNhan" | "ghiChu" | "customFields" | "createdById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["nghiepVuBanGhi"]>
+export type NghiepVuBanGhiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "linhVuc" | "toChucId" | "maBanGhi" | "tieuDe" | "trangThai" | "wardId" | "diaBan" | "ngayGhiNhan" | "ghiChu" | "customFields" | "createdById" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["nghiepVuBanGhi"]>
 export type NghiepVuBanGhiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   toChuc?: boolean | Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>
+  ward?: boolean | Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>
   createdBy?: boolean | Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>
 }
 export type NghiepVuBanGhiIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   toChuc?: boolean | Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>
+  ward?: boolean | Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>
   createdBy?: boolean | Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>
 }
 export type NghiepVuBanGhiIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   toChuc?: boolean | Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>
+  ward?: boolean | Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>
   createdBy?: boolean | Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>
 }
 
@@ -953,6 +1170,7 @@ export type $NghiepVuBanGhiPayload<ExtArgs extends runtime.Types.Extensions.Inte
   name: "NghiepVuBanGhi"
   objects: {
     toChuc: Prisma.$ToChucPayload<ExtArgs> | null
+    ward: Prisma.$AdministrativeUnitPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -962,6 +1180,7 @@ export type $NghiepVuBanGhiPayload<ExtArgs extends runtime.Types.Extensions.Inte
     maBanGhi: string
     tieuDe: string
     trangThai: string
+    wardId: string | null
     diaBan: string | null
     ngayGhiNhan: Date | null
     ghiChu: string | null
@@ -1365,6 +1584,7 @@ readonly fields: NghiepVuBanGhiFieldRefs;
 export interface Prisma__NghiepVuBanGhiClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   toChuc<T extends Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NghiepVuBanGhi$toChucArgs<ExtArgs>>): Prisma.Prisma__ToChucClient<runtime.Types.Result.GetResult<Prisma.$ToChucPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ward<T extends Prisma.NghiepVuBanGhi$wardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NghiepVuBanGhi$wardArgs<ExtArgs>>): Prisma.Prisma__AdministrativeUnitClient<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NghiepVuBanGhi$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1401,6 +1621,7 @@ export interface NghiepVuBanGhiFieldRefs {
   readonly maBanGhi: Prisma.FieldRef<"NghiepVuBanGhi", 'String'>
   readonly tieuDe: Prisma.FieldRef<"NghiepVuBanGhi", 'String'>
   readonly trangThai: Prisma.FieldRef<"NghiepVuBanGhi", 'String'>
+  readonly wardId: Prisma.FieldRef<"NghiepVuBanGhi", 'String'>
   readonly diaBan: Prisma.FieldRef<"NghiepVuBanGhi", 'String'>
   readonly ngayGhiNhan: Prisma.FieldRef<"NghiepVuBanGhi", 'DateTime'>
   readonly ghiChu: Prisma.FieldRef<"NghiepVuBanGhi", 'String'>
@@ -1826,6 +2047,25 @@ export type NghiepVuBanGhi$toChucArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.ToChucInclude<ExtArgs> | null
   where?: Prisma.ToChucWhereInput
+}
+
+/**
+ * NghiepVuBanGhi.ward
+ */
+export type NghiepVuBanGhi$wardArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdministrativeUnit
+   */
+  select?: Prisma.AdministrativeUnitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdministrativeUnit
+   */
+  omit?: Prisma.AdministrativeUnitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdministrativeUnitInclude<ExtArgs> | null
+  where?: Prisma.AdministrativeUnitWhereInput
 }
 
 /**

@@ -4,10 +4,11 @@ module.exports = {
     {
       name: 'ql-htkt',
       cwd: 'c:\\Troly\\HTKT\\app',
-      script: 'scripts/start-app.cmd',
+      script: 'node_modules/next/dist/bin/next',
+      args: 'start -p 3001',
       env: {
         NODE_ENV: 'production',
-        PORT: 3001,
+        PORT: '3001',
       },
       max_memory_restart: '500M',
       instances: 2,

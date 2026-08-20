@@ -46,6 +46,7 @@ export type ToChucMinAggregateOutputType = {
   thuTu: number | null
   isActive: boolean | null
   moTa: string | null
+  maSoThue: string | null
   parentId: string | null
   donViHCId: string | null
   createdAt: Date | null
@@ -62,6 +63,7 @@ export type ToChucMaxAggregateOutputType = {
   thuTu: number | null
   isActive: boolean | null
   moTa: string | null
+  maSoThue: string | null
   parentId: string | null
   donViHCId: string | null
   createdAt: Date | null
@@ -78,6 +80,7 @@ export type ToChucCountAggregateOutputType = {
   thuTu: number
   isActive: number
   moTa: number
+  maSoThue: number
   parentId: number
   donViHCId: number
   createdAt: number
@@ -106,6 +109,7 @@ export type ToChucMinAggregateInputType = {
   thuTu?: true
   isActive?: true
   moTa?: true
+  maSoThue?: true
   parentId?: true
   donViHCId?: true
   createdAt?: true
@@ -122,6 +126,7 @@ export type ToChucMaxAggregateInputType = {
   thuTu?: true
   isActive?: true
   moTa?: true
+  maSoThue?: true
   parentId?: true
   donViHCId?: true
   createdAt?: true
@@ -138,6 +143,7 @@ export type ToChucCountAggregateInputType = {
   thuTu?: true
   isActive?: true
   moTa?: true
+  maSoThue?: true
   parentId?: true
   donViHCId?: true
   createdAt?: true
@@ -241,6 +247,7 @@ export type ToChucGroupByOutputType = {
   thuTu: number
   isActive: boolean
   moTa: string | null
+  maSoThue: string | null
   parentId: string | null
   donViHCId: string | null
   createdAt: Date
@@ -280,6 +287,7 @@ export type ToChucWhereInput = {
   thuTu?: Prisma.IntFilter<"ToChuc"> | number
   isActive?: Prisma.BoolFilter<"ToChuc"> | boolean
   moTa?: Prisma.StringNullableFilter<"ToChuc"> | string | null
+  maSoThue?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   parentId?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   donViHCId?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ToChuc"> | Date | string
@@ -307,6 +315,7 @@ export type ToChucOrderByWithRelationInput = {
   thuTu?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   moTa?: Prisma.SortOrderInput | Prisma.SortOrder
+  maSoThue?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   donViHCId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -337,6 +346,7 @@ export type ToChucWhereUniqueInput = Prisma.AtLeast<{
   thuTu?: Prisma.IntFilter<"ToChuc"> | number
   isActive?: Prisma.BoolFilter<"ToChuc"> | boolean
   moTa?: Prisma.StringNullableFilter<"ToChuc"> | string | null
+  maSoThue?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   parentId?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   donViHCId?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ToChuc"> | Date | string
@@ -364,6 +374,7 @@ export type ToChucOrderByWithAggregationInput = {
   thuTu?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   moTa?: Prisma.SortOrderInput | Prisma.SortOrder
+  maSoThue?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   donViHCId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -388,6 +399,7 @@ export type ToChucScalarWhereWithAggregatesInput = {
   thuTu?: Prisma.IntWithAggregatesFilter<"ToChuc"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"ToChuc"> | boolean
   moTa?: Prisma.StringNullableWithAggregatesFilter<"ToChuc"> | string | null
+  maSoThue?: Prisma.StringNullableWithAggregatesFilter<"ToChuc"> | string | null
   parentId?: Prisma.StringNullableWithAggregatesFilter<"ToChuc"> | string | null
   donViHCId?: Prisma.StringNullableWithAggregatesFilter<"ToChuc"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ToChuc"> | Date | string
@@ -404,6 +416,7 @@ export type ToChucCreateInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -429,6 +442,7 @@ export type ToChucUncheckedCreateInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -454,6 +468,7 @@ export type ToChucUpdateInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -479,6 +494,7 @@ export type ToChucUncheckedUpdateInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -504,6 +520,7 @@ export type ToChucCreateManyInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -520,6 +537,7 @@ export type ToChucUpdateManyMutationInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -534,6 +552,7 @@ export type ToChucUncheckedUpdateManyInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -565,6 +584,7 @@ export type ToChucCountOrderByAggregateInput = {
   thuTu?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   moTa?: Prisma.SortOrder
+  maSoThue?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   donViHCId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -586,6 +606,7 @@ export type ToChucMaxOrderByAggregateInput = {
   thuTu?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   moTa?: Prisma.SortOrder
+  maSoThue?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   donViHCId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -602,6 +623,7 @@ export type ToChucMinOrderByAggregateInput = {
   thuTu?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   moTa?: Prisma.SortOrder
+  maSoThue?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   donViHCId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -856,6 +878,7 @@ export type ToChucCreateWithoutUsersInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -880,6 +903,7 @@ export type ToChucUncheckedCreateWithoutUsersInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -920,6 +944,7 @@ export type ToChucUpdateWithoutUsersInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -944,6 +969,7 @@ export type ToChucUncheckedUpdateWithoutUsersInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -968,6 +994,7 @@ export type ToChucCreateWithoutDonViHCInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -992,6 +1019,7 @@ export type ToChucUncheckedCreateWithoutDonViHCInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1045,6 +1073,7 @@ export type ToChucScalarWhereInput = {
   thuTu?: Prisma.IntFilter<"ToChuc"> | number
   isActive?: Prisma.BoolFilter<"ToChuc"> | boolean
   moTa?: Prisma.StringNullableFilter<"ToChuc"> | string | null
+  maSoThue?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   parentId?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   donViHCId?: Prisma.StringNullableFilter<"ToChuc"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ToChuc"> | Date | string
@@ -1061,6 +1090,7 @@ export type ToChucCreateWithoutChildrenInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1085,6 +1115,7 @@ export type ToChucUncheckedCreateWithoutChildrenInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1114,6 +1145,7 @@ export type ToChucCreateWithoutParentInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   children?: Prisma.ToChucCreateNestedManyWithoutParentInput
@@ -1138,6 +1170,7 @@ export type ToChucUncheckedCreateWithoutParentInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1183,6 +1216,7 @@ export type ToChucUpdateWithoutChildrenInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1207,6 +1241,7 @@ export type ToChucUncheckedUpdateWithoutChildrenInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1247,6 +1282,7 @@ export type ToChucCreateWithoutPhanCongsInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1271,6 +1307,7 @@ export type ToChucUncheckedCreateWithoutPhanCongsInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1311,6 +1348,7 @@ export type ToChucUpdateWithoutPhanCongsInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1335,6 +1373,7 @@ export type ToChucUncheckedUpdateWithoutPhanCongsInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1359,6 +1398,7 @@ export type ToChucCreateWithoutCanBosInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1383,6 +1423,7 @@ export type ToChucUncheckedCreateWithoutCanBosInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1423,6 +1464,7 @@ export type ToChucUpdateWithoutCanBosInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1447,6 +1489,7 @@ export type ToChucUncheckedUpdateWithoutCanBosInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1471,6 +1514,7 @@ export type ToChucCreateWithoutCongViecLoaisInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1495,6 +1539,7 @@ export type ToChucUncheckedCreateWithoutCongViecLoaisInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1535,6 +1580,7 @@ export type ToChucUpdateWithoutCongViecLoaisInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1559,6 +1605,7 @@ export type ToChucUncheckedUpdateWithoutCongViecLoaisInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1583,6 +1630,7 @@ export type ToChucCreateWithoutCongViecsInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1607,6 +1655,7 @@ export type ToChucUncheckedCreateWithoutCongViecsInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1647,6 +1696,7 @@ export type ToChucUpdateWithoutCongViecsInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1671,6 +1721,7 @@ export type ToChucUncheckedUpdateWithoutCongViecsInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1695,6 +1746,7 @@ export type ToChucCreateWithoutLichCaNhansInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1719,6 +1771,7 @@ export type ToChucUncheckedCreateWithoutLichCaNhansInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1759,6 +1812,7 @@ export type ToChucUpdateWithoutLichCaNhansInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1783,6 +1837,7 @@ export type ToChucUncheckedUpdateWithoutLichCaNhansInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1807,6 +1862,7 @@ export type ToChucCreateWithoutNghiepVuBanGhisInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1831,6 +1887,7 @@ export type ToChucUncheckedCreateWithoutNghiepVuBanGhisInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1871,6 +1928,7 @@ export type ToChucUpdateWithoutNghiepVuBanGhisInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -1895,6 +1953,7 @@ export type ToChucUncheckedUpdateWithoutNghiepVuBanGhisInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1919,6 +1978,7 @@ export type ToChucCreateWithoutDuAnGpmbsInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.ToChucCreateNestedOneWithoutChildrenInput
@@ -1943,6 +2003,7 @@ export type ToChucUncheckedCreateWithoutDuAnGpmbsInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
@@ -1983,6 +2044,7 @@ export type ToChucUpdateWithoutDuAnGpmbsInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -2007,6 +2069,7 @@ export type ToChucUncheckedUpdateWithoutDuAnGpmbsInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2031,6 +2094,7 @@ export type ToChucCreateManyDonViHCInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2046,6 +2110,7 @@ export type ToChucUpdateWithoutDonViHCInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.ToChucUpdateOneWithoutChildrenNestedInput
@@ -2070,6 +2135,7 @@ export type ToChucUncheckedUpdateWithoutDonViHCInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2094,6 +2160,7 @@ export type ToChucUncheckedUpdateManyWithoutDonViHCInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2109,6 +2176,7 @@ export type ToChucCreateManyParentInput = {
   thuTu?: number
   isActive?: boolean
   moTa?: string | null
+  maSoThue?: string | null
   donViHCId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2124,6 +2192,7 @@ export type ToChucUpdateWithoutParentInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.ToChucUpdateManyWithoutParentNestedInput
@@ -2148,6 +2217,7 @@ export type ToChucUncheckedUpdateWithoutParentInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2172,6 +2242,7 @@ export type ToChucUncheckedUpdateManyWithoutParentInput = {
   thuTu?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moTa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   donViHCId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2290,6 +2361,7 @@ export type ToChucSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   thuTu?: boolean
   isActive?: boolean
   moTa?: boolean
+  maSoThue?: boolean
   parentId?: boolean
   donViHCId?: boolean
   createdAt?: boolean
@@ -2318,6 +2390,7 @@ export type ToChucSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   thuTu?: boolean
   isActive?: boolean
   moTa?: boolean
+  maSoThue?: boolean
   parentId?: boolean
   donViHCId?: boolean
   createdAt?: boolean
@@ -2336,6 +2409,7 @@ export type ToChucSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   thuTu?: boolean
   isActive?: boolean
   moTa?: boolean
+  maSoThue?: boolean
   parentId?: boolean
   donViHCId?: boolean
   createdAt?: boolean
@@ -2354,13 +2428,14 @@ export type ToChucSelectScalar = {
   thuTu?: boolean
   isActive?: boolean
   moTa?: boolean
+  maSoThue?: boolean
   parentId?: boolean
   donViHCId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ToChucOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ma" | "ten" | "tenVietTat" | "loai" | "cap" | "thuTu" | "isActive" | "moTa" | "parentId" | "donViHCId" | "createdAt" | "updatedAt", ExtArgs["result"]["toChuc"]>
+export type ToChucOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ma" | "ten" | "tenVietTat" | "loai" | "cap" | "thuTu" | "isActive" | "moTa" | "maSoThue" | "parentId" | "donViHCId" | "createdAt" | "updatedAt", ExtArgs["result"]["toChuc"]>
 export type ToChucInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parent?: boolean | Prisma.ToChuc$parentArgs<ExtArgs>
   children?: boolean | Prisma.ToChuc$childrenArgs<ExtArgs>
@@ -2409,6 +2484,7 @@ export type $ToChucPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     thuTu: number
     isActive: boolean
     moTa: string | null
+    maSoThue: string | null
     parentId: string | null
     donViHCId: string | null
     createdAt: Date
@@ -2856,6 +2932,7 @@ export interface ToChucFieldRefs {
   readonly thuTu: Prisma.FieldRef<"ToChuc", 'Int'>
   readonly isActive: Prisma.FieldRef<"ToChuc", 'Boolean'>
   readonly moTa: Prisma.FieldRef<"ToChuc", 'String'>
+  readonly maSoThue: Prisma.FieldRef<"ToChuc", 'String'>
   readonly parentId: Prisma.FieldRef<"ToChuc", 'String'>
   readonly donViHCId: Prisma.FieldRef<"ToChuc", 'String'>
   readonly createdAt: Prisma.FieldRef<"ToChuc", 'DateTime'>

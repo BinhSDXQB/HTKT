@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ChevronRight, FileText, Download } from 'lucide-react'
-import { MAU_BIEU, NHOM_MAU } from '@/lib/htkt/mau-bieu'
+import { getMauBieuByPhong, NHOM_MAU_CHUNG } from '@/lib/phong/mau-bieu'
 
 const MAU: Record<string, { bg: string; link: string }> = {
   indigo: { bg: 'bg-indigo-600', link: 'hover:text-indigo-700' },
@@ -11,6 +11,10 @@ export function MauBieuView({ tenPhong, baseHref, color = 'indigo' }: {
   tenPhong: string; baseHref: string; color?: 'indigo' | 'emerald'
 }) {
   const c = MAU[color] ?? MAU.indigo
+  // phongKey suy từ baseHref (vd '/dashboard/phong-kh-tc' → 'phong-kh-tc') → chỉ lấy mẫu
+  // hành chính chung + mẫu riêng của phòng; KHÔNG hiển thị mẫu chuyên môn của Phòng HTKT.
+  const phongKey = baseHref.replace(/^\/dashboard\//, '').replace(/\/$/, '')
+  const danhSach = getMauBieuByPhong(phongKey)
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -30,8 +34,8 @@ export function MauBieuView({ tenPhong, baseHref, color = 'indigo' }: {
         </div>
       </div>
 
-      {NHOM_MAU.map((nhom) => {
-        const ds = MAU_BIEU.filter((m) => m.nhom === nhom)
+      {NHOM_MAU_CHUNG.map((nhom) => {
+        const ds = danhSach.filter((m) => m.nhom === nhom)
         if (!ds.length) return null
         return (
           <div key={nhom} className="mb-6">
@@ -43,7 +47,7 @@ export function MauBieuView({ tenPhong, baseHref, color = 'indigo' }: {
                   <p className="text-xs text-slate-500 mt-0.5 flex-1">{m.moTa}</p>
                   <div className="flex items-center gap-2 mt-3">
                     <a
-                      href={`/api/htkt/mau-bieu/${m.key}`}
+                      href={`/api/phong/mau-bieu/${m.key}`}
                       className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded transition"
                     >
                       <Download className="w-3.5 h-3.5" /> Tải mẫu .docx

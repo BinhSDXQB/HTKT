@@ -111,6 +111,16 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
+    label: 'Chỉnh trang đô thị PCCC (QĐ72)',
+    icon: ShieldCheck,
+    items: [
+      { label: 'Hồ sơ khảo sát', href: '/dashboard/qd72', icon: ClipboardList },
+      { label: 'Bản đồ GIS QĐ72', href: '/dashboard/qd72/ban-do', icon: Map },
+      { label: 'Báo cáo tổng hợp', href: '/dashboard/qd72/bao-cao', icon: BarChart3 },
+      { label: 'Năng lực HĐXD (liên thông)', href: '/dashboard/nang-luc-hdxd', icon: ShieldCheck },
+    ],
+  },
+  {
     label: 'BIM / Mô hình công trình',
     icon: Boxes,
     defaultOpen: false,
@@ -171,6 +181,7 @@ const navGroups: NavGroup[] = [
       { label: 'Kho văn bản đã sinh', href: '/dashboard/van-phong-so/van-ban', icon: FileText, officeOnly: true },
       { label: 'Đào tạo, bồi dưỡng', href: '/dashboard/van-phong-so/dao-tao-boi-duong', icon: GraduationCap, officeOnly: true },
       { label: 'Pháp chế', href: '/dashboard/van-phong-so/phap-che', icon: Gavel, officeOnly: true },
+      { label: 'Quy trình rà soát VBQPPL – TTHC', href: '/dashboard/van-phong-so/tham-dinh', icon: ScrollText, officeOnly: true },
       { label: 'ISO & Cải cách hành chính', href: '/dashboard/van-phong-so/iso-cchc', icon: ClipboardCheck, officeOnly: true },
       { label: 'Chuyển đổi số & Đề án 06', href: '/dashboard/van-phong-so/chuyen-doi-so', icon: Network, officeOnly: true },
       { label: 'Văn thư – Lưu trữ', href: '/dashboard/van-phong-so/van-thu-luu-tru', icon: ScrollText, officeOnly: true },

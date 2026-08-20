@@ -2,7 +2,7 @@
 // Dùng cho trang /dashboard/phong-htkt/phap-ly và làm gợi ý "Căn cứ" khi soạn văn bản.
 // Lưu ý hiệu lực: nhiều văn bản vừa thay thế trong 2024–2026 — xem field ghiChu.
 
-export type LoaiVanBan = 'Luật' | 'Nghị định' | 'Thông tư' | 'QCVN' | 'Quyết định'
+export type LoaiVanBan = 'Luật' | 'Nghị định' | 'Thông tư' | 'QCVN' | 'TCVN' | 'Quyết định' | 'Nghị quyết'
 
 export type VanBan = {
   loai: LoaiVanBan
@@ -273,5 +273,7 @@ export const LOAI_VANBAN_MAU: Record<LoaiVanBan, string> = {
   'Nghị định': 'bg-indigo-100 text-indigo-700',
   'Thông tư': 'bg-sky-100 text-sky-700',
   'QCVN': 'bg-amber-100 text-amber-700',
+  'TCVN': 'bg-yellow-100 text-yellow-700',
   'Quyết định': 'bg-emerald-100 text-emerald-700',
+  'Nghị quyết': 'bg-purple-100 text-purple-700',
 }

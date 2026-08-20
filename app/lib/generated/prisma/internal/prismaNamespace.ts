@@ -438,6 +438,8 @@ export const ModelName = {
   ReportCapNuoc: 'ReportCapNuoc',
   ReportBaiDoXe: 'ReportBaiDoXe',
   WardReport: 'WardReport',
+  WardGisLength: 'WardGisLength',
+  WardKhaiBao: 'WardKhaiBao',
   FacilityConfig: 'FacilityConfig',
   OfficeSalaryHistory: 'OfficeSalaryHistory',
   OfficeWorkHistory: 'OfficeWorkHistory',
@@ -484,7 +486,39 @@ export const ModelName = {
   DsDuAnGpmb: 'DsDuAnGpmb',
   DsDuAnThanhPhan: 'DsDuAnThanhPhan',
   DsKeHoachVon: 'DsKeHoachVon',
-  DsLienHe: 'DsLienHe'
+  DsLienHe: 'DsLienHe',
+  httt_dinh_danh: 'httt_dinh_danh',
+  httt_dong_bo_log: 'httt_dong_bo_log',
+  httt_nang_luc_ca_nhan: 'httt_nang_luc_ca_nhan',
+  httt_nang_luc_to_chuc: 'httt_nang_luc_to_chuc',
+  qd72_administrative_unit_assignments: 'qd72_administrative_unit_assignments',
+  qd72_attachments: 'qd72_attachments',
+  qd72_clearance_measurements: 'qd72_clearance_measurements',
+  qd72_comments: 'qd72_comments',
+  qd72_fire_hydrants: 'qd72_fire_hydrants',
+  qd72_fire_parking_areas: 'qd72_fire_parking_areas',
+  qd72_legal_documents: 'qd72_legal_documents',
+  qd72_overhead_utility_lines: 'qd72_overhead_utility_lines',
+  qd72_passing_bays: 'qd72_passing_bays',
+  qd72_public_lighting_assets: 'qd72_public_lighting_assets',
+  qd72_renovation_plans: 'qd72_renovation_plans',
+  qd72_renovation_tasks: 'qd72_renovation_tasks',
+  qd72_road_obstacles: 'qd72_road_obstacles',
+  qd72_road_segments: 'qd72_road_segments',
+  qd72_shared_technical_infrastructure: 'qd72_shared_technical_infrastructure',
+  qd72_survey_cases: 'qd72_survey_cases',
+  qd72_technical_rules: 'qd72_technical_rules',
+  qd72_undergrounding_proposals: 'qd72_undergrounding_proposals',
+  qd72_urban_areas: 'qd72_urban_areas',
+  qd72_utility_crossings: 'qd72_utility_crossings',
+  qd72_utility_owners: 'qd72_utility_owners',
+  qd72_utility_poles: 'qd72_utility_poles',
+  qd72_verification_items: 'qd72_verification_items',
+  qd72_verification_records: 'qd72_verification_records',
+  qd72_water_intake_points: 'qd72_water_intake_points',
+  qd72_water_sources: 'qd72_water_sources',
+  qd72_water_test_results: 'qd72_water_test_results',
+  qd72_workflow_history: 'qd72_workflow_history'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -500,7 +534,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "rolePermission" | "auditLog" | "administrativeUnit" | "lanhDaoXa" | "street" | "assetType" | "executingUnit" | "denChieuSang" | "cayXanhDuong" | "hoGa" | "congThoatNuoc" | "ongCapNuoc" | "vanCapNuoc" | "capVienThong" | "viaHe" | "tuyenMangLuoi" | "doanTuyenCong" | "doanTuyenOng" | "nhaMayXuLyNuocThai" | "tramBom" | "asset" | "maintenanceSchedule" | "inspectionTemplate" | "inspectionTemplateItem" | "inspection" | "inspectionResult" | "incident" | "workOrder" | "workOrderMaterial" | "project" | "projectMilestone" | "materialCategory" | "material" | "stockTransaction" | "systemAlert" | "assetImportBatch" | "integrationConfig" | "integrationLog" | "chatbotLog" | "toChuc" | "chucDanh" | "phanCong" | "canBo" | "reportDuong" | "reportDienCS" | "reportThoatNuoc" | "reportCayXanh" | "reportCongVien" | "reportCapNuoc" | "reportBaiDoXe" | "wardReport" | "facilityConfig" | "officeSalaryHistory" | "officeWorkHistory" | "officeSalaryRule" | "officeRewardTitle" | "officeEmulationMovement" | "officeRewardRecord" | "officeCollectiveRewardRecord" | "officeAnnualEvaluation" | "officeDisciplineRecord" | "officeSalaryReviewCase" | "officeGeneratedDocument" | "officeLeaveRequest" | "officeLeaveSignature" | "permitVehicle" | "oversizedVehiclePermit" | "permitRoute" | "roadConnectionApplication" | "roadConnectionLocation" | "roadConnectionInspection" | "roadConnectionPermit" | "roadLegalReference" | "roadPermitStatusLog" | "overtimeTimesheet" | "overtimeSignature" | "overtimeEntry" | "bimModel" | "bimModelVersion" | "bimFile" | "bimValidationCheck" | "bimConsistencyReview" | "bimViewPermission" | "taiLieu" | "taiLieuChunk" | "congViecLoai" | "congViec" | "congViecThanhVien" | "congViecNhatKy" | "congViecCheckList" | "lichCaNhan" | "nghiepVuBanGhi" | "phanCongLinhVuc" | "phanCongDinhKy" | "dsDuAnGpmb" | "dsDuAnThanhPhan" | "dsKeHoachVon" | "dsLienHe"
+    modelProps: "user" | "role" | "permission" | "rolePermission" | "auditLog" | "administrativeUnit" | "lanhDaoXa" | "street" | "assetType" | "executingUnit" | "denChieuSang" | "cayXanhDuong" | "hoGa" | "congThoatNuoc" | "ongCapNuoc" | "vanCapNuoc" | "capVienThong" | "viaHe" | "tuyenMangLuoi" | "doanTuyenCong" | "doanTuyenOng" | "nhaMayXuLyNuocThai" | "tramBom" | "asset" | "maintenanceSchedule" | "inspectionTemplate" | "inspectionTemplateItem" | "inspection" | "inspectionResult" | "incident" | "workOrder" | "workOrderMaterial" | "project" | "projectMilestone" | "materialCategory" | "material" | "stockTransaction" | "systemAlert" | "assetImportBatch" | "integrationConfig" | "integrationLog" | "chatbotLog" | "toChuc" | "chucDanh" | "phanCong" | "canBo" | "reportDuong" | "reportDienCS" | "reportThoatNuoc" | "reportCayXanh" | "reportCongVien" | "reportCapNuoc" | "reportBaiDoXe" | "wardReport" | "wardGisLength" | "wardKhaiBao" | "facilityConfig" | "officeSalaryHistory" | "officeWorkHistory" | "officeSalaryRule" | "officeRewardTitle" | "officeEmulationMovement" | "officeRewardRecord" | "officeCollectiveRewardRecord" | "officeAnnualEvaluation" | "officeDisciplineRecord" | "officeSalaryReviewCase" | "officeGeneratedDocument" | "officeLeaveRequest" | "officeLeaveSignature" | "permitVehicle" | "oversizedVehiclePermit" | "permitRoute" | "roadConnectionApplication" | "roadConnectionLocation" | "roadConnectionInspection" | "roadConnectionPermit" | "roadLegalReference" | "roadPermitStatusLog" | "overtimeTimesheet" | "overtimeSignature" | "overtimeEntry" | "bimModel" | "bimModelVersion" | "bimFile" | "bimValidationCheck" | "bimConsistencyReview" | "bimViewPermission" | "taiLieu" | "taiLieuChunk" | "congViecLoai" | "congViec" | "congViecThanhVien" | "congViecNhatKy" | "congViecCheckList" | "lichCaNhan" | "nghiepVuBanGhi" | "phanCongLinhVuc" | "phanCongDinhKy" | "dsDuAnGpmb" | "dsDuAnThanhPhan" | "dsKeHoachVon" | "dsLienHe" | "httt_dinh_danh" | "httt_dong_bo_log" | "httt_nang_luc_ca_nhan" | "httt_nang_luc_to_chuc" | "qd72_administrative_unit_assignments" | "qd72_attachments" | "qd72_clearance_measurements" | "qd72_comments" | "qd72_fire_hydrants" | "qd72_fire_parking_areas" | "qd72_legal_documents" | "qd72_overhead_utility_lines" | "qd72_passing_bays" | "qd72_public_lighting_assets" | "qd72_renovation_plans" | "qd72_renovation_tasks" | "qd72_road_obstacles" | "qd72_road_segments" | "qd72_shared_technical_infrastructure" | "qd72_survey_cases" | "qd72_technical_rules" | "qd72_undergrounding_proposals" | "qd72_urban_areas" | "qd72_utility_crossings" | "qd72_utility_owners" | "qd72_utility_poles" | "qd72_verification_items" | "qd72_verification_records" | "qd72_water_intake_points" | "qd72_water_sources" | "qd72_water_test_results" | "qd72_workflow_history"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4500,6 +4534,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WardGisLength: {
+      payload: Prisma.$WardGisLengthPayload<ExtArgs>
+      fields: Prisma.WardGisLengthFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WardGisLengthFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WardGisLengthFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>
+        }
+        findFirst: {
+          args: Prisma.WardGisLengthFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WardGisLengthFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>
+        }
+        findMany: {
+          args: Prisma.WardGisLengthFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>[]
+        }
+        create: {
+          args: Prisma.WardGisLengthCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>
+        }
+        createMany: {
+          args: Prisma.WardGisLengthCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WardGisLengthCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>[]
+        }
+        delete: {
+          args: Prisma.WardGisLengthDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>
+        }
+        update: {
+          args: Prisma.WardGisLengthUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>
+        }
+        deleteMany: {
+          args: Prisma.WardGisLengthDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WardGisLengthUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WardGisLengthUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>[]
+        }
+        upsert: {
+          args: Prisma.WardGisLengthUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardGisLengthPayload>
+        }
+        aggregate: {
+          args: Prisma.WardGisLengthAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWardGisLength>
+        }
+        groupBy: {
+          args: Prisma.WardGisLengthGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WardGisLengthGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WardGisLengthCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WardGisLengthCountAggregateOutputType> | number
+        }
+      }
+    }
+    WardKhaiBao: {
+      payload: Prisma.$WardKhaiBaoPayload<ExtArgs>
+      fields: Prisma.WardKhaiBaoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WardKhaiBaoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WardKhaiBaoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>
+        }
+        findFirst: {
+          args: Prisma.WardKhaiBaoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WardKhaiBaoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>
+        }
+        findMany: {
+          args: Prisma.WardKhaiBaoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>[]
+        }
+        create: {
+          args: Prisma.WardKhaiBaoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>
+        }
+        createMany: {
+          args: Prisma.WardKhaiBaoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WardKhaiBaoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>[]
+        }
+        delete: {
+          args: Prisma.WardKhaiBaoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>
+        }
+        update: {
+          args: Prisma.WardKhaiBaoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>
+        }
+        deleteMany: {
+          args: Prisma.WardKhaiBaoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WardKhaiBaoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WardKhaiBaoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>[]
+        }
+        upsert: {
+          args: Prisma.WardKhaiBaoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WardKhaiBaoPayload>
+        }
+        aggregate: {
+          args: Prisma.WardKhaiBaoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWardKhaiBao>
+        }
+        groupBy: {
+          args: Prisma.WardKhaiBaoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WardKhaiBaoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WardKhaiBaoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WardKhaiBaoCountAggregateOutputType> | number
+        }
+      }
+    }
     FacilityConfig: {
       payload: Prisma.$FacilityConfigPayload<ExtArgs>
       fields: Prisma.FacilityConfigFieldRefs
@@ -7978,6 +8160,2374 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    httt_dinh_danh: {
+      payload: Prisma.$httt_dinh_danhPayload<ExtArgs>
+      fields: Prisma.httt_dinh_danhFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.httt_dinh_danhFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.httt_dinh_danhFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>
+        }
+        findFirst: {
+          args: Prisma.httt_dinh_danhFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.httt_dinh_danhFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>
+        }
+        findMany: {
+          args: Prisma.httt_dinh_danhFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>[]
+        }
+        create: {
+          args: Prisma.httt_dinh_danhCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>
+        }
+        createMany: {
+          args: Prisma.httt_dinh_danhCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.httt_dinh_danhCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>[]
+        }
+        delete: {
+          args: Prisma.httt_dinh_danhDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>
+        }
+        update: {
+          args: Prisma.httt_dinh_danhUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>
+        }
+        deleteMany: {
+          args: Prisma.httt_dinh_danhDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.httt_dinh_danhUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.httt_dinh_danhUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>[]
+        }
+        upsert: {
+          args: Prisma.httt_dinh_danhUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dinh_danhPayload>
+        }
+        aggregate: {
+          args: Prisma.Httt_dinh_danhAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHttt_dinh_danh>
+        }
+        groupBy: {
+          args: Prisma.httt_dinh_danhGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_dinh_danhGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.httt_dinh_danhCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_dinh_danhCountAggregateOutputType> | number
+        }
+      }
+    }
+    httt_dong_bo_log: {
+      payload: Prisma.$httt_dong_bo_logPayload<ExtArgs>
+      fields: Prisma.httt_dong_bo_logFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.httt_dong_bo_logFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.httt_dong_bo_logFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>
+        }
+        findFirst: {
+          args: Prisma.httt_dong_bo_logFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.httt_dong_bo_logFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>
+        }
+        findMany: {
+          args: Prisma.httt_dong_bo_logFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>[]
+        }
+        create: {
+          args: Prisma.httt_dong_bo_logCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>
+        }
+        createMany: {
+          args: Prisma.httt_dong_bo_logCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.httt_dong_bo_logCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>[]
+        }
+        delete: {
+          args: Prisma.httt_dong_bo_logDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>
+        }
+        update: {
+          args: Prisma.httt_dong_bo_logUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>
+        }
+        deleteMany: {
+          args: Prisma.httt_dong_bo_logDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.httt_dong_bo_logUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.httt_dong_bo_logUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>[]
+        }
+        upsert: {
+          args: Prisma.httt_dong_bo_logUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_dong_bo_logPayload>
+        }
+        aggregate: {
+          args: Prisma.Httt_dong_bo_logAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHttt_dong_bo_log>
+        }
+        groupBy: {
+          args: Prisma.httt_dong_bo_logGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_dong_bo_logGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.httt_dong_bo_logCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_dong_bo_logCountAggregateOutputType> | number
+        }
+      }
+    }
+    httt_nang_luc_ca_nhan: {
+      payload: Prisma.$httt_nang_luc_ca_nhanPayload<ExtArgs>
+      fields: Prisma.httt_nang_luc_ca_nhanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.httt_nang_luc_ca_nhanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.httt_nang_luc_ca_nhanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>
+        }
+        findFirst: {
+          args: Prisma.httt_nang_luc_ca_nhanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.httt_nang_luc_ca_nhanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>
+        }
+        findMany: {
+          args: Prisma.httt_nang_luc_ca_nhanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>[]
+        }
+        create: {
+          args: Prisma.httt_nang_luc_ca_nhanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>
+        }
+        createMany: {
+          args: Prisma.httt_nang_luc_ca_nhanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.httt_nang_luc_ca_nhanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>[]
+        }
+        delete: {
+          args: Prisma.httt_nang_luc_ca_nhanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>
+        }
+        update: {
+          args: Prisma.httt_nang_luc_ca_nhanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>
+        }
+        deleteMany: {
+          args: Prisma.httt_nang_luc_ca_nhanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.httt_nang_luc_ca_nhanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.httt_nang_luc_ca_nhanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>[]
+        }
+        upsert: {
+          args: Prisma.httt_nang_luc_ca_nhanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_ca_nhanPayload>
+        }
+        aggregate: {
+          args: Prisma.Httt_nang_luc_ca_nhanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHttt_nang_luc_ca_nhan>
+        }
+        groupBy: {
+          args: Prisma.httt_nang_luc_ca_nhanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_nang_luc_ca_nhanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.httt_nang_luc_ca_nhanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_nang_luc_ca_nhanCountAggregateOutputType> | number
+        }
+      }
+    }
+    httt_nang_luc_to_chuc: {
+      payload: Prisma.$httt_nang_luc_to_chucPayload<ExtArgs>
+      fields: Prisma.httt_nang_luc_to_chucFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.httt_nang_luc_to_chucFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.httt_nang_luc_to_chucFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>
+        }
+        findFirst: {
+          args: Prisma.httt_nang_luc_to_chucFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.httt_nang_luc_to_chucFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>
+        }
+        findMany: {
+          args: Prisma.httt_nang_luc_to_chucFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>[]
+        }
+        create: {
+          args: Prisma.httt_nang_luc_to_chucCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>
+        }
+        createMany: {
+          args: Prisma.httt_nang_luc_to_chucCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.httt_nang_luc_to_chucCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>[]
+        }
+        delete: {
+          args: Prisma.httt_nang_luc_to_chucDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>
+        }
+        update: {
+          args: Prisma.httt_nang_luc_to_chucUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>
+        }
+        deleteMany: {
+          args: Prisma.httt_nang_luc_to_chucDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.httt_nang_luc_to_chucUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.httt_nang_luc_to_chucUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>[]
+        }
+        upsert: {
+          args: Prisma.httt_nang_luc_to_chucUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$httt_nang_luc_to_chucPayload>
+        }
+        aggregate: {
+          args: Prisma.Httt_nang_luc_to_chucAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHttt_nang_luc_to_chuc>
+        }
+        groupBy: {
+          args: Prisma.httt_nang_luc_to_chucGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_nang_luc_to_chucGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.httt_nang_luc_to_chucCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Httt_nang_luc_to_chucCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_administrative_unit_assignments: {
+      payload: Prisma.$qd72_administrative_unit_assignmentsPayload<ExtArgs>
+      fields: Prisma.qd72_administrative_unit_assignmentsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_administrative_unit_assignmentsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_administrative_unit_assignmentsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_administrative_unit_assignmentsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_administrative_unit_assignmentsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_administrative_unit_assignmentsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_administrative_unit_assignmentsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_administrative_unit_assignmentsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_administrative_unit_assignmentsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_administrative_unit_assignmentsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>
+        }
+        update: {
+          args: Prisma.qd72_administrative_unit_assignmentsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_administrative_unit_assignmentsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_administrative_unit_assignmentsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_administrative_unit_assignmentsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_administrative_unit_assignmentsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_administrative_unit_assignmentsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_administrative_unit_assignmentsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_administrative_unit_assignments>
+        }
+        groupBy: {
+          args: Prisma.qd72_administrative_unit_assignmentsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_administrative_unit_assignmentsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_administrative_unit_assignmentsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_administrative_unit_assignmentsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_attachments: {
+      payload: Prisma.$qd72_attachmentsPayload<ExtArgs>
+      fields: Prisma.qd72_attachmentsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_attachmentsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_attachmentsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_attachmentsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_attachmentsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_attachmentsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_attachmentsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_attachmentsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_attachmentsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_attachmentsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>
+        }
+        update: {
+          args: Prisma.qd72_attachmentsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_attachmentsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_attachmentsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_attachmentsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_attachmentsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_attachmentsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_attachmentsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_attachments>
+        }
+        groupBy: {
+          args: Prisma.qd72_attachmentsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_attachmentsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_attachmentsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_attachmentsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_clearance_measurements: {
+      payload: Prisma.$qd72_clearance_measurementsPayload<ExtArgs>
+      fields: Prisma.qd72_clearance_measurementsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_clearance_measurementsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_clearance_measurementsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_clearance_measurementsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_clearance_measurementsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_clearance_measurementsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_clearance_measurementsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_clearance_measurementsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_clearance_measurementsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_clearance_measurementsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>
+        }
+        update: {
+          args: Prisma.qd72_clearance_measurementsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_clearance_measurementsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_clearance_measurementsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_clearance_measurementsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_clearance_measurementsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_clearance_measurementsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_clearance_measurementsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_clearance_measurements>
+        }
+        groupBy: {
+          args: Prisma.qd72_clearance_measurementsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_clearance_measurementsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_clearance_measurementsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_clearance_measurementsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_comments: {
+      payload: Prisma.$qd72_commentsPayload<ExtArgs>
+      fields: Prisma.qd72_commentsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_commentsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_commentsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_commentsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_commentsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_commentsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_commentsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_commentsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_commentsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_commentsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>
+        }
+        update: {
+          args: Prisma.qd72_commentsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_commentsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_commentsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_commentsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_commentsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_commentsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_commentsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_comments>
+        }
+        groupBy: {
+          args: Prisma.qd72_commentsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_commentsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_commentsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_commentsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_fire_hydrants: {
+      payload: Prisma.$qd72_fire_hydrantsPayload<ExtArgs>
+      fields: Prisma.qd72_fire_hydrantsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_fire_hydrantsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_fire_hydrantsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_fire_hydrantsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_fire_hydrantsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_fire_hydrantsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_fire_hydrantsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_fire_hydrantsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_fire_hydrantsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_fire_hydrantsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>
+        }
+        update: {
+          args: Prisma.qd72_fire_hydrantsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_fire_hydrantsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_fire_hydrantsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_fire_hydrantsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_fire_hydrantsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_hydrantsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_fire_hydrantsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_fire_hydrants>
+        }
+        groupBy: {
+          args: Prisma.qd72_fire_hydrantsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_fire_hydrantsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_fire_hydrantsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_fire_hydrantsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_fire_parking_areas: {
+      payload: Prisma.$qd72_fire_parking_areasPayload<ExtArgs>
+      fields: Prisma.qd72_fire_parking_areasFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_fire_parking_areasFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_fire_parking_areasFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_fire_parking_areasFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_fire_parking_areasFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_fire_parking_areasFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_fire_parking_areasCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_fire_parking_areasCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_fire_parking_areasCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_fire_parking_areasDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>
+        }
+        update: {
+          args: Prisma.qd72_fire_parking_areasUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_fire_parking_areasDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_fire_parking_areasUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_fire_parking_areasUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_fire_parking_areasUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_fire_parking_areasPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_fire_parking_areasAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_fire_parking_areas>
+        }
+        groupBy: {
+          args: Prisma.qd72_fire_parking_areasGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_fire_parking_areasGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_fire_parking_areasCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_fire_parking_areasCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_legal_documents: {
+      payload: Prisma.$qd72_legal_documentsPayload<ExtArgs>
+      fields: Prisma.qd72_legal_documentsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_legal_documentsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_legal_documentsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_legal_documentsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_legal_documentsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_legal_documentsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_legal_documentsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_legal_documentsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_legal_documentsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_legal_documentsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>
+        }
+        update: {
+          args: Prisma.qd72_legal_documentsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_legal_documentsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_legal_documentsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_legal_documentsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_legal_documentsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_legal_documentsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_legal_documentsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_legal_documents>
+        }
+        groupBy: {
+          args: Prisma.qd72_legal_documentsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_legal_documentsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_legal_documentsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_legal_documentsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_overhead_utility_lines: {
+      payload: Prisma.$qd72_overhead_utility_linesPayload<ExtArgs>
+      fields: Prisma.qd72_overhead_utility_linesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_overhead_utility_linesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_overhead_utility_linesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_overhead_utility_linesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_overhead_utility_linesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_overhead_utility_linesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_overhead_utility_linesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_overhead_utility_linesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_overhead_utility_linesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_overhead_utility_linesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>
+        }
+        update: {
+          args: Prisma.qd72_overhead_utility_linesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_overhead_utility_linesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_overhead_utility_linesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_overhead_utility_linesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_overhead_utility_linesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_overhead_utility_linesPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_overhead_utility_linesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_overhead_utility_lines>
+        }
+        groupBy: {
+          args: Prisma.qd72_overhead_utility_linesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_overhead_utility_linesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_overhead_utility_linesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_overhead_utility_linesCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_passing_bays: {
+      payload: Prisma.$qd72_passing_baysPayload<ExtArgs>
+      fields: Prisma.qd72_passing_baysFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_passing_baysFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_passing_baysFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_passing_baysFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_passing_baysFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_passing_baysFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_passing_baysCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_passing_baysCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_passing_baysCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_passing_baysDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>
+        }
+        update: {
+          args: Prisma.qd72_passing_baysUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_passing_baysDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_passing_baysUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_passing_baysUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_passing_baysUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_passing_baysPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_passing_baysAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_passing_bays>
+        }
+        groupBy: {
+          args: Prisma.qd72_passing_baysGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_passing_baysGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_passing_baysCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_passing_baysCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_public_lighting_assets: {
+      payload: Prisma.$qd72_public_lighting_assetsPayload<ExtArgs>
+      fields: Prisma.qd72_public_lighting_assetsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_public_lighting_assetsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_public_lighting_assetsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_public_lighting_assetsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_public_lighting_assetsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_public_lighting_assetsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_public_lighting_assetsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_public_lighting_assetsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_public_lighting_assetsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_public_lighting_assetsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>
+        }
+        update: {
+          args: Prisma.qd72_public_lighting_assetsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_public_lighting_assetsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_public_lighting_assetsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_public_lighting_assetsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_public_lighting_assetsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_public_lighting_assetsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_public_lighting_assetsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_public_lighting_assets>
+        }
+        groupBy: {
+          args: Prisma.qd72_public_lighting_assetsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_public_lighting_assetsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_public_lighting_assetsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_public_lighting_assetsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_renovation_plans: {
+      payload: Prisma.$qd72_renovation_plansPayload<ExtArgs>
+      fields: Prisma.qd72_renovation_plansFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_renovation_plansFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_renovation_plansFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_renovation_plansFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_renovation_plansFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_renovation_plansFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_renovation_plansCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_renovation_plansCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_renovation_plansCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_renovation_plansDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>
+        }
+        update: {
+          args: Prisma.qd72_renovation_plansUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_renovation_plansDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_renovation_plansUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_renovation_plansUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_renovation_plansUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_plansPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_renovation_plansAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_renovation_plans>
+        }
+        groupBy: {
+          args: Prisma.qd72_renovation_plansGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_renovation_plansGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_renovation_plansCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_renovation_plansCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_renovation_tasks: {
+      payload: Prisma.$qd72_renovation_tasksPayload<ExtArgs>
+      fields: Prisma.qd72_renovation_tasksFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_renovation_tasksFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_renovation_tasksFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_renovation_tasksFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_renovation_tasksFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_renovation_tasksFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_renovation_tasksCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_renovation_tasksCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_renovation_tasksCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_renovation_tasksDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>
+        }
+        update: {
+          args: Prisma.qd72_renovation_tasksUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_renovation_tasksDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_renovation_tasksUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_renovation_tasksUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_renovation_tasksUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_renovation_tasksPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_renovation_tasksAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_renovation_tasks>
+        }
+        groupBy: {
+          args: Prisma.qd72_renovation_tasksGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_renovation_tasksGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_renovation_tasksCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_renovation_tasksCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_road_obstacles: {
+      payload: Prisma.$qd72_road_obstaclesPayload<ExtArgs>
+      fields: Prisma.qd72_road_obstaclesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_road_obstaclesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_road_obstaclesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_road_obstaclesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_road_obstaclesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_road_obstaclesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_road_obstaclesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_road_obstaclesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_road_obstaclesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_road_obstaclesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>
+        }
+        update: {
+          args: Prisma.qd72_road_obstaclesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_road_obstaclesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_road_obstaclesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_road_obstaclesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_road_obstaclesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_obstaclesPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_road_obstaclesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_road_obstacles>
+        }
+        groupBy: {
+          args: Prisma.qd72_road_obstaclesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_road_obstaclesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_road_obstaclesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_road_obstaclesCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_road_segments: {
+      payload: Prisma.$qd72_road_segmentsPayload<ExtArgs>
+      fields: Prisma.qd72_road_segmentsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_road_segmentsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_road_segmentsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_road_segmentsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_road_segmentsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_road_segmentsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_road_segmentsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_road_segmentsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_road_segmentsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_road_segmentsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>
+        }
+        update: {
+          args: Prisma.qd72_road_segmentsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_road_segmentsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_road_segmentsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_road_segmentsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_road_segmentsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_road_segmentsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_road_segmentsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_road_segments>
+        }
+        groupBy: {
+          args: Prisma.qd72_road_segmentsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_road_segmentsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_road_segmentsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_road_segmentsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_shared_technical_infrastructure: {
+      payload: Prisma.$qd72_shared_technical_infrastructurePayload<ExtArgs>
+      fields: Prisma.qd72_shared_technical_infrastructureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_shared_technical_infrastructureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_shared_technical_infrastructureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_shared_technical_infrastructureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_shared_technical_infrastructureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>
+        }
+        findMany: {
+          args: Prisma.qd72_shared_technical_infrastructureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>[]
+        }
+        create: {
+          args: Prisma.qd72_shared_technical_infrastructureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>
+        }
+        createMany: {
+          args: Prisma.qd72_shared_technical_infrastructureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_shared_technical_infrastructureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_shared_technical_infrastructureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>
+        }
+        update: {
+          args: Prisma.qd72_shared_technical_infrastructureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_shared_technical_infrastructureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_shared_technical_infrastructureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_shared_technical_infrastructureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_shared_technical_infrastructureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_shared_technical_infrastructurePayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_shared_technical_infrastructureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_shared_technical_infrastructure>
+        }
+        groupBy: {
+          args: Prisma.qd72_shared_technical_infrastructureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_shared_technical_infrastructureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_shared_technical_infrastructureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_shared_technical_infrastructureCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_survey_cases: {
+      payload: Prisma.$qd72_survey_casesPayload<ExtArgs>
+      fields: Prisma.qd72_survey_casesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_survey_casesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_survey_casesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_survey_casesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_survey_casesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_survey_casesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_survey_casesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_survey_casesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_survey_casesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_survey_casesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>
+        }
+        update: {
+          args: Prisma.qd72_survey_casesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_survey_casesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_survey_casesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_survey_casesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_survey_casesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_survey_casesPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_survey_casesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_survey_cases>
+        }
+        groupBy: {
+          args: Prisma.qd72_survey_casesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_survey_casesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_survey_casesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_survey_casesCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_technical_rules: {
+      payload: Prisma.$qd72_technical_rulesPayload<ExtArgs>
+      fields: Prisma.qd72_technical_rulesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_technical_rulesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_technical_rulesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_technical_rulesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_technical_rulesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_technical_rulesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_technical_rulesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_technical_rulesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_technical_rulesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_technical_rulesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>
+        }
+        update: {
+          args: Prisma.qd72_technical_rulesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_technical_rulesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_technical_rulesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_technical_rulesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_technical_rulesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_technical_rulesPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_technical_rulesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_technical_rules>
+        }
+        groupBy: {
+          args: Prisma.qd72_technical_rulesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_technical_rulesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_technical_rulesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_technical_rulesCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_undergrounding_proposals: {
+      payload: Prisma.$qd72_undergrounding_proposalsPayload<ExtArgs>
+      fields: Prisma.qd72_undergrounding_proposalsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_undergrounding_proposalsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_undergrounding_proposalsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_undergrounding_proposalsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_undergrounding_proposalsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_undergrounding_proposalsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_undergrounding_proposalsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_undergrounding_proposalsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_undergrounding_proposalsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_undergrounding_proposalsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>
+        }
+        update: {
+          args: Prisma.qd72_undergrounding_proposalsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_undergrounding_proposalsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_undergrounding_proposalsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_undergrounding_proposalsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_undergrounding_proposalsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_undergrounding_proposalsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_undergrounding_proposalsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_undergrounding_proposals>
+        }
+        groupBy: {
+          args: Prisma.qd72_undergrounding_proposalsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_undergrounding_proposalsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_undergrounding_proposalsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_undergrounding_proposalsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_urban_areas: {
+      payload: Prisma.$qd72_urban_areasPayload<ExtArgs>
+      fields: Prisma.qd72_urban_areasFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_urban_areasFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_urban_areasFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_urban_areasFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_urban_areasFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_urban_areasFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_urban_areasCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_urban_areasCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_urban_areasCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_urban_areasDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>
+        }
+        update: {
+          args: Prisma.qd72_urban_areasUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_urban_areasDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_urban_areasUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_urban_areasUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_urban_areasUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_urban_areasPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_urban_areasAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_urban_areas>
+        }
+        groupBy: {
+          args: Prisma.qd72_urban_areasGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_urban_areasGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_urban_areasCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_urban_areasCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_utility_crossings: {
+      payload: Prisma.$qd72_utility_crossingsPayload<ExtArgs>
+      fields: Prisma.qd72_utility_crossingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_utility_crossingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_utility_crossingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_utility_crossingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_utility_crossingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_utility_crossingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_utility_crossingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_utility_crossingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_utility_crossingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_utility_crossingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>
+        }
+        update: {
+          args: Prisma.qd72_utility_crossingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_utility_crossingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_utility_crossingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_utility_crossingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_utility_crossingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_crossingsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_utility_crossingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_utility_crossings>
+        }
+        groupBy: {
+          args: Prisma.qd72_utility_crossingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_utility_crossingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_utility_crossingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_utility_crossingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_utility_owners: {
+      payload: Prisma.$qd72_utility_ownersPayload<ExtArgs>
+      fields: Prisma.qd72_utility_ownersFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_utility_ownersFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_utility_ownersFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_utility_ownersFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_utility_ownersFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_utility_ownersFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_utility_ownersCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_utility_ownersCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_utility_ownersCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_utility_ownersDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>
+        }
+        update: {
+          args: Prisma.qd72_utility_ownersUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_utility_ownersDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_utility_ownersUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_utility_ownersUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_utility_ownersUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_ownersPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_utility_ownersAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_utility_owners>
+        }
+        groupBy: {
+          args: Prisma.qd72_utility_ownersGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_utility_ownersGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_utility_ownersCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_utility_ownersCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_utility_poles: {
+      payload: Prisma.$qd72_utility_polesPayload<ExtArgs>
+      fields: Prisma.qd72_utility_polesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_utility_polesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_utility_polesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_utility_polesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_utility_polesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_utility_polesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_utility_polesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_utility_polesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_utility_polesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_utility_polesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>
+        }
+        update: {
+          args: Prisma.qd72_utility_polesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_utility_polesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_utility_polesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_utility_polesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_utility_polesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_utility_polesPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_utility_polesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_utility_poles>
+        }
+        groupBy: {
+          args: Prisma.qd72_utility_polesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_utility_polesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_utility_polesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_utility_polesCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_verification_items: {
+      payload: Prisma.$qd72_verification_itemsPayload<ExtArgs>
+      fields: Prisma.qd72_verification_itemsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_verification_itemsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_verification_itemsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_verification_itemsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_verification_itemsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_verification_itemsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_verification_itemsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_verification_itemsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_verification_itemsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_verification_itemsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>
+        }
+        update: {
+          args: Prisma.qd72_verification_itemsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_verification_itemsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_verification_itemsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_verification_itemsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_verification_itemsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_itemsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_verification_itemsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_verification_items>
+        }
+        groupBy: {
+          args: Prisma.qd72_verification_itemsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_verification_itemsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_verification_itemsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_verification_itemsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_verification_records: {
+      payload: Prisma.$qd72_verification_recordsPayload<ExtArgs>
+      fields: Prisma.qd72_verification_recordsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_verification_recordsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_verification_recordsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_verification_recordsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_verification_recordsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_verification_recordsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_verification_recordsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_verification_recordsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_verification_recordsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_verification_recordsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>
+        }
+        update: {
+          args: Prisma.qd72_verification_recordsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_verification_recordsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_verification_recordsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_verification_recordsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_verification_recordsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_verification_recordsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_verification_recordsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_verification_records>
+        }
+        groupBy: {
+          args: Prisma.qd72_verification_recordsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_verification_recordsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_verification_recordsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_verification_recordsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_water_intake_points: {
+      payload: Prisma.$qd72_water_intake_pointsPayload<ExtArgs>
+      fields: Prisma.qd72_water_intake_pointsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_water_intake_pointsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_water_intake_pointsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_water_intake_pointsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_water_intake_pointsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_water_intake_pointsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_water_intake_pointsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_water_intake_pointsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_water_intake_pointsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_water_intake_pointsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>
+        }
+        update: {
+          args: Prisma.qd72_water_intake_pointsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_water_intake_pointsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_water_intake_pointsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_water_intake_pointsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_water_intake_pointsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_intake_pointsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_water_intake_pointsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_water_intake_points>
+        }
+        groupBy: {
+          args: Prisma.qd72_water_intake_pointsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_water_intake_pointsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_water_intake_pointsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_water_intake_pointsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_water_sources: {
+      payload: Prisma.$qd72_water_sourcesPayload<ExtArgs>
+      fields: Prisma.qd72_water_sourcesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_water_sourcesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_water_sourcesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_water_sourcesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_water_sourcesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_water_sourcesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_water_sourcesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_water_sourcesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_water_sourcesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_water_sourcesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>
+        }
+        update: {
+          args: Prisma.qd72_water_sourcesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_water_sourcesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_water_sourcesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_water_sourcesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_water_sourcesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_sourcesPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_water_sourcesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_water_sources>
+        }
+        groupBy: {
+          args: Prisma.qd72_water_sourcesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_water_sourcesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_water_sourcesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_water_sourcesCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_water_test_results: {
+      payload: Prisma.$qd72_water_test_resultsPayload<ExtArgs>
+      fields: Prisma.qd72_water_test_resultsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_water_test_resultsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_water_test_resultsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_water_test_resultsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_water_test_resultsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_water_test_resultsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_water_test_resultsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_water_test_resultsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_water_test_resultsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_water_test_resultsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>
+        }
+        update: {
+          args: Prisma.qd72_water_test_resultsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_water_test_resultsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_water_test_resultsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_water_test_resultsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_water_test_resultsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_water_test_resultsPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_water_test_resultsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_water_test_results>
+        }
+        groupBy: {
+          args: Prisma.qd72_water_test_resultsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_water_test_resultsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_water_test_resultsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_water_test_resultsCountAggregateOutputType> | number
+        }
+      }
+    }
+    qd72_workflow_history: {
+      payload: Prisma.$qd72_workflow_historyPayload<ExtArgs>
+      fields: Prisma.qd72_workflow_historyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.qd72_workflow_historyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.qd72_workflow_historyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>
+        }
+        findFirst: {
+          args: Prisma.qd72_workflow_historyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.qd72_workflow_historyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>
+        }
+        findMany: {
+          args: Prisma.qd72_workflow_historyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>[]
+        }
+        create: {
+          args: Prisma.qd72_workflow_historyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>
+        }
+        createMany: {
+          args: Prisma.qd72_workflow_historyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.qd72_workflow_historyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>[]
+        }
+        delete: {
+          args: Prisma.qd72_workflow_historyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>
+        }
+        update: {
+          args: Prisma.qd72_workflow_historyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>
+        }
+        deleteMany: {
+          args: Prisma.qd72_workflow_historyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.qd72_workflow_historyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.qd72_workflow_historyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>[]
+        }
+        upsert: {
+          args: Prisma.qd72_workflow_historyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$qd72_workflow_historyPayload>
+        }
+        aggregate: {
+          args: Prisma.Qd72_workflow_historyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQd72_workflow_history>
+        }
+        groupBy: {
+          args: Prisma.qd72_workflow_historyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_workflow_historyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.qd72_workflow_historyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Qd72_workflow_historyCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -8895,6 +11445,7 @@ export const ToChucScalarFieldEnum = {
   thuTu: 'thuTu',
   isActive: 'isActive',
   moTa: 'moTa',
+  maSoThue: 'maSoThue',
   parentId: 'parentId',
   donViHCId: 'donViHCId',
   createdAt: 'createdAt',
@@ -9198,6 +11749,37 @@ export const WardReportScalarFieldEnum = {
 } as const
 
 export type WardReportScalarFieldEnum = (typeof WardReportScalarFieldEnum)[keyof typeof WardReportScalarFieldEnum]
+
+
+export const WardGisLengthScalarFieldEnum = {
+  id: 'id',
+  wardId: 'wardId',
+  duongDiaPhuongKm: 'duongDiaPhuongKm',
+  duongHuyenKm: 'duongHuyenKm',
+  duongTinhKm: 'duongTinhKm',
+  quocLoKm: 'quocLoKm',
+  caoTocKm: 'caoTocKm',
+  tongKm: 'tongKm',
+  nguon: 'nguon',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WardGisLengthScalarFieldEnum = (typeof WardGisLengthScalarFieldEnum)[keyof typeof WardGisLengthScalarFieldEnum]
+
+
+export const WardKhaiBaoScalarFieldEnum = {
+  id: 'id',
+  wardId: 'wardId',
+  year: 'year',
+  linhVuc: 'linhVuc',
+  chiTieu: 'chiTieu',
+  giaTri: 'giaTri',
+  donVi: 'donVi',
+  ghiChu: 'ghiChu',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WardKhaiBaoScalarFieldEnum = (typeof WardKhaiBaoScalarFieldEnum)[keyof typeof WardKhaiBaoScalarFieldEnum]
 
 
 export const FacilityConfigScalarFieldEnum = {
@@ -9890,6 +12472,9 @@ export const TaiLieuScalarFieldEnum = {
   soKyTu: 'soKyTu',
   trangThai: 'trangThai',
   ghiChuLoi: 'ghiChuLoi',
+  tinhTrangHieuLuc: 'tinhTrangHieuLuc',
+  thayTheBoi: 'thayTheBoi',
+  ghiChuHieuLuc: 'ghiChuHieuLuc',
   metadata: 'metadata',
   createdById: 'createdById',
   createdAt: 'createdAt',
@@ -10025,6 +12610,7 @@ export const NghiepVuBanGhiScalarFieldEnum = {
   maBanGhi: 'maBanGhi',
   tieuDe: 'tieuDe',
   trangThai: 'trangThai',
+  wardId: 'wardId',
   diaBan: 'diaBan',
   ngayGhiNhan: 'ngayGhiNhan',
   ghiChu: 'ghiChu',
@@ -10154,6 +12740,663 @@ export const DsLienHeScalarFieldEnum = {
 } as const
 
 export type DsLienHeScalarFieldEnum = (typeof DsLienHeScalarFieldEnum)[keyof typeof DsLienHeScalarFieldEnum]
+
+
+export const Httt_dinh_danhScalarFieldEnum = {
+  id: 'id',
+  loai_doi_tuong: 'loai_doi_tuong',
+  ma_dinh_danh: 'ma_dinh_danh',
+  loai_ma: 'loai_ma',
+  bang_local: 'bang_local',
+  id_local: 'id_local',
+  trang_thai_dong_bo: 'trang_thai_dong_bo',
+  la_du_lieu_mo: 'la_du_lieu_mo',
+  thoi_diem_khoi_tao: 'thoi_diem_khoi_tao',
+  thoi_diem_dong_bo: 'thoi_diem_dong_bo',
+  phan_hoi_httt: 'phan_hoi_httt',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Httt_dinh_danhScalarFieldEnum = (typeof Httt_dinh_danhScalarFieldEnum)[keyof typeof Httt_dinh_danhScalarFieldEnum]
+
+
+export const Httt_dong_bo_logScalarFieldEnum = {
+  id: 'id',
+  dinh_danh_id: 'dinh_danh_id',
+  hanh_dong: 'hanh_dong',
+  ket_qua: 'ket_qua',
+  thong_diep: 'thong_diep',
+  payload: 'payload',
+  nguoi_id: 'nguoi_id',
+  thoi_diem: 'thoi_diem'
+} as const
+
+export type Httt_dong_bo_logScalarFieldEnum = (typeof Httt_dong_bo_logScalarFieldEnum)[keyof typeof Httt_dong_bo_logScalarFieldEnum]
+
+
+export const Httt_nang_luc_ca_nhanScalarFieldEnum = {
+  id: 'id',
+  dinh_danh_id: 'dinh_danh_id',
+  ma_dinh_danh: 'ma_dinh_danh',
+  loai_ma: 'loai_ma',
+  ho_ten: 'ho_ten',
+  quoc_tich: 'quoc_tich',
+  linh_vuc_hanh_nghe: 'linh_vuc_hanh_nghe',
+  hang_chung_chi: 'hang_chung_chi',
+  thoi_han_chung_chi: 'thoi_han_chung_chi',
+  co_so_dao_tao: 'co_so_dao_tao',
+  trinh_do_chuyen_mon: 'trinh_do_chuyen_mon',
+  so_chung_chi: 'so_chung_chi',
+  loai_cap: 'loai_cap',
+  ly_do_cap: 'ly_do_cap',
+  quyet_dinh_cap: 'quyet_dinh_cap',
+  co_quan_cap: 'co_quan_cap',
+  ngay_cap: 'ngay_cap',
+  trang_thai: 'trang_thai',
+  ket_qua_dien_tu_path: 'ket_qua_dien_tu_path',
+  truong_bo_sung: 'truong_bo_sung',
+  to_chuc_id: 'to_chuc_id',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Httt_nang_luc_ca_nhanScalarFieldEnum = (typeof Httt_nang_luc_ca_nhanScalarFieldEnum)[keyof typeof Httt_nang_luc_ca_nhanScalarFieldEnum]
+
+
+export const Httt_nang_luc_to_chucScalarFieldEnum = {
+  id: 'id',
+  dinh_danh_id: 'dinh_danh_id',
+  ma_so_dn: 'ma_so_dn',
+  ten_nha_thau: 'ten_nha_thau',
+  linh_vuc: 'linh_vuc',
+  hang: 'hang',
+  so_chung_chi_nang_luc: 'so_chung_chi_nang_luc',
+  co_quan_cap: 'co_quan_cap',
+  ngay_cap: 'ngay_cap',
+  thoi_han: 'thoi_han',
+  trang_thai: 'trang_thai',
+  ket_qua_dien_tu_path: 'ket_qua_dien_tu_path',
+  thong_tin_nang_luc: 'thong_tin_nang_luc',
+  truong_bo_sung: 'truong_bo_sung',
+  to_chuc_id: 'to_chuc_id',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Httt_nang_luc_to_chucScalarFieldEnum = (typeof Httt_nang_luc_to_chucScalarFieldEnum)[keyof typeof Httt_nang_luc_to_chucScalarFieldEnum]
+
+
+export const Qd72_administrative_unit_assignmentsScalarFieldEnum = {
+  id: 'id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  to_chuc_id: 'to_chuc_id',
+  vai_tro: 'vai_tro',
+  owner_id: 'owner_id',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_administrative_unit_assignmentsScalarFieldEnum = (typeof Qd72_administrative_unit_assignmentsScalarFieldEnum)[keyof typeof Qd72_administrative_unit_assignmentsScalarFieldEnum]
+
+
+export const Qd72_attachmentsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  ten_file: 'ten_file',
+  dinh_dang: 'dinh_dang',
+  dung_luong_byte: 'dung_luong_byte',
+  sha256: 'sha256',
+  storage_path: 'storage_path',
+  loai: 'loai',
+  gps_lat: 'gps_lat',
+  gps_lng: 'gps_lng',
+  chup_luc: 'chup_luc',
+  ghi_chu: 'ghi_chu',
+  uploaded_by_id: 'uploaded_by_id',
+  created_at: 'created_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Qd72_attachmentsScalarFieldEnum = (typeof Qd72_attachmentsScalarFieldEnum)[keyof typeof Qd72_attachmentsScalarFieldEnum]
+
+
+export const Qd72_clearance_measurementsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  nguon: 'nguon',
+  gia_tri_m: 'gia_tri_m',
+  vi_tri_do: 'vi_tri_do',
+  thiet_bi_do: 'thiet_bi_do',
+  nguoi_do: 'nguoi_do',
+  ngay_gio_do: 'ngay_gio_do',
+  dieu_kien: 'dieu_kien',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_clearance_measurementsScalarFieldEnum = (typeof Qd72_clearance_measurementsScalarFieldEnum)[keyof typeof Qd72_clearance_measurementsScalarFieldEnum]
+
+
+export const Qd72_commentsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  noi_dung: 'noi_dung',
+  nguoi_id: 'nguoi_id',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_commentsScalarFieldEnum = (typeof Qd72_commentsScalarFieldEnum)[keyof typeof Qd72_commentsScalarFieldEnum]
+
+
+export const Qd72_fire_hydrantsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  water_source_id: 'water_source_id',
+  ma: 'ma',
+  tinh_trang: 'tinh_trang',
+  cach_mep_duong_m: 'cach_mep_duong_m',
+  cach_tuong_m: 'cach_tuong_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_fire_hydrantsScalarFieldEnum = (typeof Qd72_fire_hydrantsScalarFieldEnum)[keyof typeof Qd72_fire_hydrantsScalarFieldEnum]
+
+
+export const Qd72_fire_parking_areasScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  ten: 'ten',
+  dien_tich_m2: 'dien_tich_m2',
+  do_doc: 'do_doc',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_fire_parking_areasScalarFieldEnum = (typeof Qd72_fire_parking_areasScalarFieldEnum)[keyof typeof Qd72_fire_parking_areasScalarFieldEnum]
+
+
+export const Qd72_legal_documentsScalarFieldEnum = {
+  id: 'id',
+  ma_van_ban: 'ma_van_ban',
+  loai: 'loai',
+  so_hieu: 'so_hieu',
+  ten: 'ten',
+  co_quan_ban_hanh: 'co_quan_ban_hanh',
+  ngay_ban_hanh: 'ngay_ban_hanh',
+  ngay_hieu_luc: 'ngay_hieu_luc',
+  ngay_het_hieu_luc: 'ngay_het_hieu_luc',
+  la_van_ban_goc: 'la_van_ban_goc',
+  sua_doi_cho_id: 'sua_doi_cho_id',
+  trang_thai: 'trang_thai',
+  ghi_chu_ra_soat: 'ghi_chu_ra_soat',
+  nguon_url: 'nguon_url',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_legal_documentsScalarFieldEnum = (typeof Qd72_legal_documentsScalarFieldEnum)[keyof typeof Qd72_legal_documentsScalarFieldEnum]
+
+
+export const Qd72_overhead_utility_linesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  loai_doi_tuong: 'loai_doi_tuong',
+  ten_tuyen: 'ten_tuyen',
+  owner_id: 'owner_id',
+  chu_so_huu_text: 'chu_so_huu_text',
+  trang_thai_chu_so_huu: 'trang_thai_chu_so_huu',
+  don_vi_van_hanh: 'don_vi_van_hanh',
+  cao_diem_thap_nhat_m: 'cao_diem_thap_nhat_m',
+  chay_doc_hay_cat_ngang: 'chay_doc_hay_cat_ngang',
+  do_vong_quan_sat: 'do_vong_quan_sat',
+  co_can_tro_xe_cc: 'co_can_tro_xe_cc',
+  tinh_trang_su_dung: 'tinh_trang_su_dung',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_overhead_utility_linesScalarFieldEnum = (typeof Qd72_overhead_utility_linesScalarFieldEnum)[keyof typeof Qd72_overhead_utility_linesScalarFieldEnum]
+
+
+export const Qd72_passing_baysScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  road_segment_id: 'road_segment_id',
+  ma: 'ma',
+  chieu_dai_m: 'chieu_dai_m',
+  chieu_rong_m: 'chieu_rong_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_passing_baysScalarFieldEnum = (typeof Qd72_passing_baysScalarFieldEnum)[keyof typeof Qd72_passing_baysScalarFieldEnum]
+
+
+export const Qd72_public_lighting_assetsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  loai: 'loai',
+  owner_id: 'owner_id',
+  tinh_trang: 'tinh_trang',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_public_lighting_assetsScalarFieldEnum = (typeof Qd72_public_lighting_assetsScalarFieldEnum)[keyof typeof Qd72_public_lighting_assetsScalarFieldEnum]
+
+
+export const Qd72_renovation_plansScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  van_de_ton_tai: 'van_de_ton_tai',
+  can_cu_xac_dinh: 'can_cu_xac_dinh',
+  giai_phap: 'giai_phap',
+  nhom_giai_phap: 'nhom_giai_phap',
+  muc_uu_tien: 'muc_uu_tien',
+  co_quan_chu_tri: 'co_quan_chu_tri',
+  don_vi_phoi_hop: 'don_vi_phoi_hop',
+  chu_so_huu_ct: 'chu_so_huu_ct',
+  nguon_von: 'nguon_von',
+  kinh_phi: 'kinh_phi',
+  nam_thuc_hien: 'nam_thuc_hien',
+  tien_do: 'tien_do',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_renovation_plansScalarFieldEnum = (typeof Qd72_renovation_plansScalarFieldEnum)[keyof typeof Qd72_renovation_plansScalarFieldEnum]
+
+
+export const Qd72_renovation_tasksScalarFieldEnum = {
+  id: 'id',
+  plan_id: 'plan_id',
+  ma: 'ma',
+  ten: 'ten',
+  loai_cong_viec: 'loai_cong_viec',
+  khoi_luong: 'khoi_luong',
+  ngay_bat_dau: 'ngay_bat_dau',
+  ngay_hoan_thanh_dk: 'ngay_hoan_thanh_dk',
+  tien_do_pct: 'tien_do_pct',
+  trang_thai: 'trang_thai',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_renovation_tasksScalarFieldEnum = (typeof Qd72_renovation_tasksScalarFieldEnum)[keyof typeof Qd72_renovation_tasksScalarFieldEnum]
+
+
+export const Qd72_road_obstaclesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  road_segment_id: 'road_segment_id',
+  ma: 'ma',
+  loai: 'loai',
+  mo_ta: 'mo_ta',
+  cao_m: 'cao_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_road_obstaclesScalarFieldEnum = (typeof Qd72_road_obstaclesScalarFieldEnum)[keyof typeof Qd72_road_obstaclesScalarFieldEnum]
+
+
+export const Qd72_road_segmentsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  ten: 'ten',
+  diem_dau: 'diem_dau',
+  diem_cuoi: 'diem_cuoi',
+  chieu_dai_m: 'chieu_dai_m',
+  rong_thong_thuy_min_m: 'rong_thong_thuy_min_m',
+  cao_thong_thuy_min_m: 'cao_thong_thuy_min_m',
+  do_doc_max: 'do_doc_max',
+  loai_mat_duong: 'loai_mat_duong',
+  tinh_trang_mat_duong: 'tinh_trang_mat_duong',
+  chiu_tai: 'chiu_tai',
+  la_duong_cut: 'la_duong_cut',
+  chieu_dai_cut_m: 'chieu_dai_cut_m',
+  co_diem_quay_xe: 'co_diem_quay_xe',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  de_xuat_chinh_trang: 'de_xuat_chinh_trang',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_road_segmentsScalarFieldEnum = (typeof Qd72_road_segmentsScalarFieldEnum)[keyof typeof Qd72_road_segmentsScalarFieldEnum]
+
+
+export const Qd72_shared_technical_infrastructureScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  loai: 'loai',
+  chieu_dai_m: 'chieu_dai_m',
+  con_du_phong: 'con_du_phong',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_shared_technical_infrastructureScalarFieldEnum = (typeof Qd72_shared_technical_infrastructureScalarFieldEnum)[keyof typeof Qd72_shared_technical_infrastructureScalarFieldEnum]
+
+
+export const Qd72_survey_casesScalarFieldEnum = {
+  id: 'id',
+  ma: 'ma',
+  ten: 'ten',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  to_chuc_id: 'to_chuc_id',
+  trang_thai: 'trang_thai',
+  nhom_danh_gia: 'nhom_danh_gia',
+  ngay_khao_sat: 'ngay_khao_sat',
+  thanh_phan_khao_sat: 'thanh_phan_khao_sat',
+  mo_ta: 'mo_ta',
+  chi_tiet: 'chi_tiet',
+  phien_ban: 'phien_ban',
+  created_by_id: 'created_by_id',
+  updated_by_id: 'updated_by_id',
+  verified_by_id: 'verified_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  verified_at: 'verified_at',
+  ly_do_dieu_chinh: 'ly_do_dieu_chinh'
+} as const
+
+export type Qd72_survey_casesScalarFieldEnum = (typeof Qd72_survey_casesScalarFieldEnum)[keyof typeof Qd72_survey_casesScalarFieldEnum]
+
+
+export const Qd72_technical_rulesScalarFieldEnum = {
+  id: 'id',
+  ma_tieu_chi: 'ma_tieu_chi',
+  nhom: 'nhom',
+  ten: 'ten',
+  gia_tri: 'gia_tri',
+  gia_tri_text: 'gia_tri_text',
+  toan_tu: 'toan_tu',
+  don_vi: 'don_vi',
+  legal_document_id: 'legal_document_id',
+  dieu_khoan: 'dieu_khoan',
+  ngay_hieu_luc: 'ngay_hieu_luc',
+  ngay_het_hieu_luc: 'ngay_het_hieu_luc',
+  phien_ban: 'phien_ban',
+  trang_thai: 'trang_thai',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_technical_rulesScalarFieldEnum = (typeof Qd72_technical_rulesScalarFieldEnum)[keyof typeof Qd72_technical_rulesScalarFieldEnum]
+
+
+export const Qd72_undergrounding_proposalsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  line_id: 'line_id',
+  ma: 'ma',
+  cac_phuong_an: 'cac_phuong_an',
+  don_vi_chu_tri: 'don_vi_chu_tri',
+  don_vi_phoi_hop: 'don_vi_phoi_hop',
+  khoi_luong: 'khoi_luong',
+  chieu_dai_xu_ly_m: 'chieu_dai_xu_ly_m',
+  so_cot_diem: 'so_cot_diem',
+  kinh_phi: 'kinh_phi',
+  nguon_von: 'nguon_von',
+  muc_uu_tien: 'muc_uu_tien',
+  y_kien_chuyen_nganh: 'y_kien_chuyen_nganh',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_undergrounding_proposalsScalarFieldEnum = (typeof Qd72_undergrounding_proposalsScalarFieldEnum)[keyof typeof Qd72_undergrounding_proposalsScalarFieldEnum]
+
+
+export const Qd72_urban_areasScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  ten: 'ten',
+  thon_to_dan_pho: 'thon_to_dan_pho',
+  can_cu_xac_dinh: 'can_cu_xac_dinh',
+  so_van_ban_cong_nhan: 'so_van_ban_cong_nhan',
+  ngay_van_ban: 'ngay_van_ban',
+  dien_tich_ha: 'dien_tich_ha',
+  dan_so: 'dan_so',
+  so_ho: 'so_ho',
+  so_cong_trinh: 'so_cong_trinh',
+  so_ct_tu_3_tang: 'so_ct_tu_3_tang',
+  so_cs_nguy_hiem_chay: 'so_cs_nguy_hiem_chay',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_urban_areasScalarFieldEnum = (typeof Qd72_urban_areasScalarFieldEnum)[keyof typeof Qd72_urban_areasScalarFieldEnum]
+
+
+export const Qd72_utility_crossingsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  line_id: 'line_id',
+  road_segment_id: 'road_segment_id',
+  ma: 'ma',
+  cao_thong_thuy_m: 'cao_thong_thuy_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_utility_crossingsScalarFieldEnum = (typeof Qd72_utility_crossingsScalarFieldEnum)[keyof typeof Qd72_utility_crossingsScalarFieldEnum]
+
+
+export const Qd72_utility_ownersScalarFieldEnum = {
+  id: 'id',
+  ma: 'ma',
+  ten: 'ten',
+  loai: 'loai',
+  to_chuc_id: 'to_chuc_id',
+  dien_thoai: 'dien_thoai',
+  email: 'email',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_utility_ownersScalarFieldEnum = (typeof Qd72_utility_ownersScalarFieldEnum)[keyof typeof Qd72_utility_ownersScalarFieldEnum]
+
+
+export const Qd72_utility_polesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  so_hieu: 'so_hieu',
+  loai_cot: 'loai_cot',
+  dung_chung: 'dung_chung',
+  owner_id: 'owner_id',
+  tinh_trang: 'tinh_trang',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_utility_polesScalarFieldEnum = (typeof Qd72_utility_polesScalarFieldEnum)[keyof typeof Qd72_utility_polesScalarFieldEnum]
+
+
+export const Qd72_verification_itemsScalarFieldEnum = {
+  id: 'id',
+  verification_id: 'verification_id',
+  technical_rule_id: 'technical_rule_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  gia_tri_xa_khai: 'gia_tri_xa_khai',
+  gia_tri_do_lai: 'gia_tri_do_lai',
+  ket_qua: 'ket_qua',
+  don_vi_xac_minh: 'don_vi_xac_minh',
+  y_kien: 'y_kien',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_verification_itemsScalarFieldEnum = (typeof Qd72_verification_itemsScalarFieldEnum)[keyof typeof Qd72_verification_itemsScalarFieldEnum]
+
+
+export const Qd72_verification_recordsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  ngay_xac_minh: 'ngay_xac_minh',
+  thanh_phan: 'thanh_phan',
+  noi_dung: 'noi_dung',
+  trang_thai: 'trang_thai',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_verification_recordsScalarFieldEnum = (typeof Qd72_verification_recordsScalarFieldEnum)[keyof typeof Qd72_verification_recordsScalarFieldEnum]
+
+
+export const Qd72_water_intake_pointsScalarFieldEnum = {
+  id: 'id',
+  water_source_id: 'water_source_id',
+  ma: 'ma',
+  loai: 'loai',
+  so_xe_dong_thoi: 'so_xe_dong_thoi',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_water_intake_pointsScalarFieldEnum = (typeof Qd72_water_intake_pointsScalarFieldEnum)[keyof typeof Qd72_water_intake_pointsScalarFieldEnum]
+
+
+export const Qd72_water_sourcesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  loai_nguon: 'loai_nguon',
+  ten: 'ten',
+  dia_chi: 'dia_chi',
+  don_vi_quan_ly: 'don_vi_quan_ly',
+  tinh_trang: 'tinh_trang',
+  duong_kinh_ong_dn: 'duong_kinh_ong_dn',
+  mang_vong_hay_cut: 'mang_vong_hay_cut',
+  chieu_dai_cut_m: 'chieu_dai_cut_m',
+  dung_tich_m3: 'dung_tich_m3',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  de_xuat_sua_chua: 'de_xuat_sua_chua',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_water_sourcesScalarFieldEnum = (typeof Qd72_water_sourcesScalarFieldEnum)[keyof typeof Qd72_water_sourcesScalarFieldEnum]
+
+
+export const Qd72_water_test_resultsScalarFieldEnum = {
+  id: 'id',
+  water_source_id: 'water_source_id',
+  nguon: 'nguon',
+  luu_luong_ls: 'luu_luong_ls',
+  ap_luc_du_m: 'ap_luc_du_m',
+  thoi_diem_do: 'thoi_diem_do',
+  thiet_bi_do: 'thiet_bi_do',
+  nguoi_don_vi_do: 'nguoi_don_vi_do',
+  bien_ban: 'bien_ban',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_water_test_resultsScalarFieldEnum = (typeof Qd72_water_test_resultsScalarFieldEnum)[keyof typeof Qd72_water_test_resultsScalarFieldEnum]
+
+
+export const Qd72_workflow_historyScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  trang_thai_cu: 'trang_thai_cu',
+  trang_thai_moi: 'trang_thai_moi',
+  y_kien: 'y_kien',
+  tai_lieu: 'tai_lieu',
+  nguoi_thuc_hien_id: 'nguoi_thuc_hien_id',
+  thoi_diem: 'thoi_diem'
+} as const
+
+export type Qd72_workflow_historyScalarFieldEnum = (typeof Qd72_workflow_historyScalarFieldEnum)[keyof typeof Qd72_workflow_historyScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -11206,6 +14449,8 @@ export type GlobalOmitConfig = {
   reportCapNuoc?: Prisma.ReportCapNuocOmit
   reportBaiDoXe?: Prisma.ReportBaiDoXeOmit
   wardReport?: Prisma.WardReportOmit
+  wardGisLength?: Prisma.WardGisLengthOmit
+  wardKhaiBao?: Prisma.WardKhaiBaoOmit
   facilityConfig?: Prisma.FacilityConfigOmit
   officeSalaryHistory?: Prisma.OfficeSalaryHistoryOmit
   officeWorkHistory?: Prisma.OfficeWorkHistoryOmit
@@ -11253,6 +14498,38 @@ export type GlobalOmitConfig = {
   dsDuAnThanhPhan?: Prisma.DsDuAnThanhPhanOmit
   dsKeHoachVon?: Prisma.DsKeHoachVonOmit
   dsLienHe?: Prisma.DsLienHeOmit
+  httt_dinh_danh?: Prisma.httt_dinh_danhOmit
+  httt_dong_bo_log?: Prisma.httt_dong_bo_logOmit
+  httt_nang_luc_ca_nhan?: Prisma.httt_nang_luc_ca_nhanOmit
+  httt_nang_luc_to_chuc?: Prisma.httt_nang_luc_to_chucOmit
+  qd72_administrative_unit_assignments?: Prisma.qd72_administrative_unit_assignmentsOmit
+  qd72_attachments?: Prisma.qd72_attachmentsOmit
+  qd72_clearance_measurements?: Prisma.qd72_clearance_measurementsOmit
+  qd72_comments?: Prisma.qd72_commentsOmit
+  qd72_fire_hydrants?: Prisma.qd72_fire_hydrantsOmit
+  qd72_fire_parking_areas?: Prisma.qd72_fire_parking_areasOmit
+  qd72_legal_documents?: Prisma.qd72_legal_documentsOmit
+  qd72_overhead_utility_lines?: Prisma.qd72_overhead_utility_linesOmit
+  qd72_passing_bays?: Prisma.qd72_passing_baysOmit
+  qd72_public_lighting_assets?: Prisma.qd72_public_lighting_assetsOmit
+  qd72_renovation_plans?: Prisma.qd72_renovation_plansOmit
+  qd72_renovation_tasks?: Prisma.qd72_renovation_tasksOmit
+  qd72_road_obstacles?: Prisma.qd72_road_obstaclesOmit
+  qd72_road_segments?: Prisma.qd72_road_segmentsOmit
+  qd72_shared_technical_infrastructure?: Prisma.qd72_shared_technical_infrastructureOmit
+  qd72_survey_cases?: Prisma.qd72_survey_casesOmit
+  qd72_technical_rules?: Prisma.qd72_technical_rulesOmit
+  qd72_undergrounding_proposals?: Prisma.qd72_undergrounding_proposalsOmit
+  qd72_urban_areas?: Prisma.qd72_urban_areasOmit
+  qd72_utility_crossings?: Prisma.qd72_utility_crossingsOmit
+  qd72_utility_owners?: Prisma.qd72_utility_ownersOmit
+  qd72_utility_poles?: Prisma.qd72_utility_polesOmit
+  qd72_verification_items?: Prisma.qd72_verification_itemsOmit
+  qd72_verification_records?: Prisma.qd72_verification_recordsOmit
+  qd72_water_intake_points?: Prisma.qd72_water_intake_pointsOmit
+  qd72_water_sources?: Prisma.qd72_water_sourcesOmit
+  qd72_water_test_results?: Prisma.qd72_water_test_resultsOmit
+  qd72_workflow_history?: Prisma.qd72_workflow_historyOmit
 }
 
 /* Types for Logging */

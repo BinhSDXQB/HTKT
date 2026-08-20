@@ -323,6 +323,9 @@ export type AdministrativeUnitWhereInput = {
   reportCongVien?: Prisma.ReportCongVienListRelationFilter
   reportCapNuoc?: Prisma.ReportCapNuocListRelationFilter
   reportBaiDoXe?: Prisma.ReportBaiDoXeListRelationFilter
+  wardGisLength?: Prisma.XOR<Prisma.WardGisLengthNullableScalarRelationFilter, Prisma.WardGisLengthWhereInput> | null
+  wardKhaiBao?: Prisma.WardKhaiBaoListRelationFilter
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiListRelationFilter
   denChieuSang?: Prisma.DenChieuSangListRelationFilter
   cayXanh?: Prisma.CayXanhDuongListRelationFilter
   hoGa?: Prisma.HoGaListRelationFilter
@@ -370,6 +373,9 @@ export type AdministrativeUnitOrderByWithRelationInput = {
   reportCongVien?: Prisma.ReportCongVienOrderByRelationAggregateInput
   reportCapNuoc?: Prisma.ReportCapNuocOrderByRelationAggregateInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeOrderByRelationAggregateInput
+  wardGisLength?: Prisma.WardGisLengthOrderByWithRelationInput
+  wardKhaiBao?: Prisma.WardKhaiBaoOrderByRelationAggregateInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiOrderByRelationAggregateInput
   denChieuSang?: Prisma.DenChieuSangOrderByRelationAggregateInput
   cayXanh?: Prisma.CayXanhDuongOrderByRelationAggregateInput
   hoGa?: Prisma.HoGaOrderByRelationAggregateInput
@@ -420,6 +426,9 @@ export type AdministrativeUnitWhereUniqueInput = Prisma.AtLeast<{
   reportCongVien?: Prisma.ReportCongVienListRelationFilter
   reportCapNuoc?: Prisma.ReportCapNuocListRelationFilter
   reportBaiDoXe?: Prisma.ReportBaiDoXeListRelationFilter
+  wardGisLength?: Prisma.XOR<Prisma.WardGisLengthNullableScalarRelationFilter, Prisma.WardGisLengthWhereInput> | null
+  wardKhaiBao?: Prisma.WardKhaiBaoListRelationFilter
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiListRelationFilter
   denChieuSang?: Prisma.DenChieuSangListRelationFilter
   cayXanh?: Prisma.CayXanhDuongListRelationFilter
   hoGa?: Prisma.HoGaListRelationFilter
@@ -510,6 +519,9 @@ export type AdministrativeUnitCreateInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -556,6 +568,9 @@ export type AdministrativeUnitUncheckedCreateInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -602,6 +617,9 @@ export type AdministrativeUnitUpdateInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -648,6 +666,9 @@ export type AdministrativeUnitUncheckedUpdateInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -1291,6 +1312,50 @@ export type AdministrativeUnitUpdateOneWithoutWardReportsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdministrativeUnitUpdateToOneWithWhereWithoutWardReportsInput, Prisma.AdministrativeUnitUpdateWithoutWardReportsInput>, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardReportsInput>
 }
 
+export type AdministrativeUnitCreateNestedOneWithoutWardGisLengthInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardGisLengthInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardGisLengthInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutWardGisLengthInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+}
+
+export type AdministrativeUnitUpdateOneRequiredWithoutWardGisLengthNestedInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardGisLengthInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardGisLengthInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutWardGisLengthInput
+  upsert?: Prisma.AdministrativeUnitUpsertWithoutWardGisLengthInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdministrativeUnitUpdateToOneWithWhereWithoutWardGisLengthInput, Prisma.AdministrativeUnitUpdateWithoutWardGisLengthInput>, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardGisLengthInput>
+}
+
+export type AdministrativeUnitCreateNestedOneWithoutWardKhaiBaoInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardKhaiBaoInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutWardKhaiBaoInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+}
+
+export type AdministrativeUnitUpdateOneRequiredWithoutWardKhaiBaoNestedInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardKhaiBaoInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutWardKhaiBaoInput
+  upsert?: Prisma.AdministrativeUnitUpsertWithoutWardKhaiBaoInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdministrativeUnitUpdateToOneWithWhereWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUpdateWithoutWardKhaiBaoInput>, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardKhaiBaoInput>
+}
+
+export type AdministrativeUnitCreateNestedOneWithoutNghiepVuBanGhisInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUncheckedCreateWithoutNghiepVuBanGhisInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutNghiepVuBanGhisInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+}
+
+export type AdministrativeUnitUpdateOneWithoutNghiepVuBanGhisNestedInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUncheckedCreateWithoutNghiepVuBanGhisInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutNghiepVuBanGhisInput
+  upsert?: Prisma.AdministrativeUnitUpsertWithoutNghiepVuBanGhisInput
+  disconnect?: Prisma.AdministrativeUnitWhereInput | boolean
+  delete?: Prisma.AdministrativeUnitWhereInput | boolean
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdministrativeUnitUpdateToOneWithWhereWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUpdateWithoutNghiepVuBanGhisInput>, Prisma.AdministrativeUnitUncheckedUpdateWithoutNghiepVuBanGhisInput>
+}
+
 export type AdministrativeUnitCreateNestedOneWithoutDuAnGpmbsInput = {
   create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutDuAnGpmbsInput, Prisma.AdministrativeUnitUncheckedCreateWithoutDuAnGpmbsInput>
   connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutDuAnGpmbsInput
@@ -1336,6 +1401,9 @@ export type AdministrativeUnitCreateWithoutUsersInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -1381,6 +1449,9 @@ export type AdministrativeUnitUncheckedCreateWithoutUsersInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -1442,6 +1513,9 @@ export type AdministrativeUnitUpdateWithoutUsersInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -1487,6 +1561,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutUsersInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -1532,6 +1609,9 @@ export type AdministrativeUnitCreateWithoutChildrenInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -1577,6 +1657,9 @@ export type AdministrativeUnitUncheckedCreateWithoutChildrenInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -1627,6 +1710,9 @@ export type AdministrativeUnitCreateWithoutParentInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -1672,6 +1758,9 @@ export type AdministrativeUnitUncheckedCreateWithoutParentInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -1738,6 +1827,9 @@ export type AdministrativeUnitUpdateWithoutChildrenInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -1783,6 +1875,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutChildrenInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -1866,6 +1961,9 @@ export type AdministrativeUnitCreateWithoutLanhDaoXaInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -1911,6 +2009,9 @@ export type AdministrativeUnitUncheckedCreateWithoutLanhDaoXaInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -1972,6 +2073,9 @@ export type AdministrativeUnitUpdateWithoutLanhDaoXaInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -2017,6 +2121,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutLanhDaoXaInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -2061,6 +2168,9 @@ export type AdministrativeUnitCreateWithoutStreetsInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -2106,6 +2216,9 @@ export type AdministrativeUnitUncheckedCreateWithoutStreetsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -2167,6 +2280,9 @@ export type AdministrativeUnitUpdateWithoutStreetsInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -2212,6 +2328,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutStreetsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -2258,6 +2377,9 @@ export type AdministrativeUnitCreateWithoutDenChieuSangInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
   congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
@@ -2303,6 +2425,9 @@ export type AdministrativeUnitUncheckedCreateWithoutDenChieuSangInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
   congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
@@ -2364,6 +2489,9 @@ export type AdministrativeUnitUpdateWithoutDenChieuSangInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
   congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
@@ -2409,6 +2537,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutDenChieuSangInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
   congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
@@ -2454,6 +2585,9 @@ export type AdministrativeUnitCreateWithoutCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
   congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
@@ -2499,6 +2633,9 @@ export type AdministrativeUnitUncheckedCreateWithoutCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
   congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
@@ -2560,6 +2697,9 @@ export type AdministrativeUnitUpdateWithoutCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
   congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
@@ -2605,6 +2745,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
   congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
@@ -2650,6 +2793,9 @@ export type AdministrativeUnitCreateWithoutHoGaInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
@@ -2695,6 +2841,9 @@ export type AdministrativeUnitUncheckedCreateWithoutHoGaInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
@@ -2756,6 +2905,9 @@ export type AdministrativeUnitUpdateWithoutHoGaInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
@@ -2801,6 +2953,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutHoGaInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
@@ -2846,6 +3001,9 @@ export type AdministrativeUnitCreateWithoutCongThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -2891,6 +3049,9 @@ export type AdministrativeUnitUncheckedCreateWithoutCongThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -2952,6 +3113,9 @@ export type AdministrativeUnitUpdateWithoutCongThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -2997,6 +3161,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutCongThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -3042,6 +3209,9 @@ export type AdministrativeUnitCreateWithoutOngCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -3087,6 +3257,9 @@ export type AdministrativeUnitUncheckedCreateWithoutOngCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -3148,6 +3321,9 @@ export type AdministrativeUnitUpdateWithoutOngCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -3193,6 +3369,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutOngCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -3238,6 +3417,9 @@ export type AdministrativeUnitCreateWithoutVanCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -3283,6 +3465,9 @@ export type AdministrativeUnitUncheckedCreateWithoutVanCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -3344,6 +3529,9 @@ export type AdministrativeUnitUpdateWithoutVanCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -3389,6 +3577,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutVanCapNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -3434,6 +3625,9 @@ export type AdministrativeUnitCreateWithoutCapVienThongInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -3479,6 +3673,9 @@ export type AdministrativeUnitUncheckedCreateWithoutCapVienThongInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -3540,6 +3737,9 @@ export type AdministrativeUnitUpdateWithoutCapVienThongInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -3585,6 +3785,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutCapVienThongInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -3630,6 +3833,9 @@ export type AdministrativeUnitCreateWithoutViaHeInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -3675,6 +3881,9 @@ export type AdministrativeUnitUncheckedCreateWithoutViaHeInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -3736,6 +3945,9 @@ export type AdministrativeUnitUpdateWithoutViaHeInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -3781,6 +3993,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutViaHeInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -3826,6 +4041,9 @@ export type AdministrativeUnitCreateWithoutTuyenMangLuoiInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -3871,6 +4089,9 @@ export type AdministrativeUnitUncheckedCreateWithoutTuyenMangLuoiInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -3932,6 +4153,9 @@ export type AdministrativeUnitUpdateWithoutTuyenMangLuoiInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -3977,6 +4201,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutTuyenMangLuoiInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -4022,6 +4249,9 @@ export type AdministrativeUnitCreateWithoutNhaMayXuLyInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -4067,6 +4297,9 @@ export type AdministrativeUnitUncheckedCreateWithoutNhaMayXuLyInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -4128,6 +4361,9 @@ export type AdministrativeUnitUpdateWithoutNhaMayXuLyInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -4173,6 +4409,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutNhaMayXuLyInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -4218,6 +4457,9 @@ export type AdministrativeUnitCreateWithoutTramBomInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -4263,6 +4505,9 @@ export type AdministrativeUnitUncheckedCreateWithoutTramBomInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -4324,6 +4569,9 @@ export type AdministrativeUnitUpdateWithoutTramBomInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -4369,6 +4617,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutTramBomInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -4413,6 +4664,9 @@ export type AdministrativeUnitCreateWithoutAssetsInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -4458,6 +4712,9 @@ export type AdministrativeUnitUncheckedCreateWithoutAssetsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -4519,6 +4776,9 @@ export type AdministrativeUnitUpdateWithoutAssetsInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -4564,6 +4824,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutAssetsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -4609,6 +4872,9 @@ export type AdministrativeUnitCreateWithoutIncidentsInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -4654,6 +4920,9 @@ export type AdministrativeUnitUncheckedCreateWithoutIncidentsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -4715,6 +4984,9 @@ export type AdministrativeUnitUpdateWithoutIncidentsInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -4760,6 +5032,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutIncidentsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -4805,6 +5080,9 @@ export type AdministrativeUnitCreateWithoutProjectsInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -4850,6 +5128,9 @@ export type AdministrativeUnitUncheckedCreateWithoutProjectsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -4911,6 +5192,9 @@ export type AdministrativeUnitUpdateWithoutProjectsInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -4956,6 +5240,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutProjectsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -5002,6 +5289,9 @@ export type AdministrativeUnitCreateWithoutToChucInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -5047,6 +5337,9 @@ export type AdministrativeUnitUncheckedCreateWithoutToChucInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -5108,6 +5401,9 @@ export type AdministrativeUnitUpdateWithoutToChucInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -5153,6 +5449,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutToChucInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -5197,6 +5496,9 @@ export type AdministrativeUnitCreateWithoutReportDuongInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -5242,6 +5544,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportDuongInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -5303,6 +5608,9 @@ export type AdministrativeUnitUpdateWithoutReportDuongInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -5348,6 +5656,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportDuongInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -5393,6 +5704,9 @@ export type AdministrativeUnitCreateWithoutReportDienCSInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -5438,6 +5752,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportDienCSInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -5499,6 +5816,9 @@ export type AdministrativeUnitUpdateWithoutReportDienCSInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -5544,6 +5864,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportDienCSInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -5589,6 +5912,9 @@ export type AdministrativeUnitCreateWithoutReportThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -5634,6 +5960,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -5695,6 +6024,9 @@ export type AdministrativeUnitUpdateWithoutReportThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -5740,6 +6072,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportThoatNuocInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -5785,6 +6120,9 @@ export type AdministrativeUnitCreateWithoutReportCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -5830,6 +6168,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -5891,6 +6232,9 @@ export type AdministrativeUnitUpdateWithoutReportCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -5936,6 +6280,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportCayXanhInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -5981,6 +6328,9 @@ export type AdministrativeUnitCreateWithoutReportCongVienInput = {
   reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -6026,6 +6376,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportCongVienInput = {
   reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -6087,6 +6440,9 @@ export type AdministrativeUnitUpdateWithoutReportCongVienInput = {
   reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -6132,6 +6488,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportCongVienInput = {
   reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -6177,6 +6536,9 @@ export type AdministrativeUnitCreateWithoutReportCapNuocInput = {
   reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -6222,6 +6584,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportCapNuocInput = {
   reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -6283,6 +6648,9 @@ export type AdministrativeUnitUpdateWithoutReportCapNuocInput = {
   reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -6328,6 +6696,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportCapNuocInput = {
   reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -6373,6 +6744,9 @@ export type AdministrativeUnitCreateWithoutReportBaiDoXeInput = {
   reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -6418,6 +6792,9 @@ export type AdministrativeUnitUncheckedCreateWithoutReportBaiDoXeInput = {
   reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -6479,6 +6856,9 @@ export type AdministrativeUnitUpdateWithoutReportBaiDoXeInput = {
   reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -6524,6 +6904,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportBaiDoXeInput = {
   reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -6569,6 +6952,9 @@ export type AdministrativeUnitCreateWithoutWardReportsInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -6614,6 +7000,9 @@ export type AdministrativeUnitUncheckedCreateWithoutWardReportsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -6675,6 +7064,9 @@ export type AdministrativeUnitUpdateWithoutWardReportsInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -6720,6 +7112,633 @@ export type AdministrativeUnitUncheckedUpdateWithoutWardReportsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUncheckedUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUncheckedUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUncheckedUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUncheckedUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitCreateWithoutWardGisLengthInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
+  children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportCreateNestedManyWithoutWardInput
+  users?: Prisma.UserCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitUncheckedCreateWithoutWardGisLengthInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  parentId?: string | null
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportUncheckedCreateNestedManyWithoutWardInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongUncheckedCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongUncheckedCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeUncheckedCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomUncheckedCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucUncheckedCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitCreateOrConnectWithoutWardGisLengthInput = {
+  where: Prisma.AdministrativeUnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardGisLengthInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardGisLengthInput>
+}
+
+export type AdministrativeUnitUpsertWithoutWardGisLengthInput = {
+  update: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutWardGisLengthInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardGisLengthInput>
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardGisLengthInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardGisLengthInput>
+  where?: Prisma.AdministrativeUnitWhereInput
+}
+
+export type AdministrativeUnitUpdateToOneWithWhereWithoutWardGisLengthInput = {
+  where?: Prisma.AdministrativeUnitWhereInput
+  data: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutWardGisLengthInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardGisLengthInput>
+}
+
+export type AdministrativeUnitUpdateWithoutWardGisLengthInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitUncheckedUpdateWithoutWardGisLengthInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUncheckedUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUncheckedUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUncheckedUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUncheckedUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUncheckedUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUncheckedUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitCreateWithoutWardKhaiBaoInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
+  children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportCreateNestedManyWithoutWardInput
+  users?: Prisma.UserCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitUncheckedCreateWithoutWardKhaiBaoInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  parentId?: string | null
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportUncheckedCreateNestedManyWithoutWardInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongUncheckedCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongUncheckedCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeUncheckedCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomUncheckedCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucUncheckedCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitCreateOrConnectWithoutWardKhaiBaoInput = {
+  where: Prisma.AdministrativeUnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardKhaiBaoInput>
+}
+
+export type AdministrativeUnitUpsertWithoutWardKhaiBaoInput = {
+  update: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardKhaiBaoInput>
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUncheckedCreateWithoutWardKhaiBaoInput>
+  where?: Prisma.AdministrativeUnitWhereInput
+}
+
+export type AdministrativeUnitUpdateToOneWithWhereWithoutWardKhaiBaoInput = {
+  where?: Prisma.AdministrativeUnitWhereInput
+  data: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutWardKhaiBaoInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutWardKhaiBaoInput>
+}
+
+export type AdministrativeUnitUpdateWithoutWardKhaiBaoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitUncheckedUpdateWithoutWardKhaiBaoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUncheckedUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUncheckedUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUncheckedUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUncheckedUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUncheckedUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUncheckedUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitCreateWithoutNghiepVuBanGhisInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
+  children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportCreateNestedManyWithoutWardInput
+  users?: Prisma.UserCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitUncheckedCreateWithoutNghiepVuBanGhisInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  parentId?: string | null
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportUncheckedCreateNestedManyWithoutWardInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongUncheckedCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongUncheckedCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeUncheckedCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomUncheckedCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucUncheckedCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitCreateOrConnectWithoutNghiepVuBanGhisInput = {
+  where: Prisma.AdministrativeUnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUncheckedCreateWithoutNghiepVuBanGhisInput>
+}
+
+export type AdministrativeUnitUpsertWithoutNghiepVuBanGhisInput = {
+  update: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutNghiepVuBanGhisInput>
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUncheckedCreateWithoutNghiepVuBanGhisInput>
+  where?: Prisma.AdministrativeUnitWhereInput
+}
+
+export type AdministrativeUnitUpdateToOneWithWhereWithoutNghiepVuBanGhisInput = {
+  where?: Prisma.AdministrativeUnitWhereInput
+  data: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutNghiepVuBanGhisInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutNghiepVuBanGhisInput>
+}
+
+export type AdministrativeUnitUpdateWithoutNghiepVuBanGhisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitUncheckedUpdateWithoutNghiepVuBanGhisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUncheckedUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUncheckedUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -6766,6 +7785,9 @@ export type AdministrativeUnitCreateWithoutDuAnGpmbsInput = {
   reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
@@ -6811,6 +7833,9 @@ export type AdministrativeUnitUncheckedCreateWithoutDuAnGpmbsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
@@ -6872,6 +7897,9 @@ export type AdministrativeUnitUpdateWithoutDuAnGpmbsInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -6917,6 +7945,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutDuAnGpmbsInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -6978,6 +8009,9 @@ export type AdministrativeUnitUpdateWithoutParentInput = {
   reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
@@ -7023,6 +8057,9 @@ export type AdministrativeUnitUncheckedUpdateWithoutParentInput = {
   reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
   reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
   reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
@@ -7076,6 +8113,8 @@ export type AdministrativeUnitCountOutputType = {
   reportCongVien: number
   reportCapNuoc: number
   reportBaiDoXe: number
+  wardKhaiBao: number
+  nghiepVuBanGhis: number
   denChieuSang: number
   cayXanh: number
   hoGa: number
@@ -7107,6 +8146,8 @@ export type AdministrativeUnitCountOutputTypeSelect<ExtArgs extends runtime.Type
   reportCongVien?: boolean | AdministrativeUnitCountOutputTypeCountReportCongVienArgs
   reportCapNuoc?: boolean | AdministrativeUnitCountOutputTypeCountReportCapNuocArgs
   reportBaiDoXe?: boolean | AdministrativeUnitCountOutputTypeCountReportBaiDoXeArgs
+  wardKhaiBao?: boolean | AdministrativeUnitCountOutputTypeCountWardKhaiBaoArgs
+  nghiepVuBanGhis?: boolean | AdministrativeUnitCountOutputTypeCountNghiepVuBanGhisArgs
   denChieuSang?: boolean | AdministrativeUnitCountOutputTypeCountDenChieuSangArgs
   cayXanh?: boolean | AdministrativeUnitCountOutputTypeCountCayXanhArgs
   hoGa?: boolean | AdministrativeUnitCountOutputTypeCountHoGaArgs
@@ -7229,6 +8270,20 @@ export type AdministrativeUnitCountOutputTypeCountReportCapNuocArgs<ExtArgs exte
  */
 export type AdministrativeUnitCountOutputTypeCountReportBaiDoXeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReportBaiDoXeWhereInput
+}
+
+/**
+ * AdministrativeUnitCountOutputType without action
+ */
+export type AdministrativeUnitCountOutputTypeCountWardKhaiBaoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WardKhaiBaoWhereInput
+}
+
+/**
+ * AdministrativeUnitCountOutputType without action
+ */
+export type AdministrativeUnitCountOutputTypeCountNghiepVuBanGhisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NghiepVuBanGhiWhereInput
 }
 
 /**
@@ -7361,6 +8416,9 @@ export type AdministrativeUnitSelect<ExtArgs extends runtime.Types.Extensions.In
   reportCongVien?: boolean | Prisma.AdministrativeUnit$reportCongVienArgs<ExtArgs>
   reportCapNuoc?: boolean | Prisma.AdministrativeUnit$reportCapNuocArgs<ExtArgs>
   reportBaiDoXe?: boolean | Prisma.AdministrativeUnit$reportBaiDoXeArgs<ExtArgs>
+  wardGisLength?: boolean | Prisma.AdministrativeUnit$wardGisLengthArgs<ExtArgs>
+  wardKhaiBao?: boolean | Prisma.AdministrativeUnit$wardKhaiBaoArgs<ExtArgs>
+  nghiepVuBanGhis?: boolean | Prisma.AdministrativeUnit$nghiepVuBanGhisArgs<ExtArgs>
   denChieuSang?: boolean | Prisma.AdministrativeUnit$denChieuSangArgs<ExtArgs>
   cayXanh?: boolean | Prisma.AdministrativeUnit$cayXanhArgs<ExtArgs>
   hoGa?: boolean | Prisma.AdministrativeUnit$hoGaArgs<ExtArgs>
@@ -7451,6 +8509,9 @@ export type AdministrativeUnitInclude<ExtArgs extends runtime.Types.Extensions.I
   reportCongVien?: boolean | Prisma.AdministrativeUnit$reportCongVienArgs<ExtArgs>
   reportCapNuoc?: boolean | Prisma.AdministrativeUnit$reportCapNuocArgs<ExtArgs>
   reportBaiDoXe?: boolean | Prisma.AdministrativeUnit$reportBaiDoXeArgs<ExtArgs>
+  wardGisLength?: boolean | Prisma.AdministrativeUnit$wardGisLengthArgs<ExtArgs>
+  wardKhaiBao?: boolean | Prisma.AdministrativeUnit$wardKhaiBaoArgs<ExtArgs>
+  nghiepVuBanGhis?: boolean | Prisma.AdministrativeUnit$nghiepVuBanGhisArgs<ExtArgs>
   denChieuSang?: boolean | Prisma.AdministrativeUnit$denChieuSangArgs<ExtArgs>
   cayXanh?: boolean | Prisma.AdministrativeUnit$cayXanhArgs<ExtArgs>
   hoGa?: boolean | Prisma.AdministrativeUnit$hoGaArgs<ExtArgs>
@@ -7492,6 +8553,9 @@ export type $AdministrativeUnitPayload<ExtArgs extends runtime.Types.Extensions.
     reportCongVien: Prisma.$ReportCongVienPayload<ExtArgs>[]
     reportCapNuoc: Prisma.$ReportCapNuocPayload<ExtArgs>[]
     reportBaiDoXe: Prisma.$ReportBaiDoXePayload<ExtArgs>[]
+    wardGisLength: Prisma.$WardGisLengthPayload<ExtArgs> | null
+    wardKhaiBao: Prisma.$WardKhaiBaoPayload<ExtArgs>[]
+    nghiepVuBanGhis: Prisma.$NghiepVuBanGhiPayload<ExtArgs>[]
     denChieuSang: Prisma.$DenChieuSangPayload<ExtArgs>[]
     cayXanh: Prisma.$CayXanhDuongPayload<ExtArgs>[]
     hoGa: Prisma.$HoGaPayload<ExtArgs>[]
@@ -7932,6 +8996,9 @@ export interface Prisma__AdministrativeUnitClient<T, Null = never, ExtArgs exten
   reportCongVien<T extends Prisma.AdministrativeUnit$reportCongVienArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$reportCongVienArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportCongVienPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportCapNuoc<T extends Prisma.AdministrativeUnit$reportCapNuocArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$reportCapNuocArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportCapNuocPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportBaiDoXe<T extends Prisma.AdministrativeUnit$reportBaiDoXeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$reportBaiDoXeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportBaiDoXePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  wardGisLength<T extends Prisma.AdministrativeUnit$wardGisLengthArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$wardGisLengthArgs<ExtArgs>>): Prisma.Prisma__WardGisLengthClient<runtime.Types.Result.GetResult<Prisma.$WardGisLengthPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  wardKhaiBao<T extends Prisma.AdministrativeUnit$wardKhaiBaoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$wardKhaiBaoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WardKhaiBaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  nghiepVuBanGhis<T extends Prisma.AdministrativeUnit$nghiepVuBanGhisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$nghiepVuBanGhisArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NghiepVuBanGhiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   denChieuSang<T extends Prisma.AdministrativeUnit$denChieuSangArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$denChieuSangArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DenChieuSangPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cayXanh<T extends Prisma.AdministrativeUnit$cayXanhArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$cayXanhArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CayXanhDuongPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   hoGa<T extends Prisma.AdministrativeUnit$hoGaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$hoGaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HoGaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8743,6 +9810,73 @@ export type AdministrativeUnit$reportBaiDoXeArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.ReportBaiDoXeScalarFieldEnum | Prisma.ReportBaiDoXeScalarFieldEnum[]
+}
+
+/**
+ * AdministrativeUnit.wardGisLength
+ */
+export type AdministrativeUnit$wardGisLengthArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WardGisLength
+   */
+  select?: Prisma.WardGisLengthSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WardGisLength
+   */
+  omit?: Prisma.WardGisLengthOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WardGisLengthInclude<ExtArgs> | null
+  where?: Prisma.WardGisLengthWhereInput
+}
+
+/**
+ * AdministrativeUnit.wardKhaiBao
+ */
+export type AdministrativeUnit$wardKhaiBaoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WardKhaiBao
+   */
+  select?: Prisma.WardKhaiBaoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WardKhaiBao
+   */
+  omit?: Prisma.WardKhaiBaoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WardKhaiBaoInclude<ExtArgs> | null
+  where?: Prisma.WardKhaiBaoWhereInput
+  orderBy?: Prisma.WardKhaiBaoOrderByWithRelationInput | Prisma.WardKhaiBaoOrderByWithRelationInput[]
+  cursor?: Prisma.WardKhaiBaoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WardKhaiBaoScalarFieldEnum | Prisma.WardKhaiBaoScalarFieldEnum[]
+}
+
+/**
+ * AdministrativeUnit.nghiepVuBanGhis
+ */
+export type AdministrativeUnit$nghiepVuBanGhisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NghiepVuBanGhi
+   */
+  select?: Prisma.NghiepVuBanGhiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NghiepVuBanGhi
+   */
+  omit?: Prisma.NghiepVuBanGhiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NghiepVuBanGhiInclude<ExtArgs> | null
+  where?: Prisma.NghiepVuBanGhiWhereInput
+  orderBy?: Prisma.NghiepVuBanGhiOrderByWithRelationInput | Prisma.NghiepVuBanGhiOrderByWithRelationInput[]
+  cursor?: Prisma.NghiepVuBanGhiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NghiepVuBanGhiScalarFieldEnum | Prisma.NghiepVuBanGhiScalarFieldEnum[]
 }
 
 /**

@@ -41,7 +41,7 @@
 19501|cmpq4pei4003rekum9zktrugk|Xã Bến Hải
 18871|cmpq5ktef00070gumpth7z9wl|Phường Đồng Sơn
 18880|cmpq5kteg00080gumgrszty7w|Phường Đồng Hới
-18949|cmpq5kteu000j0gum8a1q7tiv|Xã Đồng Lề
+18949|cmpq5kteu000j0gum8a1q7tiv|Xã Đồng Lê
 19009|cmpq5ktei00090gum438p1s8y|Phường Ba Đồn
 19066|cmpq5ktej000a0gumn3sba1s6|Phường Bắc Gianh
 19333|cmpq4pefm0023ekumwkdzu9c0|Phường Đông Hà

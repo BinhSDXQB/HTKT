@@ -7,6 +7,7 @@ export type LoaiMau =
   | 'phieu-gop-y' | 'quyet-dinh' | 'van-ban-chi-dao'
   | 'thong-bao-tham-dinh-bcnckt' | 'thong-bao-tham-dinh-bcktkt'
   | 'thong-bao-tham-dinh-thiet-ke' | 'chap-thuan-nghiem-thu' | 'bien-ban-kiem-tra'
+  | 'bao-cao-tham-tra' | 'van-ban-chap-thuan'
 
 export type MauBieu = {
   key: LoaiMau

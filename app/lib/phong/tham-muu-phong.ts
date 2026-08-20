@@ -34,13 +34,13 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
         ],
         sanPham: [
           'Thông báo kết quả kiểm tra nghiệm thu công trình giao thông.',
-          'Văn bản chấp thuận đưa công trình vào sử dụng.',
+          'Văn bản chấp thuận kết quả kiểm tra công tác nghiệm thu (đưa công trình vào khai thác, sử dụng).',
           'Biên bản kiểm tra hiện trường.',
         ],
       }},
       { key: 'chat-luong-an-toan', ten: 'Chất lượng & an toàn thi công', thamMuu: {
         noiDung: [
-          'Tham mưu quản lý chất lượng thi công công trình giao thông; kiểm tra chủng loại, nguồn gốc, thông số kỹ thuật vật liệu.',
+          'Tham mưu quản lý chất lượng thi công công trình giao thông theo NĐ 207/2026/NĐ-CP; kiểm tra chủng loại, nguồn gốc, thông số kỹ thuật vật liệu.',
           'Tham mưu giám sát, đôn đốc chủ đầu tư, nhà thầu thực hiện quy định an toàn thi công, phá dỡ công trình.',
           'Tham mưu xử lý sự cố công trình giao thông; tiếp nhận, báo cáo sự cố theo quy định (24 giờ).',
           'Tham mưu kiểm tra điều kiện an toàn lao động trên công trường theo QCVN 18:2021/BXD.',
@@ -55,7 +55,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
         noiDung: [
           'Tham mưu quản lý công tác bảo trì kết cấu hạ tầng đường bộ; kiểm tra quy trình bảo trì do nhà thầu thiết kế lập.',
           'Tham mưu kế hoạch bảo trì công trình GT hằng năm; đề xuất nguồn kinh phí bảo trì.',
-          'Tham mưu phân cấp quản lý bảo trì quốc lộ ủy thác, tỉnh lộ, đường đô thị theo NĐ 165/2024.',
+          'Tham mưu phân cấp quản lý bảo trì quốc lộ ủy thác, tỉnh lộ, đường đô thị theo NĐ 165/2024 (sửa đổi bởi NĐ 241/2026, hiệu lực 01/7/2026).',
         ],
         sanPham: [
           'Kế hoạch bảo trì công trình giao thông hằng năm.',
@@ -65,7 +65,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'giam-dinh-dinh-muc', ten: 'Giám định tư pháp & định mức KT-KT', thamMuu: {
         noiDung: [
-          'Tham mưu tổ chức giám định tư pháp về chất lượng công trình xây dựng giao thông theo yêu cầu cơ quan tố tụng.',
+          'Tham mưu tổ chức giám định tư pháp về chất lượng công trình xây dựng giao thông theo yêu cầu cơ quan tố tụng (Luật Giám định tư pháp 13/2012/QH13, sửa đổi 56/2020/QH14).',
           'Tham mưu rà soát, áp dụng hệ thống định mức, đơn giá, chỉ số giá XD cho công trình GT.',
           'Tham mưu giải quyết vướng mắc về chi phí, dự toán công trình giao thông.',
         ],
@@ -83,10 +83,10 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
     linhVuc: [
       { key: 'cap-phep-xay-dung', ten: 'Cấp phép xây dựng', thamMuu: {
         noiDung: [
-          'Tham mưu tiếp nhận, thẩm định hồ sơ cấp giấy phép xây dựng công trình cấp II trở lên, công trình đặc thù.',
+          'Tham mưu tiếp nhận, thẩm định hồ sơ cấp giấy phép xây dựng công trình cấp II trở lên, công trình đặc thù thuộc thẩm quyền Sở theo phân cấp/ủy quyền của UBND tỉnh.',
           'Tham mưu giải quyết hồ sơ gia hạn, cấp lại, điều chỉnh GPXD; thu hồi GPXD khi vi phạm.',
           'Tham mưu kiểm tra hồ sơ PCCC đối với công trình thuộc Phụ lục III/IV NĐ 105/2025 trước khi cấp GPXD.',
-          'Tham mưu công khai GPXD trên cổng điện tử theo Điều 66 NĐ 217/2026.',
+          'Tham mưu công khai GPXD trên cổng điện tử theo NĐ 217/2026 (⚠️ đối chiếu điều khoản cụ thể trước khi viện dẫn).',
         ],
         sanPham: [
           'Giấy phép xây dựng (cấp mới, gia hạn, điều chỉnh).',
@@ -97,13 +97,13 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       { key: 'trat-tu-xay-dung', ten: 'Quản lý trật tự xây dựng', thamMuu: {
         noiDung: [
           'Tham mưu kiểm tra, phát hiện, xử lý vi phạm trật tự xây dựng trên địa bàn theo phân cấp.',
-          'Tham mưu đình chỉ thi công, cưỡng chế phá dỡ công trình xây dựng không phép, sai phép.',
-          'Tham mưu phối hợp UBND cấp huyện, cấp xã trong quản lý trật tự XD; hướng dẫn nghiệp vụ.',
+          'Tham mưu, đề xuất cấp có thẩm quyền (Chủ tịch UBND cấp xã/tỉnh, thanh tra xây dựng) đình chỉ thi công, cưỡng chế phá dỡ công trình không phép, sai phép theo pháp luật xử lý vi phạm hành chính và phân cấp — Sở không trực tiếp ban hành quyết định cưỡng chế.',
+          'Tham mưu phối hợp UBND cấp xã trong quản lý trật tự XD; hướng dẫn nghiệp vụ.',
           'Tham mưu tổng hợp, báo cáo tình hình trật tự xây dựng trên địa bàn tỉnh.',
         ],
         sanPham: [
-          'Quyết định đình chỉ thi công công trình vi phạm.',
-          'Quyết định cưỡng chế phá dỡ công trình vi phạm.',
+          'Biên bản kiểm tra, hồ sơ vi phạm trật tự xây dựng phục vụ xử lý vi phạm hành chính.',
+          'Văn bản kiến nghị/đề xuất cấp có thẩm quyền xử lý vi phạm (đình chỉ, cưỡng chế phá dỡ).',
           'Báo cáo tình hình trật tự xây dựng định kỳ/đột xuất.',
         ],
       }},
@@ -166,7 +166,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'dau-thau', ten: 'Đấu thầu', thamMuu: {
         noiDung: [
-          'Tham mưu thẩm tra kế hoạch lựa chọn nhà thầu, hồ sơ mời thầu, kết quả lựa chọn nhà thầu theo phân cấp.',
+          'Tham mưu thẩm tra kế hoạch lựa chọn nhà thầu, hồ sơ mời thầu, kết quả lựa chọn nhà thầu theo Luật Đấu thầu 22/2023 (sửa 57/2024, 90/2025) và NĐ 214/2025/NĐ-CP — trong vai trò chủ đầu tư/bên mời thầu hoặc được giao thẩm tra.',
           'Tham mưu giải quyết kiến nghị trong đấu thầu; kiểm tra, giám sát hoạt động đấu thầu.',
           'Tham mưu áp dụng hình thức lựa chọn nhà thầu phù hợp (đấu thầu rộng rãi, chỉ định thầu) theo Luật Đấu thầu.',
           'Tham mưu quản lý đấu thầu qua mạng, ứng dụng CNTT trong đấu thầu.',
@@ -179,7 +179,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'ke-hoach-von', ten: 'Kế hoạch vốn & dự toán', thamMuu: {
         noiDung: [
-          'Tham mưu lập kế hoạch vốn đầu tư công trung hạn, hằng năm cho các dự án ngành XD, GT.',
+          'Tham mưu lập kế hoạch vốn đầu tư công trung hạn, hằng năm cho các dự án ngành XD, GT theo Luật Đầu tư công 58/2024 (sửa 90/2025) và quyết định giao kế hoạch vốn của UBND tỉnh.',
           'Tham mưu phân bổ, điều chỉnh kế hoạch vốn; đôn đốc giải ngân vốn đầu tư công.',
           'Tham mưu thẩm tra dự toán thu-chi ngân sách của Sở; lập dự toán chi thường xuyên, chi đầu tư.',
         ],
@@ -225,7 +225,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
         noiDung: [
           'Tham mưu xây dựng, quản lý hệ thống thông tin và CSDL quy hoạch đô thị, nông thôn trên địa bàn tỉnh.',
           'Tham mưu cập nhật dữ liệu quy hoạch khi có đồ án QH mới được phê duyệt; cung cấp thông tin QH cho tổ chức, cá nhân.',
-          'Tham mưu kết nối, liên thông CSDL QH tỉnh với CSDL QH quốc gia (Bộ XD) theo NĐ 178/2025.',
+          'Tham mưu kết nối, liên thông CSDL QH tỉnh với CSDL QH quốc gia (Bộ XD) theo NĐ 178/2025 (sửa đổi bởi NĐ 34/2026).',
         ],
         sanPham: [
           'CSDL quy hoạch đô thị, nông thôn trên địa bàn tỉnh.',
@@ -237,19 +237,19 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
         noiDung: [
           'Tham mưu thẩm định nhiệm vụ và đồ án quy hoạch phân khu, chi tiết theo phân cấp UBND tỉnh.',
           'Tham mưu kiểm tra sự phù hợp QH cấp trên, QCVN, đánh giá tác động; lấy ý kiến phối hợp sở ngành.',
-          'Tham mưu trình phê duyệt QH chung đô thị loại III-V, QH nông thôn theo thẩm quyền.',
-          'Tham mưu điều chỉnh quy hoạch khi có căn cứ theo Chương VI Luật QHĐT-NT.',
+          'Tham mưu thẩm định, lập tờ trình để UBND tỉnh phê duyệt QH theo thẩm quyền (Sở không tự phê duyệt) — QH chung đô thị loại I/loại đặc biệt và một số QH thuộc thẩm quyền Thủ tướng Chính phủ/Bộ Xây dựng, Sở chỉ phối hợp, lấy ý kiến theo Luật QHĐT-NT 47/2024 (sửa đổi 144/2025).',
+          'Tham mưu điều chỉnh quy hoạch khi có căn cứ theo Chương VI Luật QHĐT-NT (NĐ 178/2025 sửa đổi bởi NĐ 34/2026).',
         ],
         sanPham: [
           'Văn bản kết quả thẩm định nhiệm vụ/đồ án quy hoạch.',
-          'Tờ trình phê duyệt quy hoạch.',
-          'Quyết định phê duyệt quy hoạch (khi được ủy quyền).',
+          'Tờ trình UBND tỉnh phê duyệt quy hoạch.',
+          'Dự thảo Quyết định phê duyệt quy hoạch trình UBND tỉnh ký ban hành.',
           'Văn bản thông báo bổ sung hồ sơ QH.',
         ],
       }},
       { key: 'thiet-ke-do-thi', ten: 'Thiết kế đô thị', thamMuu: {
         noiDung: [
-          'Tham mưu hướng dẫn, kiểm tra nội dung thiết kế đô thị trong QH phân khu, chi tiết (không gian, cảnh quan, chiều cao, mật độ XD).',
+          'Tham mưu hướng dẫn, kiểm tra nội dung thiết kế đô thị trong QH phân khu, chi tiết (không gian, cảnh quan, chiều cao, mật độ XD) theo Luật Kiến trúc 40/2019/QH14 và Luật Quy hoạch đô thị - nông thôn 47/2024/QH15.',
           'Tham mưu thẩm định nội dung thiết kế đô thị: khoảng lùi, hệ số sử dụng đất, vật liệu, màu sắc, cây xanh, chiếu sáng.',
           'Tham mưu bảo tồn bản sắc kiến trúc địa phương trong thiết kế đô thị.',
         ],
@@ -317,7 +317,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'do-thi-thong-minh', ten: 'Đô thị thông minh & tăng trưởng xanh', thamMuu: {
         noiDung: [
-          'Tham mưu triển khai NĐ 269/2025/NĐ-CP về phát triển đô thị thông minh (hướng dẫn tại TT 03/2026/TT-BXD) và Đề án 950/QĐ-TTg; xây dựng CSDL không gian đô thị.',
+          'Tham mưu triển khai phát triển đô thị thông minh (NĐ 269/2025/NĐ-CP, TT 03/2026/TT-BXD — ⚠️ đối chiếu số hiệu/hiệu lực trước khi viện dẫn) và Đề án 950/QĐ-TTg; xây dựng CSDL không gian đô thị.',
           'Tham mưu ứng dụng ICT/IoT trong quản lý đô thị; dịch vụ đô thị thông minh.',
           'Tham mưu thực hiện kế hoạch đô thị tăng trưởng xanh; giảm phát thải, tiết kiệm năng lượng, VLXD xanh.',
           'Tham mưu lồng ghép tiêu chí môi trường, bền vững trong các dự án phát triển đô thị.',
@@ -330,7 +330,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'tham-dinh-htkt-khu-do-thi', ten: 'Thẩm định hạ tầng kỹ thuật khu đô thị', thamMuu: {
         noiDung: [
-          'Tham mưu thẩm định HTKT khu đô thị mới: đường, cấp thoát nước, điện, chiếu sáng, viễn thông, xử lý rác.',
+          'Tham mưu thẩm định thiết kế HTKT khu đô thị mới (đường, cấp thoát nước, điện, chiếu sáng, viễn thông, xử lý rác) theo pháp luật xây dựng — Luật Xây dựng 135/2025, NĐ 217/2026 về thẩm định; NĐ 35/2026 áp dụng cho công tác phát triển đô thị.',
           'Tham mưu kiểm tra nội dung PCCC khu ĐT mới (chung cư, TTTM, trường, bệnh viện thuộc Phụ lục III NĐ 105/2025).',
           'Tham mưu kiểm tra điều kiện chuyển nhượng quyền sử dụng đất có HTKT trong khu ĐT theo Điều 12 NĐ 11/2013 (VBHN 04/VBHN-BXD 2026).',
           'Tham mưu tuân thủ QCVN 01:2021/BXD, QCVN 07:2016/BXD khi thẩm định HTKT khu ĐT.',
@@ -343,7 +343,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'csdl-ptdt', ten: 'CSDL phát triển đô thị', thamMuu: {
         noiDung: [
-          'Tham mưu xây dựng, quản lý CSDL phát triển đô thị trên địa bàn tỉnh; tích hợp dữ liệu QH, hạ tầng, dân cư.',
+          'Tham mưu xây dựng, quản lý CSDL phát triển đô thị trên địa bàn tỉnh theo NĐ 35/2026/NĐ-CP; tích hợp dữ liệu QH, hạ tầng, dân cư.',
           'Tham mưu cập nhật dữ liệu dự án khu ĐT, chương trình PTĐT; kết nối với CSDL quốc gia về HĐXD.',
           'Tham mưu ứng dụng CSDL phục vụ quản lý, đánh giá tình hình phát triển đô thị.',
         ],
@@ -400,7 +400,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       { key: 'quan-ly-vlxd-khoang-san', ten: 'Quản lý VLXD & khoáng sản làm VLXD', thamMuu: {
         noiDung: [
           'Tham mưu quản lý hoạt động sản xuất, kinh doanh VLXD trên địa bàn; ưu tiên VLXD xanh, tái chế, thân thiện MT.',
-          'Tham mưu quản lý khoáng sản làm VLXD thông thường (cát, sỏi, đá XD); phối hợp Sở TNMT về cấp phép khai thác.',
+          'Tham mưu quản lý khoáng sản làm VLXD thông thường (cát, sỏi, đá XD): góp ý quy hoạch thăm dò/khai thác, chất lượng, cân đối cung–cầu VLXD — Sở TNMT chủ trì cấp phép khai thác khoáng sản, Sở Xây dựng không cấp phép khai thác.',
           'Tham mưu kiểm tra chất lượng sản phẩm VLXD lưu thông trên thị trường theo QCVN 16:2023/BXD.',
           'Tham mưu cơ chế khuyến khích R&D vật liệu mới, chuyển đổi xanh, giảm phát thải trong sản xuất VLXD.',
         ],
@@ -421,7 +421,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
           'Tham mưu quản lý đầu tư, vận hành, khai thác kết cấu hạ tầng đường bộ (quốc lộ ủy thác, tỉnh lộ, đường đô thị).',
           'Tham mưu phân loại, đánh giá hiện trạng KCHT đường bộ; đề xuất đầu tư nâng cấp, sửa chữa.',
           'Tham mưu quản lý KCHT đường sắt, đường thủy nội địa trên địa bàn theo phân cấp.',
-          'Tham mưu kế hoạch bảo trì KCHT đường bộ hằng năm; phân cấp quản lý bảo trì.',
+          'Tham mưu kế hoạch bảo trì KCHT đường bộ hằng năm; phân cấp quản lý bảo trì theo NĐ 165/2024 (sửa đổi bởi NĐ 241/2026) — quản lý quốc lộ ủy thác theo quyết định ủy thác của Bộ Xây dựng/Cục Đường bộ VN.',
         ],
         sanPham: [
           'Kế hoạch đầu tư, bảo trì KCHT giao thông hằng năm.',
@@ -431,7 +431,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'an-toan-giao-thong', ten: 'An toàn giao thông (Thường trực Ban ATGT)', thamMuu: {
         noiDung: [
-          'Tham mưu thực hiện nhiệm vụ Thường trực Ban ATGT tỉnh (phía Sở XD/GTVT) theo Điều 55 Luật TTATGT.',
+          'Tham mưu thực hiện nhiệm vụ được phân công tại Ban ATGT tỉnh (do UBND tỉnh thành lập và quy định quy chế) theo Luật TTATGT đường bộ 36/2024/QH15 — theo phân công của UBND tỉnh, không mặc định Sở là Thường trực Ban.',
           'Tham mưu xây dựng kế hoạch, chương trình bảo đảm ATGT; triển khai tuần lễ, tháng ATGT.',
           'Tham mưu rà soát, xử lý điểm đen, điểm tiềm ẩn tai nạn GT; bổ sung biển báo, rào chắn, chiếu sáng.',
           'Tham mưu tổng hợp, báo cáo tình hình ATGT trên địa bàn tỉnh; đề xuất giải pháp giảm TNGT.',
@@ -445,7 +445,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'cap-phep-thi-cong', ten: 'Cấp phép thi công trên đường bộ', thamMuu: {
         noiDung: [
-          'Tham mưu cấp phép thi công trên đường bộ đang khai thác theo NĐ 165/2024.',
+          'Tham mưu cấp phép thi công trên đường bộ đang khai thác theo NĐ 165/2024 (sửa đổi bởi NĐ 241/2026).',
           'Tham mưu cấp phép đấu nối đường nhánh vào quốc lộ, tỉnh lộ; sử dụng tạm hành lang ATGT.',
           'Tham mưu kiểm tra, đôn đốc nhà thầu khôi phục mặt đường sau thi công.',
         ],
@@ -467,14 +467,13 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
           'Quyết định công bố hoạt động cảng, bến thủy nội địa.',
         ],
       }},
-      { key: 'pha-do-nong-thon-moi', ten: 'Phá dỡ tàu biển & nông thôn mới', thamMuu: {
+      { key: 'pha-do-nong-thon-moi', ten: 'Giao thông nông thôn mới', thamMuu: {
         noiDung: [
-          'Tham mưu cấp phép, kiểm tra cơ sở phá dỡ tàu biển đã qua sử dụng theo NĐ 82/2019.',
           'Tham mưu đánh giá tiêu chí giao thông trong xây dựng nông thôn mới (tỷ lệ cứng hóa, bảo trì, ATGT).',
           'Tham mưu phối hợp đánh giá đạt tiêu chí NTM/NTM nâng cao về giao thông.',
+          'Tham mưu quản lý, bảo trì đường giao thông nông thôn theo phân cấp.',
         ],
         sanPham: [
-          'Giấy phép nhập khẩu tàu biển phá dỡ.',
           'Báo cáo đánh giá tiêu chí GT nông thôn mới.',
           'Văn bản phối hợp công nhận xã/huyện đạt NTM.',
         ],
@@ -487,7 +486,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
     linhVuc: [
       { key: 'phat-trien-nha-o', ten: 'Chương trình, kế hoạch phát triển nhà ở', thamMuu: {
         noiDung: [
-          'Tham mưu lập, điều chỉnh chương trình phát triển nhà ở địa phương trình UBND tỉnh phê duyệt.',
+          'Tham mưu lập, điều chỉnh chương trình phát triển nhà ở địa phương, trình HĐND tỉnh thông qua và UBND tỉnh phê duyệt theo Luật Nhà ở 27/2023/QH15.',
           'Tham mưu xây dựng kế hoạch phát triển nhà ở 5 năm, hằng năm; xác định nhu cầu, quỹ đất, vốn.',
           'Tham mưu thẩm định điều kiện dự án ĐTXD nhà ở thương mại, nhà ở tái định cư.',
           'Tham mưu theo dõi, đánh giá tình hình thực hiện chương trình phát triển nhà ở; báo cáo Bộ XD.',
@@ -501,31 +500,32 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       { key: 'nha-o-xa-hoi', ten: 'Nhà ở xã hội, nhà công vụ', thamMuu: {
         noiDung: [
           'Tham mưu quản lý, phát triển nhà ở xã hội trên địa bàn; bố trí quỹ đất 20% theo Luật Nhà ở.',
-          'Tham mưu thẩm định dự án NƠXH; xét duyệt đối tượng mua/thuê NƠXH; giám sát giá bán (lợi nhuận ≤ 10%).',
+          'Tham mưu thẩm định dự án NƠXH; theo dõi, công khai, cập nhật và HẬU KIỂM danh sách đối tượng mua/thuê (chủ đầu tư xét duyệt hồ sơ); giám sát giá bán (lợi nhuận ≤ 10%).',
           'Tham mưu quản lý nhà ở công vụ, nhà ở tái định cư; giá thuê, bàn giao, trả lại nhà công vụ.',
           'Tham mưu chính sách ưu đãi NƠXH: miễn tiền sử dụng đất, thuế TNDN, hỗ trợ tín dụng.',
         ],
         sanPham: [
           'Văn bản thẩm định dự án NƠXH.',
-          'Danh sách xét duyệt đối tượng mua/thuê NƠXH.',
+          'Danh sách đối tượng mua/thuê NƠXH được công khai, hậu kiểm.',
           'Báo cáo quản lý nhà ở công vụ, tái định cư.',
         ],
       }},
       { key: 'dinh-gia-nha', ten: 'Định giá nhà', thamMuu: {
         noiDung: [
           'Tham mưu phương pháp định giá nhà ở (thu nhập, so sánh, chi phí) theo NĐ 95/2024.',
-          'Tham mưu UBND tỉnh quyết định giá thuê nhà ở thuộc sở hữu nhà nước; giá bán NƠXH.',
+          'Tham mưu UBND tỉnh ban hành giá thuê nhà ở thuộc sở hữu nhà nước, nhà ở công vụ (NĐ 95/2024).',
+          'Tham mưu thẩm định giá bán, giá thuê mua nhà ở xã hội do chủ đầu tư lập theo Điều 35 NĐ 100/2024 (chủ đầu tư xây dựng giá, Sở Xây dựng thẩm định — không phải UBND tỉnh quyết định giá bán NƠXH).',
           'Tham mưu giải quyết vướng mắc về giá nhà ở, đất ở gắn liền nhà; phối hợp Sở TNMT về giá đất.',
         ],
         sanPham: [
-          'Tờ trình giá thuê nhà ở thuộc SHNN.',
-          'Báo cáo thẩm định giá bán nhà ở xã hội.',
+          'Tờ trình UBND tỉnh ban hành giá thuê nhà ở thuộc SHNN/nhà công vụ.',
+          'Văn bản thẩm định giá bán/thuê mua nhà ở xã hội.',
           'Văn bản hướng dẫn phương pháp định giá nhà.',
         ],
       }},
       { key: 'thi-truong-bds', ten: 'Quản lý thị trường BĐS & chứng chỉ môi giới', thamMuu: {
         noiDung: [
-          'Tham mưu quản lý hoạt động kinh doanh BĐS trên địa bàn; kiểm tra điều kiện KD BĐS (pháp nhân, vốn ≥ 50 tỷ).',
+          'Tham mưu quản lý hoạt động kinh doanh BĐS trên địa bàn; kiểm tra điều kiện KD BĐS (thành lập doanh nghiệp; bảo đảm tỷ lệ vốn chủ sở hữu theo dự án — Điều 6 NĐ 96/2024, không còn ngưỡng vốn pháp định cố định).',
           'Tham mưu tổ chức sát hạch, cấp chứng chỉ hành nghề môi giới BĐS theo NĐ 96/2024.',
           'Tham mưu quản lý sàn giao dịch BĐS; kiểm tra nghĩa vụ công khai thông tin giao dịch.',
           'Tham mưu xử lý vi phạm kinh doanh BĐS; thu hồi chứng chỉ, đình chỉ hoạt động sàn.',
@@ -556,9 +556,9 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
     linhVuc: [
       { key: 'dang-kiem-duong-thuy', ten: 'Đăng ký - đăng kiểm phương tiện đường thủy nội địa', thamMuu: {
         noiDung: [
-          'Tham mưu tiếp nhận, xử lý hồ sơ đăng ký, xóa đăng ký phương tiện thủy nội địa theo NĐ 128/2018.',
-          'Tham mưu quản lý đăng kiểm an toàn kỹ thuật, bảo vệ môi trường phương tiện thủy nội địa.',
-          'Tham mưu kiểm tra, cấp giấy chứng nhận an toàn kỹ thuật phương tiện thủy theo Luật GTĐTNĐ.',
+          'Tham mưu tiếp nhận, xử lý hồ sơ đăng ký, xóa đăng ký phương tiện thủy nội địa theo Luật GTĐTNĐ 23/2004 (sửa 48/2014) và Thông tư 09/2025/TT-BXD — phân cấp: Sở XD đăng ký phương tiện VR-SB/không động cơ >15 tấn/có động cơ, UBND cấp xã đăng ký phương tiện nhỏ còn lại.',
+          'Tham mưu phối hợp Cục Đăng kiểm Việt Nam về đăng kiểm an toàn kỹ thuật, bảo vệ môi trường phương tiện thủy nội địa theo Thông tư 28/2026/TT-BXD (hiệu lực 01/8/2026); TT 38/2025/TT-BXD về giá dịch vụ đăng kiểm.',
+          'Tham mưu quản lý đào tạo, thi, cấp/cấp lại/chuyển đổi giấy chứng nhận khả năng chuyên môn (GCNKNCM), chứng chỉ chuyên môn (CCCM) thuyền viên, người lái phương tiện thủy nội địa theo Thông tư 09/2025/TT-BXD.',
         ],
         sanPham: [
           'Giấy chứng nhận đăng ký phương tiện thủy nội địa.',
@@ -596,7 +596,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       { key: 'van-tai-cong-cong', ten: 'Vận tải hành khách công cộng', thamMuu: {
         noiDung: [
           'Tham mưu quy hoạch mạng lưới tuyến xe buýt, vận tải HK công cộng trên địa bàn tỉnh.',
-          'Tham mưu chính sách trợ giá, trợ cước vận tải HK công cộng; khuyến khích xe buýt điện, năng lượng xanh.',
+          'Tham mưu chính sách trợ giá, trợ cước vận tải HK công cộng theo quy định đặt hàng/đấu thầu cung cấp sản phẩm, dịch vụ công ích (NĐ 32/2019/NĐ-CP); khuyến khích xe buýt điện, năng lượng xanh.',
           'Tham mưu quản lý biểu đồ, lịch trình hoạt động xe buýt; kiểm tra chất lượng dịch vụ.',
         ],
         sanPham: [
@@ -607,14 +607,13 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'htx-gtvt', ten: 'Hợp tác xã giao thông vận tải', thamMuu: {
         noiDung: [
-          'Tham mưu quản lý nhà nước về HTX GTVT trên địa bàn; hướng dẫn thành lập, đăng ký kinh doanh HTX theo Luật HTX 2023.',
-          'Tham mưu kiểm tra hoạt động, quản trị HTX GTVT; hỗ trợ, ưu đãi HTX GTVT theo chính sách của tỉnh.',
-          'Tham mưu giải thể, phá sản HTX GTVT khi có vi phạm hoặc không đủ điều kiện hoạt động.',
+          'Tham mưu quản lý nhà nước về HOẠT ĐỘNG VẬN TẢI của HTX GTVT trên địa bàn (điều kiện kinh doanh vận tải, phương tiện, tuyến). Việc đăng ký thành lập/giải thể/phá sản HTX thuộc cơ quan đăng ký kinh doanh, không thuộc Sở XD.',
+          'Tham mưu kiểm tra hoạt động vận tải, quản trị HTX GTVT; hỗ trợ, ưu đãi HTX GTVT theo chính sách của tỉnh.',
+          'Tham mưu phối hợp xử lý vi phạm về kinh doanh vận tải của HTX GTVT.',
         ],
         sanPham: [
-          'Văn bản hướng dẫn thành lập HTX GTVT.',
-          'Báo cáo tình hình hoạt động HTX GTVT trên địa bàn.',
-          'Văn bản kiểm tra, đánh giá HTX GTVT.',
+          'Báo cáo tình hình hoạt động vận tải của HTX GTVT trên địa bàn.',
+          'Văn bản kiểm tra, đánh giá hoạt động vận tải HTX GTVT.',
         ],
       }},
     ],

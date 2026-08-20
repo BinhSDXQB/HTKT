@@ -1,6 +1,6 @@
 import { requireAuth } from '@/lib/auth'
 import { getWardReportPerms } from '@/lib/ward-report-perms'
-import { SHEET_STANDARD, SHEET_BIEU_MAU } from '@/lib/ward-report-schema'
+import { CATEGORY_ORDER, CATEGORY_SHEET, SHEET_BIEU_MAU } from '@/lib/ward-report-schema'
 import Link from 'next/link'
 
 const COLORS: Record<string, { bg: string; icon: string }> = {
@@ -10,6 +10,7 @@ const COLORS: Record<string, { bg: string; icon: string }> = {
   'CAY_XANH': { bg: 'bg-green-50 border-green-200', icon: '🌿' },
   'CONG_VIEN': { bg: 'bg-pink-50 border-pink-200', icon: '🎪' },
   'CAP_NUOC_BC': { bg: 'bg-cyan-50 border-cyan-200', icon: '🚰' },
+  'BAI_DO_XE': { bg: 'bg-violet-50 border-violet-200', icon: '🅿️' },
   'KHAC': { bg: 'bg-slate-50 border-slate-200', icon: '📦' },
 }
 
@@ -25,12 +26,14 @@ export default async function NhapLieuPage() {
     )
   }
 
-  const categories = Object.entries(SHEET_STANDARD).map(([sheetName, category]) => ({
-    category,
-    sheetName,
-    label: SHEET_BIEU_MAU[sheetName] || sheetName,
-    color: COLORS[category] || COLORS['KHAC'],
-  }))
+  const categories = CATEGORY_ORDER.map((category) => {
+    const sheetName = CATEGORY_SHEET[category]
+    return {
+      category,
+      label: SHEET_BIEU_MAU[sheetName] || sheetName,
+      color: COLORS[category] || COLORS['KHAC'],
+    }
+  })
 
   return (
     <div className="p-8">
@@ -40,7 +43,7 @@ export default async function NhapLieuPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {categories.map(({ category, sheetName, label, color }) => (
+        {categories.map(({ category, label, color }) => (
           <Link
             key={category}
             href={`/dashboard/bao-cao/nhap-lieu/${category}`}

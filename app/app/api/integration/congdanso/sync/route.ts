@@ -5,6 +5,7 @@ import { getIntegrationConfig, syncToHTKT } from '@/lib/congdanso-client'
 export async function POST() {
   let user
   try { user = await requireAuth() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+  if (user.role?.name !== 'admin') return NextResponse.json({ error: 'Chỉ quản trị viên mới được đồng bộ tích hợp' }, { status: 403 })
 
   const cfg = await getIntegrationConfig()
   if (!cfg.enabled) return NextResponse.json({ error: 'Tích hợp chưa được bật' }, { status: 400 })

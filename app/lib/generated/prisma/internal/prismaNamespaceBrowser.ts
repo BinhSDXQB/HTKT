@@ -105,6 +105,8 @@ export const ModelName = {
   ReportCapNuoc: 'ReportCapNuoc',
   ReportBaiDoXe: 'ReportBaiDoXe',
   WardReport: 'WardReport',
+  WardGisLength: 'WardGisLength',
+  WardKhaiBao: 'WardKhaiBao',
   FacilityConfig: 'FacilityConfig',
   OfficeSalaryHistory: 'OfficeSalaryHistory',
   OfficeWorkHistory: 'OfficeWorkHistory',
@@ -151,7 +153,39 @@ export const ModelName = {
   DsDuAnGpmb: 'DsDuAnGpmb',
   DsDuAnThanhPhan: 'DsDuAnThanhPhan',
   DsKeHoachVon: 'DsKeHoachVon',
-  DsLienHe: 'DsLienHe'
+  DsLienHe: 'DsLienHe',
+  httt_dinh_danh: 'httt_dinh_danh',
+  httt_dong_bo_log: 'httt_dong_bo_log',
+  httt_nang_luc_ca_nhan: 'httt_nang_luc_ca_nhan',
+  httt_nang_luc_to_chuc: 'httt_nang_luc_to_chuc',
+  qd72_administrative_unit_assignments: 'qd72_administrative_unit_assignments',
+  qd72_attachments: 'qd72_attachments',
+  qd72_clearance_measurements: 'qd72_clearance_measurements',
+  qd72_comments: 'qd72_comments',
+  qd72_fire_hydrants: 'qd72_fire_hydrants',
+  qd72_fire_parking_areas: 'qd72_fire_parking_areas',
+  qd72_legal_documents: 'qd72_legal_documents',
+  qd72_overhead_utility_lines: 'qd72_overhead_utility_lines',
+  qd72_passing_bays: 'qd72_passing_bays',
+  qd72_public_lighting_assets: 'qd72_public_lighting_assets',
+  qd72_renovation_plans: 'qd72_renovation_plans',
+  qd72_renovation_tasks: 'qd72_renovation_tasks',
+  qd72_road_obstacles: 'qd72_road_obstacles',
+  qd72_road_segments: 'qd72_road_segments',
+  qd72_shared_technical_infrastructure: 'qd72_shared_technical_infrastructure',
+  qd72_survey_cases: 'qd72_survey_cases',
+  qd72_technical_rules: 'qd72_technical_rules',
+  qd72_undergrounding_proposals: 'qd72_undergrounding_proposals',
+  qd72_urban_areas: 'qd72_urban_areas',
+  qd72_utility_crossings: 'qd72_utility_crossings',
+  qd72_utility_owners: 'qd72_utility_owners',
+  qd72_utility_poles: 'qd72_utility_poles',
+  qd72_verification_items: 'qd72_verification_items',
+  qd72_verification_records: 'qd72_verification_records',
+  qd72_water_intake_points: 'qd72_water_intake_points',
+  qd72_water_sources: 'qd72_water_sources',
+  qd72_water_test_results: 'qd72_water_test_results',
+  qd72_workflow_history: 'qd72_workflow_history'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1048,6 +1082,7 @@ export const ToChucScalarFieldEnum = {
   thuTu: 'thuTu',
   isActive: 'isActive',
   moTa: 'moTa',
+  maSoThue: 'maSoThue',
   parentId: 'parentId',
   donViHCId: 'donViHCId',
   createdAt: 'createdAt',
@@ -1351,6 +1386,37 @@ export const WardReportScalarFieldEnum = {
 } as const
 
 export type WardReportScalarFieldEnum = (typeof WardReportScalarFieldEnum)[keyof typeof WardReportScalarFieldEnum]
+
+
+export const WardGisLengthScalarFieldEnum = {
+  id: 'id',
+  wardId: 'wardId',
+  duongDiaPhuongKm: 'duongDiaPhuongKm',
+  duongHuyenKm: 'duongHuyenKm',
+  duongTinhKm: 'duongTinhKm',
+  quocLoKm: 'quocLoKm',
+  caoTocKm: 'caoTocKm',
+  tongKm: 'tongKm',
+  nguon: 'nguon',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WardGisLengthScalarFieldEnum = (typeof WardGisLengthScalarFieldEnum)[keyof typeof WardGisLengthScalarFieldEnum]
+
+
+export const WardKhaiBaoScalarFieldEnum = {
+  id: 'id',
+  wardId: 'wardId',
+  year: 'year',
+  linhVuc: 'linhVuc',
+  chiTieu: 'chiTieu',
+  giaTri: 'giaTri',
+  donVi: 'donVi',
+  ghiChu: 'ghiChu',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WardKhaiBaoScalarFieldEnum = (typeof WardKhaiBaoScalarFieldEnum)[keyof typeof WardKhaiBaoScalarFieldEnum]
 
 
 export const FacilityConfigScalarFieldEnum = {
@@ -2043,6 +2109,9 @@ export const TaiLieuScalarFieldEnum = {
   soKyTu: 'soKyTu',
   trangThai: 'trangThai',
   ghiChuLoi: 'ghiChuLoi',
+  tinhTrangHieuLuc: 'tinhTrangHieuLuc',
+  thayTheBoi: 'thayTheBoi',
+  ghiChuHieuLuc: 'ghiChuHieuLuc',
   metadata: 'metadata',
   createdById: 'createdById',
   createdAt: 'createdAt',
@@ -2178,6 +2247,7 @@ export const NghiepVuBanGhiScalarFieldEnum = {
   maBanGhi: 'maBanGhi',
   tieuDe: 'tieuDe',
   trangThai: 'trangThai',
+  wardId: 'wardId',
   diaBan: 'diaBan',
   ngayGhiNhan: 'ngayGhiNhan',
   ghiChu: 'ghiChu',
@@ -2307,6 +2377,663 @@ export const DsLienHeScalarFieldEnum = {
 } as const
 
 export type DsLienHeScalarFieldEnum = (typeof DsLienHeScalarFieldEnum)[keyof typeof DsLienHeScalarFieldEnum]
+
+
+export const Httt_dinh_danhScalarFieldEnum = {
+  id: 'id',
+  loai_doi_tuong: 'loai_doi_tuong',
+  ma_dinh_danh: 'ma_dinh_danh',
+  loai_ma: 'loai_ma',
+  bang_local: 'bang_local',
+  id_local: 'id_local',
+  trang_thai_dong_bo: 'trang_thai_dong_bo',
+  la_du_lieu_mo: 'la_du_lieu_mo',
+  thoi_diem_khoi_tao: 'thoi_diem_khoi_tao',
+  thoi_diem_dong_bo: 'thoi_diem_dong_bo',
+  phan_hoi_httt: 'phan_hoi_httt',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Httt_dinh_danhScalarFieldEnum = (typeof Httt_dinh_danhScalarFieldEnum)[keyof typeof Httt_dinh_danhScalarFieldEnum]
+
+
+export const Httt_dong_bo_logScalarFieldEnum = {
+  id: 'id',
+  dinh_danh_id: 'dinh_danh_id',
+  hanh_dong: 'hanh_dong',
+  ket_qua: 'ket_qua',
+  thong_diep: 'thong_diep',
+  payload: 'payload',
+  nguoi_id: 'nguoi_id',
+  thoi_diem: 'thoi_diem'
+} as const
+
+export type Httt_dong_bo_logScalarFieldEnum = (typeof Httt_dong_bo_logScalarFieldEnum)[keyof typeof Httt_dong_bo_logScalarFieldEnum]
+
+
+export const Httt_nang_luc_ca_nhanScalarFieldEnum = {
+  id: 'id',
+  dinh_danh_id: 'dinh_danh_id',
+  ma_dinh_danh: 'ma_dinh_danh',
+  loai_ma: 'loai_ma',
+  ho_ten: 'ho_ten',
+  quoc_tich: 'quoc_tich',
+  linh_vuc_hanh_nghe: 'linh_vuc_hanh_nghe',
+  hang_chung_chi: 'hang_chung_chi',
+  thoi_han_chung_chi: 'thoi_han_chung_chi',
+  co_so_dao_tao: 'co_so_dao_tao',
+  trinh_do_chuyen_mon: 'trinh_do_chuyen_mon',
+  so_chung_chi: 'so_chung_chi',
+  loai_cap: 'loai_cap',
+  ly_do_cap: 'ly_do_cap',
+  quyet_dinh_cap: 'quyet_dinh_cap',
+  co_quan_cap: 'co_quan_cap',
+  ngay_cap: 'ngay_cap',
+  trang_thai: 'trang_thai',
+  ket_qua_dien_tu_path: 'ket_qua_dien_tu_path',
+  truong_bo_sung: 'truong_bo_sung',
+  to_chuc_id: 'to_chuc_id',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Httt_nang_luc_ca_nhanScalarFieldEnum = (typeof Httt_nang_luc_ca_nhanScalarFieldEnum)[keyof typeof Httt_nang_luc_ca_nhanScalarFieldEnum]
+
+
+export const Httt_nang_luc_to_chucScalarFieldEnum = {
+  id: 'id',
+  dinh_danh_id: 'dinh_danh_id',
+  ma_so_dn: 'ma_so_dn',
+  ten_nha_thau: 'ten_nha_thau',
+  linh_vuc: 'linh_vuc',
+  hang: 'hang',
+  so_chung_chi_nang_luc: 'so_chung_chi_nang_luc',
+  co_quan_cap: 'co_quan_cap',
+  ngay_cap: 'ngay_cap',
+  thoi_han: 'thoi_han',
+  trang_thai: 'trang_thai',
+  ket_qua_dien_tu_path: 'ket_qua_dien_tu_path',
+  thong_tin_nang_luc: 'thong_tin_nang_luc',
+  truong_bo_sung: 'truong_bo_sung',
+  to_chuc_id: 'to_chuc_id',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Httt_nang_luc_to_chucScalarFieldEnum = (typeof Httt_nang_luc_to_chucScalarFieldEnum)[keyof typeof Httt_nang_luc_to_chucScalarFieldEnum]
+
+
+export const Qd72_administrative_unit_assignmentsScalarFieldEnum = {
+  id: 'id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  to_chuc_id: 'to_chuc_id',
+  vai_tro: 'vai_tro',
+  owner_id: 'owner_id',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_administrative_unit_assignmentsScalarFieldEnum = (typeof Qd72_administrative_unit_assignmentsScalarFieldEnum)[keyof typeof Qd72_administrative_unit_assignmentsScalarFieldEnum]
+
+
+export const Qd72_attachmentsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  ten_file: 'ten_file',
+  dinh_dang: 'dinh_dang',
+  dung_luong_byte: 'dung_luong_byte',
+  sha256: 'sha256',
+  storage_path: 'storage_path',
+  loai: 'loai',
+  gps_lat: 'gps_lat',
+  gps_lng: 'gps_lng',
+  chup_luc: 'chup_luc',
+  ghi_chu: 'ghi_chu',
+  uploaded_by_id: 'uploaded_by_id',
+  created_at: 'created_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Qd72_attachmentsScalarFieldEnum = (typeof Qd72_attachmentsScalarFieldEnum)[keyof typeof Qd72_attachmentsScalarFieldEnum]
+
+
+export const Qd72_clearance_measurementsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  nguon: 'nguon',
+  gia_tri_m: 'gia_tri_m',
+  vi_tri_do: 'vi_tri_do',
+  thiet_bi_do: 'thiet_bi_do',
+  nguoi_do: 'nguoi_do',
+  ngay_gio_do: 'ngay_gio_do',
+  dieu_kien: 'dieu_kien',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_clearance_measurementsScalarFieldEnum = (typeof Qd72_clearance_measurementsScalarFieldEnum)[keyof typeof Qd72_clearance_measurementsScalarFieldEnum]
+
+
+export const Qd72_commentsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  noi_dung: 'noi_dung',
+  nguoi_id: 'nguoi_id',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_commentsScalarFieldEnum = (typeof Qd72_commentsScalarFieldEnum)[keyof typeof Qd72_commentsScalarFieldEnum]
+
+
+export const Qd72_fire_hydrantsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  water_source_id: 'water_source_id',
+  ma: 'ma',
+  tinh_trang: 'tinh_trang',
+  cach_mep_duong_m: 'cach_mep_duong_m',
+  cach_tuong_m: 'cach_tuong_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_fire_hydrantsScalarFieldEnum = (typeof Qd72_fire_hydrantsScalarFieldEnum)[keyof typeof Qd72_fire_hydrantsScalarFieldEnum]
+
+
+export const Qd72_fire_parking_areasScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  ten: 'ten',
+  dien_tich_m2: 'dien_tich_m2',
+  do_doc: 'do_doc',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_fire_parking_areasScalarFieldEnum = (typeof Qd72_fire_parking_areasScalarFieldEnum)[keyof typeof Qd72_fire_parking_areasScalarFieldEnum]
+
+
+export const Qd72_legal_documentsScalarFieldEnum = {
+  id: 'id',
+  ma_van_ban: 'ma_van_ban',
+  loai: 'loai',
+  so_hieu: 'so_hieu',
+  ten: 'ten',
+  co_quan_ban_hanh: 'co_quan_ban_hanh',
+  ngay_ban_hanh: 'ngay_ban_hanh',
+  ngay_hieu_luc: 'ngay_hieu_luc',
+  ngay_het_hieu_luc: 'ngay_het_hieu_luc',
+  la_van_ban_goc: 'la_van_ban_goc',
+  sua_doi_cho_id: 'sua_doi_cho_id',
+  trang_thai: 'trang_thai',
+  ghi_chu_ra_soat: 'ghi_chu_ra_soat',
+  nguon_url: 'nguon_url',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_legal_documentsScalarFieldEnum = (typeof Qd72_legal_documentsScalarFieldEnum)[keyof typeof Qd72_legal_documentsScalarFieldEnum]
+
+
+export const Qd72_overhead_utility_linesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  loai_doi_tuong: 'loai_doi_tuong',
+  ten_tuyen: 'ten_tuyen',
+  owner_id: 'owner_id',
+  chu_so_huu_text: 'chu_so_huu_text',
+  trang_thai_chu_so_huu: 'trang_thai_chu_so_huu',
+  don_vi_van_hanh: 'don_vi_van_hanh',
+  cao_diem_thap_nhat_m: 'cao_diem_thap_nhat_m',
+  chay_doc_hay_cat_ngang: 'chay_doc_hay_cat_ngang',
+  do_vong_quan_sat: 'do_vong_quan_sat',
+  co_can_tro_xe_cc: 'co_can_tro_xe_cc',
+  tinh_trang_su_dung: 'tinh_trang_su_dung',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_overhead_utility_linesScalarFieldEnum = (typeof Qd72_overhead_utility_linesScalarFieldEnum)[keyof typeof Qd72_overhead_utility_linesScalarFieldEnum]
+
+
+export const Qd72_passing_baysScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  road_segment_id: 'road_segment_id',
+  ma: 'ma',
+  chieu_dai_m: 'chieu_dai_m',
+  chieu_rong_m: 'chieu_rong_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_passing_baysScalarFieldEnum = (typeof Qd72_passing_baysScalarFieldEnum)[keyof typeof Qd72_passing_baysScalarFieldEnum]
+
+
+export const Qd72_public_lighting_assetsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  loai: 'loai',
+  owner_id: 'owner_id',
+  tinh_trang: 'tinh_trang',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_public_lighting_assetsScalarFieldEnum = (typeof Qd72_public_lighting_assetsScalarFieldEnum)[keyof typeof Qd72_public_lighting_assetsScalarFieldEnum]
+
+
+export const Qd72_renovation_plansScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  van_de_ton_tai: 'van_de_ton_tai',
+  can_cu_xac_dinh: 'can_cu_xac_dinh',
+  giai_phap: 'giai_phap',
+  nhom_giai_phap: 'nhom_giai_phap',
+  muc_uu_tien: 'muc_uu_tien',
+  co_quan_chu_tri: 'co_quan_chu_tri',
+  don_vi_phoi_hop: 'don_vi_phoi_hop',
+  chu_so_huu_ct: 'chu_so_huu_ct',
+  nguon_von: 'nguon_von',
+  kinh_phi: 'kinh_phi',
+  nam_thuc_hien: 'nam_thuc_hien',
+  tien_do: 'tien_do',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_renovation_plansScalarFieldEnum = (typeof Qd72_renovation_plansScalarFieldEnum)[keyof typeof Qd72_renovation_plansScalarFieldEnum]
+
+
+export const Qd72_renovation_tasksScalarFieldEnum = {
+  id: 'id',
+  plan_id: 'plan_id',
+  ma: 'ma',
+  ten: 'ten',
+  loai_cong_viec: 'loai_cong_viec',
+  khoi_luong: 'khoi_luong',
+  ngay_bat_dau: 'ngay_bat_dau',
+  ngay_hoan_thanh_dk: 'ngay_hoan_thanh_dk',
+  tien_do_pct: 'tien_do_pct',
+  trang_thai: 'trang_thai',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_renovation_tasksScalarFieldEnum = (typeof Qd72_renovation_tasksScalarFieldEnum)[keyof typeof Qd72_renovation_tasksScalarFieldEnum]
+
+
+export const Qd72_road_obstaclesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  road_segment_id: 'road_segment_id',
+  ma: 'ma',
+  loai: 'loai',
+  mo_ta: 'mo_ta',
+  cao_m: 'cao_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_road_obstaclesScalarFieldEnum = (typeof Qd72_road_obstaclesScalarFieldEnum)[keyof typeof Qd72_road_obstaclesScalarFieldEnum]
+
+
+export const Qd72_road_segmentsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  ten: 'ten',
+  diem_dau: 'diem_dau',
+  diem_cuoi: 'diem_cuoi',
+  chieu_dai_m: 'chieu_dai_m',
+  rong_thong_thuy_min_m: 'rong_thong_thuy_min_m',
+  cao_thong_thuy_min_m: 'cao_thong_thuy_min_m',
+  do_doc_max: 'do_doc_max',
+  loai_mat_duong: 'loai_mat_duong',
+  tinh_trang_mat_duong: 'tinh_trang_mat_duong',
+  chiu_tai: 'chiu_tai',
+  la_duong_cut: 'la_duong_cut',
+  chieu_dai_cut_m: 'chieu_dai_cut_m',
+  co_diem_quay_xe: 'co_diem_quay_xe',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  de_xuat_chinh_trang: 'de_xuat_chinh_trang',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_road_segmentsScalarFieldEnum = (typeof Qd72_road_segmentsScalarFieldEnum)[keyof typeof Qd72_road_segmentsScalarFieldEnum]
+
+
+export const Qd72_shared_technical_infrastructureScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  loai: 'loai',
+  chieu_dai_m: 'chieu_dai_m',
+  con_du_phong: 'con_du_phong',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_shared_technical_infrastructureScalarFieldEnum = (typeof Qd72_shared_technical_infrastructureScalarFieldEnum)[keyof typeof Qd72_shared_technical_infrastructureScalarFieldEnum]
+
+
+export const Qd72_survey_casesScalarFieldEnum = {
+  id: 'id',
+  ma: 'ma',
+  ten: 'ten',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  to_chuc_id: 'to_chuc_id',
+  trang_thai: 'trang_thai',
+  nhom_danh_gia: 'nhom_danh_gia',
+  ngay_khao_sat: 'ngay_khao_sat',
+  thanh_phan_khao_sat: 'thanh_phan_khao_sat',
+  mo_ta: 'mo_ta',
+  chi_tiet: 'chi_tiet',
+  phien_ban: 'phien_ban',
+  created_by_id: 'created_by_id',
+  updated_by_id: 'updated_by_id',
+  verified_by_id: 'verified_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  verified_at: 'verified_at',
+  ly_do_dieu_chinh: 'ly_do_dieu_chinh'
+} as const
+
+export type Qd72_survey_casesScalarFieldEnum = (typeof Qd72_survey_casesScalarFieldEnum)[keyof typeof Qd72_survey_casesScalarFieldEnum]
+
+
+export const Qd72_technical_rulesScalarFieldEnum = {
+  id: 'id',
+  ma_tieu_chi: 'ma_tieu_chi',
+  nhom: 'nhom',
+  ten: 'ten',
+  gia_tri: 'gia_tri',
+  gia_tri_text: 'gia_tri_text',
+  toan_tu: 'toan_tu',
+  don_vi: 'don_vi',
+  legal_document_id: 'legal_document_id',
+  dieu_khoan: 'dieu_khoan',
+  ngay_hieu_luc: 'ngay_hieu_luc',
+  ngay_het_hieu_luc: 'ngay_het_hieu_luc',
+  phien_ban: 'phien_ban',
+  trang_thai: 'trang_thai',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_technical_rulesScalarFieldEnum = (typeof Qd72_technical_rulesScalarFieldEnum)[keyof typeof Qd72_technical_rulesScalarFieldEnum]
+
+
+export const Qd72_undergrounding_proposalsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  line_id: 'line_id',
+  ma: 'ma',
+  cac_phuong_an: 'cac_phuong_an',
+  don_vi_chu_tri: 'don_vi_chu_tri',
+  don_vi_phoi_hop: 'don_vi_phoi_hop',
+  khoi_luong: 'khoi_luong',
+  chieu_dai_xu_ly_m: 'chieu_dai_xu_ly_m',
+  so_cot_diem: 'so_cot_diem',
+  kinh_phi: 'kinh_phi',
+  nguon_von: 'nguon_von',
+  muc_uu_tien: 'muc_uu_tien',
+  y_kien_chuyen_nganh: 'y_kien_chuyen_nganh',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_undergrounding_proposalsScalarFieldEnum = (typeof Qd72_undergrounding_proposalsScalarFieldEnum)[keyof typeof Qd72_undergrounding_proposalsScalarFieldEnum]
+
+
+export const Qd72_urban_areasScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  ten: 'ten',
+  thon_to_dan_pho: 'thon_to_dan_pho',
+  can_cu_xac_dinh: 'can_cu_xac_dinh',
+  so_van_ban_cong_nhan: 'so_van_ban_cong_nhan',
+  ngay_van_ban: 'ngay_van_ban',
+  dien_tich_ha: 'dien_tich_ha',
+  dan_so: 'dan_so',
+  so_ho: 'so_ho',
+  so_cong_trinh: 'so_cong_trinh',
+  so_ct_tu_3_tang: 'so_ct_tu_3_tang',
+  so_cs_nguy_hiem_chay: 'so_cs_nguy_hiem_chay',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_urban_areasScalarFieldEnum = (typeof Qd72_urban_areasScalarFieldEnum)[keyof typeof Qd72_urban_areasScalarFieldEnum]
+
+
+export const Qd72_utility_crossingsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  line_id: 'line_id',
+  road_segment_id: 'road_segment_id',
+  ma: 'ma',
+  cao_thong_thuy_m: 'cao_thong_thuy_m',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_utility_crossingsScalarFieldEnum = (typeof Qd72_utility_crossingsScalarFieldEnum)[keyof typeof Qd72_utility_crossingsScalarFieldEnum]
+
+
+export const Qd72_utility_ownersScalarFieldEnum = {
+  id: 'id',
+  ma: 'ma',
+  ten: 'ten',
+  loai: 'loai',
+  to_chuc_id: 'to_chuc_id',
+  dien_thoai: 'dien_thoai',
+  email: 'email',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_utility_ownersScalarFieldEnum = (typeof Qd72_utility_ownersScalarFieldEnum)[keyof typeof Qd72_utility_ownersScalarFieldEnum]
+
+
+export const Qd72_utility_polesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  so_hieu: 'so_hieu',
+  loai_cot: 'loai_cot',
+  dung_chung: 'dung_chung',
+  owner_id: 'owner_id',
+  tinh_trang: 'tinh_trang',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_utility_polesScalarFieldEnum = (typeof Qd72_utility_polesScalarFieldEnum)[keyof typeof Qd72_utility_polesScalarFieldEnum]
+
+
+export const Qd72_verification_itemsScalarFieldEnum = {
+  id: 'id',
+  verification_id: 'verification_id',
+  technical_rule_id: 'technical_rule_id',
+  doi_tuong_loai: 'doi_tuong_loai',
+  doi_tuong_id: 'doi_tuong_id',
+  gia_tri_xa_khai: 'gia_tri_xa_khai',
+  gia_tri_do_lai: 'gia_tri_do_lai',
+  ket_qua: 'ket_qua',
+  don_vi_xac_minh: 'don_vi_xac_minh',
+  y_kien: 'y_kien',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_verification_itemsScalarFieldEnum = (typeof Qd72_verification_itemsScalarFieldEnum)[keyof typeof Qd72_verification_itemsScalarFieldEnum]
+
+
+export const Qd72_verification_recordsScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  ma: 'ma',
+  ngay_xac_minh: 'ngay_xac_minh',
+  thanh_phan: 'thanh_phan',
+  noi_dung: 'noi_dung',
+  trang_thai: 'trang_thai',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_verification_recordsScalarFieldEnum = (typeof Qd72_verification_recordsScalarFieldEnum)[keyof typeof Qd72_verification_recordsScalarFieldEnum]
+
+
+export const Qd72_water_intake_pointsScalarFieldEnum = {
+  id: 'id',
+  water_source_id: 'water_source_id',
+  ma: 'ma',
+  loai: 'loai',
+  so_xe_dong_thoi: 'so_xe_dong_thoi',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_water_intake_pointsScalarFieldEnum = (typeof Qd72_water_intake_pointsScalarFieldEnum)[keyof typeof Qd72_water_intake_pointsScalarFieldEnum]
+
+
+export const Qd72_water_sourcesScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  don_vi_hanh_chinh_id: 'don_vi_hanh_chinh_id',
+  ma: 'ma',
+  loai_nguon: 'loai_nguon',
+  ten: 'ten',
+  dia_chi: 'dia_chi',
+  don_vi_quan_ly: 'don_vi_quan_ly',
+  tinh_trang: 'tinh_trang',
+  duong_kinh_ong_dn: 'duong_kinh_ong_dn',
+  mang_vong_hay_cut: 'mang_vong_hay_cut',
+  chieu_dai_cut_m: 'chieu_dai_cut_m',
+  dung_tich_m3: 'dung_tich_m3',
+  geometry: 'geometry',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  chi_tiet: 'chi_tiet',
+  de_xuat_sua_chua: 'de_xuat_sua_chua',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Qd72_water_sourcesScalarFieldEnum = (typeof Qd72_water_sourcesScalarFieldEnum)[keyof typeof Qd72_water_sourcesScalarFieldEnum]
+
+
+export const Qd72_water_test_resultsScalarFieldEnum = {
+  id: 'id',
+  water_source_id: 'water_source_id',
+  nguon: 'nguon',
+  luu_luong_ls: 'luu_luong_ls',
+  ap_luc_du_m: 'ap_luc_du_m',
+  thoi_diem_do: 'thoi_diem_do',
+  thiet_bi_do: 'thiet_bi_do',
+  nguoi_don_vi_do: 'nguoi_don_vi_do',
+  bien_ban: 'bien_ban',
+  chi_tiet: 'chi_tiet',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at'
+} as const
+
+export type Qd72_water_test_resultsScalarFieldEnum = (typeof Qd72_water_test_resultsScalarFieldEnum)[keyof typeof Qd72_water_test_resultsScalarFieldEnum]
+
+
+export const Qd72_workflow_historyScalarFieldEnum = {
+  id: 'id',
+  survey_case_id: 'survey_case_id',
+  trang_thai_cu: 'trang_thai_cu',
+  trang_thai_moi: 'trang_thai_moi',
+  y_kien: 'y_kien',
+  tai_lieu: 'tai_lieu',
+  nguoi_thuc_hien_id: 'nguoi_thuc_hien_id',
+  thoi_diem: 'thoi_diem'
+} as const
+
+export type Qd72_workflow_historyScalarFieldEnum = (typeof Qd72_workflow_historyScalarFieldEnum)[keyof typeof Qd72_workflow_historyScalarFieldEnum]
 
 
 export const SortOrder = {

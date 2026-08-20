@@ -6,8 +6,13 @@ import { CongViecCreateForm } from '@/components/cong-viec/create-form'
 
 export const dynamic = 'force-dynamic'
 
-export default async function CongViecCreatePage() {
+export default async function CongViecCreatePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tieuDe?: string; moTa?: string }>
+}) {
   const user = await requireAuth()
+  const sp = await searchParams
 
   const loais = await db.congViecLoai.findMany({
     where: { isActive: true, OR: [{ toChucId: null }, ...(user.toChucId ? [{ toChucId: user.toChucId }] : [])] },
@@ -35,6 +40,8 @@ export default async function CongViecCreatePage() {
         members={members}
         phongs={phongs}
         hasPhong={!!user.toChucId}
+        initialTieuDe={sp.tieuDe ?? ''}
+        initialMoTa={sp.moTa ?? ''}
       />
     </div>
   )

@@ -10,11 +10,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { createCongViecAction, type CongViecFormState } from '@/app/actions/cong-viec'
 import { UU_TIEN_OPTIONS } from '@/lib/cong-viec-labels'
 
-export function CongViecCreateForm({ loais, members, phongs, hasPhong }: {
+export function CongViecCreateForm({ loais, members, phongs, hasPhong, initialTieuDe = '', initialMoTa = '' }: {
   loais: { id: string; ten: string }[]
   members: { id: string; name: string }[]
   phongs: { id: string; ten: string }[]
   hasPhong: boolean
+  initialTieuDe?: string
+  initialMoTa?: string
 }) {
   const router = useRouter()
   const [state, formAction, isPending] = useActionState<CongViecFormState, FormData>(createCongViecAction, null)
@@ -41,13 +43,13 @@ export function CongViecCreateForm({ loais, members, phongs, hasPhong }: {
 
       <div className="space-y-1">
         <Label className="text-xs font-medium text-slate-600">Tiêu đề công việc *</Label>
-        <Input name="tieuDe" className="h-9" placeholder="VD: Tham mưu kế hoạch chiếu sáng đô thị 2026" />
+        <Input name="tieuDe" defaultValue={initialTieuDe} className="h-9" placeholder="VD: Tham mưu kế hoạch chiếu sáng đô thị 2026" />
         {state?.fieldErrors?.tieuDe && <p className="text-xs text-red-600">{state.fieldErrors.tieuDe[0]}</p>}
       </div>
 
       <div className="space-y-1">
         <Label className="text-xs font-medium text-slate-600">Mô tả</Label>
-        <Textarea name="moTa" rows={3} placeholder="Nội dung, yêu cầu công việc" />
+        <Textarea name="moTa" defaultValue={initialMoTa} rows={3} placeholder="Nội dung, yêu cầu công việc" />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

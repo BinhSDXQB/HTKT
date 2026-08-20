@@ -1,7 +1,7 @@
 import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import Link from 'next/link'
-import { BarChart3, Building2, AlertTriangle, Wrench, CheckCircle2, Clock, FileSpreadsheet, TrendingUp } from 'lucide-react'
+import { BarChart3, Building2, AlertTriangle, Wrench, CheckCircle2, Clock, FileSpreadsheet, TrendingUp, ShieldCheck } from 'lucide-react'
 import { DOMAIN_LABEL, CONDITION_LABEL, CONDITION_COLOR } from '@/lib/constants/tai-san'
 import { INCIDENT_STATUS_LABEL } from '@/lib/constants/su-co'
 import { WO_STATUS_LABEL } from '@/lib/constants/phieu-cv'
@@ -51,6 +51,10 @@ export default async function BaoCaoPage() {
         <Link href="/dashboard/bao-cao/du-lieu-phuong-xa"
           className="flex items-center gap-2 h-9 px-4 text-sm font-medium rounded-lg border border-green-300 text-green-700 hover:bg-green-50 transition-colors">
           <FileSpreadsheet className="w-4 h-4" />Dữ liệu phường/xã
+        </Link>
+        <Link href="/dashboard/bao-cao/doi-soat"
+          className="flex items-center gap-2 h-9 px-4 text-sm font-medium rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50 transition-colors">
+          <ShieldCheck className="w-4 h-4" />Đối soát số liệu ↔ GIS
         </Link>
       </div>
 

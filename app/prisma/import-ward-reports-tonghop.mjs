@@ -43,6 +43,20 @@ const WARD_MAP = {
   'Phường Nam Đông Hà': 'cmpq4peg00029ekumy60ycm2n',
 };
 
+// Chuẩn hoá tên để so khớp bền vững: bỏ dấu tiếng Việt, thường hoá, gộp khoảng trắng.
+// Xử lý các lệch tên file thực tế: 'Xã Triệu phong'≠'Xã Triệu Phong', '_ Xa Minh Hoá'≠'Xã Minh Hóa'.
+function normKey(s) {
+  return (s || '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')  // bỏ dấu thanh + dấu mũ
+    .replace(/đ/gi, 'd')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+const NORM_WARD_MAP = Object.fromEntries(
+  Object.entries(WARD_MAP).map(([k, v]) => [normKey(k), v])
+);
+
 const client = new Client({
   host: 'localhost',
   user: 'postgres',
@@ -379,8 +393,8 @@ async function main() {
       // Extract ward key từ tên file: "PHỤ LỤC 1_[KEY].xlsx"
       let wardKey = file.replace(/^PHỤ LỤC 1_|^PHU LUC 1_/i, '').replace(/\.xlsx$/i, '').trim();
 
-      // Tìm match trực tiếp trong WARD_MAP
-      const wardId = WARD_MAP[wardKey];
+      // Tìm match trực tiếp; nếu lệch tên (dấu/hoa-thường/khoảng trắng) thì so khớp chuẩn hoá
+      const wardId = WARD_MAP[wardKey] || NORM_WARD_MAP[normKey(wardKey)];
 
       if (!wardId) {
         console.log(`⚠️  Bỏ qua: ${file} — wardKey '${wardKey}' không tìm thấy`);

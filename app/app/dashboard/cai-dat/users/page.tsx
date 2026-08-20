@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,7 @@ import { vi } from 'date-fns/locale'
 export default async function UsersPage() {
   const currentUser = await requireAuth()
   const isAdmin = currentUser.role?.name === 'admin'
+  if (!isAdmin) redirect('/forbidden')
   const users = await db.user.findMany({ orderBy: { createdAt: 'desc' }, include: { role: { select: { displayName: true, name: true } } } })
 
   return (

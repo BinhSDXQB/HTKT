@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   experimental: {
     // Máy 6GB RAM: hạn chế worker + bật chế độ tiết kiệm bộ nhớ webpack để build không OOM
-    cpus: 2,
+    cpus: 1,
     webpackMemoryOptimizations: true,
     serverActions: {
       bodySizeLimit: '10mb',

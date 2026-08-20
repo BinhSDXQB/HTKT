@@ -16,7 +16,7 @@ const norm = s => (s || '').toString().toLowerCase().normalize('NFC').replace(/\
 // Ánh xạ tên Excel (lệch chính tả) → mã ĐVHC trong DB
 const OVERRIDE = {
   'xã trung thuần': '19030',  // DB: Xã Trung Thuận
-  'xã đồng lê': '18949',      // DB: Xã Đồng Lề
+  'xã đồng lê': '18949',      // DB: Xã Đồng Lê
   'xã bắc gianh': '19066',    // DB: Phường Bắc Gianh
   'nam cửa việt': '19639',    // DB: Xã Nam Cửa Việt
 }

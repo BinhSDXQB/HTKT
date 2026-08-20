@@ -3,7 +3,9 @@ import ExcelJS from 'exceljs'
 import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getWardReportPerms } from '@/lib/ward-report-perms'
-import { SHEET_COLUMNS, SHEET_STANDARD, SHEET_BIEU_MAU } from '@/lib/ward-report-schema'
+import { CATEGORY_MODEL, CATEGORY_SHEET, CATEGORY_COORDS, editableColumns, SHEET_BIEU_MAU } from '@/lib/ward-report-schema'
+
+const dbAny = db as unknown as Record<string, { findMany: (a: unknown) => Promise<Record<string, unknown>[]> }>
 
 export async function GET(req: NextRequest) {
   try {
@@ -26,8 +28,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const sheetName = Object.keys(SHEET_STANDARD).find(k => SHEET_STANDARD[k] === category)
-    if (!sheetName) {
+    const sheetName = CATEGORY_SHEET[category]
+    const model = CATEGORY_MODEL[category]
+    if (!sheetName || !model) {
       return NextResponse.json({ error: 'Invalid category' }, { status: 400 })
     }
 
@@ -39,28 +42,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Ward not found' }, { status: 404 })
     }
 
-    const categoryMap: Record<string, string> = {
-      'DUONG': 'ReportDuong',
-      'DIEN_CHIEU_SANG': 'ReportDienCS',
-      'THOAT_NUOC_BC': 'ReportThoatNuoc',
-      'CAY_XANH': 'ReportCayXanh',
-      'CONG_VIEN': 'ReportCongVien',
-    }
-
-    const model = categoryMap[category]
-    if (!model) {
-      return NextResponse.json({ error: 'Model not found' }, { status: 400 })
-    }
-
-    const entries = await (db[model as never] as any).findMany({
+    const entries = await dbAny[model].findMany({
       where: { wardId, year },
       orderBy: { createdAt: 'asc' },
     })
 
-    const columns = SHEET_COLUMNS[sheetName] || []
-    const colHeaders = columns.map(c => c.name)
-    const hasCoords = ['DUONG', 'THOAT_NUOC_BC', 'CAY_XANH'].includes(category) ||
-      ['DIEN_CHIEU_SANG', 'CONG_VIEN'].includes(category)
+    const columns = editableColumns(category)
+    const colHeaders = columns.map(c => c.unit ? `${c.name} (${c.unit})` : c.name)
+    const coordKind = CATEGORY_COORDS[category] ?? 'none'
 
     const wb = new ExcelJS.Workbook()
     wb.creator = 'Sở Xây dựng Quảng Trị'
@@ -85,9 +74,9 @@ export async function GET(req: NextRequest) {
 
     // Columns header
     const allCols = ['STT', ...colHeaders]
-    if (hasCoords && ['DUONG', 'THOAT_NUOC_BC', 'CAY_XANH'].includes(category)) {
+    if (coordKind === 'startEnd') {
       allCols.push('Tọa độ đầu (Lat)', 'Tọa độ đầu (Lng)', 'Tọa độ cuối (Lat)', 'Tọa độ cuối (Lng)')
-    } else if (hasCoords && ['DIEN_CHIEU_SANG', 'CONG_VIEN'].includes(category)) {
+    } else if (coordKind === 'center') {
       allCols.push('Tọa độ (Lat)', 'Tọa độ (Lng)')
     }
 
@@ -105,17 +94,18 @@ export async function GET(req: NextRequest) {
     for (const entry of entries) {
       const rowData: unknown[] = [stt++]
       for (const col of columns) {
-        rowData.push(entry[col.name] ?? '')
+        const v = entry[col.field]
+        rowData.push(col.type === 'boolean' ? (v === true ? 'Có' : v === false ? 'Không' : '') : (v ?? ''))
       }
 
-      if (hasCoords && ['DUONG', 'THOAT_NUOC_BC', 'CAY_XANH'].includes(category)) {
+      if (coordKind === 'startEnd') {
         rowData.push(
           entry.toaDoDauLat ?? '',
           entry.toaDoDauLng ?? '',
           entry.toaDoCuoiLat ?? '',
           entry.toaDoCuoiLng ?? ''
         )
-      } else if (hasCoords && ['DIEN_CHIEU_SANG', 'CONG_VIEN'].includes(category)) {
+      } else if (coordKind === 'center') {
         rowData.push(entry.toaDoLat ?? '', entry.toaDoLng ?? '')
       }
 

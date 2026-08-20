@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ChevronRight, Settings, FileText } from 'lucide-react'
@@ -6,7 +7,8 @@ import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 
 export default async function AuditPage() {
-  await requireAuth()
+  const user = await requireAuth()
+  if (user.role?.name !== 'admin') redirect('/forbidden')
   const logs = await db.auditLog.findMany({
     orderBy: { createdAt: 'desc' }, take: 100,
     include: { user: { select: { name: true, email: true } } },
