@@ -18,13 +18,18 @@ function run(text: string, opts: { bold?: boolean; italics?: boolean; size?: num
 function center(children: TextRun[], opts: { spacingAfter?: number } = {}) {
   return new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: opts.spacingAfter ?? 0 }, children })
 }
+// Thể thức ngày tháng theo Nghị định 30/2020/NĐ-CP, Phụ lục I: số chỉ NGÀY nhỏ hơn 10
+// và THÁNG 1, 2 phải ghi thêm số 0 ở trước. Tháng 3–12 giữ nguyên, KHÔNG thêm số 0.
+const soNgay = (n: number) => (n < 10 ? `0${n}` : String(n))
+const soThang = (n: number) => (n === 1 || n === 2 ? `0${n}` : String(n))
+
 function fmtDmy(d?: Date | null): string {
   if (!d) return '…/…/……'
-  return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`
+  return `${soNgay(d.getDate())}/${soThang(d.getMonth() + 1)}/${d.getFullYear()}`
 }
 function dateLine(d?: Date | null, diaDanh = 'Quảng Trị'): string {
   const dt = d ?? new Date()
-  return `${diaDanh}, ngày ${dt.getDate()} tháng ${dt.getMonth() + 1} năm ${dt.getFullYear()}`
+  return `${diaDanh}, ngày ${soNgay(dt.getDate())} tháng ${soThang(dt.getMonth() + 1)} năm ${dt.getFullYear()}`
 }
 
 // subLines: các dòng phụ trong cùng một Điều, canh trái (không thụt đầu dòng) — vd
@@ -305,17 +310,34 @@ export function buildVuotKhungDecisionDocx(input: VuotKhungDecisionInput): Promi
 //   Điều 71 khoản 2 điểm b NĐ 170/2025/NĐ-CP ghi rõ NĐ 46/2010 HẾT HIỆU LỰC kể từ ngày
 //   NĐ 170/2025 có hiệu lực (01/7/2025). Nay dùng NĐ 170/2025 làm căn cứ.
 //
-//   ⚠️ VIỆC CÒN LẠI CỦA VĂN PHÒNG SỞ: NĐ 170/2025 ban hành kèm MẪU SỐ 2 (Thông báo
-//   nghỉ hưu — Điều 62) và MẪU SỐ 3 (Quyết định nghỉ hưu — Điều 63). Cần đối chiếu
-//   biểu mẫu hệ thống đang sinh với hai mẫu này. Các văn bản ĐÃ KÝ trước 20/8/2026
-//   mang căn cứ NĐ 46/2010 — Văn phòng Sở xem xét có cần đính chính hay không.
-const CAN_CU_NGHI_HUU = [
-  'Căn cứ Bộ luật Lao động ngày 20/11/2019;',
-  'Căn cứ Luật Bảo hiểm xã hội;',
-  'Căn cứ Nghị định số 135/2020/NĐ-CP ngày 18/11/2020 của Chính phủ quy định về tuổi nghỉ hưu;',
-  'Căn cứ Nghị định số 170/2025/NĐ-CP ngày 30/6/2025 của Chính phủ quy định về tuyển dụng, sử dụng và quản lý công chức;',
-  'Căn cứ Quyết định số 07/2025/QĐ-UBND ngày 18/8/2025 của UBND tỉnh Quảng Trị ban hành quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Sở Xây dựng tỉnh Quảng Trị;',
+//   ĐÃ ĐỐI CHIẾU MẪU (20/8/2026): hai khối căn cứ dưới đây chép theo đúng MẪU SỐ 2
+//   (Thông báo nghỉ hưu — Điều 62) và MẪU SỐ 3 (Quyết định nghỉ hưu — Điều 63) ban
+//   hành kèm NĐ 170/2025, trích từ bản gốc 170_2025_ND-CP_663212.docx trong kho.
+//   LƯU Ý HAI MẪU KHÁC NHAU: Mẫu số 2 có "Căn cứ Bộ luật Lao động" và "Căn cứ hồ sơ
+//   công chức và hồ sơ bảo hiểm xã hội"; Mẫu số 3 KHÔNG có hai căn cứ này mà thay
+//   bằng "Xét đề nghị của …". Không gộp chung.
+//
+//   Quyết định 07/2025/QĐ-UBND là căn cứ thẩm quyền riêng của Sở (không có trong mẫu,
+//   nhưng cần để xác lập thẩm quyền ký của Giám đốc Sở) — giữ ở cuối khối.
+//   Ngày tháng trong phần căn cứ VIẾT ĐẦY ĐỦ ("ngày 29 tháng 6 năm 2024") đúng như
+//   bản gốc hai mẫu, không viết tắt 29/6/2024.
+const CAN_CU_CHUNG_NGHI_HUU = [
+  'Căn cứ Luật Bảo hiểm xã hội ngày 29 tháng 6 năm 2024;',
+  'Căn cứ Luật Cán bộ, công chức ngày 24 tháng 6 năm 2025;',
+  'Căn cứ Nghị định số 135/2020/NĐ-CP ngày 18 tháng 11 năm 2020 của Chính phủ quy định về tuổi nghỉ hưu;',
+  'Căn cứ Nghị định số 170/2025/NĐ-CP ngày 30 tháng 6 năm 2025 của Chính phủ quy định về tuyển dụng, sử dụng và quản lý công chức;',
+  'Căn cứ Quyết định số 07/2025/QĐ-UBND ngày 18 tháng 8 năm 2025 của UBND tỉnh Quảng Trị ban hành quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Sở Xây dựng tỉnh Quảng Trị;',
+]
+
+// MẪU SỐ 2 — Thông báo nghỉ hưu. Căn cứ cuối ("hồ sơ công chức và hồ sơ bảo hiểm xã
+// hội") KHÔNG đứng riêng mà nối liền vào câu dẫn thân bài, nên xử lý ở phần thân.
+const CAN_CU_TB_NGHI_HUU = [
+  'Căn cứ Bộ luật Lao động ngày 20 tháng 11 năm 2019;',
+  ...CAN_CU_CHUNG_NGHI_HUU,
 ].join('\n')
+
+// MẪU SỐ 3 — Quyết định nghỉ hưu (không viện dẫn Bộ luật Lao động).
+const CAN_CU_QD_NGHI_HUU = CAN_CU_CHUNG_NGHI_HUU.join('\n')
 
 export type RetirementInput = {
   soVanBan: string
@@ -334,20 +356,18 @@ export type RetirementInput = {
   tenCoQuan: string
   diaDanh?: string
   nguoiKyHoTen?: string
+  // Các trường MẪU SỐ 3 (Điều 1) bắt buộc phải có. Thiếu thì in PLACEHOLDER để
+  // người soạn thấy ngay chỗ trống, KHÔNG tự suy đoán.
+  soSoBHXH?: string | null
+  noiSinh?: string | null
+  noiCuTruSauNghiHuu?: string | null
+  baoHiemKhuVuc?: string | null   // "Bảo hiểm xã hội khu vực …" giải quyết chế độ
 }
 
-function thongTinCongChuc(input: RetirementInput): string {
-  const parts = [
-    input.ngaySinh ? `sinh ngày ${fmtDmy(input.ngaySinh)}` : null,
-    [input.chucDanh, input.donVi].filter(Boolean).join(', ') || null,
-  ].filter(Boolean)
-  return parts.join('; ')
-}
 
-// THÔNG BÁO nghỉ hưu — trước 6 tháng (NĐ 46/2010, Điều 9 khoản 3).
+// THÔNG BÁO nghỉ hưu — trước 06 tháng (NĐ 170/2025, Điều 62; theo MẪU SỐ 2).
 export async function buildRetirementNoticeDocx(input: RetirementInput): Promise<Buffer> {
   const diaDanh = input.diaDanh || 'Quảng Trị'
-  const ngachLine = `Ngạch: ${input.ngach || PLACEHOLDER}; Mã số: ${input.maNgach || PLACEHOLDER}; Bậc: ${input.bac ?? PLACEHOLDER}; Hệ số: ${input.heSo ?? PLACEHOLDER}.`
 
   const heading: Paragraph[] = [
     new Paragraph({
@@ -373,33 +393,46 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
     }),
   ]
 
-  const canCuLines = (input.canCuPhapLy || CAN_CU_NGHI_HUU).split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
+  const canCuLines = (input.canCuPhapLy || CAN_CU_TB_NGHI_HUU).split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
   const canCuParas = canCuLines.map((line) => new Paragraph({
     alignment: AlignmentType.JUSTIFIED, spacing: { after: 40 },
     children: [run(/^căn cứ/i.test(line) ? line : `Căn cứ ${line}`, { italics: true })],
   }))
 
+  // Thân bài chép đúng bố cục MẪU SỐ 2: câu dẫn có căn cứ hồ sơ nối liền, rồi TỪNG
+  // DÒNG RIÊNG "Ông (bà)" / "Sinh ngày" / "Chức vụ" / "Đơn vị công tác" / "Kể từ ngày".
+  // Mẫu KHÔNG có dòng ngạch/bậc/hệ số nên không đưa vào (giữ đúng mẫu ban hành).
   const body: Paragraph[] = [
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED, spacing: { before: 120, after: 120 }, indent: { firstLine: 567 },
-      children: [run(`${input.tenCoQuan || 'Sở Xây dựng Quảng Trị'} thông báo thời điểm nghỉ hưu đối với công chức như sau:`)],
+      children: [run(`Căn cứ hồ sơ công chức và hồ sơ bảo hiểm xã hội, ${input.tenCoQuan || 'Sở Xây dựng Quảng Trị'} thông báo:`)],
     }),
     new Paragraph({
-      alignment: AlignmentType.JUSTIFIED, spacing: { after: 60 }, indent: { firstLine: 567 },
-      children: [run('Ông/bà: '), run(input.hoTen, { bold: true }), run(`, ${thongTinCongChuc(input)}.`)],
+      alignment: AlignmentType.JUSTIFIED, spacing: { after: 60 },
+      children: [run('Ông (bà): '), run(input.hoTen, { bold: true })],
     }),
-    new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 120 }, children: [run(ngachLine)] }),
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED, spacing: { after: 60 },
+      children: [run(`Sinh ngày: ${fmtDmy(input.ngaySinh)}`)],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED, spacing: { after: 60 },
+      children: [run(`Chức vụ: ${input.chucDanh || PLACEHOLDER}`)],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED, spacing: { after: 120 },
+      children: [run(`Đơn vị công tác: ${input.donVi || PLACEHOLDER}`)],
+    }),
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED, spacing: { after: 120 }, indent: { firstLine: 567 },
-      children: [run('Được nghỉ hưu để hưởng chế độ bảo hiểm xã hội kể từ ngày '), run(fmtDmy(input.ngayNghiHuu), { bold: true }), run('.')],
+      children: [
+        run('Kể từ ngày '), run(fmtDmy(input.ngayNghiHuu), { bold: true }),
+        run(' sẽ được nghỉ hưu để hưởng chế độ bảo hiểm xã hội theo quy định.'),
+      ],
     }),
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED, spacing: { after: 120 }, indent: { firstLine: 567 },
-      children: [run('Đề nghị công chức có tên trên và đơn vị quản lý chuẩn bị người thay thế, tổ chức bàn giao công việc, hồ sơ, tài liệu, tài sản (nếu có) theo quy định; hoàn thiện hồ sơ để cơ quan ban hành Quyết định nghỉ hưu trước 03 tháng tính đến thời điểm nghỉ hưu.')],
-    }),
-    new Paragraph({
-      alignment: AlignmentType.JUSTIFIED, spacing: { after: 120 }, indent: { firstLine: 567 },
-      children: [run(`${input.tenCoQuan || 'Sở Xây dựng Quảng Trị'} thông báo để công chức và các đơn vị liên quan biết, thực hiện./.`)],
+      children: [run(`${input.tenCoQuan || 'Sở Xây dựng Quảng Trị'} thông báo để ông (bà) ${input.hoTen} được biết và thực hiện./.`)],
     }),
   ]
 
@@ -412,7 +445,8 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
         new TextRun({ text: '\tGIÁM ĐỐC', font: FONT, size: SIZE, bold: true }),
       ],
     }),
-    ...['- Công chức có tên trên;', '- Lãnh đạo Sở;', '- Đơn vị quản lý;', '- BHXH tỉnh;', '- Lưu: VT, VP.']
+    // Nơi nhận theo đúng MẪU SỐ 2 NĐ 170/2025.
+    ...['- Như trên;', '- Lưu: VT, Hồ sơ công chức, TCCB.']
       .map((line) => new Paragraph({ spacing: { after: 0 }, children: [run(line, { size: 22 })] })),
     new Paragraph({ spacing: { before: 700 }, alignment: AlignmentType.CENTER, indent: { left: 5000 },
       children: [run(input.nguoiKyHoTen || '', { bold: true })] }),
@@ -425,6 +459,11 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
         ...heading,
         center([run('THÔNG BÁO', { bold: true, size: 28 })], { spacingAfter: 60 }),
         center([run('Về việc nghỉ hưu đối với công chức', { bold: true })], { spacingAfter: 200 }),
+        // "Kính gửi" — bắt buộc theo MẪU SỐ 2 (trước đây thiếu).
+        new Paragraph({
+          alignment: AlignmentType.CENTER, spacing: { after: 240 },
+          children: [run('Kính gửi: Ông (bà) '), run(input.hoTen, { bold: true })],
+        }),
         ...canCuParas,
         ...body,
         ...signing,
@@ -434,36 +473,52 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
   return Buffer.from(await Packer.toBuffer(doc))
 }
 
-// QUYẾT ĐỊNH nghỉ hưu — trước 3 tháng (NĐ 46/2010, Điều 9 khoản 4).
+// QUYẾT ĐỊNH nghỉ hưu — trước 03 tháng (NĐ 170/2025, Điều 63; theo MẪU SỐ 3).
 export function buildRetirementDecisionDocx(input: RetirementInput): Promise<Buffer> {
-  const chucVuDonVi = [input.chucDanh, input.donVi].filter(Boolean).join(', ')
   return decisionDocx({
     coQuanCapTren: input.coQuanCapTren,
     tenCoQuan: input.tenCoQuan,
     soVanBan: input.soVanBan,
     ngayVanBan: input.ngayVanBan,
     diaDanh: input.diaDanh,
-    tieuDePhu: 'Về việc nghỉ hưu đối với công chức',
+    // MẪU SỐ 3 ghi tiêu đề phụ là "Về việc nghỉ hưu để hưởng chế độ bảo hiểm xã hội".
+    tieuDePhu: 'Về việc nghỉ hưu để hưởng chế độ bảo hiểm xã hội',
     thamQuyen: `GIÁM ĐỐC ${(input.tenCoQuan || 'SỞ XÂY DỰNG QUẢNG TRỊ').toUpperCase()}`,
-    canCuPhapLy: input.canCuPhapLy || CAN_CU_NGHI_HUU,
-    theoDeNghi: 'Theo đề nghị của Chánh Văn phòng Sở.',
+    canCuPhapLy: input.canCuPhapLy || CAN_CU_QD_NGHI_HUU,
+    // (2) trong mẫu = "Người đứng đầu đơn vị phụ trách công tác tổ chức, cán bộ" → Chánh Văn phòng Sở.
+    theoDeNghi: 'Xét đề nghị của Chánh Văn phòng Sở,',
     nguoiKyHoTen: input.nguoiKyHoTen,
-    noiNhan: ['- Như Điều 3;', '- Lãnh đạo Sở;', '- BHXH tỉnh;', '- Phòng KH-TC;', '- Lưu: VT, VP.'],
+    // Nơi nhận theo MẪU SỐ 3. Mẫu ghi "BHXH tỉnh (thành phố)…", nhưng chính Điều 2 của
+    // mẫu đã dùng "Bảo hiểm khu vực" (từ 01/7/2025 BHXH tỉnh tổ chức lại thành khu vực)
+    // nên thống nhất dùng "khu vực" và để trống tên khu vực cho người soạn điền.
+    noiNhan: ['- Như Điều 3;', `- Bảo hiểm xã hội khu vực ${PLACEHOLDER};`, '- Lưu: VT, Hồ sơ công chức, TCCB.'],
     dieu: [
       {
+        // Điều 1 chép đúng bố cục MẪU SỐ 3: họ tên + Số sổ BHXH trên cùng dòng, rồi
+        // Sinh ngày / Nơi sinh / Chức vụ / Đơn vị công tác / Được nghỉ hưu / Nơi cư trú.
+        // Mẫu KHÔNG có dòng ngạch, bậc, hệ số nên không đưa vào.
         label: 'Điều 1. ',
         runs: [
-          run('Ông/bà '), run(input.hoTen, { bold: true }),
-          run(`${input.ngaySinh ? `, sinh ngày ${fmtDmy(input.ngaySinh)}` : ''} được nghỉ hưu để hưởng chế độ bảo hiểm xã hội kể từ ngày `),
-          run(fmtDmy(input.ngayNghiHuu), { bold: true }), run('.'),
+          run('Ông (bà) '), run(input.hoTen, { bold: true }),
+          run(`  Số sổ BHXH: ${input.soSoBHXH || PLACEHOLDER}`),
         ],
         subLines: [
-          [run(`Chức vụ, đơn vị công tác trước khi nghỉ hưu: ${chucVuDonVi || PLACEHOLDER}.`)],
-          [run(`Ngạch: ${input.ngach || PLACEHOLDER}; Mã số: ${input.maNgach || PLACEHOLDER}; Bậc: ${input.bac ?? PLACEHOLDER}; Hệ số: ${input.heSo ?? PLACEHOLDER}.`)],
+          [run(`Sinh ngày: ${fmtDmy(input.ngaySinh)}`)],
+          [run(`Nơi sinh: ${input.noiSinh || PLACEHOLDER}`)],
+          [run(`Chức vụ: ${input.chucDanh || PLACEHOLDER}`)],
+          [run(`Đơn vị công tác: ${input.donVi || PLACEHOLDER}`)],
+          [run('Được nghỉ hưu để hưởng chế độ bảo hiểm xã hội từ ngày '), run(fmtDmy(input.ngayNghiHuu), { bold: true })],
+          [run(`Nơi cư trú sau khi nghỉ hưu: ${input.noiCuTruSauNghiHuu || PLACEHOLDER}`)],
         ],
       },
-      { label: 'Điều 2. ', runs: [run('Ông/bà có tên tại Điều 1 được hưởng chế độ hưu trí theo quy định của pháp luật về bảo hiểm xã hội; bàn giao công việc, hồ sơ, tài liệu, tài sản (nếu có) trước thời điểm nghỉ hưu.')] },
-      { label: 'Điều 3. ', runs: [run(DIEU_THI_HANH(`ông/bà ${input.hoTen}`))] },
+      {
+        label: 'Điều 2. ',
+        runs: [run(`Chế độ bảo hiểm xã hội đối với ông (bà) ${input.hoTen} do ${input.baoHiemKhuVuc || `Bảo hiểm khu vực ${PLACEHOLDER}`} trực thuộc Bảo hiểm xã hội Việt Nam giải quyết theo quy định của pháp luật bảo hiểm xã hội hiện hành.`)],
+      },
+      {
+        label: 'Điều 3. ',
+        runs: [run(`Thủ trưởng các cơ quan, đơn vị có liên quan và ông (bà) ${input.hoTen} chịu trách nhiệm thi hành quyết định này./.`)],
+      },
     ],
   })
 }

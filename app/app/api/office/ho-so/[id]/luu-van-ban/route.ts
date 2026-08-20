@@ -88,15 +88,23 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       soVanBan: '...../...-SXD', hoTen: cb.hoTen, ngaySinh: cb.ngaySinh, chucDanh, donVi,
       ngach: cb.ngachHienHuong, maNgach: cb.maNgach, bac: cb.bacLuong, heSo: cb.heSoLuong,
       ngayNghiHuu, coQuanCapTren, tenCoQuan,
+      // MẪU SỐ 3 (NĐ 170/2025) yêu cầu Số sổ BHXH tại Điều 1. Mã số BHXH 10 chữ số
+      // chính là số sổ BHXH theo quy định của BHXH Việt Nam nên dùng trực tiếp.
+      soSoBHXH: cb.maSoBHXH,
+      // "Nơi sinh" và "Nơi cư trú sau khi nghỉ hưu" KHÔNG có trong CSDL và KHÔNG suy ra
+      // được từ quê quán / nơi ở hiện nay (khác nhau về pháp lý) → để trống có chủ đích,
+      // biểu mẫu sẽ in "…………" để Văn phòng Sở điền trước khi trình ký.
+      noiSinh: null,
+      noiCuTruSauNghiHuu: null,
     }
     if (loai === 'tb_nghi_huu') {
       fileName = `DuThao_Thong_bao_nghi_huu_${safeName}.docx`
       tieuDe = `Dự thảo Thông báo nghỉ hưu — ${cb.hoTen}`
-      buf = await buildRetirementNoticeDocx(common)
+      buf = await buildRetirementNoticeDocx({ ...common, soVanBan: '...../TB-SXD' })
     } else {
       fileName = `DuThao_QD_nghi_huu_${safeName}.docx`
       tieuDe = `Dự thảo Quyết định nghỉ hưu — ${cb.hoTen}`
-      buf = await buildRetirementDecisionDocx(common)
+      buf = await buildRetirementDecisionDocx({ ...common, soVanBan: '...../QĐ-SXD' })
     }
   }
 
