@@ -58,3 +58,9 @@ backups/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Build output cua quy trinh build zero-downtime (truoc day bi commit nham)
+app/.next-staging/
+app/.next-old/
+.next-staging/
+.next-old/
