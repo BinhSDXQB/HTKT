@@ -44,6 +44,8 @@ const TT_LABEL = { con_hieu_luc: 'Còn hiệu lực', het_hieu_luc: 'HẾT hiệ
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex')
 const chuanHoaText = (t) => t.replace(/\[Trang \d+\]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase()
 const noiDungHashCua = (t) => sha256(chuanHoaText(t))
+// Dưới ngưỡng này coi như KHÔNG bóc được chữ (PDF scan) — xem giải thích ở phần nạp.
+const NGUONG_CHU_TOI_THIEU = 500
 
 // ── Trích xuất ───────────────────────────────────────────────────────
 async function extractText(buf, filename) {
@@ -189,6 +191,7 @@ if (!REPORT_ONLY) {
   console.log(`📁 ${FOLDER}\n   ${targets.length} file PDF/DOCX · ${boQua.length} file .doc/.gdoc bỏ qua\n`)
 
   let them = 0, daCo = 0, trungFile = 0, trungND = 0, loi = 0
+  const canOcr = []
   for (const f of targets) {
     try {
       const buf = readFileSync(join(FOLDER, f))
@@ -214,6 +217,21 @@ if (!REPORT_ONLY) {
 
       // (c) file mới → trích xuất, kiểm tra TRÙNG NỘI DUNG.
       const text = await extractText(buf, f)
+
+      // CHẶN "HỐ ĐEN" PDF SCAN — lỗi đã xảy ra thật (phát hiện 20/8/2026):
+      // PDF scan không có lớp văn bản thì bóc ra gần như rỗng. Mã băm nội dung của
+      // các bản rỗng GIỐNG HỆT NHAU, nên tệp scan đầu tiên lọt vào kho biến thành
+      // "bản gốc" và MỌI tệp scan nạp sau đều bị coi là trùng rồi âm thầm bỏ qua.
+      // Thực tế: 36_2026_TT-BXD_PL6.pdf chỉ có 57 ký tự ("[Trang 1]…[Trang 5]") đã
+      // nuốt mất 7 nghị định 2026 (NĐ 210, 193, 205, 136, 238, 269, 35).
+      // Nay chặn ngay từ đầu và báo rõ là CẦN OCR, không tạo bản ghi trong kho.
+      const soChuThuc = chuanHoaText(text).replace(/\[trang \d+\]/g, '').replace(/\s/g, '').length
+      if (soChuThuc < NGUONG_CHU_TOI_THIEU) {
+        console.log(`🔍 CẦN OCR: "${f}" chỉ bóc được ${soChuThuc} ký tự — nhiều khả năng là bản SCAN không có lớp văn bản. CHƯA NẠP (nạp vào sẽ làm hỏng cơ chế chống trùng).`)
+        canOcr.push(f)
+        continue
+      }
+
       const ndHash = noiDungHashCua(text)
       const byContent = await client.query(`SELECT nguon FROM tai_lieu WHERE metadata->>'noiDungHash'=$1 AND "deletedAt" IS NULL LIMIT 1`, [ndHash])
       if (byContent.rows.length) {
@@ -245,6 +263,12 @@ if (!REPORT_ONLY) {
 
   console.log(`\n──────── ĐỒNG BỘ ────────`)
   console.log(`✅ Thêm mới: ${them}  ·  ⏭️ Đã có: ${daCo}  ·  🟰 Trùng file: ${trungFile}  ·  📑 Trùng nội dung: ${trungND}  ·  🗑️ Đã gỡ: ${xoa}  ·  ❌ Lỗi: ${loi}`)
+  if (canOcr.length) {
+    console.log(`
+🔍 ${canOcr.length} tệp CẦN OCR trước khi nạp (bản scan, không có lớp văn bản):`)
+    canOcr.forEach((x) => console.log(`   - ${x}`))
+    console.log('   → Dùng Adobe Acrobat / công cụ OCR để tạo lớp văn bản, hoặc tải bản .docx từ Công báo, rồi chạy lại.')
+  }
   if (boQua.length) console.log(`⚠️ Không xử lý (.doc cũ/.gdoc shortcut): ${boQua.length} file — lưu lại thành .docx/PDF rồi chạy lại.`)
 }
 
