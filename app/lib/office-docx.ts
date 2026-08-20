@@ -299,6 +299,14 @@ export function buildVuotKhungDecisionDocx(input: VuotKhungDecisionInput): Promi
 
 // ───────────────────────── Nghỉ hưu (Thông báo & Quyết định) ─────────────────────────
 // Căn cứ pháp lý mặc định cho thủ tục nghỉ hưu công chức (NĐ 46/2010, NĐ 135/2020).
+//
+// ⚠️ CẢNH BÁO CĂN CỨ PHÁP LÝ (rà soát 19/8/2026):
+//   Có nguồn nêu NĐ 46/2010/NĐ-CP đã HẾT HIỆU LỰC từ 01/7/2025 (bị NĐ 170/2025/NĐ-CP
+//   thay, cùng đợt Luật Cán bộ, công chức 2025). Hệ thống CHƯA tự xác minh được vì cả
+//   hai văn bản chưa có trong kho tài liệu (G:\My Drive\Tailieu_VBPL).
+//   Khối căn cứ này đi thẳng vào Thông báo/Quyết định nghỉ hưu do lãnh đạo KÝ, nên
+//   Văn phòng Sở PHẢI đối chiếu bản chính thức trước khi trình ký, và cập nhật tại đây
+//   ngay khi có kết luận. Xem thêm lib/data/co-so-phap-ly-nhan-su.ts (mục nghỉ hưu).
 const CAN_CU_NGHI_HUU = [
   'Căn cứ Bộ luật Lao động ngày 20/11/2019;',
   'Căn cứ Luật Bảo hiểm xã hội;',

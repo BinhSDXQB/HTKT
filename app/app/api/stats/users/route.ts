@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db as prisma } from '@/lib/db'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    // Thống kê nội bộ — bắt buộc đăng nhập (trước đây mở công khai)
+    if (!(await getCurrentUser())) {
+      return NextResponse.json({ error: 'Chưa đăng nhập' }, { status: 401 })
+    }
+
     const now = new Date()
     const fifteenMinutesAgo = new Date(now.getTime() - 15 * 60 * 1000)
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())

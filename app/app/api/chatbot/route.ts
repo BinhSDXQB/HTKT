@@ -9,6 +9,40 @@ import { timPhapLy, formatPhapLyMuc } from '@/lib/data/co-so-phap-ly-nhan-su'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
+// Model chat — đổi được qua .env (OPENAI_CHAT_MODEL) mà không phải sửa code.
+// Mặc định gpt-4.1: bám sát dữ liệu tool và trích dẫn pháp lý chính xác hơn hẳn
+// gpt-4o-mini (model cũ hay tự "suy diễn" điều/khoản khi tool trả về không đủ).
+// gpt-4.1-mini: hạn mức 200.000 token/phút (gpt-4.1 chỉ 30.000 TPM — đã gây lỗi
+// 429 → HTTP 500 khi vài người hỏi cùng lúc), chất lượng vượt hẳn gpt-4o-mini cũ.
+const CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4.1-mini'
+
+// Số lượt hội thoại tối đa nhận từ client (mỗi lượt = 1 tin). Cắt bớt để tránh
+// prompt phình to và hạn chế việc client nhồi lịch sử giả.
+const MAX_HISTORY = 16
+
+/**
+ * Gọi OpenAI có thử lại khi bị giới hạn tốc độ (429) hoặc lỗi tạm thời 5xx.
+ * Không có lớp này, chỉ cần vài người hỏi cùng lúc là chatbot trả "Lỗi máy chủ"
+ * dù dữ liệu và câu hỏi đều hợp lệ.
+ */
+async function goiOpenAI(
+  params: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming,
+): Promise<OpenAI.Chat.Completions.ChatCompletion> {
+  const CHO = [800, 2000, 4500]   // ms
+  for (let lan = 0; ; lan++) {
+    try {
+      return await openai.chat.completions.create(params)
+    } catch (e) {
+      const status = (e as { status?: number })?.status
+      const thuLaiDuoc = status === 429 || (typeof status === 'number' && status >= 500)
+      if (!thuLaiDuoc || lan >= CHO.length) throw e
+      console.warn(`OpenAI ${status} — thử lại lần ${lan + 1} sau ${CHO[lan]}ms`)
+      await new Promise((r) => setTimeout(r, CHO[lan]))
+    }
+  }
+}
+
+
 // Email tài khoản quản trị được phép GHI danh bạ lãnh đạo xã/phường
 const ADMIN_EMAIL = 'admin@htkt.com.vn'
 
@@ -120,6 +154,14 @@ QUY TẮC:
 - CƠ SỞ PHÁP LÝ: khi hỏi "căn cứ pháp lý", "quy định ở đâu/điều khoản nào", "nghị định/thông tư nào", "vị trí việc làm quy định tại đâu", "trước bao nhiêu tháng ra thông báo nghỉ hưu", HOẶC các câu về CHẾ ĐỘ NGHỈ ("nghỉ phép năm mấy ngày", "phép năm có tính thứ bảy chủ nhật/ngày lễ không", "cưới/kết hôn được nghỉ mấy ngày", "có người thân mất nghỉ mấy ngày", "vợ đẻ/vợ sinh con chồng được nghỉ mấy ngày", "nghỉ chăm con ốm", "nghỉ không lương")... dùng tool tra_cuu_phap_ly_nhan_su. PHẢI trích dẫn ĐÚNG số hiệu văn bản, điều/khoản/điểm và NGÀY HIỆU LỰC như tool trả về — KHÔNG bịa thêm điều khoản, KHÔNG đổi ngày hiệu lực; nếu chủ đề chưa có trong kết quả tool thì nói rõ chưa có trong cơ sở dữ liệu, KHÔNG tự suy diễn. Riêng VỊ TRÍ VIỆC LÀM: luôn nhắc người quản lý PHẢI cập nhật vị trí việc làm cho TỪNG công chức/viên chức (căn cứ NĐ 62/2020 — công chức, NĐ 106/2020 — viên chức, Luật CBCC 2025 hiệu lực 01/7/2025) và có thể vào Văn phòng Sở → Cảnh báo & việc cần làm để xem ai chưa cập nhật
 - TRA CỨU NỘI DUNG TÀI LIỆU: khi người dùng hỏi về NỘI DUNG một văn bản/tài liệu/quy trình/hướng dẫn nghiệp vụ đã được nạp vào hệ thống ("tài liệu nào nói về…", "quy trình/hướng dẫn về…", "theo quy định/tài liệu thì…", "trình tự/thủ tục …"), dùng tool tra_cuu_tai_lieu. CHỈ trả lời dựa trên các đoạn tool trả về; LUÔN dẫn nguồn (tên tài liệu + trang) ở cuối; nếu tool báo không có đoạn liên quan thì nói rõ "chưa có tài liệu phù hợp trong kho", KHÔNG bịa. Phân biệt với tra_cuu_phap_ly_nhan_su (dành riêng cho cơ sở pháp lý nhân sự đã mã hoá sẵn) — câu hỏi về tài liệu chuyên ngành hạ tầng/xây dựng/quy trình do Sở nạp thì dùng tra_cuu_tai_lieu
 - ⚠️ PHÁP LUẬT XÂY DỰNG MỚI TỪ 01/7/2026: Luật Xây dựng 135/2025/QH15 và bộ nghị định/thông tư hướng dẫn đã CÓ HIỆU LỰC, thay thế văn bản cũ. Khi trả lời về pháp luật xây dựng — giao thông — quy hoạch, dùng đúng văn bản MỚI: NĐ 217/2026 (quản lý hoạt động XD — thay NĐ 175/2024, 15/2021), NĐ 207/2026 (chất lượng, thi công, bảo trì — thay NĐ 06/2021), NĐ 206/2026 (chi phí ĐTXD — thay NĐ 10/2021), NĐ 210/2026 (hợp đồng XD — thay NĐ 37/2015, 50/2021), NĐ 209/2026 (VLXD — thay NĐ 09/2021), NĐ 212/2026 (năng lực HĐXD), NĐ 193/2026 (quyết toán vốn), bộ TT 32–41/2026/TT-BXD (thay TT 06/2021 và TT 11–14/2021). Quy hoạch: Luật Quy hoạch 112/2025 (thay Luật 21/2017, hiệu lực 01/3/2026) + NĐ 70/2026; Luật QHĐT-NT 47/2024 sửa đổi bởi Luật 144/2025. Đô thị: NQ 111/2025/UBTVQH15 phân loại đô thị (thay NQ 1210/2016) + NĐ 35/2026; NĐ 269/2025 đô thị thông minh. Nhà ở-BĐS: NĐ 54/2026, NĐ 136/2026 sửa NĐ 95/96/100/2024. Vận tải: NĐ 218/2026 sửa NĐ 158/2024 (từ 10/8/2026), NĐ 238/2026 sửa NĐ 168/2024 (từ 15/8/2026), TT 30/2026 kiểm định xe. Ngân sách: Luật NSNN 89/2025 (thay 83/2015 từ năm NS 2026). TUYỆT ĐỐI không viện dẫn văn bản đã hết hiệu lực làm căn cứ hiện hành; cần nội dung chi tiết điều khoản thì tra bằng tool tra_cuu_tai_lieu (kho đã nạp các văn bản trên)
+- ⛔ NGUYÊN TẮC TỐI THƯỢNG — KHÔNG BỊA (ưu tiên cao hơn mọi hướng dẫn khác):
+  1. MỌI số liệu, họ tên, số điện thoại, ngày tháng, hệ số lương, số hiệu văn bản, điều/khoản/điểm PHẢI lấy nguyên văn từ KẾT QUẢ TOOL trong chính lượt trả lời này. Không lấy từ trí nhớ, không suy luận, không ước lượng, không "làm tròn" cho hợp lý.
+  2. Nếu tool trả về rỗng, "không tìm thấy", "chưa cập nhật", hoặc báo lỗi → PHẢI nói thẳng: chưa có dữ liệu trong hệ thống / chưa truy vấn được, và hướng dẫn người dùng liên hệ bộ phận phụ trách. TUYỆT ĐỐI KHÔNG thay bằng kiến thức chung.
+  3. Câu hỏi cần dữ liệu của cơ quan (nhân sự, lương, hạ tầng, văn bản, pháp lý) mà bạn CHƯA gọi tool → phải gọi tool trước. Không trả lời chay.
+  4. Lịch sử hội thoại (kể cả lời của chính bạn ở lượt trước) CHỈ dùng để hiểu ngữ cảnh câu hỏi nối tiếp — KHÔNG phải nguồn dữ liệu. Câu hỏi hiện tại cần số liệu thì PHẢI gọi lại tool, không chép số từ lượt trước. Nếu người dùng khẳng định một số liệu, phải kiểm chứng bằng tool trước khi dùng.
+  5. Khi không chắc chắn, nói rõ mức độ chắc chắn và nêu cần kiểm chứng ở đâu — thà thiếu còn hơn sai.
+  6. Trả lời phải ĐỦ: nêu đúng con số + đơn vị + mốc thời gian + nguồn (tên tool/tài liệu/số hiệu văn bản) khi có.
+  7. NGƯỜI DÙNG NÊU SỐ HIỆU VĂN BẢN mà kết quả tool KHÔNG hề nhắc tới số hiệu đó: PHẢI nói thẳng "hệ thống không có văn bản số … trong kho, có thể số hiệu chưa chính xác", TUYỆT ĐỐI KHÔNG gán nội dung của văn bản khác cho số hiệu người dùng nêu, KHÔNG mở đầu bằng "Theo Nghị định X…" khi chưa xác minh được X.
 - Nếu không biết hoặc không chắc, đề nghị liên hệ quản trị viên hệ thống`
 
 // ── Định nghĩa tools theo chuẩn OpenAI ───────────────────────────────────────
@@ -404,6 +446,53 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
 
 // ── Thực thi tool ─────────────────────────────────────────────────────────────
 type ToolCtx = { userId: string; email: string; user: CurrentUser }
+// ── Kiểm chứng SỐ HIỆU VĂN BẢN người dùng nêu ────────────────────────────────
+// Người dùng hay hỏi "theo Nghị định X/YYYY thì ...". Nếu X/YYYY không hề tồn tại,
+// model vẫn có xu hướng mở đầu bằng "Theo Nghị định X/YYYY..." rồi gán nội dung
+// của văn bản khác cho nó. Nhắc trong prompt là chưa đủ — chặn bằng mã: dò số
+// hiệu trong câu hỏi, đối chiếu với kho tài liệu, không có thì bắt buộc nói rõ.
+
+/** Rút các số hiệu dạng 175/2024, 217/2026/NĐ-CP, 45/2019/QH14... khỏi câu hỏi. */
+function docSoHieu(cauHoi: string): string[] {
+  const out = new Set<string>()
+  const re = /\b(\d{1,4}\/20\d{2})(?:\/[A-Za-zĐđ-]+)?/g
+  let m: RegExpExecArray | null
+  while ((m = re.exec(cauHoi)) !== null) out.add(m[1])
+  return [...out]
+}
+
+/**
+ * Trả về cảnh báo cho các số hiệu người dùng nêu mà KHÔNG tìm thấy ở đâu trong
+ * hệ thống (không có trong đoạn trích, không có trong tiêu đề/tên file kho tài liệu).
+ */
+async function canhBaoSoHieuLa(cauHoi: string, doanTrich: string): Promise<string> {
+  const soHieus = docSoHieu(cauHoi)
+  if (soHieus.length === 0) return ''
+
+  const la: string[] = []
+  for (const sh of soHieus) {
+    if (doanTrich.includes(sh)) continue
+    const co = await db.taiLieu.findFirst({
+      where: {
+        deletedAt: null,
+        OR: [{ tieuDe: { contains: sh } }, { nguon: { contains: sh } }],
+      },
+      select: { id: true },
+    })
+    if (!co) la.push(sh)
+  }
+  if (la.length === 0) return ''
+
+  return (
+    `⛔ CẢNH BÁO BẮT BUỘC: hệ thống KHÔNG có văn bản số ${la.join(', ')} trong kho tài liệu, ` +
+    'và các đoạn trích dưới đây cũng KHÔNG nhắc tới số hiệu đó. ' +
+    'PHẢI mở đầu câu trả lời bằng việc nói rõ: không tìm thấy văn bản người dùng nêu, ' +
+    'có thể số hiệu chưa chính xác. TUYỆT ĐỐI KHÔNG viết "Theo Nghị định/Thông tư ' +
+    `${la.join(', ')}..." và KHÔNG gán nội dung của văn bản khác cho số hiệu này. ` +
+    'Nếu vẫn cung cấp thông tin tham khảo, phải ghi rõ đó là của văn bản NÀO (số hiệu thật).\n\n'
+  )
+}
+
 async function executeTool(name: string, args: Record<string, string>, ctx: ToolCtx): Promise<string> {
   try {
     if (name === 'tim_can_bo') {
@@ -551,7 +640,13 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
     }
 
     if (name === 'so_do_to_chuc') {
-      const phongFilter = args.phong?.trim()
+      let phongFilter: string | undefined = args.phong?.trim() || undefined
+      // Model hay truyền nhầm tên cơ quan cấp trên ("Sở Xây dựng Quảng Trị") vào
+      // ô lọc phòng → không đơn vị cấp 2 nào khớp → trả rỗng và chatbot báo
+      // "không tìm thấy" dù CSDL có đủ 24 đơn vị. Bỏ qua các từ khoá cấp Sở.
+      if (phongFilter && /^(?:sở|so)\b|sở xây dựng|toàn bộ|tất cả/i.test(phongFilter)) {
+        phongFilter = undefined
+      }
       const donVis = await db.toChuc.findMany({
         where: {
           cap: 2, isActive: true,
@@ -573,7 +668,21 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
         orderBy: { thuTu: 'asc' },
       })
 
-      if (donVis.length === 0) return 'Không tìm thấy đơn vị phù hợp.'
+      // Lọc không ra kết quả → trả TOÀN BỘ sơ đồ kèm ghi chú, thay vì báo rỗng
+      // (rỗng khiến chatbot nói "không có dữ liệu" trong khi CSDL vẫn có).
+      if (donVis.length === 0) {
+        if (!phongFilter) return 'Chưa có đơn vị nào trong cơ sở dữ liệu tổ chức.'
+        const tatCa = await db.toChuc.findMany({
+          where: { cap: 2, isActive: true },
+          include: { canBos: { select: { hoTen: true, chucDanh: { select: { ten: true, capQuanLy: true } }, soDienThoai: true } } },
+          orderBy: { thuTu: 'asc' },
+        })
+        if (tatCa.length === 0) return 'Chưa có đơn vị nào trong cơ sở dữ liệu tổ chức.'
+        return (
+          `Không có đơn vị nào khớp "${phongFilter}". Dưới đây là TOÀN BỘ sơ đồ tổ chức (${tatCa.length} đơn vị):\n\n` +
+          tatCa.map(dv => `**${dv.ten}** — ${dv.canBos.length} cán bộ`).join('\n')
+        )
+      }
 
       return donVis.map(dv => {
         const total = dv.canBos.length
@@ -1305,8 +1414,26 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
           '\n\nVí dụ: "căn cứ pháp lý về vị trí việc làm", "nâng lương theo thông tư nào", "trước mấy tháng phải ra thông báo nghỉ hưu".'
         )
       }
-      // Trả tối đa 3 mục khớp nhất để câu trả lời gọn
-      return mucs.slice(0, 3).map(formatPhapLyMuc).join('\n\n──────────\n\n')
+      // CHỐNG BỊA: không mục nào khớp → báo rõ chưa có, KHÔNG trả mục không liên quan
+      if (mucs.length === 0) {
+        return (
+          `KHÔNG TÌM THẤY căn cứ pháp lý về "${chuDe}" trong cơ sở dữ liệu pháp lý nhân sự của hệ thống.\n` +
+          'BẮT BUỘC: nói rõ với người dùng là chủ đề này CHƯA có trong cơ sở dữ liệu, ' +
+          'TUYỆT ĐỐI KHÔNG tự nêu số hiệu văn bản/điều/khoản nào. ' +
+          'Có thể gợi ý người dùng thử tool tra_cuu_tai_lieu (kho văn bản đã nạp) hoặc liên hệ Văn phòng Sở.\n' +
+          'Các chủ đề HIỆN CÓ: ' + timPhapLy().map((m) => m.tieuDe).join('; ')
+        )
+      }
+      // Buộc model chuyển tiếp cảnh báo hiệu lực thay vì bỏ qua (mục có nhãn ⛔/⚠️)
+      const ket = mucs.slice(0, 3).map(formatPhapLyMuc).join('\n\n──────────\n\n')
+      if (ket.includes('ĐÃ HẾT HIỆU LỰC') || ket.includes('⚠️')) {
+        return (
+          'LƯU Ý BẮT BUỘC: kết quả dưới đây có văn bản ĐÃ HẾT HIỆU LỰC hoặc CHƯA XÁC MINH. ' +
+          'PHẢI nêu rõ điều đó cho người dùng, KHÔNG trình bày như căn cứ đang áp dụng, ' +
+          'và nói rõ văn bản thay thế nếu có.' + '\n\n' + ket
+        )
+      }
+      return ket
     }
 
     if (name === 'tra_cuu_tai_lieu') {
@@ -1320,14 +1447,30 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (relevant.length === 0) {
         return 'Không tìm thấy đoạn tài liệu nào đủ liên quan trong kho tài liệu của Sở. Hãy nói rõ với người dùng là chưa có tài liệu phù hợp; tuyệt đối không bịa nội dung.'
       }
+      // HIỆU LỰC PHÁP LÝ (mig 043): gắn nhãn ngay trên từng đoạn để model không
+      // viện dẫn văn bản đã hết hiệu lực làm căn cứ hiện hành.
+      const nhanHieuLuc = (h: { tinhTrangHieuLuc: string; thayTheBoi: string | null }): string => {
+        if (h.tinhTrangHieuLuc === 'het_hieu_luc') {
+          return ` ⛔ ĐÃ HẾT HIỆU LỰC${h.thayTheBoi ? ` — thay thế bởi ${h.thayTheBoi}` : ''}. KHÔNG dùng làm căn cứ hiện hành.`
+        }
+        if (h.tinhTrangHieuLuc === 'du_thao') return ' ⚠️ MỚI LÀ DỰ THẢO — chưa có hiệu lực thi hành.'
+        if (h.tinhTrangHieuLuc === 'can_kiem_chung') return ' ⚠️ CHƯA XÁC MINH HIỆU LỰC — nhắc người dùng đối chiếu bản chính thức.'
+        return ''
+      }
       const ctxText = relevant
         .map((h, i) => {
-          const nguon = `${h.tieuDe}${h.viTri ? `, ${h.viTri}` : ''}`
+          const nguon = `${h.tieuDe}${h.viTri ? `, ${h.viTri}` : ''}${nhanHieuLuc(h)}`
           return `【Đoạn ${i + 1} — Nguồn: ${nguon}】\n${h.noiDung.replace(/\[Trang \d+\]/g, '').trim()}`
         })
         .join('\n\n──────────\n\n')
+      const canhBao = await canhBaoSoHieuLa(cauHoi, ctxText)
       return (
-        'Các đoạn tài liệu liên quan (CHỈ trả lời dựa trên đây, BẮT BUỘC dẫn nguồn tên tài liệu + trang ở cuối):\n\n' +
+        canhBao +
+        'Các đoạn tài liệu liên quan (CHỈ trả lời dựa trên đây, BẮT BUỘC dẫn nguồn tên tài liệu + trang ở cuối).' +
+        ' Nếu đoạn trích có nhãn ĐÃ HẾT HIỆU LỰC / DỰ THẢO / CHƯA XÁC MINH thì PHẢI nói rõ điều đó cho người dùng,' +
+        ' không trình bày như quy định đang áp dụng. Nếu nội dung đoạn trích viện dẫn một văn bản mà hệ thống đã' +
+        ' báo là bị thay thế từ 01/7/2026, phải nêu rõ văn bản thay thế tương ứng.' +
+        '\n\n' +
         ctxText
       )
     }
@@ -1359,30 +1502,53 @@ const STOPWORDS = new Set([
 ])
 
 /**
+ * CHẶN TÁI SỬ DỤNG DỮ KIỆN CŨ.
+ * Câu trả lời cũ (dù đã được LIKE) KHÔNG được dùng làm nguồn cho các nội dung
+ * dễ thay đổi hoặc buộc phải tra từ CSDL: số hiệu văn bản, điều/khoản, hệ số
+ * lương, tiền, ngày tháng, danh sách người... Một cú LIKE nhầm sẽ khiến chatbot
+ * lặp lại con số sai mãi mãi. Những câu chứa các dấu hiệu này bị loại khỏi
+ * "kiến thức đã học"; chatbot phải gọi tool để lấy dữ liệu thật.
+ */
+const MAU_DU_KIEN_DONG: RegExp[] = [
+  /\d{1,4}\s*\/\s*\d{4}\s*\/?\s*(nđ|tt|qh|qđ)/i,   // 175/2024/NĐ-CP, 07/2024/TT-BNV...
+  /(điều|khoản|điểm)\s*\d/i,                        // trích dẫn điều/khoản/điểm
+  /hệ số\s*(lương)?\s*\d/i,
+  /\d[\d.,]{5,}\s*(đ|đồng|vnđ)/i,                   // số tiền
+  /\d{1,2}\/\d{1,2}\/\d{4}/,                        // ngày cụ thể
+  /\b(cccd|căn cước|số điện thoại|0\d{9})\b/i,
+]
+
+/**
  * Truy hồi "kiến thức đã học": các câu trả lời đã được người dùng đánh giá ĐÚNG (LIKE)
  * và KHÔNG dùng tool dữ liệu (kiến thức ổn định, không chứa dữ liệu cá nhân động).
  * Chấm điểm theo độ trùng từ khoá với câu hỏi hiện tại, lấy tối đa 3 câu giống nhất.
+ *
+ * Kết quả chỉ là GỢI Ý CÁCH TRẢ LỜI (hướng dẫn thao tác, cách diễn đạt) — model
+ * được nhắc rõ đây KHÔNG phải nguồn dữ kiện, mọi số liệu vẫn phải lấy từ tool.
  */
 async function getLearnedKnowledge(question: string, isWardUser: boolean): Promise<string> {
   const qTokens = new Set(tokenize(question).filter(t => !STOPWORDS.has(t)))
-  if (qTokens.size === 0) return ''
+  if (qTokens.size < 2) return ''
 
   const candidates = await db.chatbotLog.findMany({
     where: { feedback: 'LIKE', isWardUser, toolsUsed: { isEmpty: true } },
     select: { question: true, answer: true },
     orderBy: { feedbackAt: 'desc' },
-    take: 300,
+    take: 200,
   })
 
   const scored = candidates
     .filter(c => c.answer.length >= 40 && !/^xin lỗi/i.test(c.answer.trim()))
+    // Loại câu trả lời chứa dữ kiện động (số hiệu VB, điều khoản, tiền, ngày, CCCD...)
+    .filter(c => !MAU_DU_KIEN_DONG.some(re => re.test(c.answer)))
     .map(c => {
       const tks = new Set(tokenize(c.question).filter(t => !STOPWORDS.has(t)))
       let overlap = 0
       for (const t of qTokens) if (tks.has(t)) overlap++
       return { ...c, overlap, score: overlap / Math.sqrt(Math.max(tks.size, 1)) }
     })
-    .filter(c => c.overlap >= 2)
+    // Ngưỡng chặt hơn (>=3 từ khoá chung) để không kéo nhầm câu chỉ hao hao
+    .filter(c => c.overlap >= 3)
     .sort((a, b) => b.score - a.score)
 
   // Khử trùng câu hỏi giống nhau, lấy 3 câu tốt nhất
@@ -1397,21 +1563,115 @@ async function getLearnedKnowledge(question: string, isWardUser: boolean): Promi
   if (top.length === 0) return ''
 
   return (
-    '\n\nKIẾN THỨC ĐÃ HỌC (các câu trả lời đã được người dùng xác nhận ĐÚNG trước đây — ' +
-    'ưu tiên dùng lại để trả lời nhất quán, có thể diễn đạt lại cho tự nhiên):\n' +
+    '\n\nGỢI Ý TỪ CÁC LƯỢT TRẢ LỜI ĐÃ ĐƯỢC NGƯỜI DÙNG XÁC NHẬN ĐÚNG:\n' +
+    '⚠️ Đây CHỈ là gợi ý về cách diễn đạt / hướng dẫn thao tác để trả lời nhất quán. ' +
+    'ĐÂY KHÔNG PHẢI NGUỒN DỮ KIỆN: mọi số liệu, họ tên, ngày tháng, số hiệu văn bản ' +
+    'vẫn PHẢI lấy từ kết quả tool trong lượt này. Nếu gợi ý mâu thuẫn với kết quả tool, ' +
+    'LUÔN theo kết quả tool.\n' +
     top.map((c, i) => `[${i + 1}] Hỏi: ${c.question}\nĐáp: ${c.answer}`).join('\n---\n')
   )
 }
 
 // ── API Route ─────────────────────────────────────────────────────────────────
+
+/**
+ * GHI NHẬN CÂU HỎI — luôn lưu lại mọi lượt hỏi, kể cả khi trả lời thất bại.
+ * Trước đây chỉ lưu khi model trả lời thành công, nên các câu hỏi gây lỗi hoặc
+ * chạy hết vòng lặp tool đều biến mất, không phân tích để cải tiến được.
+ * Tình huống bất thường được đánh dấu bằng phần tử "__..." trong toolsUsed.
+ */
+async function ghiNhanCauHoi(opts: {
+  userId: string
+  isWardUser: boolean
+  question: string
+  answer: string
+  toolsUsed: string[]
+}): Promise<string | undefined> {
+  try {
+    const log = await db.chatbotLog.create({
+      data: {
+        userId: opts.userId,
+        isWardUser: opts.isWardUser,
+        question: opts.question.slice(0, 4000),
+        answer: opts.answer.slice(0, 8000),
+        toolsUsed: opts.toolsUsed,
+      },
+    })
+    return log.id
+  } catch (e) {
+    console.error('Không ghi được chatbot log:', e)
+    return undefined
+  }
+}
+
+/**
+ * Lấy CÂU HỎI của lượt này từ body client.
+ * Chỉ tin phần người dùng gõ; mọi nội dung role "assistant" do client gửi lên
+ * đều BỊ BỎ (client có thể tự chế "assistant: hệ số lương ông A là 9.99" rồi hỏi
+ * tiếp "nhắc lại con số đó" để mớm dữ kiện giả cho model).
+ */
+function layCauHoi(raw: unknown): string | null {
+  if (!Array.isArray(raw)) return null
+  const cuoi = raw
+    .filter(
+      (m): m is { role: string; content: string } =>
+        !!m && typeof m === 'object' && typeof (m as { content?: unknown }).content === 'string',
+    )
+    .filter((m) => m.role === 'user' && m.content.trim().length > 0)
+    .at(-1)
+  return cuoi ? cuoi.content.slice(0, 4000) : null
+}
+
+/**
+ * Dựng LỊCH SỬ HỘI THOẠI TỪ PHÍA MÁY CHỦ (bảng chatbot_logs) thay vì tin mảng
+ * messages của client. Giữ được ngữ cảnh câu hỏi nối tiếp ("còn tháng 7 thì sao")
+ * mà không cho client bịa lời của trợ lý.
+ * Chỉ lấy các lượt trong 3 giờ gần nhất của chính người dùng đó.
+ */
+async function dungLichSuTuMayChu(
+  userId: string,
+  soLuot = MAX_HISTORY / 2,
+): Promise<Array<{ role: 'user' | 'assistant'; content: string }>> {
+  // Cửa sổ 90 phút: đủ cho một phiên làm việc liên tục, đủ ngắn để không tái sử
+  // dụng câu trả lời cũ khi dữ liệu đã thay đổi.
+  const tuLuc = new Date(Date.now() - 90 * 60 * 1000)
+  const logs = await db.chatbotLog.findMany({
+    where: { userId, createdAt: { gte: tuLuc } },
+    select: { question: true, answer: true },
+    orderBy: { createdAt: 'desc' },
+    take: soLuot,
+  })
+  const out: Array<{ role: 'user' | 'assistant'; content: string }> = []
+  for (const l of logs.reverse()) {
+    out.push({ role: 'user', content: l.question.slice(0, 2000) })
+    out.push({ role: 'assistant', content: l.answer.slice(0, 2000) })
+  }
+  return out
+}
+
+
 export async function POST(req: NextRequest) {
+  let userIdForLog: string | undefined
+  let isWardForLog = false
+  let questionForLog = ''
+  const toolsUsedInSession: string[] = []
+
   try {
     const user = await requireAuth()
+    userIdForLog = user.id
+    isWardForLog = user.wardId !== null
+
+    // Đọc câu hỏi TRƯỚC mọi nhánh chặn, để lượt hỏi nào cũng được GHI NHẬN
+    // (trước đây các nhánh trả sớm 400 / chặn mật khẩu mặc định không ghi log,
+    // quản trị viên không thấy người dùng đã hỏi gì).
+    const body = await req.json().catch(() => null)
+    const cauHoi = layCauHoi((body as { messages?: unknown } | null)?.messages)
+    questionForLog = cauHoi ?? ''
 
     // BẢO MẬT: chặn làm việc khi còn dùng MẬT KHẨU MẶC ĐỊNH (Abc@12345) → buộc đổi trước.
     const acct = await db.user.findUnique({ where: { id: user.id }, select: { password: true } })
-    if (acct && await bcrypt.compare(DEFAULT_PASSWORD, acct.password)) {
-      return NextResponse.json({
+    if (acct && (await bcrypt.compare(DEFAULT_PASSWORD, acct.password))) {
+      const chan = NextResponse.json({
         reply:
           '🔒 **Cảnh báo bảo mật — tài khoản đang dùng mật khẩu mặc định.**\n\n' +
           'Tài khoản của bạn vẫn đang dùng mật khẩu mặc định (`Abc@12345`). Vì lý do an toàn dữ liệu, ' +
@@ -1419,17 +1679,32 @@ export async function POST(req: NextRequest) {
           '👉 Vào [Hồ sơ → Đổi mật khẩu](/dashboard/profile) để đặt mật khẩu mới (tối thiểu 8 ký tự, có chữ HOA, thường, số và ký tự đặc biệt).\n\n' +
           'Sau khi đổi mật khẩu, hãy quay lại đặt câu hỏi nhé.',
       })
+      if (cauHoi) {
+        await ghiNhanCauHoi({
+          userId: user.id,
+          isWardUser: user.wardId !== null,
+          question: cauHoi,
+          answer: '[CHẶN — TÀI KHOẢN CÒN DÙNG MẬT KHẨU MẶC ĐỊNH]',
+          toolsUsed: ['__chan_mat_khau_mac_dinh__'],
+        })
+      }
+      return chan
     }
 
     // Xác định vai trò: wardId !== null → tài khoản phường/xã
     const isWardUser = user.wardId !== null
+    isWardForLog = isWardUser
 
-    const body = await req.json()
-    const userMessages: Array<{ role: 'user' | 'assistant'; content: string }> = body.messages ?? []
-
-    if (!userMessages.length) {
-      return NextResponse.json({ error: 'Không có tin nhắn' }, { status: 400 })
+    if (!cauHoi) {
+      return NextResponse.json({ error: 'Không có câu hỏi hợp lệ' }, { status: 400 })
     }
+    const question = cauHoi
+
+    // Lịch sử lấy TỪ LOG MÁY CHỦ (không tin mảng messages của client)
+    const userMessages = [
+      ...(await dungLichSuTuMayChu(user.id)),
+      { role: 'user' as const, content: question },
+    ]
 
     // Lọc tools theo quyền
     const allowedTools = isWardUser
@@ -1455,30 +1730,24 @@ export async function POST(req: NextRequest) {
       : SYSTEM_PROMPT + '\n\nBạn cũng có thể tra cứu mã đơn vị hành chính (ĐVHC) của 78 phường/xã tỉnh Quảng Trị qua tool tra_cuu_dvhc.') + dateContext
 
     // Học hỏi từ người dùng: chèn các câu trả lời đã được xác nhận đúng (LIKE) tương tự câu hỏi hiện tại
-    const lastQuestion = userMessages.at(-1)?.content ?? ''
-    const learned = await getLearnedKnowledge(lastQuestion, isWardUser)
+    const learned = await getLearnedKnowledge(question, isWardUser)
 
     // Chuyển messages sang định dạng OpenAI
     const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt + learned },
-      ...userMessages.map(m => ({
-        role: m.role as 'user' | 'assistant',
-        content: m.content,
-      })),
+      ...userMessages,
     ]
-
-    // Theo dõi tools đã gọi trong phiên
-    const toolsUsedInSession: string[] = []
 
     // Vòng lặp tool-use (max 5 lần)
     for (let i = 0; i < 5; i++) {
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+      const response = await goiOpenAI({
+        model: CHAT_MODEL,
         messages,
         tools: allowedTools.length > 0 ? allowedTools : undefined,
         tool_choice: allowedTools.length > 0 ? 'auto' : undefined,
-        temperature: 0.4,
-        max_tokens: 1024,
+        // Nhiệt độ thấp: bám sát dữ liệu tool, hạn chế "sáng tác" số liệu/điều khoản
+        temperature: 0.1,
+        max_tokens: 2048,
       })
 
       const choice = response.choices[0]
@@ -1488,22 +1757,14 @@ export async function POST(req: NextRequest) {
       if (choice.finish_reason === 'stop' || !msg.tool_calls?.length) {
         // GPT hay tự thêm tiền tố "sandbox:" vào link tải file làm link không bấm được → gỡ bỏ
         const reply = (msg.content ?? 'Xin lỗi, không có phản hồi.').replace(/\(sandbox:[/]*/g, '(/')
-        const question = userMessages.at(-1)?.content ?? ''
 
-        // Lưu log đồng bộ để lấy logId cho feedback
-        let logId: string | undefined
-        try {
-          const log = await db.chatbotLog.create({
-            data: {
-              userId: user.id,
-              isWardUser,
-              question,
-              answer: reply,
-              toolsUsed: toolsUsedInSession,
-            },
-          })
-          logId = log.id
-        } catch { /* bỏ qua lỗi log */ }
+        const logId = await ghiNhanCauHoi({
+          userId: user.id,
+          isWardUser,
+          question,
+          answer: reply,
+          toolsUsed: toolsUsedInSession,
+        })
 
         return NextResponse.json({ reply, logId })
       }
@@ -1531,9 +1792,33 @@ export async function POST(req: NextRequest) {
       messages.push(...toolResults)
     }
 
-    return NextResponse.json({ reply: 'Xin lỗi, yêu cầu quá phức tạp. Vui lòng thử lại.' })
+    // Hết 5 vòng mà model vẫn đòi gọi tool → vẫn PHẢI ghi nhận câu hỏi để phân tích
+    const replyQuaPhucTap =
+      'Xin lỗi, yêu cầu này cần quá nhiều bước tra cứu nên tôi chưa tổng hợp được. ' +
+      'Bạn thử tách thành các câu hỏi nhỏ hơn (VD hỏi từng tháng, từng phòng) hoặc liên hệ quản trị viên hệ thống.'
+    await ghiNhanCauHoi({
+      userId: user.id,
+      isWardUser,
+      question,
+      answer: replyQuaPhucTap,
+      toolsUsed: [...toolsUsedInSession, '__het_vong_lap__'],
+    })
+    return NextResponse.json({ reply: replyQuaPhucTap })
   } catch (err) {
     console.error('Chatbot error:', err)
-    return NextResponse.json({ error: 'Lỗi máy chủ' }, { status: 500 })
+    // Ghi nhận cả lượt hỏi bị lỗi (nếu đã xác định được người dùng) để quản trị viên rà soát
+    if (userIdForLog && questionForLog) {
+      await ghiNhanCauHoi({
+        userId: userIdForLog,
+        isWardUser: isWardForLog,
+        question: questionForLog,
+        answer: `[LỖI HỆ THỐNG] ${err instanceof Error ? err.message : String(err)}`,
+        toolsUsed: [...toolsUsedInSession, '__loi_he_thong__'],
+      })
+    }
+    return NextResponse.json(
+      { error: 'Hệ thống chưa truy vấn được dữ liệu lúc này. Vui lòng thử lại hoặc liên hệ quản trị viên.' },
+      { status: 500 },
+    )
   }
 }

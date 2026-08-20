@@ -9,6 +9,8 @@ export type VanBanPhapLy = {
   ngayBanHanh: string    // dd/mm/yyyy
   hieuLucTu: string      // dd/mm/yyyy
   hieuLucDen?: string    // để trống = còn hiệu lực ("hiện hành")
+  thayTheBoi?: string    // văn bản thay thế — BẮT BUỘC điền khi có hieuLucDen
+  canhBao?: string       // cảnh báo cần đối chiếu (chưa khẳng định được hiệu lực)
   trichYeu: string       // trích yếu nội dung văn bản
   dieuKhoan?: string[]   // điều/khoản/điểm liên quan + nội dung tóm tắt
 }
@@ -104,7 +106,9 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
   {
     id: 'vuot_khung',
     tieuDe: 'Phụ cấp thâm niên vượt khung',
-    tuKhoa: ['vượt khung', 'vuot khung', 'thâm niên vượt khung', 'phụ cấp'],
+    // Bỏ từ khoá quá chung 'phụ cấp': câu hỏi "phụ cấp độc hại nguy hiểm" từng
+    // khớp nhầm vào mục vượt khung và bị trình bày như căn cứ liên quan.
+    tuKhoa: ['vượt khung', 'vuot khung', 'thâm niên vượt khung', 'phụ cấp thâm niên'],
     yeuCauQuanLy: 'Khi đã hưởng bậc CUỐI của ngạch đủ thời gian quy định thì xét hưởng %; cập nhật % vượt khung và mốc tăng tiếp theo (+1%/năm).',
     vanBan: [
       {
@@ -167,7 +171,11 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Luật Cán bộ, công chức 2008 (Luật 22/2008/QH12)',
         ngayBanHanh: '13/11/2008',
         hieuLucTu: '01/01/2010',
-        trichYeu: 'Quyền nghỉ của cán bộ, công chức.',
+        hieuLucDen: '30/6/2025 (hết hiệu lực TỪ 01/7/2025)',
+        thayTheBoi: 'Luật Cán bộ, công chức năm 2025 (hiệu lực 01/7/2025)',
+        canhBao: 'CHƯA đối chiếu được điều khoản tương ứng về chế độ nghỉ trong Luật CBCC 2025 '
+          + '(văn bản chưa có trong kho tài liệu). Phải tra bản chính thức trước khi dùng làm căn cứ.',
+        trichYeu: 'Quyền nghỉ của cán bộ, công chức (VĂN BẢN ĐÃ HẾT HIỆU LỰC — chỉ để đối chiếu lịch sử).',
         dieuKhoan: [
           'Điều 13: Cán bộ, công chức được nghỉ hằng năm, nghỉ lễ, nghỉ việc riêng theo quy định của pháp luật về lao động; do yêu cầu nhiệm vụ chưa nghỉ hoặc nghỉ chưa hết phép thì được thanh toán thêm tiền lương cho những ngày chưa nghỉ.',
         ],
@@ -176,6 +184,10 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Luật Viên chức 2010 (Luật 58/2010/QH12)',
         ngayBanHanh: '15/11/2010',
         hieuLucTu: '01/01/2012',
+        canhBao: 'CHƯA XÁC MINH ĐƯỢC HIỆU LỰC. Phải đối chiếu bản chính thức trước khi dùng làm '
+          + 'căn cứ — cần kiểm tra Luật Viên chức mới (được nêu là Luật 129/2025/QH15, hiệu lực '
+          + '01/7/2026) và Luật Cán bộ, công chức năm 2025. Cả hai văn bản này CHƯA có trong kho '
+          + 'tài liệu của Sở nên hệ thống không tự khẳng định được.',
         trichYeu: 'Quyền nghỉ của viên chức.',
         dieuKhoan: [
           'Điều 13: Viên chức được nghỉ hằng năm, nghỉ lễ, nghỉ việc riêng theo quy định của pháp luật về lao động.',
@@ -256,6 +268,11 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 46/2010/NĐ-CP',
         ngayBanHanh: '27/4/2010',
         hieuLucTu: '01/7/2010',
+        canhBao: '⚠️ CẦN KIỂM CHỨNG GẤP — có nguồn nêu Nghị định này đã hết hiệu lực từ 01/7/2025 '
+          + '(bị Nghị định 170/2025/NĐ-CP thay, cùng đợt Luật CBCC 2025). Hệ thống CHƯA xác minh được '
+          + 'vì cả hai văn bản chưa có trong kho tài liệu. Đây đang là CĂN CỨ trong Thông báo/Quyết định '
+          + 'nghỉ hưu do hệ thống sinh (lib/office-docx.ts) — Văn phòng Sở phải đối chiếu bản chính thức '
+          + 'TRƯỚC KHI TRÌNH KÝ.',
         trichYeu: 'Quy định về thôi việc và thủ tục nghỉ hưu đối với công chức.',
         dieuKhoan: [
           'Điều 9 khoản 1: Thời điểm nghỉ hưu là ngày 01 của tháng liền kề sau tháng công chức đủ tuổi nghỉ hưu.',
@@ -350,23 +367,53 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
 export function formatPhapLyMuc(m: PhapLyMuc): string {
   const dong: string[] = [`📖 **${m.tieuDe}**`, `➡️ Yêu cầu quản lý: ${m.yeuCauQuanLy}`]
   for (const v of m.vanBan) {
-    const hieuLuc = `hiệu lực từ ${v.hieuLucTu}${v.hieuLucDen ? ` đến ${v.hieuLucDen}` : ' (hiện hành)'}`
-    dong.push(`\n• **${v.soHieu}** — ban hành ${v.ngayBanHanh}, ${hieuLuc}.`)
+    // CHỐNG DẪN CHỨNG SAI CĂN CỨ: trước đây mọi văn bản đều được in kèm chữ
+    // "(hiện hành)" vì không mục nào điền hieuLucDen — kể cả Luật CBCC 2008 đã
+    // bị Luật CBCC 2025 thay từ 01/7/2025. Nay tách rõ 2 trạng thái.
+    if (v.hieuLucDen) {
+      dong.push(
+        `\n• ⛔ **${v.soHieu}** — ĐÃ HẾT HIỆU LỰC ngày ${v.hieuLucDen}` +
+          (v.thayTheBoi ? `, thay thế bởi ${v.thayTheBoi}` : '') +
+          '. KHÔNG dùng làm căn cứ hiện hành, chỉ nêu khi đối chiếu lịch sử.',
+      )
+    } else {
+      dong.push(`\n• **${v.soHieu}** — ban hành ${v.ngayBanHanh}, hiệu lực từ ${v.hieuLucTu} (hiện hành).`)
+    }
+    if (v.canhBao) dong.push(`  ⚠️ ${v.canhBao}`)
     dong.push(`  Trích yếu: ${v.trichYeu}`)
     for (const dk of v.dieuKhoan ?? []) dong.push(`  – ${dk}`)
   }
   return dong.join('\n')
 }
 
-/** Tìm các mục pháp lý theo từ khoá; rỗng = trả toàn bộ. */
+/**
+ * Tìm các mục pháp lý theo từ khoá; rỗng = trả toàn bộ (dùng để liệt kê danh mục chủ đề).
+ *
+ * CHỐNG BỊA: khi có từ khoá mà KHÔNG mục nào khớp thì trả về MẢNG RỖNG.
+ * Trước đây hàm trả về toàn bộ CO_SO_PHAP_LY khi không khớp — chatbot nhận
+ * các mục pháp lý KHÔNG liên quan và dễ suy diễn thành căn cứ sai
+ * (VD hỏi "phụ cấp độc hại theo điều nào" → trả 3 mục đầu về nghỉ hưu/nâng lương).
+ */
 export function timPhapLy(tuKhoa?: string): PhapLyMuc[] {
   const q = (tuKhoa ?? '').trim().toLowerCase()
   if (!q) return CO_SO_PHAP_LY
-  const hits = CO_SO_PHAP_LY.filter((m) =>
+  // Bỏ dấu để khớp cả khi người dùng gõ không dấu
+  const boDau = (s: string) =>
+    s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd')
+  const qk = boDau(q)
+  return CO_SO_PHAP_LY.filter((m) =>
     m.id.includes(q) ||
-    m.tieuDe.toLowerCase().includes(q) ||
-    m.tuKhoa.some((k) => k.includes(q) || q.includes(k)) ||
-    m.vanBan.some((v) => v.soHieu.toLowerCase().includes(q) || v.trichYeu.toLowerCase().includes(q))
+    boDau(m.tieuDe.toLowerCase()).includes(qk) ||
+    m.tuKhoa.some((k) => {
+      const kk = boDau(k.toLowerCase())
+      // Chiều "câu hỏi chứa từ khoá" chỉ nhận từ khoá đủ đặc trưng (>= 8 ký tự),
+      // tránh từ chung như "phụ cấp" kéo về mục không liên quan.
+      return kk.includes(qk) || (kk.length >= 8 && qk.includes(kk))
+    }) ||
+    m.vanBan.some(
+      (v) =>
+        v.soHieu.toLowerCase().includes(q) ||
+        boDau(v.trichYeu.toLowerCase()).includes(qk),
+    )
   )
-  return hits.length ? hits : CO_SO_PHAP_LY
 }

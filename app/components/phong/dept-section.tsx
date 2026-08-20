@@ -5,6 +5,28 @@ import { NghiepVuSection } from '@/components/nghiep-vu/nghiep-vu-section'
 // Khung trang con dùng chung cho module nghiệp vụ các phòng (KT-VLXD, PTĐT, ...).
 // Hiển thị breadcrumb về trang tổng quan phòng, tiêu đề, mô tả, danh sách nhiệm vụ
 // (trích QĐ 331/QĐ-SXD) và ghi chú "đang phát triển". Tham số hóa màu + breadcrumb.
+// Bảng màu dùng chung cho các trang phòng/ban & trung tâm.
+// Lớp Tailwind phải viết đủ chữ (không ghép chuỗi động) để không bị purge.
+export type DeptColor = 'indigo' | 'emerald' | 'rose' | 'slate' | 'amber' | 'sky'
+
+const MAU_SECTION: Record<DeptColor, { bg: string; link: string; dot: string }> = {
+  indigo:  { bg: 'bg-indigo-600',  link: 'hover:text-indigo-700',  dot: 'bg-indigo-500' },
+  emerald: { bg: 'bg-emerald-600', link: 'hover:text-emerald-700', dot: 'bg-emerald-500' },
+  rose:    { bg: 'bg-rose-600',    link: 'hover:text-rose-700',    dot: 'bg-rose-500' },
+  slate:   { bg: 'bg-slate-600',   link: 'hover:text-slate-700',   dot: 'bg-slate-500' },
+  amber:   { bg: 'bg-amber-600',   link: 'hover:text-amber-700',   dot: 'bg-amber-500' },
+  sky:     { bg: 'bg-sky-600',     link: 'hover:text-sky-700',     dot: 'bg-sky-500' },
+}
+
+const MAU_OVERVIEW: Record<DeptColor, { bg: string; icon: string; hover: string; nvBg: string }> = {
+  indigo:  { bg: 'bg-indigo-600',  icon: 'text-indigo-600',  hover: 'hover:border-indigo-300',  nvBg: 'bg-indigo-50/40' },
+  emerald: { bg: 'bg-emerald-600', icon: 'text-emerald-600', hover: 'hover:border-emerald-300', nvBg: 'bg-emerald-50/40' },
+  rose:    { bg: 'bg-rose-600',    icon: 'text-rose-600',    hover: 'hover:border-rose-300',    nvBg: 'bg-rose-50/40' },
+  slate:   { bg: 'bg-slate-600',   icon: 'text-slate-600',   hover: 'hover:border-slate-300',   nvBg: 'bg-slate-50/40' },
+  amber:   { bg: 'bg-amber-600',   icon: 'text-amber-600',   hover: 'hover:border-amber-300',   nvBg: 'bg-amber-50/40' },
+  sky:     { bg: 'bg-sky-600',     icon: 'text-sky-600',     hover: 'hover:border-sky-300',     nvBg: 'bg-sky-50/40' },
+}
+
 export function DeptSection({
   title,
   icon: Icon,
@@ -20,12 +42,9 @@ export function DeptSection({
   nhiemVu?: string[]
   baseHref: string
   baseLabel: string
-  color?: 'indigo' | 'emerald'
+  color?: DeptColor
 }) {
-  const c =
-    color === 'emerald'
-      ? { bg: 'bg-emerald-600', link: 'hover:text-emerald-700', dot: 'bg-emerald-500' }
-      : { bg: 'bg-indigo-600', link: 'hover:text-indigo-700', dot: 'bg-indigo-500' }
+  const c = MAU_SECTION[color] ?? MAU_SECTION.indigo
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -79,13 +98,10 @@ export function DeptOverview({
   icon: React.ElementType
   subMenus: { label: string; desc: string; icon: React.ElementType; href: string }[]
   note: string
-  color?: 'indigo' | 'emerald'
+  color?: DeptColor
   phapLyHref?: string
 }) {
-  const c =
-    color === 'emerald'
-      ? { bg: 'bg-emerald-600', icon: 'text-emerald-600', hover: 'hover:border-emerald-300', nvBg: 'bg-emerald-50/40' }
-      : { bg: 'bg-indigo-600', icon: 'text-indigo-600', hover: 'hover:border-indigo-300', nvBg: 'bg-indigo-50/40' }
+  const c = MAU_OVERVIEW[color] ?? MAU_OVERVIEW.indigo
 
   const baseHref = phapLyHref?.replace(/\/phap-ly$/, '') ?? ''
   const nghiepVu = phapLyHref

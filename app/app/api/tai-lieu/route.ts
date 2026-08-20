@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic'
 const LOAI_HOP_LE = ['VB_PHAP_LUAT', 'QUY_TRINH', 'HUONG_DAN', 'BAO_CAO', 'BIEU_MAU', 'KHAC']
 const PHAM_VI_HOP_LE = ['CONG_KHAI', 'NOI_BO_SO']
 const MAX_BYTES = 20 * 1024 * 1024 // 20MB
+const GIOI_HAN_DS = 500            // trần số tài liệu trả về mỗi lần liệt kê
 
 /** GET: danh sách tài liệu trong kho (chỉ người quản lý kho — VP Sở/admin). */
 export async function GET() {
@@ -26,12 +27,15 @@ export async function GET() {
   const items = await db.taiLieu.findMany({
     where: { deletedAt: null },
     orderBy: { createdAt: 'desc' },
+    take: GIOI_HAN_DS + 1,   // +1 để biết còn tài liệu chưa trả về
     select: {
       id: true, tieuDe: true, loai: true, nguon: true, moTa: true, phamVi: true,
       soChunk: true, soKyTu: true, trangThai: true, ghiChuLoi: true, createdAt: true,
     },
   })
-  return NextResponse.json({ items })
+  // Báo cho client biết danh sách đã bị cắt để không hiểu nhầm là kho chỉ có bấy nhiêu
+  const conNua = items.length > GIOI_HAN_DS
+  return NextResponse.json({ items: conNua ? items.slice(0, GIOI_HAN_DS) : items, conNua })
 }
 
 /** POST: nạp tài liệu mới (file PDF/DOCX hoặc dán text). */

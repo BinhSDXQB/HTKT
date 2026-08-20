@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getCurrentUser, canViewOfficeSensitive } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    // BẢO MẬT: route này TỪNG mở công khai và trả về cột email = SỐ CCCD của cán bộ
+    // đang online → lộ dữ liệu cá nhân ra Internet. Nay bắt buộc đăng nhập, và chỉ
+    // nhóm được xem dữ liệu nhạy cảm (admin / lãnh đạo VP Sở) mới thấy CCCD.
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Chưa đăng nhập' }, { status: 401 })
+    }
+    const xemDuocCccd = canViewOfficeSensitive(user)
+
     const now = new Date()
     const fifteenMinutesAgo = new Date(now.getTime() - 15 * 60 * 1000)
 
@@ -27,8 +37,13 @@ export async function GET(request: NextRequest) {
       },
     })
 
+    // Ẩn CCCD (cột email) với người không đủ quyền
+    const danhSach = onlineUsers.map(({ email, ...rest }) =>
+      xemDuocCccd ? { ...rest, email } : rest,
+    )
+
     return NextResponse.json({
-      online: onlineUsers,
+      online: danhSach,
       count: onlineUsers.length,
       timestamp: now.toISOString(),
       refreshAt: new Date(now.getTime() + 60000).toISOString(), // 1 phút nữa

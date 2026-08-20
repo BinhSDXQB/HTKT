@@ -8,7 +8,7 @@ type CheckResult = { checkCode: string; ketQua: 'PASS' | 'FAIL' | 'WARNING'; chi
 type UploadedFile = { tenFile: string; kind: string; checks: CheckResult[] }
 
 const CHECK_LABEL: Record<string, string> = {
-  FILE_SIZE_500MB: 'Dung lượng ≤ 500MB (NĐ 175/2024)',
+  FILE_SIZE_500MB: 'Dung lượng ≤ 500MB (NĐ 217/2026/NĐ-CP)',
   IFC_SCHEMA_VALID: 'Định dạng IFC 4.0',
 }
 
@@ -77,7 +77,7 @@ export default function BimTiepNhanPage() {
   async function uploadFile(kind: string, file: File) {
     setBusy(true); setError(''); setUploadPct(0)
     try {
-      if (file.size > 500 * 1024 * 1024) throw new Error('Tệp vượt 500MB — NĐ 175/2024 không cho phép')
+      if (file.size > 500 * 1024 * 1024) throw new Error('Tệp vượt 500MB — NĐ 217/2026/NĐ-CP không cho phép')
 
       // XHR để có tiến độ upload (fetch chưa hỗ trợ upload progress rộng rãi)
       const result = await new Promise<{ ok: boolean; data: { error?: string; checks?: CheckResult[] } }>((resolve, reject) => {
@@ -206,7 +206,7 @@ export default function BimTiepNhanPage() {
       {step === 2 && (
         <div className="space-y-4">
           <div className="rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-800">
-            Đã tạo mô hình <strong>{maMoHinh}</strong>. Tải tệp lên — theo NĐ 175/2024 cần <strong>cả định dạng gốc và IFC 4.0</strong>.
+            Đã tạo mô hình <strong>{maMoHinh}</strong>. Tải tệp lên — theo NĐ 217/2026/NĐ-CP cần <strong>cả định dạng gốc và IFC 4.0</strong>.
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

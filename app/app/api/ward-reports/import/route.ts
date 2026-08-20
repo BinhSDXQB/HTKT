@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx'
 import { db } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 import { logAction } from '@/lib/audit'
+import { getWardReportPerms } from '@/lib/ward-report-perms'
 import {
   SHEET_STANDARD, shouldSkipSheet, validateFileName, validateSheet,
   buildStandardColumns, SHEET_COLUMNS,
@@ -28,9 +29,28 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData()
   const file     = formData.get('file') as File | null
-  const wardId   = formData.get('wardId') as string | null
+  const wardIdRaw = formData.get('wardId') as string | null
   const yearRaw  = formData.get('year') as string | null
   const monthRaw = formData.get('month') as string | null
+
+  // ── PHÂN QUYỀN GHI ─────────────────────────────────────────────────────────
+  // Trước đây wardId lấy thẳng từ form: một tài khoản phường có thể nhập đè dữ
+  // liệu (trạng thái DA_DUYET) cho phường KHÁC. Nay: tài khoản phường bị ép về
+  // đúng phường của mình; cán bộ Sở không có quyền ghi thì bị từ chối.
+  const perms = await getWardReportPerms(user.id, user.role.name, user.wardId)
+  if (!perms.canWrite) {
+    return NextResponse.json(
+      { error: 'Tài khoản của bạn không có quyền nhập dữ liệu báo cáo phường/xã' },
+      { status: 403 },
+    )
+  }
+  if (perms.limitWardId && wardIdRaw && wardIdRaw !== perms.limitWardId) {
+    return NextResponse.json(
+      { error: 'Bạn chỉ được nhập dữ liệu cho đơn vị của mình' },
+      { status: 403 },
+    )
+  }
+  const wardId = perms.limitWardId ?? wardIdRaw
 
   if (!file) return NextResponse.json({ error: 'Thiếu file Excel' }, { status: 400 })
   if (!yearRaw) return NextResponse.json({ error: 'Thiếu năm báo cáo' }, { status: 400 })
@@ -178,7 +198,7 @@ export async function POST(req: NextRequest) {
         stdDefs.map(def => {
           const val = (row as unknown[])[def.index]
           if (val === null || val === undefined || val === '') return null
-          if (def.type === 'number') { const n = parseFloat(String(val).replace(/,/g,'')); return isNaN(n) ? String(val) : n }
+          if (def.type === 'number' || def.type === 'integer' || def.type === 'year') { const n = parseFloat(String(val).replace(/,/g,'')); if (isNaN(n)) return String(val); return def.type === 'number' ? n : Math.round(n) }
           return String(val)
         })
       ).filter(r => r.some(c => c !== null))

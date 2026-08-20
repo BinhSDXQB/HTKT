@@ -12,7 +12,8 @@ const ReviewSchema = z.object({
 })
 
 // Đánh giá tính nhất quán mô hình BIM ↔ kết quả tính toán/thiết kế.
-// NĐ 175/2024: bắt buộc trong kết quả thẩm định công trình cấp I, cấp đặc biệt.
+// NĐ 217/2026/NĐ-CP (thay NĐ 175/2024 từ 01/7/2026): bắt buộc trong kết quả thẩm định
+// công trình cấp I, cấp đặc biệt.
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -61,7 +61,7 @@ export default async function BimListPage() {
             Mô hình BIM công trình
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Tiếp nhận theo NĐ 175/2024/NĐ-CP — IFC 4.0, ≤500MB/tệp · Lộ trình QĐ 258/QĐ-TTg: từ 2026 bắt buộc với công trình cấp II trở lên
+            Tiếp nhận theo NĐ 217/2026/NĐ-CP — IFC 4.0, ≤500MB/tệp · Lộ trình QĐ 258/QĐ-TTg: từ 2026 bắt buộc với công trình cấp II trở lên
           </p>
         </div>
         {isManager && (

@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { requireAuth } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { layDuLieuTrungTam } from '@/lib/htkt/trung-tam-bao-tri'
 import {
   BarChart3, ChevronRight, TrendingUp, CheckCircle2, AlertTriangle,
   XCircle, Upload, Map, Zap, TreePine, Droplets, Waves, ParkingSquare,
-  Building2, Filter,
+  Building2, Filter, Wrench, MapPin, MapPinOff,
 } from 'lucide-react'
 
 // ── Chỉ số tổng hợp thực tế theo lĩnh vực (column index + đơn vị) ────────────
@@ -39,13 +40,26 @@ const STATUS_META = {
   CHUA_NOP: { label: 'Chưa nộp',       badge: 'bg-red-100 text-red-600',      icon: XCircle,       dot: 'bg-red-500'   },
 }
 
-type SP = { filter?: string; q?: string }
+type SP = { filter?: string; q?: string; nam?: string }
 
 export default async function TheoDoiPage({ searchParams }: { searchParams: Promise<SP> }) {
   await requireAuth()
   const sp = await searchParams
   const filter = sp.filter ?? 'all'
   const q = (sp.q ?? '').trim().toLowerCase()
+
+  // ── KỲ BÁO CÁO ────────────────────────────────────────────────────────────
+  // Trước đây các groupBy dưới đây KHÔNG lọc năm và trạng thái → khi có dữ liệu
+  // năm mới, số liệu 2 năm bị CỘNG DỒN vào nhau và bản NHÁP/CHỜ DUYỆT cũng bị
+  // tính vào số chính thức. Nay chốt theo 1 năm + chỉ lấy bản ĐÃ DUYỆT.
+  const namCoDuLieu = (
+    await db.reportDuong.groupBy({ by: ['year'], orderBy: { year: 'desc' } })
+  ).map((r) => r.year)
+  const nam = Number(sp.nam) || namCoDuLieu[0] || new Date().getFullYear()
+  const kyBaoCao = { year: nam, status: 'DA_DUYET' as const }
+
+  // Số liệu Trung tâm Quản lý, bảo trì GT & HTKT (đơn vị trực thuộc)
+  const tt = await layDuLieuTrungTam()
 
   // Tất cả phường/xã
   const allWards = await db.administrativeUnit.findMany({
@@ -56,13 +70,13 @@ export default async function TheoDoiPage({ searchParams }: { searchParams: Prom
 
   // ── SQL thuần qua 7 bảng chuẩn hoá — GROUP BY wardId, SUM() trực tiếp ──────
   const [duong, dienCS, thoatNuoc, cayXanh, congVien, capNuoc, baiDoXe] = await Promise.all([
-    db.reportDuong.groupBy({ by: ['wardId'], _sum: { chieuDaiKm: true }, _count: { id: true }, _max: { updatedAt: true } }),
-    db.reportDienCS.groupBy({ by: ['wardId'], _sum: { soColDen: true, chieuDaiCSKm: true }, _count: { id: true }, _max: { updatedAt: true } }),
-    db.reportThoatNuoc.groupBy({ by: ['wardId'], _sum: { chieuDaiM: true }, _count: { id: true }, _max: { updatedAt: true } }),
-    db.reportCayXanh.groupBy({ by: ['wardId'], _sum: { soLuongCay: true }, _count: { id: true }, _max: { updatedAt: true } }),
-    db.reportCongVien.groupBy({ by: ['wardId'], _sum: { dienTichM2: true }, _count: { id: true }, _max: { updatedAt: true } }),
-    db.reportCapNuoc.groupBy({ by: ['wardId'], _sum: { soHoGiaDinh: true }, _count: { id: true }, _max: { updatedAt: true } }),
-    db.reportBaiDoXe.groupBy({ by: ['wardId'], _sum: { dienTichM2: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportDuong.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { chieuDaiKm: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportDienCS.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { soColDen: true, chieuDaiCSKm: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportThoatNuoc.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { chieuDaiM: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportCayXanh.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { soLuongCay: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportCongVien.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { dienTichM2: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportCapNuoc.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { soHoGiaDinh: true }, _count: { id: true }, _max: { updatedAt: true } }),
+    db.reportBaiDoXe.groupBy({ by: ['wardId'], where: kyBaoCao, _sum: { dienTichM2: true }, _count: { id: true }, _max: { updatedAt: true } }),
   ])
 
   // Gom thành Map wardId → category → { value, rows, lastUpdate }
@@ -122,6 +136,7 @@ export default async function TheoDoiPage({ searchParams }: { searchParams: Prom
   // Tính "Tỷ lệ đất giao thông" theo yêu cầu: Sheet DUONG GT (T), Cột E (chieuDaiKm, km) * 1000 * Cột F (nenM, m = NỀN ĐƯỜNG)
   // = diện tích nền đường (m2). Tính cho CẢ vùng lõi đô thị lẫn TOÀN TỈNH để so sánh.
   const allRoads = await db.reportDuong.findMany({
+    where: kyBaoCao,
     select: {
       wardId: true,
       chieuDaiKm: true,
@@ -549,6 +564,47 @@ export default async function TheoDoiPage({ searchParams }: { searchParams: Prom
           </div>
         </div>
       )}
+
+      {/* ── Trung tâm Quản lý, bảo trì GT & HTKT (đơn vị trực thuộc) ── */}
+      <div className="bg-white rounded-xl border-2 border-teal-600 overflow-hidden shadow-sm">
+        <div className="px-5 py-3 bg-teal-700 flex items-center justify-between flex-wrap gap-2">
+          <h3 className="font-bold text-white text-sm flex items-center gap-2">
+            <Wrench className="w-4 h-4" />{tt.donViQuanLy}
+          </h3>
+          <Link href="/dashboard/ban-do"
+            className="text-xs bg-white/15 hover:bg-white/25 text-white px-3 py-1 rounded-full flex items-center gap-1">
+            <Map className="w-3.5 h-3.5" />Xem trên bản đồ
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-slate-100">
+          <div className="p-4">
+            <p className="text-xs text-slate-500 flex items-center gap-1"><Wrench className="w-3.5 h-3.5 text-teal-600" />Tuyến quản lý</p>
+            <p className="text-2xl font-bold text-teal-700 mt-1">{tt.tongTuyen}</p>
+            <p className="text-xs text-slate-400">tuyến mặt cắt lớn</p>
+          </div>
+          <div className="p-4">
+            <p className="text-xs text-slate-500 flex items-center gap-1"><Map className="w-3.5 h-3.5 text-blue-600" />Tổng chiều dài</p>
+            <p className="text-2xl font-bold text-blue-700 mt-1">{tt.tongChieuDaiKm.toLocaleString('vi-VN')}</p>
+            <p className="text-xs text-slate-400">km</p>
+          </div>
+          <div className="p-4">
+            <p className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-green-600" />Hiển thị bản đồ</p>
+            <p className="text-2xl font-bold text-green-700 mt-1">{tt.soKhopBanDo}</p>
+            <p className="text-xs text-slate-400">tuyến khớp geometry</p>
+          </div>
+          <div className="p-4">
+            <p className="text-xs text-slate-500 flex items-center gap-1"><MapPinOff className="w-3.5 h-3.5 text-orange-500" />Chưa định vị</p>
+            <p className="text-2xl font-bold text-orange-600 mt-1">{tt.soChuaDinhVi}</p>
+            <p className="text-xs text-slate-400">tuyến cần số hóa toạ độ</p>
+          </div>
+        </div>
+        <div className="px-5 py-2.5 bg-slate-50 border-t text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+          <Waves className="w-3.5 h-3.5 text-sky-600" />
+          Trạm xử lý nước thải: <b className="text-slate-700">{tt.tram.length}</b> trạm
+          {tt.tram.length === 0 && <span className="text-slate-400">(chưa có dữ liệu — nhập tại module nghiệp vụ)</span>}
+          <span className="ml-auto">Trên bản đồ: rê chuột vào tuyến để xem <b>đơn vị quản lý</b>.</span>
+        </div>
+      </div>
 
       {/* ── Báo cáo Chỉ tiêu/Tỷ lệ Hạ tầng Kỹ thuật Đô thị (Vùng lõi tỉnh Quảng Trị) ── */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 rounded-2xl p-6 border border-slate-700 text-white shadow-xl space-y-6 mt-6">

@@ -158,7 +158,7 @@ export default function BimDetailPage() {
               <div className="p-4 border-b bg-slate-50 space-y-3">
                 <textarea
                   className="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={3} placeholder="Nội dung đánh giá tính nhất quán mô hình BIM với kết quả tính toán, thiết kế (NĐ 175/2024 — bắt buộc với cấp I, đặc biệt)..."
+                  rows={3} placeholder="Nội dung đánh giá tính nhất quán mô hình BIM với kết quả tính toán, thiết kế (NĐ 217/2026/NĐ-CP — bắt buộc với cấp I, đặc biệt)..."
                   value={reviewForm.noiDung} onChange={(e) => setReviewForm((f) => ({ ...f, noiDung: e.target.value }))}
                 />
                 <div className="flex flex-wrap gap-3">
@@ -214,7 +214,7 @@ export default function BimDetailPage() {
 
             {v.consistencyReviews.length > 0 && (
               <div className="p-4 border-t bg-slate-50 space-y-2">
-                <p className="text-xs font-semibold text-slate-500 uppercase">Đánh giá tính nhất quán (NĐ 175/2024)</p>
+                <p className="text-xs font-semibold text-slate-500 uppercase">Đánh giá tính nhất quán (NĐ 217/2026/NĐ-CP)</p>
                 {v.consistencyReviews.map((r) => (
                   <div key={r.id} className="text-sm">
                     <span className="font-medium">{KET_LUAN_LABEL[r.ketLuan] || r.ketLuan}</span>

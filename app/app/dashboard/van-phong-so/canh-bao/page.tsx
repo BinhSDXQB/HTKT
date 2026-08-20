@@ -398,8 +398,29 @@ export default async function CanhBaoPage() {
                 <ul className="mt-2 space-y-1.5">
                   {m.vanBan.map((v) => (
                     <li key={v.soHieu} className="text-xs text-slate-600">
-                      <span className="font-semibold text-slate-800">{v.soHieu}</span>
-                      {' '}— ban hành {v.ngayBanHanh}, <span className="text-emerald-700">hiệu lực từ {v.hieuLucTu}{v.hieuLucDen ? ` đến ${v.hieuLucDen}` : ' (hiện hành)'}</span>.
+                      {/* CHỐNG DẪN CHỨNG SAI CĂN CỨ: văn bản đã hết hiệu lực phải
+                          hiện rõ màu đỏ + chữ "ĐÃ HẾT HIỆU LỰC". Trước đây mọi
+                          văn bản đều in màu xanh kèm "(hiện hành)". */}
+                      {v.hieuLucDen ? (
+                        <>
+                          <span className="font-semibold text-rose-700">⛔ {v.soHieu}</span>
+                          {' '}— <span className="text-rose-700 font-medium">
+                            ĐÃ HẾT HIỆU LỰC ngày {v.hieuLucDen}
+                            {v.thayTheBoi ? `, thay thế bởi ${v.thayTheBoi}` : ''}
+                          </span>
+                          <span className="block text-rose-600">Không dùng làm căn cứ hiện hành — chỉ để đối chiếu lịch sử.</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-semibold text-slate-800">{v.soHieu}</span>
+                          {' '}— ban hành {v.ngayBanHanh}, <span className="text-emerald-700">hiệu lực từ {v.hieuLucTu} (hiện hành)</span>.
+                        </>
+                      )}
+                      {v.canhBao && (
+                        <span className="block mt-1 text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1">
+                          ⚠️ {v.canhBao}
+                        </span>
+                      )}
                       <span className="block text-slate-500">{v.trichYeu}</span>
                       {v.dieuKhoan?.map((dk, i) => <span key={i} className="block text-slate-500 pl-3">– {dk}</span>)}
                     </li>

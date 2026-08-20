@@ -53,7 +53,7 @@ export async function PUT(
     })
   } catch (err) {
     if (err instanceof Error && err.message === 'FILE_TOO_LARGE') {
-      return NextResponse.json({ error: 'Tệp vượt quá 500MB (NĐ 175/2024/NĐ-CP)' }, { status: 413 })
+      return NextResponse.json({ error: 'Tệp vượt quá 500MB (NĐ 217/2026/NĐ-CP)' }, { status: 413 })
     }
     throw err
   }

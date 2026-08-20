@@ -110,7 +110,7 @@ export function TaiLieuManager({ initialItems }: { initialItems: Item[] }) {
           <div>
             <label className="text-xs font-medium text-slate-600">Tiêu đề tài liệu *</label>
             <input value={tieuDe} onChange={(e) => setTieuDe(e.target.value)}
-              className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" placeholder="VD: Nghị định 175/2024/NĐ-CP về quản lý đầu tư xây dựng" />
+              className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" placeholder="VD: Nghị định 217/2026/NĐ-CP về quản lý hoạt động xây dựng" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>

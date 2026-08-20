@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { getSession } from '@/lib/session'
+import { getCurrentUser } from '@/lib/auth'
 
 // GeoJSON FeatureCollection endpoint cho bản đồ MapLibre
 export async function GET(req: NextRequest) {
-  const session = await getSession()
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const user = await getCurrentUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { searchParams } = new URL(req.url)
   const domain = searchParams.get('domain')
@@ -20,7 +20,10 @@ export async function GET(req: NextRequest) {
   }
   if (domain) where.domain = domain
   if (assetTypeId) where.assetTypeId = assetTypeId
-  if (wardId) where.wardId = wardId
+  // CÔ LẬP DỮ LIỆU: tài khoản phường/xã chỉ được xem tài sản của phường mình,
+  // dù truyền wardId khác trên URL. Tài khoản Sở xem toàn tỉnh như cũ.
+  if (user.wardId) where.wardId = user.wardId
+  else if (wardId) where.wardId = wardId
 
   const assets = await db.asset.findMany({
     where,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { generatePreview, isPreviewExpired } from '@/lib/codex-preview'
+import { getCurrentUser, canViewOfficeSensitive } from '@/lib/auth'
 
 /**
  * GET /api/preview?id=...&type=...
@@ -15,9 +16,16 @@ import { generatePreview, isPreviewExpired } from '@/lib/codex-preview'
  */
 export async function GET(req: NextRequest) {
   try {
+    // BẢO MẬT: trước đây route mở công khai và type=user trả email (=CCCD) + SĐT.
+    // Nay bắt buộc đăng nhập; nhánh user chỉ dành cho người xem được dữ liệu nhạy cảm.
+    const currentUser = await getCurrentUser()
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Chưa đăng nhập' }, { status: 401 })
+    }
+
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
-    const type = searchParams.get('type')
+    let type = searchParams.get('type')
 
     if (!id) {
       return NextResponse.json({ error: 'id parameter required' }, { status: 400 })
@@ -39,10 +47,9 @@ export async function GET(req: NextRequest) {
       if (data) type = 'to-chuc'
     }
 
-    if (!data && (type === 'user' || !type)) {
+    if (!data && (type === 'user' || !type) && canViewOfficeSensitive(currentUser)) {
       data = await db.user.findUnique({
         where: { id },
-        include: { role: true, toChuc: { select: { id: true, ten: true, ma: true } } },
         select: {
           id: true,
           name: true,
@@ -50,8 +57,8 @@ export async function GET(req: NextRequest) {
           phone: true,
           isActive: true,
           lastLoginAt: true,
-          role: true,
-          toChuc: true,
+          role: { select: { id: true, name: true, displayName: true } },
+          toChuc: { select: { id: true, ten: true, ma: true } },
         },
       })
       if (data) type = 'user'

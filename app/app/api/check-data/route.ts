@@ -1,7 +1,14 @@
 import { db } from '@/lib/db'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function GET() {
   try {
+    // Route chẩn đoán dữ liệu — chỉ quản trị viên (trước đây mở công khai)
+    const user = await getCurrentUser()
+    if (!user || user.role.name !== 'admin') {
+      return Response.json({ error: 'Không có quyền' }, { status: 403 })
+    }
+
     // Kiểm tra ĐVHC
     const dvhc = await db.administrativeUnit.findMany({
       select: {

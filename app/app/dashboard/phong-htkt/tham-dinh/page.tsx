@@ -20,7 +20,7 @@ export default function ThamDinhPage() {
         <div>
           <h1 className="text-xl font-bold text-slate-900">Quy trình thẩm định công trình HTKT</h1>
           <p className="text-sm text-slate-500">
-            Theo Luật Xây dựng 135/2025/QH15 & Nghị định 175/2024/NĐ-CP (đang chuyển tiếp)
+            Theo Luật Xây dựng 135/2025/QH15 & Nghị định 217/2026/NĐ-CP (hiệu lực 01/7/2026, thay NĐ 175/2024)
           </p>
         </div>
       </div>

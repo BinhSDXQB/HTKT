@@ -109,10 +109,28 @@ export async function saveNghiepVu(input: NvSaveInput): Promise<NvResult> {
   if (!tieuDe) return { ok: false, error: 'Vui lòng nhập ' + schema.tieuDeLabel.toLowerCase() + '.' }
 
   const customFields = coerceCustomFields(input.linhVuc, input.customFields)
+
+  // LIÊN THÔNG ĐỊA BÀN (mig 044): quy tên địa bàn về khoá ngoại administrative_units.
+  // Giữ nguyên chuỗi diaBan làm nhãn hiển thị; wardId mới là nguồn liên kết để
+  // tổng hợp/JOIN, không đứt khi đổi tên hay sáp nhập đơn vị hành chính.
+  const diaBan = input.diaBan?.trim() || null
+  // Chỉ khớp đơn vị hành chính cấp PHƯỜNG/XÃ đang hoạt động — tránh gắn nhầm vào
+  // đơn vị cũ/khác cấp trùng tên. Trùng tên trong cùng cấp → để trống wardId
+  // (giữ diaBan) thay vì đoán bừa.
+  const ungVien = diaBan
+    ? await db.administrativeUnit.findMany({
+        where: { name: { equals: diaBan, mode: 'insensitive' }, type: 'PHUONG_XA', isActive: true },
+        select: { id: true },
+        take: 2,
+      })
+    : []
+  const ward = ungVien.length === 1 ? ungVien[0] : null
+
   const data = {
     tieuDe,
     trangThai: input.trangThai || 'MOI',
-    diaBan: input.diaBan?.trim() || null,
+    wardId: ward?.id ?? null,
+    diaBan,
     ngayGhiNhan: parseDate(input.ngayGhiNhan),
     ghiChu: input.ghiChu?.trim() || null,
     customFields: customFields as never,

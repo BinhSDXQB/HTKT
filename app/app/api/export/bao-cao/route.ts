@@ -24,11 +24,16 @@ function cur(n: number | null | undefined) {
 }
 
 export async function GET(req: NextRequest) {
+  let user
   try {
-    await requireAuth()
+    user = await requireAuth()
   } catch {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  // CÔ LẬP DỮ LIỆU: tài khoản phường/xã chỉ xuất được dữ liệu phường mình.
+  // Trước đây route xuất TOÀN BỘ tài sản/sự cố/dự án của cả tỉnh cho mọi tài khoản.
+  const locWard = user.wardId ? { wardId: user.wardId } : {}
 
   const { searchParams } = req.nextUrl
   const tuNgay  = searchParams.get('tuNgay')  ? new Date(searchParams.get('tuNgay')!)  : new Date(new Date().getFullYear(), 0, 1)
@@ -42,21 +47,41 @@ export async function GET(req: NextRequest) {
   // ── Fetch data ──────────────────────────────────────────────────────────────
   const [assets, incidents, workOrders, projects] = await Promise.all([
     db.asset.findMany({
+      where: locWard,
       include: { assetType: true, ward: true, street: true },
       orderBy: [{ domain: 'asc' }, { assetCode: 'asc' }],
     }),
     db.incident.findMany({
-      where: { reportedAt: { gte: tuNgay, lte: denNgay } },
-      include: { ward: true, reportedBy: true },
+      where: { reportedAt: { gte: tuNgay, lte: denNgay }, ...locWard },
+      // Chỉ lấy tên phường — trước đây include reportedBy: true kéo NGUYÊN bản ghi
+      // User (gồm hash mật khẩu và email = số CCCD) dù báo cáo không dùng tới.
+      include: { ward: { select: { name: true } } },
       orderBy: { reportedAt: 'desc' },
     }),
     db.workOrder.findMany({
-      where: { createdAt: { gte: tuNgay, lte: denNgay } },
-      include: { executingUnit: true, assignedTo: true },
+      // WorkOrder không có cột wardId → cô lập gián tiếp qua tài sản / sự cố.
+      // Không lọc thì tài khoản phường vẫn xuất được phiếu công việc của phường khác.
+      where: {
+        createdAt: { gte: tuNgay, lte: denNgay },
+        ...(user.wardId
+          ? {
+              OR: [
+                { asset: { wardId: user.wardId } },
+                { incident: { wardId: user.wardId } },
+                { incident: { asset: { wardId: user.wardId } } },
+              ],
+            }
+          : {}),
+      },
+      include: {
+        executingUnit: { select: { name: true } },
+        assignedTo: { select: { name: true } },
+      },
       orderBy: { createdAt: 'desc' },
     }),
     db.project.findMany({
-      include: { ward: true, executingUnit: true },
+      where: locWard,
+      include: { ward: { select: { name: true } }, executingUnit: { select: { name: true } } },
       orderBy: { createdAt: 'desc' },
     }),
   ])

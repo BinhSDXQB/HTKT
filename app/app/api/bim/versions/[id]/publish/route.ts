@@ -24,9 +24,9 @@ export async function POST(
     return NextResponse.json({ error: `Phiên bản đang ở trạng thái ${version.cdeStatus}` }, { status: 409 })
   }
 
-  // NĐ 175/2024: hồ sơ phải có IFC — chặn publish nếu thiếu
+  // NĐ 217/2026/NĐ-CP Điều 8 (thay NĐ 175/2024 từ 01/7/2026): hồ sơ phải có IFC
   if (!version.files.some((f) => f.kind === 'IFC')) {
-    return NextResponse.json({ error: 'Chưa có tệp IFC — không thể công bố (NĐ 175/2024 yêu cầu IFC 4.0)' }, { status: 400 })
+    return NextResponse.json({ error: 'Chưa có tệp IFC — không thể công bố (NĐ 217/2026/NĐ-CP yêu cầu IFC 4.0)' }, { status: 400 })
   }
   // Chặn publish nếu còn check FAIL
   const failCount = await db.bimValidationCheck.count({
