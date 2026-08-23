@@ -23,6 +23,35 @@ export type PhapLyMuc = {
   vanBan: VanBanPhapLy[]
 }
 
+/**
+ * Tìm VĂN BẢN trong cơ sở pháp lý nhân sự theo số hiệu hoặc tên gọi.
+ *
+ * Dùng cho tool tra_cuu_hieu_luc_van_ban: kho tài liệu chỉ có toàn văn một số văn bản, nhưng
+ * tình trạng hiệu lực của các văn bản nhân sự (VD Luật Viên chức 58/2010 hết hiệu lực 01/7/2026)
+ * đã được rà và mã hoá ở đây — không tra tới thì chatbot trả lời "không có trong kho" dù hệ thống
+ * biết rõ (bắt được ngày 23/8/2026 khi hỏi "Luật Viên chức 2010 còn hiệu lực không?").
+ */
+export function timVanBanNhanSu(tuKhoa: string): Array<{ muc: string; vanBan: VanBanPhapLy }> {
+  const tu = (tuKhoa || '').toLowerCase().trim()
+  if (!tu) return []
+  // Khớp theo TỪNG TỪ có nghĩa, không đòi khớp nguyên chuỗi: người dùng gõ "Luật Viên chức 2010"
+  // còn dữ liệu ghi "Luật Viên chức 2010 (Luật 58/2010/QH12)". Bỏ các từ quá chung.
+  const BO_QUA = new Set(['luật', 'nghị', 'định', 'thông', 'tư', 'số', 'năm', 'của', 'và', 'về'])
+  const tuKhoaCon = tu.split(/[^\p{L}\p{N}/]+/u).filter((w) => w.length > 1 && !BO_QUA.has(w))
+  const ra: Array<{ muc: string; vanBan: VanBanPhapLy }> = []
+  const daCo = new Set<string>()
+  for (const muc of CO_SO_PHAP_LY) {
+    for (const vb of muc.vanBan) {
+      const kho = `${vb.soHieu} ${vb.trichYeu}`.toLowerCase()
+      const khop = kho.includes(tu) || (tuKhoaCon.length > 0 && tuKhoaCon.every((w) => kho.includes(w)))
+      if (!khop || daCo.has(vb.soHieu)) continue
+      daCo.add(vb.soHieu)
+      ra.push({ muc: muc.tieuDe, vanBan: vb })
+    }
+  }
+  return ra
+}
+
 export const CO_SO_PHAP_LY: PhapLyMuc[] = [
   {
     id: 'vi_tri_viec_lam',
@@ -173,8 +202,12 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         hieuLucTu: '01/01/2010',
         hieuLucDen: '30/6/2025 (hết hiệu lực TỪ 01/7/2025)',
         thayTheBoi: 'Luật Cán bộ, công chức năm 2025 (hiệu lực 01/7/2025)',
-        canhBao: 'CHƯA đối chiếu được điều khoản tương ứng về chế độ nghỉ trong Luật CBCC 2025 '
-          + '(văn bản chưa có trong kho tài liệu). Phải tra bản chính thức trước khi dùng làm căn cứ.',
+        canhBao: 'Đã đối chiếu 23/8/2026: Luật Cán bộ, công chức số 80/2025/QH15 (bản Công báo số 951+952 '
+          + 'ngày 21/7/2025, nay đã nạp vào kho tài liệu) quy định tại Điều 11 khoản 1: "Cán bộ, công chức '
+          + 'được nghỉ hằng năm, nghỉ lễ, tết, nghỉ việc riêng, nghỉ không hưởng lương theo quy định của '
+          + 'pháp luật về lao động. Trường hợp do yêu cầu nhiệm vụ, cán bộ, công chức không sử dụng hoặc '
+          + 'sử dụng không hết số ngày nghỉ hằng năm thì ngoài tiền lương còn được thanh toán thêm một '
+          + 'khoản tiền bằng tiền lương cho những ngày không nghỉ." — nội dung kế thừa Điều 13 Luật 2008.',
         trichYeu: 'Quyền nghỉ của cán bộ, công chức (VĂN BẢN ĐÃ HẾT HIỆU LỰC — chỉ để đối chiếu lịch sử).',
         dieuKhoan: [
           'Điều 13: Cán bộ, công chức được nghỉ hằng năm, nghỉ lễ, nghỉ việc riêng theo quy định của pháp luật về lao động; do yêu cầu nhiệm vụ chưa nghỉ hoặc nghỉ chưa hết phép thì được thanh toán thêm tiền lương cho những ngày chưa nghỉ.',
@@ -184,13 +217,26 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Luật Viên chức 2010 (Luật 58/2010/QH12)',
         ngayBanHanh: '15/11/2010',
         hieuLucTu: '01/01/2012',
-        canhBao: 'CHƯA XÁC MINH ĐƯỢC HIỆU LỰC. Phải đối chiếu bản chính thức trước khi dùng làm '
-          + 'căn cứ — cần kiểm tra Luật Viên chức mới (được nêu là Luật 129/2025/QH15, hiệu lực '
-          + '01/7/2026) và Luật Cán bộ, công chức năm 2025. Cả hai văn bản này CHƯA có trong kho '
-          + 'tài liệu của Sở nên hệ thống không tự khẳng định được.',
-        trichYeu: 'Quyền nghỉ của viên chức.',
+        hieuLucDen: '30/6/2026 (hết hiệu lực TỪ 01/7/2026)',
+        thayTheBoi: 'Luật Viên chức số 129/2025/QH15 (hiệu lực 01/7/2026)',
+        canhBao: 'ĐÃ XÁC MINH 23/8/2026 từ bản Công báo số 41 ngày 22/01/2026 (nay đã nạp vào kho tài liệu). '
+          + 'Nguyên văn Điều 43 khoản 2 Luật Viên chức 129/2025: "Luật Viên chức số 58/2010/QH12 đã được sửa '
+          + 'đổi, bổ sung một số điều theo Luật số 52/2019/QH14 hết hiệu lực kể từ ngày Luật này có hiệu lực '
+          + 'thi hành" (01/7/2026). KHÔNG dùng Luật 58/2010 làm căn cứ hiện hành.',
+        trichYeu: 'Quyền nghỉ của viên chức (ĐÃ HẾT HIỆU LỰC — chỉ để đối chiếu lịch sử).',
         dieuKhoan: [
-          'Điều 13: Viên chức được nghỉ hằng năm, nghỉ lễ, nghỉ việc riêng theo quy định của pháp luật về lao động.',
+          'Điều 13: Viên chức được nghỉ hằng năm, nghỉ lễ, nghỉ việc riêng theo quy định của pháp luật về lao động. (Nay: Luật Viên chức 129/2025)',
+        ],
+      },
+      {
+        soHieu: 'Luật Viên chức số 129/2025/QH15',
+        ngayBanHanh: '10/12/2025',
+        hieuLucTu: '01/7/2026',
+        trichYeu: 'Luật Viên chức hiện hành — thay Luật 58/2010 và Luật 52/2019 kể từ 01/7/2026 (Điều 43).',
+        dieuKhoan: [
+          'Điều 32 khoản 2 (nguyên văn): "Viên chức được nghỉ hưu theo quy định của pháp luật về lao động và pháp luật về bảo hiểm xã hội; việc nghỉ hưu ở tuổi thấp hơn hoặc ở tuổi cao hơn được thực hiện theo quy định của pháp luật về hoạt động nghề nghiệp hoặc quy định của cấp có thẩm quyền."',
+          'Điều 32 khoản 3: Chính phủ quy định thẩm quyền, trình tự, thủ tục thôi việc, nghỉ hưu (hiện là Nghị định 259/2026/NĐ-CP).',
+          'Điều 43 khoản 1, 2: hiệu lực 01/7/2026; Luật Viên chức 58/2010 (sửa đổi bởi Luật 52/2019) hết hiệu lực từ ngày này.',
         ],
       },
       {
@@ -250,7 +296,11 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
       'mẫu số 2', 'mẫu số 3',
     ],
     yeuCauQuanLy:
-      'Theo dõi thời điểm nghỉ hưu của từng người; TRƯỚC 6 THÁNG ra Thông báo nghỉ hưu theo Mẫu số 2 (bố trí người thay thế, bàn giao), '
+      'PHẠM VI: mục này là nghỉ hưu THÔNG THƯỜNG (đủ tuổi theo Phụ lục I NĐ 135/2020). KHÔNG áp dụng cho nghỉ hưu ở '
+      + 'tuổi THẤP HƠN (Phụ lục II: nghề nặng nhọc–độc hại–nguy hiểm, vùng đặc biệt khó khăn, suy giảm khả năng lao động) '
+      + 'và nghỉ hưu TRƯỚC TUỔI do sắp xếp tổ chức bộ máy/tinh giản biên chế — các trường hợp này hệ thống chưa tính tự động, '
+      + 'phải xét thủ công theo nghị định chuyên ngành. '
+      + 'Theo dõi thời điểm nghỉ hưu của từng người; TRƯỚC 6 THÁNG ra Thông báo nghỉ hưu theo Mẫu số 2 (bố trí người thay thế, bàn giao), '
       + 'TRƯỚC 3 THÁNG ra Quyết định nghỉ hưu theo Mẫu số 3 (NĐ 170/2025). PHÂN BIỆT: ngày nghỉ hưu do hệ thống tính theo NĐ 135/2020 chỉ là '
       + 'DỰ KIẾN; nếu người có thẩm quyền đã quyết định LÙI (NĐ 170/2025 Điều 61 khoản 3, tối đa 1/3/6 tháng tuỳ trường hợp, không cộng dồn) '
       + 'thì phải ghi nhận ngày lùi + số văn bản vào hồ sơ và mọi văn bản phải lấy theo ngày đã lùi.',
@@ -266,16 +316,48 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 135/2020/NĐ-CP',
         ngayBanHanh: '18/11/2020',
         hieuLucTu: '01/01/2021',
-        trichYeu: 'Quy định về tuổi nghỉ hưu.',
+        trichYeu: 'Quy định về tuổi nghỉ hưu (chi tiết Điều 169 Bộ luật Lao động 2019) — văn bản GỐC xác định THỜI ĐIỂM nghỉ hưu cho cả công chức, viên chức và người lao động.',
         dieuKhoan: [
-          'Điều 4 + Phụ lục I, II: Lộ trình tuổi nghỉ hưu theo năm/tháng sinh; ngày nghỉ hưu = ngày 01 tháng liền kề sau tháng đủ tuổi.',
+          // Nguyên văn bản Công báo số 1117+1118 ngày 03/12/2020 (đã nạp vào kho tài liệu 23/8/2026).
+          'Điều 3 khoản 1: "Thời điểm nghỉ hưu là KẾT THÚC NGÀY CUỐI CÙNG CỦA THÁNG đủ tuổi nghỉ hưu theo quy định. Đối với trường hợp người lao động tiếp tục làm việc sau khi đã đủ tuổi nghỉ hưu theo quy định thì thời điểm nghỉ hưu là thời điểm chấm dứt hợp đồng lao động."',
+          'Điều 3 khoản 2: "Thời điểm HƯỞNG CHẾ ĐỘ HƯU TRÍ là bắt đầu NGÀY ĐẦU TIÊN CỦA THÁNG LIỀN KỀ sau thời điểm nghỉ hưu." → đây chính là cột "ngày nghỉ hưu" mà hệ thống đang lưu và là mốc ghi trong Quyết định nghỉ hưu (Mẫu số 3: "được nghỉ hưu để hưởng chế độ bảo hiểm xã hội từ ngày …").',
+          'Điều 3 khoản 3: hồ sơ KHÔNG xác định được ngày, tháng sinh mà chỉ có năm sinh thì lấy NGÀY 01 THÁNG 01 của năm sinh làm căn cứ xác định thời điểm nghỉ hưu và thời điểm hưởng chế độ hưu trí.',
+          'Điều 4 khoản 1: từ 01/01/2021, tuổi nghỉ hưu trong điều kiện lao động bình thường là đủ 60 tuổi 03 tháng (nam), đủ 55 tuổi 04 tháng (nữ); mỗi năm tăng 03 tháng với nam đến khi đủ 62 tuổi vào năm 2028, tăng 04 tháng với nữ đến khi đủ 60 tuổi vào năm 2035.',
+          'Điều 4 khoản 2 + Phụ lục I: đối chiếu THÁNG, NĂM SINH với tuổi nghỉ hưu — nam sinh 01/1961–9/1961 nghỉ ở 60 tuổi 3 tháng, mỗi nhóm 9 tháng sinh kế tiếp tăng 3 tháng, sinh từ 4/1966 trở đi là 62 tuổi; nữ sinh 01/1966–8/1966 nghỉ ở 55 tuổi 4 tháng, mỗi nhóm 8 tháng sinh kế tiếp tăng 4 tháng, sinh từ 5/1975 trở đi là 60 tuổi. Cột cuối Phụ lục I là THỜI ĐIỂM HƯỞNG LƯƠNG HƯU (tháng liền kề).',
+          'Phụ lục II: tuổi nghỉ hưu THẤP HƠN tối đa 5 tuổi (nghề nặng nhọc–độc hại–nguy hiểm, vùng đặc biệt khó khăn, suy giảm khả năng lao động) — hệ thống CHƯA tính trường hợp này, phải xét thủ công.',
         ],
+      },
+      {
+        soHieu: 'Luật Cán bộ, công chức số 80/2025/QH15',
+        ngayBanHanh: '24/6/2025',
+        hieuLucTu: '01/7/2025',
+        trichYeu: 'Luật gốc về nghỉ hưu của CÁN BỘ và CÔNG CHỨC — dẫn chiếu sang pháp luật lao động (Bộ luật Lao động 2019 + NĐ 135/2020).',
+        dieuKhoan: [
+          // Nguyên văn bản Công báo số 951+952 ngày 21/7/2025 (đã nạp vào kho tài liệu 23/8/2026).
+          'Điều 32 khoản 2 (công chức, nguyên văn): "Công chức được nghỉ hưu theo quy định của Bộ luật Lao động, trừ trường hợp theo quy định của cấp có thẩm quyền."',
+          'Điều 32 khoản 3: thẩm quyền, trình tự, thủ tục cho thôi việc, nghỉ hưu và chế độ, chính sách thực hiện theo quy định của cấp có thẩm quyền và của Chính phủ (hiện là Nghị định 170/2025/NĐ-CP).',
+          'Điều 17 khoản 2 (cán bộ, nguyên văn): "Cán bộ được nghỉ hưu theo quy định của pháp luật về lao động, trừ trường hợp thực hiện theo quy định của cấp có thẩm quyền."',
+        ],
+      },
+      {
+        soHieu: 'Nghị định 259/2026/NĐ-CP',
+        ngayBanHanh: '30/6/2026',
+        hieuLucTu: '01/7/2026',
+        canhBao: 'ÁP DỤNG CHO VIÊN CHỨC (các đơn vị sự nghiệp thuộc Sở). Nghị định thay Nghị định 115/2020, '
+          + '85/2023, 101/2017, 89/2021 kể từ 01/7/2026 — thông tin lấy từ Cổng TTĐT Chính phủ ngày 23/8/2026. '
+          + '⚠️ CHƯA trích được NGUYÊN VĂN điều khoản nghỉ hưu: bản đăng trên vanban.chinhphu.vn là PDF SCAN '
+          + '(76 trang, không có lớp văn bản) nên chưa nạp được vào kho tài liệu. Trước khi ra Thông báo/Quyết '
+          + 'định nghỉ hưu cho VIÊN CHỨC, Văn phòng Sở phải đối chiếu bản chính thức — KHÔNG suy diễn theo '
+          + 'quy định của công chức (NĐ 170/2025) vì hai đối tượng do hai nghị định khác nhau điều chỉnh.',
+        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý VIÊN CHỨC (hướng dẫn Luật Viên chức 129/2025). '
+          + 'Theo bản tin tóm tắt của Cổng TTĐT Chính phủ thì Nghị định có quy định tuổi nghỉ hưu, thời điểm nghỉ hưu, '
+          + 'lùi thời điểm nghỉ hưu và thủ tục nghỉ hưu đối với viên chức — CHƯA đối chiếu được điều khoản chi tiết.',
       },
       {
         soHieu: 'Nghị định 170/2025/NĐ-CP',
         ngayBanHanh: '30/6/2025',
         hieuLucTu: '01/7/2025',
-        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý công chức — THAY THẾ Nghị định 46/2010 về thủ tục nghỉ hưu.',
+        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý CÔNG CHỨC — THAY THẾ Nghị định 46/2010 về thủ tục nghỉ hưu.',
         dieuKhoan: [
           'Điều 61 khoản 1: Người có thẩm quyền cho thôi việc (Điều 57) là người có thẩm quyền cho nghỉ hưu.',
           'Điều 61 khoản 2: Thời điểm nghỉ hưu thực hiện theo pháp luật về lao động và bảo hiểm xã hội, trừ trường hợp có quy định khác của cơ quan có thẩm quyền.',

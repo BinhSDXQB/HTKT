@@ -350,7 +350,9 @@ export type RetirementInput = {
   maNgach?: string | null
   bac?: number | null
   heSo?: number | null
-  ngayNghiHuu?: Date | null    // thời điểm nghỉ hưu (NĐ 135/2020)
+  ngayNghiHuu?: Date | null    // ngày ghi trong hai mẫu = THỜI ĐIỂM HƯỞNG CHẾ ĐỘ HƯU TRÍ
+                               // (NĐ 135/2020 Điều 3 khoản 2 — ngày 01 tháng liền kề), khớp câu
+                               // "được nghỉ hưu để hưởng chế độ bảo hiểm xã hội từ ngày…" của Mẫu 2/3.
   canCuPhapLy?: string | null
   coQuanCapTren: string
   tenCoQuan: string

@@ -101,3 +101,42 @@ node scripts/smoke-chatbot.mjs --loc nghi-huu # chỉ nhóm nghỉ hưu
 ```bash
 node scripts/kiem-tra-vbpl-chatbot.mjs        # độ phủ văn bản pháp lý của chatbot
 ```
+
+---
+
+## 8. Chốt NGÀY NGHỈ HƯU THÔNG THƯỜNG theo quy định hiện hành (23/8/2026)
+
+Đã tải bản **Công báo** (có lớp văn bản, khác bản ký số trên datafiles vốn là PDF scan) và **nạp vào kho tài liệu** 3 văn bản gốc:
+`135_2020_ND-CP_Tuoi nghi huu (Cong bao).pdf`, `80_2025_QH15_Luat Can bo cong chuc (Cong bao).pdf`, `129_2025_QH15_Luat Vien chuc (Cong bao).pdf`.
+
+### Ba mốc phải phân biệt — NĐ 135/2020 Điều 3 (nguyên văn)
+
+| Mốc | Quy định | Ví dụ: nam sinh 4/1966 |
+|---|---|---|
+| Tháng đủ tuổi | Phụ lục I (nam sinh từ 4/1966 → 62 tuổi) | tháng 4/2028 |
+| **Thời điểm nghỉ hưu** | k1: "kết thúc ngày cuối cùng của tháng đủ tuổi nghỉ hưu"; người tiếp tục làm việc sau tuổi hưu thì là lúc **chấm dứt HĐLĐ** | hết ngày 30/4/2028 |
+| **Thời điểm hưởng chế độ hưu trí** | k2: "bắt đầu ngày đầu tiên của tháng liền kề" — cũng là cột cuối Phụ lục I và là ngày ghi trong Mẫu số 2/3 | 01/5/2028 |
+
+Hồ sơ chỉ có năm sinh → lấy **01/01 của năm sinh** làm căn cứ (k3).
+
+**Cột `can_bo.ngayVeHuu` giữ nguyên = ngày 01 tháng liền kề** (theo chỉ đạo): đúng với cột Phụ lục I và đúng với câu trong Quyết định nghỉ hưu *"được nghỉ hưu để hưởng chế độ bảo hiểm xã hội từ ngày…"*. Hai mốc còn lại tính tại chỗ (`ngayKetThucLamViec`, `thangDuTuoi`) để hiển thị và để chatbot nói đúng tên từng mốc.
+
+### Căn cứ theo đối tượng (đã đối chiếu nguyên văn Công báo)
+
+- **Cán bộ** — Luật CBCC 80/2025 Điều 17 khoản 2: nghỉ hưu theo pháp luật về lao động.
+- **Công chức** — Luật CBCC 80/2025 Điều 32 khoản 2: "nghỉ hưu theo quy định của Bộ luật Lao động"; thủ tục: NĐ 170/2025 Điều 61–63 (Mẫu số 2/3).
+- **Viên chức** — Luật Viên chức **129/2025/QH15** Điều 32 khoản 2 (lao động + BHXH); thủ tục: **NĐ 259/2026** (hiệu lực 01/7/2026, thay NĐ 115/2020). Điều 43 khoản 2 Luật 129/2025: **Luật Viên chức 58/2010 hết hiệu lực từ 01/7/2026** — trước đó hệ thống vẫn ghi Luật 58/2010 là căn cứ.
+
+### Kiểm chứng máy tính tuổi nghỉ hưu
+
+Đối chiếu `tuoiNghiHuuThang` với Phụ lục I: nam 01/1961 → 60 tuổi 3 tháng, hưởng hưu 5/2021; nam 4/1966 → 62 tuổi, hưởng 5/2028; nữ 01/1966 → 55 tuổi 4 tháng, hưởng 6/2021; nữ 5/1975 → 60 tuổi, hưởng 6/2035 — **khớp đúng từng dòng** của Phụ lục I.
+
+### Đã sửa thêm
+
+- `lib/nghi-huu-alert.ts`: mốc "trước 6 tháng/3 tháng" nay đếm từ **thời điểm nghỉ hưu** (hết ngày cuối tháng), không từ ngày hưởng lương hưu; căn cứ đổi từ NĐ 46/2010 (đã hết hiệu lực) sang NĐ 170/2025 Điều 62, 63.
+- `tra_cuu_hieu_luc_van_ban` tra thêm cơ sở pháp lý nhân sự (trước đó hỏi "Luật Viên chức 2010 còn hiệu lực không?" thì mô hình **tự bịa số hiệu 15/2010/QH12** rồi báo không có).
+
+### Chưa làm được
+
+- **NĐ 259/2026** (thủ tục nghỉ hưu viên chức): bản đăng trên vanban.chinhphu.vn là **PDF scan 76 trang**, chưa nạp được. Hệ thống hiện chỉ nêu tên văn bản + cảnh báo phải đối chiếu bản chính thức, KHÔNG áp quy định của công chức sang viên chức.
+- Nghỉ hưu ở **tuổi thấp hơn** (Phụ lục II) và **nghỉ hưu trước tuổi** do sắp xếp bộ máy: chưa tính tự động, đã ghi rõ trong phần "yêu cầu quản lý" để chatbot cảnh báo.

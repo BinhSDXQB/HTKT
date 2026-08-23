@@ -1,14 +1,18 @@
-// Cảnh báo nghỉ hưu — nhắc việc theo thủ tục nghỉ hưu đối với công chức
-// (Nghị định 46/2010/NĐ-CP, Điều 9):
-//   - Trước 06 tháng: cơ quan RA THÔNG BÁO nghỉ hưu để chuẩn bị người thay thế, BÀN GIAO công việc (khoản 3).
-//   - Trước 03 tháng: cơ quan RA QUYẾT ĐỊNH nghỉ hưu (khoản 4).
-// Thời điểm nghỉ hưu (ngayVeHuu) tính theo NĐ 135/2020 — xem lib/nghi-huu.ts.
+// Cảnh báo nghỉ hưu — nhắc việc theo thủ tục nghỉ hưu đối với CÔNG CHỨC
+// (Nghị định 170/2025/NĐ-CP — thay Nghị định 46/2010 từ 01/7/2025):
+//   - Điều 62: TRƯỚC 06 THÁNG tính đến thời điểm nghỉ hưu → RA THÔNG BÁO (Mẫu số 2), chuẩn bị người thay thế, bàn giao.
+//   - Điều 63: TRƯỚC 03 THÁNG tính đến thời điểm nghỉ hưu → RA QUYẾT ĐỊNH nghỉ hưu (Mẫu số 3).
+// Viên chức: thủ tục theo Nghị định 259/2026/NĐ-CP (hiệu lực 01/7/2026) — chưa đối chiếu được nguyên văn.
+//
+// MỐC ĐẾM LÙI: cả hai điều đếm từ THỜI ĐIỂM NGHỈ HƯU = kết thúc ngày cuối cùng của tháng đủ tuổi
+// (NĐ 135/2020 Điều 3 khoản 1), tức TRƯỚC ngày lưu trong can_bo."ngayVeHuu" (ngày 01 tháng liền kề,
+// là thời điểm HƯỞNG chế độ hưu trí — khoản 2) đúng 1 ngày.
 //
 // Đây là cảnh báo nhắc việc theo mốc thời gian; Văn phòng Sở rà soát hồ sơ trước khi trình.
 
 import { daysUntil } from './salary-alert'
 
-// Ngưỡng theo NĐ 46/2010 — đặt hằng số để dễ điều chỉnh nếu văn bản mới thay đổi.
+// Ngưỡng theo NĐ 170/2025 Điều 62, 63 — đặt hằng số để dễ điều chỉnh nếu văn bản mới thay đổi.
 export const THANG_RA_THONG_BAO = 6
 export const THANG_RA_QUYET_DINH = 3
 
@@ -45,8 +49,10 @@ export function classifyRetireAlert(
     return { bucket: null, daysLeft: null, ngayVeHuu: null, ngayRaThongBao: null, ngayRaQuyetDinh: null, label: 'Chưa có ngày nghỉ hưu', viecCanLam: null }
   }
 
-  const ngayRaThongBao = addMonths(veHuu, -THANG_RA_THONG_BAO)
-  const ngayRaQuyetDinh = addMonths(veHuu, -THANG_RA_QUYET_DINH)
+  // Đếm lùi từ thời điểm nghỉ hưu (hết ngày cuối tháng đủ tuổi), không từ ngày hưởng lương hưu.
+  const thoiDiemNghiHuu = new Date(Date.UTC(veHuu.getUTCFullYear(), veHuu.getUTCMonth(), veHuu.getUTCDate() - 1))
+  const ngayRaThongBao = addMonths(thoiDiemNghiHuu, -THANG_RA_THONG_BAO)
+  const ngayRaQuyetDinh = addMonths(thoiDiemNghiHuu, -THANG_RA_QUYET_DINH)
   const daysLeft = daysUntil(veHuu, now)!
 
   const base = { daysLeft, ngayVeHuu: veHuu, ngayRaThongBao, ngayRaQuyetDinh }

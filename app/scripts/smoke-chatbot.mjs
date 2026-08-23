@@ -98,6 +98,38 @@ const BO_CAU_HOI = [
     ghiChu: 'NĐ 175/2024 không có trong kho → tool tra_cuu_hieu_luc_van_ban phải báo chưa nạp, không mô tả nội dung',
   },
 
+  // ── Ngày nghỉ hưu thông thường theo Luật CBCC / Luật Viên chức (chốt 23/8/2026) ──
+  {
+    nhom: 'nghi-huu',
+    hoi: 'Ngày nghỉ hưu thông thường của công chức được xác định thế nào theo quy định hiện hành? Nêu rõ điều khoản.',
+    phai: [/135\/2020/, /Điều\s*3/i, /kết thúc ngày cuối cùng của tháng/i, /80\/2025|Bộ luật Lao động/],
+    cam: [],
+    ghiChu: 'NĐ 135/2020 Điều 3 khoản 1 — thời điểm nghỉ hưu là hết ngày cuối cùng của tháng đủ tuổi',
+  },
+  {
+    nhom: 'nghi-huu',
+    hoi: 'Hồ sơ chỉ có năm sinh, không có ngày tháng sinh thì tính ngày nghỉ hưu thế nào?',
+    phai: [/01\s*\/?\s*01|01 tháng 01|ngày 1[^0-9]/i, /135\/2020/],
+    cam: [],
+    ghiChu: 'NĐ 135/2020 Điều 3 khoản 3 — lấy ngày 01/01 của năm sinh làm căn cứ',
+  },
+  {
+    nhom: 'nghi-huu',
+    hoi: 'Viên chức ở đơn vị sự nghiệp của Sở nghỉ hưu theo văn bản nào?',
+    phai: [/129\/2025/, /259\/2026/],
+    // Không được áp thẳng nghị định của công chức cho viên chức
+    cam: [/viên chức[^.]{0,60}170\/2025/i],
+    ghiChu: 'Viên chức: Luật Viên chức 129/2025 + NĐ 259/2026 (chưa có toàn văn trong kho)',
+  },
+  {
+    nhom: 'nghi-huu',
+    hoi: 'Luật Viên chức 2010 còn hiệu lực không?',
+    phai: [/hết hiệu lực/i, /129\/2025/],
+    // Số hiệu đúng là 58/2010/QH12 — bịa số khác là dấu hiệu lấy từ trí nhớ
+    cam: [/15\/2010|59\/2010|60\/2010/],
+    ghiChu: 'Luật 58/2010 hết hiệu lực 01/7/2026 theo Điều 43 khoản 2 Luật Viên chức 129/2025',
+  },
+
   // ── Nội dung MỚI: nghỉ hưu theo NĐ 170/2025 (kiểm 23/8/2026) ───────────────
   {
     nhom: 'nghi-huu',

@@ -33,7 +33,6 @@ const env = (k) =>
 const DRY = process.argv.includes('--dry')
 const NGAY_RA = '23/8/2026'
 const RE_HIEU_LUC = /(Nghị định|Thông tư|Quyết định|Luật) này có hiệu lực[^.]{0,200}?\./gi
-const RE_NGAY = /ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})/i
 
 /**
  * Câu điều khoản thi hành "sạch" nhất: mốc ngày phải ĐỨNG NGAY SAU "có hiệu lực … từ ngày".
@@ -43,8 +42,14 @@ const RE_NGAY = /ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})/i
  * 2021…" — bắt theo "ngày bất kỳ" sẽ ghi nhầm mốc 2021 làm ngày hiệu lực.
  */
 const RE_MOC = /có hiệu lực(?:\s+thi hành)?\s+(?:kể\s+)?từ\s+ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})/i
-function bangChung(text) {
-  const cau = [...new Set(text.match(RE_HIEU_LUC) ?? [])].map((s) => s.replace(/\s+/g, ' ').trim())
+
+// Bản PDF Công báo bóc chữ ra rời rạc ("Ngh ị đị nh này có hi ệ u l ự c"), khoảng trắng đặt
+// tuỳ font nên không gộp lại thành câu chuẩn được. Cách chắc ăn: BỎ HẾT khoảng trắng rồi dò.
+const RE_MOC_LIEN = /cóhiệulực(?:thihành)?(?:kểtừ|từ)?ngày(\d{1,2})tháng(\d{1,2})năm((?:19|20)\d{2})/i
+const RE_KY_LIEN = /cóhiệulực(?:thihành)?kểtừngàyký/i
+
+function bangChung(raw) {
+  const cau = [...new Set(raw.match(RE_HIEU_LUC) ?? [])].map((s) => s.replace(/\s+/g, ' ').trim())
   const coMoc = cau.filter((s) => RE_MOC.test(s))
   if (coMoc.length) {
     const moc = (s) => { const m = s.match(RE_MOC); return new Date(Date.UTC(+m[3], +m[2] - 1, +m[1])) }
@@ -52,7 +57,23 @@ function bangChung(text) {
     return { cau: sapXep[0], ngay: moc(sapXep[0]) }
   }
   const kyBanHanh = cau.find((s) => /có hiệu lực(\s+thi hành)?\s+kể từ ngày ký/i.test(s))
-  return kyBanHanh ? { cau: kyBanHanh, ngay: null } : null
+  if (kyBanHanh) return { cau: kyBanHanh, ngay: null }
+
+  // Không dò được trên văn bản có khoảng trắng chuẩn → thử bản BỎ HẾT khoảng trắng (PDF Công báo).
+  const lien = raw.replace(/\s+/g, '')
+  const m = lien.match(RE_MOC_LIEN)
+  if (m) {
+    const [, d, mm, y] = m
+    return {
+      cau: `Nghị định/Luật này có hiệu lực thi hành từ ngày ${d} tháng ${mm} năm ${y}`
+        + ' (trích bản Công báo — PDF tách rời từng ký tự nên câu đã được chuẩn hoá lại)',
+      ngay: new Date(Date.UTC(+y, +mm - 1, +d)),
+    }
+  }
+  if (RE_KY_LIEN.test(lien)) {
+    return { cau: 'Văn bản này có hiệu lực thi hành kể từ ngày ký (trích bản Công báo, đã chuẩn hoá)', ngay: null }
+  }
+  return null
 }
 
 /** Năm ban hành suy từ tên tệp ("170_2025_ND-CP…", "TT 30 2026…"). */

@@ -1,7 +1,22 @@
 // Tính ngày nghỉ hưu theo Bộ luật Lao động 2019 + Nghị định 135/2020/NĐ-CP.
 // Lộ trình: NAM 60 tuổi 3 tháng (2021) tăng 3 tháng/năm → đủ 62 tuổi từ 2028;
 //           NỮ  55 tuổi 4 tháng (2021) tăng 4 tháng/năm → đủ 60 tuổi từ 2035.
-// "Ngày về hưu" = ngày đầu tháng liền kề sau tháng đủ tuổi (Điều 3 NĐ 135/2020).
+//
+// BA MỐC KHÁC NHAU — đối chiếu bản Công báo số 1117+1118 ngày 03/12/2020 (đã nạp vào kho
+// tài liệu 23/8/2026), Điều 3 Nghị định 135/2020/NĐ-CP:
+//   • Tháng đủ tuổi          : tháng sinh + tuổi nghỉ hưu (Phụ lục I).
+//   • THỜI ĐIỂM NGHỈ HƯU     : "kết thúc ngày cuối cùng của THÁNG đủ tuổi nghỉ hưu" (khoản 1)
+//                              — người tiếp tục làm việc sau tuổi hưu thì là lúc chấm dứt HĐLĐ.
+//   • THỜI ĐIỂM HƯỞNG HƯU TRÍ: "bắt đầu ngày đầu tiên của tháng LIỀN KỀ sau thời điểm nghỉ hưu"
+//                              (khoản 2) — cũng chính là cột cuối Phụ lục I và là ngày ghi trong
+//                              Quyết định nghỉ hưu Mẫu số 3 ("nghỉ hưu để hưởng chế độ BHXH từ ngày…").
+// Cột can_bo."ngayVeHuu" của hệ thống lưu MỐC THỨ BA (ngày 01 tháng liền kề) — giữ nguyên để
+// khớp Phụ lục I và biểu mẫu; hai mốc còn lại tính tại chỗ bằng các hàm dưới đây khi cần hiển thị.
+//
+// Căn cứ theo đối tượng: công chức — Luật CBCC 80/2025 Điều 32 khoản 2 + NĐ 170/2025 Điều 61;
+// cán bộ — Luật CBCC 80/2025 Điều 17 khoản 2; viên chức — Luật Viên chức 129/2025 Điều 32 khoản 2
+// + NĐ 259/2026 (chưa trích được nguyên văn, xem cảnh báo trong co-so-phap-ly-nhan-su.ts).
+// Cả ba đều dẫn chiếu về pháp luật lao động, nên dùng chung lộ trình Phụ lục I ở đây.
 
 export type GioiTinhInput = 'NAM' | 'NU' | null | undefined
 
@@ -24,14 +39,36 @@ export function tuoiNghiHuuThang(ngaySinh: Date, gioiTinh: 'NAM' | 'NU'): number
 }
 
 /**
- * Ngày nghỉ hưu (hưởng lương hưu) = ngày 01 của tháng liền kề sau tháng đủ tuổi.
+ * THỜI ĐIỂM HƯỞNG CHẾ ĐỘ HƯU TRÍ = ngày 01 của tháng liền kề sau tháng đủ tuổi
+ * (NĐ 135/2020 Điều 3 khoản 2 + cột cuối Phụ lục I). Đây là giá trị lưu ở can_bo."ngayVeHuu"
+ * và là ngày ghi trong Quyết định nghỉ hưu (Mẫu số 3).
  * Trả về null nếu thiếu ngày sinh hoặc giới tính.
  */
 export function tinhNgayNghiHuu(ngaySinh: Date | null | undefined, gioiTinh: GioiTinhInput): Date | null {
   if (!ngaySinh || !gioiTinh) return null
   const thang = tuoiNghiHuuThang(ngaySinh, gioiTinh)
-  // Tháng đủ tuổi = tháng sinh + thang → nghỉ hưu từ ngày 01 tháng kế tiếp
+  // Tháng đủ tuổi = tháng sinh + thang → hưởng chế độ hưu trí từ ngày 01 tháng kế tiếp
   return new Date(Date.UTC(ngaySinh.getUTCFullYear(), ngaySinh.getUTCMonth() + thang + 1, 1))
+}
+
+/**
+ * THỜI ĐIỂM NGHỈ HƯU theo NĐ 135/2020 Điều 3 khoản 1 = kết thúc ngày cuối cùng của tháng đủ tuổi.
+ * Khác mốc hưởng lương hưu đúng 1 ngày, nhưng là mốc để đếm ngược "trước 06 tháng ra thông báo,
+ * trước 03 tháng ra quyết định" (NĐ 170/2025 Điều 62, 63) và là ngày công chức thôi làm việc.
+ */
+export function ngayKetThucLamViec(ngaySinh: Date | null | undefined, gioiTinh: GioiTinhInput): Date | null {
+  const huong = tinhNgayNghiHuu(ngaySinh, gioiTinh)
+  if (!huong) return null
+  // Lùi 1 ngày bằng Date.UTC (không trừ 24h theo mili-giây) để không dính lệch múi giờ/DST.
+  return new Date(Date.UTC(huong.getUTCFullYear(), huong.getUTCMonth(), huong.getUTCDate() - 1))
+}
+
+/** Tháng đủ tuổi nghỉ hưu (Phụ lục I NĐ 135/2020), dạng { thang: 1-12, nam }. */
+export function thangDuTuoi(ngaySinh: Date | null | undefined, gioiTinh: GioiTinhInput): { thang: number; nam: number } | null {
+  if (!ngaySinh || !gioiTinh) return null
+  const t = tuoiNghiHuuThang(ngaySinh, gioiTinh)
+  const d = new Date(Date.UTC(ngaySinh.getUTCFullYear(), ngaySinh.getUTCMonth() + t, 1))
+  return { thang: d.getUTCMonth() + 1, nam: d.getUTCFullYear() }
 }
 
 // ───────────── Lùi thời điểm nghỉ hưu — NĐ 170/2025/NĐ-CP, Điều 61 khoản 3–5 ─────────────

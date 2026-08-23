@@ -5,8 +5,8 @@ import { db } from '@/lib/db'
 import { requireAuth, isOfficeLeader, canManageSalary, canManageCanBo, canAccessOffice, type CurrentUser } from '@/lib/auth'
 import { searchTaiLieu } from '@/lib/rag/search'
 import { hasPermission, MODULES } from '@/lib/permissions'
-import { timPhapLy, formatPhapLyMuc } from '@/lib/data/co-so-phap-ly-nhan-su'
-import { thoiDiemNghiHuu, TRUONG_HOP_LUI, type MaTruongHopLui } from '@/lib/nghi-huu'
+import { timPhapLy, formatPhapLyMuc, timVanBanNhanSu } from '@/lib/data/co-so-phap-ly-nhan-su'
+import { thoiDiemNghiHuu, TRUONG_HOP_LUI, thangDuTuoi, ngayKetThucLamViec, type MaTruongHopLui } from '@/lib/nghi-huu'
 import { timPhapLyChuyenNganh, formatPhapLyChuyenNganh, danhSachLinhVuc } from '@/lib/data/phap-ly-chuyen-nganh'
 import { logAction } from '@/lib/audit'
 
@@ -141,7 +141,14 @@ function moTaNghiHuu(cb: CanBoNghiHuu): string {
       ` · ngày dự kiến trước khi lùi: ${fmt(kq.ngayDuKien)}${daQua}`
     )
   }
-  return `${fmt(kq.ngay)} — DỰ KIẾN (máy tính theo NĐ 135/2020, chưa có quyết định lùi trong hồ sơ)${daQua}`
+  // Tách 3 mốc của NĐ 135/2020 Điều 3 — cán bộ hay nhầm "ngày nghỉ hưu" với "ngày hưởng lương hưu".
+  const moc = thangDuTuoi(cb.ngaySinh, (cb.gioiTinh === 'NAM' || cb.gioiTinh === 'NU' ? cb.gioiTinh : null))
+  const ketThuc = ngayKetThucLamViec(cb.ngaySinh, (cb.gioiTinh === 'NAM' || cb.gioiTinh === 'NU' ? cb.gioiTinh : null))
+  const chiTiet = moc && ketThuc
+    ? ` · đủ tuổi tháng ${moc.thang}/${moc.nam} → thời điểm nghỉ hưu là kết thúc ngày ${fmt(ketThuc)}` +
+      ` (NĐ 135/2020 Điều 3 khoản 1), hưởng chế độ hưu trí từ ${fmt(kq.ngay)} (khoản 2)`
+    : ''
+  return `${fmt(kq.ngay)} — DỰ KIẾN (máy tính theo NĐ 135/2020, chưa có quyết định lùi trong hồ sơ)${chiTiet}${daQua}`
 }
 
 const SYSTEM_PROMPT = `Bạn là trợ lý AI của Hệ thống Quản lý Hạ tầng Kỹ thuật Đô thị tỉnh Quảng Trị (HTKT).
@@ -203,7 +210,9 @@ QUY TẮC:
 - CƠ SỞ PHÁP LÝ: khi hỏi "căn cứ pháp lý", "quy định ở đâu/điều khoản nào", "nghị định/thông tư nào", "vị trí việc làm quy định tại đâu", "trước bao nhiêu tháng ra thông báo nghỉ hưu", HOẶC các câu về CHẾ ĐỘ NGHỈ ("nghỉ phép năm mấy ngày", "phép năm có tính thứ bảy chủ nhật/ngày lễ không", "cưới/kết hôn được nghỉ mấy ngày", "có người thân mất nghỉ mấy ngày", "vợ đẻ/vợ sinh con chồng được nghỉ mấy ngày", "nghỉ chăm con ốm", "nghỉ không lương")... dùng tool tra_cuu_phap_ly_nhan_su. PHẢI trích dẫn ĐÚNG số hiệu văn bản, điều/khoản/điểm và NGÀY HIỆU LỰC như tool trả về — KHÔNG bịa thêm điều khoản, KHÔNG đổi ngày hiệu lực; nếu chủ đề chưa có trong kết quả tool thì nói rõ chưa có trong cơ sở dữ liệu, KHÔNG tự suy diễn. Riêng VỊ TRÍ VIỆC LÀM: luôn nhắc người quản lý PHẢI cập nhật vị trí việc làm cho TỪNG công chức/viên chức (căn cứ NĐ 62/2020 — công chức, NĐ 106/2020 — viên chức, Luật CBCC 2025 hiệu lực 01/7/2025) và có thể vào Văn phòng Sở → Cảnh báo & việc cần làm để xem ai chưa cập nhật
 - NGHỈ HƯU — LUÔN PHÂN BIỆT "DỰ KIẾN" VỚI "ĐÃ QUYẾT ĐỊNH LÙI": ngày nghỉ hưu trong hồ sơ là giá trị MÁY TÍNH theo NĐ 135/2020, chưa phải quyết định của ai. Khi tool trả về nhãn DỰ KIẾN thì PHẢI giữ nguyên chữ "dự kiến" trong câu trả lời; khi tool trả về ĐÃ QUYẾT ĐỊNH LÙI thì lấy ngày đã lùi, nêu kèm số văn bản và TUYỆT ĐỐI KHÔNG gọi ngày đó là "dự kiến" (chỉ ngày trước khi lùi mới là dự kiến). TUYỆT ĐỐI không nói ngày nghỉ hưu như đã chốt khi tool ghi là dự kiến, và không tự tính ngày nghỉ hưu bằng đầu óc. Thời điểm chính thức chỉ có trong Quyết định nghỉ hưu (Mẫu số 3 NĐ 170/2025).
 - LÙI THỜI ĐIỂM NGHỈ HƯU: căn cứ NĐ 170/2025 Điều 61 khoản 3 (tối đa 01 tháng / 03 tháng / 06 tháng tuỳ trường hợp) và khoản 4 (thuộc nhiều trường hợp thì CHỈ áp dụng MỘT trường hợp có thời gian lùi nhiều nhất — KHÔNG cộng dồn, trần tuyệt đối 06 tháng), khoản 5 (người có thẩm quyền cho nghỉ hưu quyết định). Khi người dùng hỏi hoặc khẳng định về mức lùi, PHẢI gọi tool tra_cuu_phap_ly_nhan_su với chủ đề "nghỉ hưu" rồi trả lời theo đúng kết quả tool; nếu người dùng nêu con số cộng dồn (VD 3+6=9 tháng) thì SAU KHI gọi tool và đối chiếu kết quả, phải BÁC BỎ và nêu rõ khoản 4. Phân biệt LÙI thời điểm nghỉ hưu (khoản 3) với KÉO DÀI thời gian công tác (khoản 6) — hai chế định khác nhau.
-- CĂN CỨ PHÁP LÝ THỦ TỤC NGHỈ HƯU: hiện hành là NĐ 170/2025/NĐ-CP (Điều 61 thời điểm, Điều 62 thông báo trước 06 tháng theo Mẫu số 2, Điều 63 quyết định trước 03 tháng theo Mẫu số 3). NĐ 46/2010/NĐ-CP ĐÃ HẾT HIỆU LỰC từ 01/7/2025 (Điều 71 khoản 2 điểm b NĐ 170/2025) — chỉ được nhắc kèm chữ "đã hết hiệu lực", KHÔNG dùng làm căn cứ. Câu hỏi về mẫu biểu/điều khoản nghỉ hưu PHẢI qua tool tra_cuu_phap_ly_nhan_su, không trả lời bằng trí nhớ.
+- BA MỐC NGHỈ HƯU (NĐ 135/2020 Điều 3) — không được nói lẫn: (1) THÁNG ĐỦ TUỔI theo Phụ lục I; (2) THỜI ĐIỂM NGHỈ HƯU = kết thúc ngày cuối cùng của tháng đủ tuổi (người tiếp tục làm việc sau tuổi hưu thì là lúc chấm dứt hợp đồng lao động); (3) THỜI ĐIỂM HƯỞNG CHẾ ĐỘ HƯU TRÍ = ngày 01 tháng liền kề — đây là ngày hệ thống lưu và là ngày ghi trong Quyết định nghỉ hưu Mẫu số 3. Hồ sơ chỉ có năm sinh thì lấy ngày 01/01 của năm sinh làm căn cứ (khoản 3). Tuổi nghỉ hưu thấp hơn (nghề nặng nhọc–độc hại, vùng đặc biệt khó khăn, suy giảm khả năng lao động — Phụ lục II) hệ thống CHƯA tính, phải nói rõ là xét thủ công.
+- ĐỐI TƯỢNG NÀO THEO VĂN BẢN NÀO: cán bộ — Luật CBCC 80/2025 Điều 17 khoản 2; công chức — Luật CBCC 80/2025 Điều 32 khoản 2 + thủ tục theo NĐ 170/2025 (Điều 61–63, Mẫu số 2/3); viên chức — Luật Viên chức 129/2025 Điều 32 khoản 2 + thủ tục theo NĐ 259/2026 (hiệu lực 01/7/2026, thay NĐ 115/2020). LƯU Ý: kho CHƯA có toàn văn NĐ 259/2026 (bản đăng là PDF scan) nên với VIÊN CHỨC chỉ được nêu tên văn bản và nhắc đối chiếu bản chính thức, KHÔNG áp quy định của công chức sang viên chức.
+- CĂN CỨ PHÁP LÝ THỦ TỤC NGHỈ HƯU (ĐỐI VỚI CÔNG CHỨC): hiện hành là NĐ 170/2025/NĐ-CP (Điều 61 thời điểm, Điều 62 thông báo trước 06 tháng theo Mẫu số 2, Điều 63 quyết định trước 03 tháng theo Mẫu số 3). NĐ 46/2010/NĐ-CP ĐÃ HẾT HIỆU LỰC từ 01/7/2025 (Điều 71 khoản 2 điểm b NĐ 170/2025) — chỉ được nhắc kèm chữ "đã hết hiệu lực", KHÔNG dùng làm căn cứ. Câu hỏi về mẫu biểu/điều khoản nghỉ hưu PHẢI qua tool tra_cuu_phap_ly_nhan_su, không trả lời bằng trí nhớ.
 - PHÁP LÝ CHUYÊN NGÀNH (không phải nhân sự): câu hỏi "căn cứ pháp lý về cấp nước/thoát nước/cây xanh/chiếu sáng/nghĩa trang/giao thông đô thị/không gian ngầm/sử dụng chung, thẩm định thiết kế, nghiệm thu, bảo trì, chi phí đầu tư xây dựng, hợp đồng xây dựng, vật liệu xây dựng, quy hoạch, phát triển đô thị, nhà ở – bất động sản, vận tải, kết cấu hạ tầng giao thông…" → dùng tool tra_cuu_phap_ly_chuyen_nganh (danh mục 11 phòng đã rà theo bộ văn bản hiệu lực 01/7/2026). Cần NGUYÊN VĂN điều khoản thì gọi thêm tra_cuu_tai_lieu. Ba nguồn pháp lý KHÁC NHAU, chọn đúng: tra_cuu_phap_ly_nhan_su (nhân sự, có điều/khoản) · tra_cuu_phap_ly_chuyen_nganh (danh mục chuyên môn) · tra_cuu_tai_lieu (toàn văn trong kho).
 - HIỆU LỰC VĂN BẢN: hỏi "văn bản X còn hiệu lực không", "X bị thay bởi văn bản nào", "hệ thống có văn bản X chưa" → dùng tool tra_cuu_hieu_luc_van_ban, trả lời đúng theo tình trạng tool báo. Tool báo KHÔNG có trong kho thì nói thẳng là chưa nạp, KHÔNG mô tả nội dung văn bản đó.
 - TRA CỨU NỘI DUNG TÀI LIỆU: khi người dùng hỏi về NỘI DUNG một văn bản/tài liệu/quy trình/hướng dẫn nghiệp vụ đã được nạp vào hệ thống ("tài liệu nào nói về…", "quy trình/hướng dẫn về…", "theo quy định/tài liệu thì…", "trình tự/thủ tục …"), dùng tool tra_cuu_tai_lieu. CHỈ trả lời dựa trên các đoạn tool trả về; LUÔN dẫn nguồn (tên tài liệu + trang) ở cuối; nếu tool báo không có đoạn liên quan thì nói rõ "chưa có tài liệu phù hợp trong kho", KHÔNG bịa. Phân biệt với tra_cuu_phap_ly_nhan_su (dành riêng cho cơ sở pháp lý nhân sự đã mã hoá sẵn) — câu hỏi về tài liệu chuyên ngành hạ tầng/xây dựng/quy trình do Sở nạp thì dùng tra_cuu_tai_lieu
@@ -519,7 +528,7 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
       parameters: {
         type: 'object',
         properties: {
-          so_hieu: { type: 'string', description: 'Số hiệu văn bản, VD "175/2024", "217/2026/NĐ-CP", "12/2024/TT-BXD", "135/2025/QH15".' },
+          so_hieu: { type: 'string', description: 'Số hiệu HOẶC TÊN văn bản ĐÚNG NHƯ người dùng nêu, VD "175/2024", "217/2026/NĐ-CP", "Luật Viên chức 2010", "Nghị định 46/2010". TUYỆT ĐỐI KHÔNG tự nghĩ ra số hiệu khi người dùng chỉ nói tên — truyền nguyên tên, tool tự tra được.' },
         },
         required: ['so_hieu'],
       },
@@ -1591,8 +1600,30 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
 
     if (name === 'tra_cuu_hieu_luc_van_ban') {
       const raw = (args.so_hieu || '').trim()
+
+      // Tình trạng hiệu lực của văn bản NHÂN SỰ đã được rà và mã hoá sẵn — tra trước, vì nhiều
+      // văn bản loại này không có toàn văn trong kho (Luật Viên chức 58/2010, Luật CBCC 2008…).
+      const trongNhanSu = timVanBanNhanSu(raw)
+      if (trongNhanSu.length) {
+        return (
+          `Cơ sở pháp lý nhân sự của hệ thống có ${trongNhanSu.length} văn bản khớp "${raw}":\n` +
+          trongNhanSu.map(({ muc, vanBan: v }) =>
+            `• **${v.soHieu}** (${muc}) — ban hành ${v.ngayBanHanh}, hiệu lực từ ${v.hieuLucTu}\n` +
+            `  Tình trạng: ${v.hieuLucDen ? `⛔ ĐÃ HẾT HIỆU LỰC ${v.hieuLucDen}${v.thayTheBoi ? `, thay thế bởi ${v.thayTheBoi}` : ''}` : 'còn hiệu lực (theo rà soát của hệ thống)'}\n` +
+            `  ${v.trichYeu}` + (v.canhBao ? `\n  ⚠️ ${v.canhBao}` : ''),
+          ).join('\n') +
+          `\n\nTrả lời đúng theo tình trạng trên; nếu cần nguyên văn điều khoản thì gọi thêm tool tra_cuu_tai_lieu.`
+        )
+      }
+
       const m = raw.match(/(\d{1,4})\s*[/-]\s*(20\d\d|19\d\d)/)
-      if (!m) return `Không đọc được số hiệu từ "${raw}". Đề nghị người dùng nêu dạng "175/2024" hoặc "217/2026/NĐ-CP".`
+      if (!m) {
+        return (
+          `Không đọc được số hiệu từ "${raw}" và cơ sở pháp lý nhân sự cũng không có văn bản nào khớp tên này. ` +
+          `KHÔNG được tự nghĩ ra số hiệu để tra lại — hãy hỏi người dùng số hiệu chính xác, hoặc gọi tool ` +
+          `tra_cuu_phap_ly_nhan_su / tra_cuu_phap_ly_chuyen_nganh / tra_cuu_tai_lieu theo TÊN văn bản.`
+        )
+      }
       const [, so, nam] = m
       // Tên tệp trong kho dùng cả "217_2026", "217 2026", "217/2026" → so khớp nới lỏng.
       const soRaw = String(Number(so))
@@ -1625,6 +1656,22 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       }
 
       // Không có toàn văn → tra tiếp danh mục chuyên ngành (có thể chỉ có ở mức danh mục)
+      // Thử lại cơ sở pháp lý nhân sự theo SỐ HIỆU vừa bóc được — mô hình có thể truyền số hiệu
+      // viết khác cách ghi trong dữ liệu, hoặc người dùng nêu tên kèm số hiệu sai.
+      const nhanSuTheoSo = timVanBanNhanSu(`${soRaw}/${nam}`)
+      if (nhanSuTheoSo.length) {
+        return (
+          `Văn bản ${so}/${nam} KHÔNG có toàn văn trong kho, nhưng cơ sở pháp lý nhân sự đã rà soát có:\n` +
+          nhanSuTheoSo.map(({ muc, vanBan: v }) =>
+            `• **${v.soHieu}** (${muc}) — hiệu lực từ ${v.hieuLucTu}` +
+            (v.hieuLucDen
+              ? `, ⛔ HẾT HIỆU LỰC ${v.hieuLucDen}${v.thayTheBoi ? `, thay thế bởi ${v.thayTheBoi}` : ''}`
+              : ' (còn hiệu lực theo rà soát của hệ thống)') +
+            (v.canhBao ? `\n  ⚠️ ${v.canhBao}` : ''),
+          ).join('\n')
+        )
+      }
+
       const trongDanhMuc = timPhapLyChuyenNganh(`${soRaw}/${nam}`)
       if (trongDanhMuc.length) {
         return (
