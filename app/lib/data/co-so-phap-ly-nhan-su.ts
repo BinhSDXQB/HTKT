@@ -244,9 +244,16 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
   {
     id: 'nghi_huu',
     tieuDe: 'Nghỉ hưu (tuổi & thủ tục)',
-    tuKhoa: ['nghỉ hưu', 'nghi huu', 'về hưu', 'tuổi nghỉ hưu', 'thông báo nghỉ hưu', 'quyết định nghỉ hưu'],
+    tuKhoa: [
+      'nghỉ hưu', 'nghi huu', 'về hưu', 'tuổi nghỉ hưu', 'thông báo nghỉ hưu', 'quyết định nghỉ hưu',
+      'lùi thời điểm nghỉ hưu', 'lui nghi huu', 'lùi nghỉ hưu', 'hoãn nghỉ hưu', 'kéo dài thời gian công tác',
+      'mẫu số 2', 'mẫu số 3',
+    ],
     yeuCauQuanLy:
-      'Theo dõi thời điểm nghỉ hưu của từng người; TRƯỚC 6 THÁNG ra Thông báo nghỉ hưu (bố trí người thay thế, bàn giao), TRƯỚC 3 THÁNG ra Quyết định nghỉ hưu.',
+      'Theo dõi thời điểm nghỉ hưu của từng người; TRƯỚC 6 THÁNG ra Thông báo nghỉ hưu theo Mẫu số 2 (bố trí người thay thế, bàn giao), '
+      + 'TRƯỚC 3 THÁNG ra Quyết định nghỉ hưu theo Mẫu số 3 (NĐ 170/2025). PHÂN BIỆT: ngày nghỉ hưu do hệ thống tính theo NĐ 135/2020 chỉ là '
+      + 'DỰ KIẾN; nếu người có thẩm quyền đã quyết định LÙI (NĐ 170/2025 Điều 61 khoản 3, tối đa 1/3/6 tháng tuỳ trường hợp, không cộng dồn) '
+      + 'thì phải ghi nhận ngày lùi + số văn bản vào hồ sơ và mọi văn bản phải lấy theo ngày đã lùi.',
     vanBan: [
       {
         soHieu: 'Bộ luật Lao động 2019 (Luật 45/2019/QH14)',
@@ -270,10 +277,17 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         hieuLucTu: '01/7/2025',
         trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý công chức — THAY THẾ Nghị định 46/2010 về thủ tục nghỉ hưu.',
         dieuKhoan: [
-          'Điều 61: Thẩm quyền, thời điểm nghỉ hưu.',
+          'Điều 61 khoản 1: Người có thẩm quyền cho thôi việc (Điều 57) là người có thẩm quyền cho nghỉ hưu.',
+          'Điều 61 khoản 2: Thời điểm nghỉ hưu thực hiện theo pháp luật về lao động và bảo hiểm xã hội, trừ trường hợp có quy định khác của cơ quan có thẩm quyền.',
+          'Điều 61 khoản 3: LÙI thời điểm nghỉ hưu theo MỘT trong các trường hợp — a) KHÔNG QUÁ 01 THÁNG: thời điểm nghỉ hưu trùng ngày nghỉ Tết Nguyên đán; vợ/chồng, bố, mẹ (vợ hoặc chồng), con từ trần hoặc bị Toà án tuyên bố mất tích; bản thân và gia đình bị thiệt hại do thiên tai, địch hoạ, hoả hoạn. b) KHÔNG QUÁ 03 THÁNG: bị bệnh nặng hoặc bị tai nạn có giấy xác nhận của bệnh viện. c) KHÔNG QUÁ 06 THÁNG: đang điều trị bệnh thuộc danh mục bệnh cần chữa trị dài ngày do Bộ Y tế ban hành, có giấy xác nhận của bệnh viện.',
+          'Điều 61 khoản 4: Thuộc NHIỀU trường hợp tại khoản 3 thì CHỈ được thực hiện theo MỘT trường hợp có thời gian lùi NHIỀU NHẤT — không cộng dồn (do đó mức lùi nhiều nhất có thể là 06 tháng theo điểm c khoản 3).',
+          'Điều 61 khoản 5: Người có thẩm quyền cho nghỉ hưu QUYẾT ĐỊNH việc lùi, trừ trường hợp công chức không có nguyện vọng lùi.',
+          'Điều 61 khoản 6: Kéo dài thời gian công tác với công chức có trình độ chuyên môn cao, bề dày kinh nghiệm đã đủ tuổi nghỉ hưu thực hiện theo pháp luật có liên quan (khác với LÙI thời điểm nghỉ hưu ở khoản 3).',
           'Điều 62: TRƯỚC 06 THÁNG tính đến thời điểm nghỉ hưu, người có thẩm quyền cho nghỉ hưu phải ra THÔNG BÁO bằng văn bản về thời điểm nghỉ hưu để công chức biết — theo MẪU SỐ 2 ban hành kèm theo Nghị định.',
           'Điều 63 khoản 1: TRƯỚC 03 THÁNG tính đến thời điểm nghỉ hưu, người có thẩm quyền ra QUYẾT ĐỊNH nghỉ hưu — theo MẪU SỐ 3 ban hành kèm theo Nghị định.',
           'Điều 63 khoản 2: Căn cứ quyết định nghỉ hưu, cơ quan quản lý công chức phối hợp với tổ chức bảo hiểm xã hội làm thủ tục cho công chức được hưởng chế độ.',
+          'Điều 63 khoản 3: Công chức nghỉ hưu có trách nhiệm BÀN GIAO hồ sơ tài liệu và công việc đang làm cho người được phân công tiếp nhận TRƯỚC thời điểm nghỉ hưu ghi trong quyết định.',
+          'Điều 63 khoản 4: Kể từ thời điểm nghỉ hưu GHI TRONG QUYẾT ĐỊNH, công chức được nghỉ hưu và hưởng chế độ bảo hiểm xã hội theo quy định.',
           'Điều 71 khoản 2 điểm b: Nghị định 46/2010/NĐ-CP HẾT HIỆU LỰC kể từ ngày Nghị định này có hiệu lực (01/7/2025).',
         ],
       },
