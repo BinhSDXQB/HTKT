@@ -123,6 +123,14 @@ const BO_CAU_HOI = [
   },
   {
     nhom: 'nghi-huu',
+    hoi: 'Ai có thẩm quyền cho công chức nghỉ hưu?',
+    phai: [/tuyển dụng/i, /bổ nhiệm/i],
+    // Điều 57 NĐ 170/2025 đã bị NĐ 300/2026 thay từ 01/8/2026 — trả lời theo bản cũ là sai
+    cam: [],
+    ghiChu: 'NĐ 170/2025 Điều 61 k1 dẫn chiếu Điều 57 — nay theo NĐ 300/2026 Điều 28: cơ quan tuyển dụng (không giữ chức vụ) / cơ quan bổ nhiệm (lãnh đạo, quản lý)',
+  },
+  {
+    nhom: 'nghi-huu',
     hoi: 'Luật Viên chức 2010 còn hiệu lực không?',
     phai: [/hết hiệu lực/i, /129\/2025/],
     // Số hiệu đúng là 58/2010/QH12 — bịa số khác là dấu hiệu lấy từ trí nhớ

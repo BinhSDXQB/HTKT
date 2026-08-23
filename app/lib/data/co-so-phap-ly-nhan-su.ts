@@ -357,9 +357,15 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 170/2025/NĐ-CP',
         ngayBanHanh: '30/6/2025',
         hieuLucTu: '01/7/2025',
-        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý CÔNG CHỨC — THAY THẾ Nghị định 46/2010 về thủ tục nghỉ hưu.',
+        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý CÔNG CHỨC — THAY THẾ Nghị định 46/2010 về thủ tục nghỉ hưu. '
+          + 'ĐÃ ĐƯỢC SỬA ĐỔI, BỔ SUNG bởi Nghị định 300/2026/NĐ-CP (hiệu lực 01/8/2026): sửa 34 điều nhưng '
+          + 'KHÔNG sửa Điều 61, 62, 63 (nghỉ hưu) — riêng Điều 57 mà Điều 61 khoản 1 dẫn chiếu thì đã bị thay.',
         dieuKhoan: [
-          'Điều 61 khoản 1: Người có thẩm quyền cho thôi việc (Điều 57) là người có thẩm quyền cho nghỉ hưu.',
+          'Điều 61 khoản 1: Người có thẩm quyền cho thôi việc (Điều 57) là người có thẩm quyền cho nghỉ hưu. '
+            + 'LƯU Ý: Điều 57 ĐÃ ĐƯỢC THAY bằng Điều 28 Nghị định 300/2026/NĐ-CP (hiệu lực 01/8/2026) — nay: '
+            + 'người đứng đầu cơ quan có thẩm quyền TUYỂN DỤNG quyết định cho thôi việc (và cho nghỉ hưu) đối với '
+            + 'công chức KHÔNG giữ chức vụ lãnh đạo, quản lý; người đứng đầu cơ quan có thẩm quyền BỔ NHIỆM đối với '
+            + 'công chức GIỮ chức vụ lãnh đạo, quản lý.',
           'Điều 61 khoản 2: Thời điểm nghỉ hưu thực hiện theo pháp luật về lao động và bảo hiểm xã hội, trừ trường hợp có quy định khác của cơ quan có thẩm quyền.',
           'Điều 61 khoản 3: LÙI thời điểm nghỉ hưu theo MỘT trong các trường hợp — a) KHÔNG QUÁ 01 THÁNG: thời điểm nghỉ hưu trùng ngày nghỉ Tết Nguyên đán; vợ/chồng, bố, mẹ (vợ hoặc chồng), con từ trần hoặc bị Toà án tuyên bố mất tích; bản thân và gia đình bị thiệt hại do thiên tai, địch hoạ, hoả hoạn. b) KHÔNG QUÁ 03 THÁNG: bị bệnh nặng hoặc bị tai nạn có giấy xác nhận của bệnh viện. c) KHÔNG QUÁ 06 THÁNG: đang điều trị bệnh thuộc danh mục bệnh cần chữa trị dài ngày do Bộ Y tế ban hành, có giấy xác nhận của bệnh viện.',
           'Điều 61 khoản 4: Thuộc NHIỀU trường hợp tại khoản 3 thì CHỈ được thực hiện theo MỘT trường hợp có thời gian lùi NHIỀU NHẤT — không cộng dồn (do đó mức lùi nhiều nhất có thể là 06 tháng theo điểm c khoản 3).',
@@ -371,6 +377,19 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
           'Điều 63 khoản 3: Công chức nghỉ hưu có trách nhiệm BÀN GIAO hồ sơ tài liệu và công việc đang làm cho người được phân công tiếp nhận TRƯỚC thời điểm nghỉ hưu ghi trong quyết định.',
           'Điều 63 khoản 4: Kể từ thời điểm nghỉ hưu GHI TRONG QUYẾT ĐỊNH, công chức được nghỉ hưu và hưởng chế độ bảo hiểm xã hội theo quy định.',
           'Điều 71 khoản 2 điểm b: Nghị định 46/2010/NĐ-CP HẾT HIỆU LỰC kể từ ngày Nghị định này có hiệu lực (01/7/2025).',
+        ],
+      },
+      {
+        soHieu: 'Nghị định 300/2026/NĐ-CP',
+        ngayBanHanh: '29/7/2026',
+        hieuLucTu: '01/8/2026',
+        trichYeu: 'Sửa đổi, bổ sung một số điều của Nghị định 170/2025/NĐ-CP về tuyển dụng, sử dụng và quản lý công chức (bản .docx do Văn phòng Sở cung cấp, đã nạp vào kho tài liệu).',
+        dieuKhoan: [
+          'Sửa 34 điều của NĐ 170/2025 (Điều 6, 9, 13, 14, 18, 19, 20, 23, 24, 26, 27, 29, 33–37, 39–41, 51a, 52–59, 64, 66–68). '
+            + 'ĐÃ ĐỐI CHIẾU: KHÔNG sửa Điều 61 (thời điểm nghỉ hưu, lùi nghỉ hưu), Điều 62 (thông báo, Mẫu số 2), Điều 63 (quyết định, Mẫu số 3) — phần nghỉ hưu giữ nguyên.',
+          'Điều 28 thay toàn bộ Điều 57 "Thẩm quyền, trình tự, thủ tục giải quyết thôi việc" — do Điều 61 khoản 1 dẫn chiếu Điều 57 nên THẨM QUYỀN CHO NGHỈ HƯU cũng theo quy định mới: '
+            + 'khoản 1 điểm a người đứng đầu cơ quan có thẩm quyền TUYỂN DỤNG (công chức không giữ chức vụ lãnh đạo, quản lý); điểm b người đứng đầu cơ quan có thẩm quyền BỔ NHIỆM (công chức giữ chức vụ lãnh đạo, quản lý).',
+          'Điều 36: Nghị định này có hiệu lực thi hành từ ngày 01 tháng 8 năm 2026.',
         ],
       },
       {
