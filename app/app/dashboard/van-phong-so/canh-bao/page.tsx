@@ -64,7 +64,7 @@ export default async function CanhBaoPage() {
     .filter((cb) => cb.doiTuong !== 'NGUOI_LAO_DONG')
     .map((cb) => {
       const td = thoiDiemNghiHuu(cb)
-      return { cb, td, alert: classifyRetireAlert(td.ngay) }
+      return { cb, td, alert: classifyRetireAlert(td.ngay, new Date(), cb.doiTuong) }
     })
     .filter((x) => x.alert.bucket !== null)
     .sort((a, b) => (a.alert.daysLeft ?? 0) - (b.alert.daysLeft ?? 0))

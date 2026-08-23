@@ -28,7 +28,7 @@ async function computeCount(includeSensitive: boolean): Promise<number> {
       // CC/VC chưa gán vị trí việc làm
       ((cb.doiTuong === 'CONG_CHUC' || cb.doiTuong === 'VIEN_CHUC') && !cb.viTriViecLam?.trim()) ||
       // Sắp nghỉ hưu (không tính NLĐ hợp đồng)
-      (cb.doiTuong !== 'NGUOI_LAO_DONG' && classifyRetireAlert(veHuu).bucket !== null) ||
+      (cb.doiTuong !== 'NGUOI_LAO_DONG' && classifyRetireAlert(veHuu, new Date(), cb.doiTuong).bucket !== null) ||
       // Sắp đến hạn nâng lương (chỉ người hưởng lương ngạch bậc)
       (huongLuongNgachBac(cb) && classifySalaryAlert(cb.ngayNangLuongKeTiep).bucket !== null) ||
       // Sắp hết hạn hợp đồng

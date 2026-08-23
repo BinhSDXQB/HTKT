@@ -40,6 +40,8 @@ function addMonths(d: Date, months: number): Date {
 export function classifyRetireAlert(
   ngayVeHuu: Date | string | null | undefined,
   now: Date = new Date(),
+  /** CONG_CHUC | VIEN_CHUC | NGUOI_LAO_DONG — viên chức có mốc nghỉ hưu khác, xem chú thích dưới. */
+  doiTuong?: string | null,
 ): RetireAlert {
   if (!ngayVeHuu) {
     return { bucket: null, daysLeft: null, ngayVeHuu: null, ngayRaThongBao: null, ngayRaQuyetDinh: null, label: 'Chưa có ngày nghỉ hưu', viecCanLam: null }
@@ -49,8 +51,14 @@ export function classifyRetireAlert(
     return { bucket: null, daysLeft: null, ngayVeHuu: null, ngayRaThongBao: null, ngayRaQuyetDinh: null, label: 'Chưa có ngày nghỉ hưu', viecCanLam: null }
   }
 
-  // Đếm lùi từ thời điểm nghỉ hưu (hết ngày cuối tháng đủ tuổi), không từ ngày hưởng lương hưu.
-  const thoiDiemNghiHuu = new Date(Date.UTC(veHuu.getUTCFullYear(), veHuu.getUTCMonth(), veHuu.getUTCDate() - 1))
+  // Đếm lùi từ THỜI ĐIỂM NGHỈ HƯU, mà mốc này khác nhau theo đối tượng:
+  //   • Viên chức — NĐ 259/2026 Điều 54 khoản 1: thời điểm nghỉ hưu ĐÚNG BẰNG ngày 01 tháng liền kề
+  //     (chính giá trị đang lưu) → không lùi 1 ngày.
+  //   • Công chức, cán bộ, NLĐ — NĐ 135/2020 Điều 3 khoản 1: hết ngày cuối cùng của tháng đủ tuổi,
+  //     tức trước giá trị đang lưu 1 ngày.
+  const thoiDiemNghiHuu = doiTuong === 'VIEN_CHUC'
+    ? veHuu
+    : new Date(Date.UTC(veHuu.getUTCFullYear(), veHuu.getUTCMonth(), veHuu.getUTCDate() - 1))
   const ngayRaThongBao = addMonths(thoiDiemNghiHuu, -THANG_RA_THONG_BAO)
   const ngayRaQuyetDinh = addMonths(thoiDiemNghiHuu, -THANG_RA_QUYET_DINH)
   const daysLeft = daysUntil(veHuu, now)!

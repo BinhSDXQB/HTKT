@@ -113,6 +113,7 @@ type CanBoNghiHuu = {
   truongHopLui?: string | null
   vanBanLuiNghiHuu?: string | null
   trangThai?: string | null
+  doiTuong?: string | null   // CONG_CHUC | VIEN_CHUC | NGUOI_LAO_DONG — quyết định mốc pháp lý
 }
 function moTaNghiHuu(cb: CanBoNghiHuu): string {
   const fmt = (d: Date | null) => (d ? new Date(d).toLocaleDateString('vi-VN') : null)
@@ -141,14 +142,24 @@ function moTaNghiHuu(cb: CanBoNghiHuu): string {
       ` · ngày dự kiến trước khi lùi: ${fmt(kq.ngayDuKien)}${daQua}`
     )
   }
-  // Tách 3 mốc của NĐ 135/2020 Điều 3 — cán bộ hay nhầm "ngày nghỉ hưu" với "ngày hưởng lương hưu".
-  const moc = thangDuTuoi(cb.ngaySinh, (cb.gioiTinh === 'NAM' || cb.gioiTinh === 'NU' ? cb.gioiTinh : null))
-  const ketThuc = ngayKetThucLamViec(cb.ngaySinh, (cb.gioiTinh === 'NAM' || cb.gioiTinh === 'NU' ? cb.gioiTinh : null))
-  const chiTiet = moc && ketThuc
-    ? ` · đủ tuổi tháng ${moc.thang}/${moc.nam} → thời điểm nghỉ hưu là kết thúc ngày ${fmt(ketThuc)}` +
-      ` (NĐ 135/2020 Điều 3 khoản 1), hưởng chế độ hưu trí từ ${fmt(kq.ngay)} (khoản 2)`
-    : ''
-  return `${fmt(kq.ngay)} — DỰ KIẾN (máy tính theo NĐ 135/2020, chưa có quyết định lùi trong hồ sơ)${chiTiet}${daQua}`
+  // Mốc pháp lý KHÁC NHAU theo đối tượng:
+  //   • VIÊN CHỨC — NĐ 259/2026 Điều 54 khoản 1: thời điểm nghỉ hưu CHÍNH LÀ ngày 01 tháng liền kề.
+  //   • Công chức, cán bộ, NLĐ — NĐ 135/2020 Điều 3: nghỉ hưu là hết ngày cuối tháng đủ tuổi,
+  //     ngày 01 tháng liền kề chỉ là mốc HƯỞNG chế độ hưu trí.
+  const gt = (cb.gioiTinh === 'NAM' || cb.gioiTinh === 'NU' ? cb.gioiTinh : null)
+  const moc = thangDuTuoi(cb.ngaySinh, gt)
+  const ketThuc = ngayKetThucLamViec(cb.ngaySinh, gt)
+  const laVienChuc = cb.doiTuong === 'VIEN_CHUC'
+  const chiTiet = !moc
+    ? ''
+    : laVienChuc
+      ? ` · viên chức: đủ tuổi tháng ${moc.thang}/${moc.nam} → thời điểm nghỉ hưu là ngày 01 tháng liền kề` +
+        ` (NĐ 259/2026 Điều 54 khoản 1), tức đúng ngày nêu trên`
+      : ketThuc
+        ? ` · đủ tuổi tháng ${moc.thang}/${moc.nam} → thời điểm nghỉ hưu là kết thúc ngày ${fmt(ketThuc)}` +
+          ` (NĐ 135/2020 Điều 3 khoản 1), hưởng chế độ hưu trí từ ${fmt(kq.ngay)} (khoản 2)`
+        : ''
+  return `${fmt(kq.ngay)} — DỰ KIẾN (máy tính theo lộ trình Phụ lục I NĐ 135/2020, chưa có quyết định lùi trong hồ sơ)${chiTiet}${daQua}`
 }
 
 const SYSTEM_PROMPT = `Bạn là trợ lý AI của Hệ thống Quản lý Hạ tầng Kỹ thuật Đô thị tỉnh Quảng Trị (HTKT).
@@ -211,7 +222,7 @@ QUY TẮC:
 - NGHỈ HƯU — LUÔN PHÂN BIỆT "DỰ KIẾN" VỚI "ĐÃ QUYẾT ĐỊNH LÙI": ngày nghỉ hưu trong hồ sơ là giá trị MÁY TÍNH theo NĐ 135/2020, chưa phải quyết định của ai. Khi tool trả về nhãn DỰ KIẾN thì PHẢI giữ nguyên chữ "dự kiến" trong câu trả lời; khi tool trả về ĐÃ QUYẾT ĐỊNH LÙI thì lấy ngày đã lùi, nêu kèm số văn bản và TUYỆT ĐỐI KHÔNG gọi ngày đó là "dự kiến" (chỉ ngày trước khi lùi mới là dự kiến). TUYỆT ĐỐI không nói ngày nghỉ hưu như đã chốt khi tool ghi là dự kiến, và không tự tính ngày nghỉ hưu bằng đầu óc. Thời điểm chính thức chỉ có trong Quyết định nghỉ hưu (Mẫu số 3 NĐ 170/2025).
 - LÙI THỜI ĐIỂM NGHỈ HƯU: căn cứ NĐ 170/2025 Điều 61 khoản 3 (tối đa 01 tháng / 03 tháng / 06 tháng tuỳ trường hợp) và khoản 4 (thuộc nhiều trường hợp thì CHỈ áp dụng MỘT trường hợp có thời gian lùi nhiều nhất — KHÔNG cộng dồn, trần tuyệt đối 06 tháng), khoản 5 (người có thẩm quyền cho nghỉ hưu quyết định). Khi người dùng hỏi hoặc khẳng định về mức lùi, PHẢI gọi tool tra_cuu_phap_ly_nhan_su với chủ đề "nghỉ hưu" rồi trả lời theo đúng kết quả tool; nếu người dùng nêu con số cộng dồn (VD 3+6=9 tháng) thì SAU KHI gọi tool và đối chiếu kết quả, phải BÁC BỎ và nêu rõ khoản 4. Phân biệt LÙI thời điểm nghỉ hưu (khoản 3) với KÉO DÀI thời gian công tác (khoản 6) — hai chế định khác nhau.
 - BA MỐC NGHỈ HƯU (NĐ 135/2020 Điều 3) — không được nói lẫn: (1) THÁNG ĐỦ TUỔI theo Phụ lục I; (2) THỜI ĐIỂM NGHỈ HƯU = kết thúc ngày cuối cùng của tháng đủ tuổi (người tiếp tục làm việc sau tuổi hưu thì là lúc chấm dứt hợp đồng lao động); (3) THỜI ĐIỂM HƯỞNG CHẾ ĐỘ HƯU TRÍ = ngày 01 tháng liền kề — đây là ngày hệ thống lưu và là ngày ghi trong Quyết định nghỉ hưu Mẫu số 3. Hồ sơ chỉ có năm sinh thì lấy ngày 01/01 của năm sinh làm căn cứ (khoản 3). Tuổi nghỉ hưu thấp hơn (nghề nặng nhọc–độc hại, vùng đặc biệt khó khăn, suy giảm khả năng lao động — Phụ lục II) hệ thống CHƯA tính, phải nói rõ là xét thủ công.
-- ĐỐI TƯỢNG NÀO THEO VĂN BẢN NÀO: cán bộ — Luật CBCC 80/2025 Điều 17 khoản 2; công chức — Luật CBCC 80/2025 Điều 32 khoản 2 + thủ tục theo NĐ 170/2025 (Điều 61–63, Mẫu số 2/3), NĐ 170/2025 đã được sửa đổi bởi NĐ 300/2026 từ 01/8/2026 (KHÔNG sửa Điều 61–63 nhưng THAY Điều 57 nên thẩm quyền cho nghỉ hưu nay là: người đứng đầu cơ quan có thẩm quyền tuyển dụng với công chức không giữ chức vụ lãnh đạo–quản lý, người đứng đầu cơ quan có thẩm quyền bổ nhiệm với công chức giữ chức vụ lãnh đạo–quản lý); viên chức — Luật Viên chức 129/2025 Điều 32 khoản 2 + thủ tục theo NĐ 259/2026 (hiệu lực 01/7/2026, thay NĐ 115/2020). LƯU Ý: kho CHƯA có toàn văn NĐ 259/2026 (bản đăng là PDF scan) nên với VIÊN CHỨC chỉ được nêu tên văn bản và nhắc đối chiếu bản chính thức, KHÔNG áp quy định của công chức sang viên chức.
+- ĐỐI TƯỢNG NÀO THEO VĂN BẢN NÀO: cán bộ — Luật CBCC 80/2025 Điều 17 khoản 2; công chức — Luật CBCC 80/2025 Điều 32 khoản 2 + thủ tục theo NĐ 170/2025 (Điều 61–63, Mẫu số 2/3), NĐ 170/2025 đã được sửa đổi bởi NĐ 300/2026 từ 01/8/2026 (KHÔNG sửa Điều 61–63 nhưng THAY Điều 57 nên thẩm quyền cho nghỉ hưu nay là: người đứng đầu cơ quan có thẩm quyền tuyển dụng với công chức không giữ chức vụ lãnh đạo–quản lý, người đứng đầu cơ quan có thẩm quyền bổ nhiệm với công chức giữ chức vụ lãnh đạo–quản lý); viên chức — Luật Viên chức 129/2025 Điều 32 khoản 2 + NĐ 259/2026 Điều 54 (hiệu lực 01/7/2026, thay NĐ 115/2020). VIÊN CHỨC KHÁC CÔNG CHỨC: (a) thời điểm nghỉ hưu của viên chức là NGÀY 01 THÁNG LIỀN KỀ sau tháng đủ tuổi (Điều 54 k1) chứ không phải hết ngày cuối tháng; (b) người quyết định LÙI là người đứng đầu cơ quan, đơn vị có thẩm quyền quản lý viên chức (k3); (c) trước 06 tháng ĐƠN VỊ SỰ NGHIỆP CÔNG LẬP ra thông báo (k4), trước 03 tháng cơ quan có thẩm quyền ra quyết định (k5 điểm a), bàn giao ít nhất trước 03 ngày làm việc (k5 điểm c); (d) NĐ 259/2026 KHÔNG ban hành mẫu thông báo/quyết định nghỉ hưu — Mẫu số 2, Mẫu số 3 là của NĐ 170/2025 chỉ dùng cho CÔNG CHỨC.
 - CĂN CỨ PHÁP LÝ THỦ TỤC NGHỈ HƯU (ĐỐI VỚI CÔNG CHỨC): hiện hành là NĐ 170/2025/NĐ-CP (Điều 61 thời điểm, Điều 62 thông báo trước 06 tháng theo Mẫu số 2, Điều 63 quyết định trước 03 tháng theo Mẫu số 3). NĐ 46/2010/NĐ-CP ĐÃ HẾT HIỆU LỰC từ 01/7/2025 (Điều 71 khoản 2 điểm b NĐ 170/2025) — chỉ được nhắc kèm chữ "đã hết hiệu lực", KHÔNG dùng làm căn cứ. Câu hỏi về mẫu biểu/điều khoản nghỉ hưu PHẢI qua tool tra_cuu_phap_ly_nhan_su, không trả lời bằng trí nhớ.
 - PHÁP LÝ CHUYÊN NGÀNH (không phải nhân sự): câu hỏi "căn cứ pháp lý về cấp nước/thoát nước/cây xanh/chiếu sáng/nghĩa trang/giao thông đô thị/không gian ngầm/sử dụng chung, thẩm định thiết kế, nghiệm thu, bảo trì, chi phí đầu tư xây dựng, hợp đồng xây dựng, vật liệu xây dựng, quy hoạch, phát triển đô thị, nhà ở – bất động sản, vận tải, kết cấu hạ tầng giao thông…" → dùng tool tra_cuu_phap_ly_chuyen_nganh (danh mục 11 phòng đã rà theo bộ văn bản hiệu lực 01/7/2026). Cần NGUYÊN VĂN điều khoản thì gọi thêm tra_cuu_tai_lieu. Ba nguồn pháp lý KHÁC NHAU, chọn đúng: tra_cuu_phap_ly_nhan_su (nhân sự, có điều/khoản) · tra_cuu_phap_ly_chuyen_nganh (danh mục chuyên môn) · tra_cuu_tai_lieu (toàn văn trong kho).
 - HIỆU LỰC VĂN BẢN: hỏi "văn bản X còn hiệu lực không", "X bị thay bởi văn bản nào", "hệ thống có văn bản X chưa" → dùng tool tra_cuu_hieu_luc_van_ban, trả lời đúng theo tình trạng tool báo. Tool báo KHÔNG có trong kho thì nói thẳng là chưa nạp, KHÔNG mô tả nội dung văn bản đó.
@@ -644,7 +655,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
           hoTen: true, cccd: true, ngaySinh: true, gioiTinh: true, soDienThoai: true, email: true,
           heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true, ngayNangLuongKeTiep: true,
           // Nghỉ hưu: phải lấy CẢ ngày dự kiến lẫn quyết định lùi, nếu không sẽ trả lời sai thời điểm
-          ngayVeHuu: true, ngayNghiHuuLui: true, truongHopLui: true, vanBanLuiNghiHuu: true, trangThai: true,
+          ngayVeHuu: true, ngayNghiHuuLui: true, truongHopLui: true, vanBanLuiNghiHuu: true, trangThai: true, doiTuong: true,
           toChuc: { select: { ten: true } },
           chucDanh: { select: { ten: true } },
         },

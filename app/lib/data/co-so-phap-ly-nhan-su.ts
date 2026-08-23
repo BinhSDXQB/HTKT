@@ -343,15 +343,22 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 259/2026/NĐ-CP',
         ngayBanHanh: '30/6/2026',
         hieuLucTu: '01/7/2026',
-        canhBao: 'ÁP DỤNG CHO VIÊN CHỨC (các đơn vị sự nghiệp thuộc Sở). Nghị định thay Nghị định 115/2020, '
-          + '85/2023, 101/2017, 89/2021 kể từ 01/7/2026 — thông tin lấy từ Cổng TTĐT Chính phủ ngày 23/8/2026. '
-          + '⚠️ CHƯA trích được NGUYÊN VĂN điều khoản nghỉ hưu: bản đăng trên vanban.chinhphu.vn là PDF SCAN '
-          + '(76 trang, không có lớp văn bản) nên chưa nạp được vào kho tài liệu. Trước khi ra Thông báo/Quyết '
-          + 'định nghỉ hưu cho VIÊN CHỨC, Văn phòng Sở phải đối chiếu bản chính thức — KHÔNG suy diễn theo '
-          + 'quy định của công chức (NĐ 170/2025) vì hai đối tượng do hai nghị định khác nhau điều chỉnh.',
-        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý VIÊN CHỨC (hướng dẫn Luật Viên chức 129/2025). '
-          + 'Theo bản tin tóm tắt của Cổng TTĐT Chính phủ thì Nghị định có quy định tuổi nghỉ hưu, thời điểm nghỉ hưu, '
-          + 'lùi thời điểm nghỉ hưu và thủ tục nghỉ hưu đối với viên chức — CHƯA đối chiếu được điều khoản chi tiết.',
+        canhBao: 'ÁP DỤNG CHO VIÊN CHỨC (các đơn vị sự nghiệp thuộc Sở) — thay NĐ 115/2020, 85/2023, 101/2017, '
+          + '89/2021 từ 01/7/2026. KHÁC CÔNG CHỨC Ở HAI ĐIỂM: (1) THỜI ĐIỂM NGHỈ HƯU của viên chức là NGÀY 01 '
+          + 'THÁNG LIỀN KỀ sau tháng đủ tuổi (Điều 54 khoản 1) — không phải "kết thúc ngày cuối cùng của tháng '
+          + 'đủ tuổi" như NĐ 135/2020 Điều 3 khoản 1 áp cho người lao động/công chức; (2) Nghị định 259/2026 '
+          + 'KHÔNG ban hành mẫu Thông báo/Quyết định nghỉ hưu (chỉ có Mẫu số 01–04: phiếu đăng ký dự tuyển và '
+          + 'hợp đồng làm việc) — Mẫu số 2, Mẫu số 3 là của NĐ 170/2025 dành cho CÔNG CHỨC, không áp cho viên chức.',
+        trichYeu: 'Quy định về tuyển dụng, sử dụng và quản lý VIÊN CHỨC (hướng dẫn Luật Viên chức 129/2025) — '
+          + 'gồm thủ tục nghỉ hưu tại Điều 54.',
+        dieuKhoan: [
+          // Nguyên văn bản .docx do Văn phòng Sở cung cấp 24/8/2026 (259_2026_ND-CP_713417.docx).
+          'Điều 54 khoản 1 (nguyên văn): "Tuổi nghỉ hưu của viên chức được thực hiện theo tuổi nghỉ hưu đối với người lao động theo quy định của pháp luật lao động. Thời điểm nghỉ hưu là ngày 01 của tháng liền kề sau tháng viên chức đủ tuổi nghỉ hưu theo quy định."',
+          'Điều 54 khoản 2: LÙI thời điểm nghỉ hưu — a) không quá 01 tháng (trùng nghỉ Tết Nguyên đán; vợ/chồng, bố, mẹ (vợ/chồng), con từ trần hoặc bị Toà án tuyên bố mất tích; thiệt hại do thiên tai, địch hoạ, hoả hoạn); b) không quá 03 tháng (bệnh nặng hoặc tai nạn, có giấy xác nhận của bệnh viện); c) không quá 06 tháng (điều trị bệnh thuộc danh mục cần chữa trị dài ngày do Bộ Y tế ban hành, có giấy xác nhận của bệnh viện).',
+          'Điều 54 khoản 3: thuộc nhiều trường hợp thì CHỈ áp dụng MỘT trường hợp có thời gian lùi nhiều nhất. Người quyết định việc lùi là NGƯỜI ĐỨNG ĐẦU CƠ QUAN, ĐƠN VỊ CÓ THẨM QUYỀN QUẢN LÝ VIÊN CHỨC (khác công chức: theo Điều 57 NĐ 170/2025 sửa bởi NĐ 300/2026), trừ trường hợp viên chức không có nguyện vọng lùi.',
+          'Điều 54 khoản 4: TRƯỚC 06 THÁNG tính đến thời điểm nghỉ hưu, ĐƠN VỊ SỰ NGHIỆP CÔNG LẬP ra thông báo bằng văn bản về thời điểm nghỉ hưu để viên chức biết và chuẩn bị người thay thế (Nghị định KHÔNG quy định mẫu).',
+          'Điều 54 khoản 5: a) TRƯỚC 03 THÁNG, cơ quan có thẩm quyền phải ra quyết định nghỉ hưu; b) căn cứ quyết định, phối hợp với tổ chức bảo hiểm xã hội làm thủ tục hưởng chế độ; c) viên chức bàn giao hồ sơ, tài liệu, công việc cho người tiếp nhận ÍT NHẤT TRƯỚC 03 NGÀY LÀM VIỆC tính đến thời điểm nghỉ hưu; d) kể từ thời điểm nghỉ hưu ghi trong quyết định, viên chức được nghỉ hưu và hưởng chế độ bảo hiểm xã hội.',
+        ],
       },
       {
         soHieu: 'Nghị định 170/2025/NĐ-CP',

@@ -13,10 +13,12 @@
 // Cột can_bo."ngayVeHuu" của hệ thống lưu MỐC THỨ BA (ngày 01 tháng liền kề) — giữ nguyên để
 // khớp Phụ lục I và biểu mẫu; hai mốc còn lại tính tại chỗ bằng các hàm dưới đây khi cần hiển thị.
 //
-// Căn cứ theo đối tượng: công chức — Luật CBCC 80/2025 Điều 32 khoản 2 + NĐ 170/2025 Điều 61;
-// cán bộ — Luật CBCC 80/2025 Điều 17 khoản 2; viên chức — Luật Viên chức 129/2025 Điều 32 khoản 2
-// + NĐ 259/2026 (chưa trích được nguyên văn, xem cảnh báo trong co-so-phap-ly-nhan-su.ts).
-// Cả ba đều dẫn chiếu về pháp luật lao động, nên dùng chung lộ trình Phụ lục I ở đây.
+// Căn cứ theo đối tượng — tuổi nghỉ hưu dùng chung Phụ lục I, nhưng THỜI ĐIỂM nghỉ hưu KHÁC NHAU:
+//   • Cán bộ, công chức, người lao động: Luật CBCC 80/2025 Điều 17 k2 / Điều 32 k2 → pháp luật lao động
+//     → NĐ 135/2020 Điều 3 k1: thời điểm nghỉ hưu = KẾT THÚC NGÀY CUỐI CÙNG của tháng đủ tuổi.
+//   • VIÊN CHỨC: Luật Viên chức 129/2025 Điều 32 k2 + NĐ 259/2026 Điều 54 k1 (nguyên văn):
+//     "Thời điểm nghỉ hưu là ngày 01 của tháng liền kề sau tháng viên chức đủ tuổi nghỉ hưu theo quy định."
+//     → với viên chức, giá trị của tinhNgayNghiHuu() CHÍNH LÀ thời điểm nghỉ hưu, không phải mốc hưởng.
 
 export type GioiTinhInput = 'NAM' | 'NU' | null | undefined
 

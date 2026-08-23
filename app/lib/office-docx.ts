@@ -329,17 +329,39 @@ const CAN_CU_CHUNG_NGHI_HUU = [
   'Căn cứ Quyết định số 07/2025/QĐ-UBND ngày 18 tháng 8 năm 2025 của UBND tỉnh Quảng Trị ban hành quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Sở Xây dựng tỉnh Quảng Trị;',
 ]
 
-// MẪU SỐ 2 — Thông báo nghỉ hưu. Căn cứ cuối ("hồ sơ công chức và hồ sơ bảo hiểm xã
-// hội") KHÔNG đứng riêng mà nối liền vào câu dẫn thân bài, nên xử lý ở phần thân.
-const CAN_CU_TB_NGHI_HUU = [
-  'Căn cứ Bộ luật Lao động ngày 20 tháng 11 năm 2019;',
-  ...CAN_CU_CHUNG_NGHI_HUU,
-].join('\n')
+// MẪU SỐ 2 — Thông báo nghỉ hưu: CÓ thêm "Căn cứ Bộ luật Lao động"; căn cứ cuối ("hồ sơ công
+// chức và hồ sơ bảo hiểm xã hội") KHÔNG đứng riêng mà nối liền vào câu dẫn thân bài.
+// MẪU SỐ 3 — Quyết định nghỉ hưu: KHÔNG viện dẫn Bộ luật Lao động.
+// Hai khối căn cứ này do canCuNghiHuu() dựng theo đối tượng (xem ngay bên dưới).
 
-// MẪU SỐ 3 — Quyết định nghỉ hưu (không viện dẫn Bộ luật Lao động).
-const CAN_CU_QD_NGHI_HUU = CAN_CU_CHUNG_NGHI_HUU.join('\n')
+// VIÊN CHỨC do văn bản KHÁC điều chỉnh: Luật Viên chức số 129/2025/QH15 (hiệu lực 01/7/2026)
+// và Nghị định 259/2026/NĐ-CP Điều 54 (bản .docx trong kho: 259_2026_ND-CP_713417.docx).
+// Dùng khối căn cứ của công chức cho viên chức là viện dẫn SAI trong văn bản trình ký.
+// NĐ 259/2026 không ban hành mẫu thông báo/quyết định nghỉ hưu (chỉ có Mẫu số 01–04 về tuyển
+// dụng và hợp đồng làm việc) nên giữ bố cục theo thể thức NĐ 30/2020, chỉ thay khối căn cứ.
+const CAN_CU_CHUNG_NGHI_HUU_VC = [
+  'Căn cứ Luật Bảo hiểm xã hội ngày 29 tháng 6 năm 2024;',
+  'Căn cứ Luật Viên chức ngày 10 tháng 12 năm 2025;',
+  'Căn cứ Nghị định số 135/2020/NĐ-CP ngày 18 tháng 11 năm 2020 của Chính phủ quy định về tuổi nghỉ hưu;',
+  'Căn cứ Nghị định số 259/2026/NĐ-CP ngày 30 tháng 6 năm 2026 của Chính phủ quy định về tuyển dụng, sử dụng và quản lý viên chức;',
+  'Căn cứ Quyết định số 07/2025/QĐ-UBND ngày 18 tháng 8 năm 2025 của UBND tỉnh Quảng Trị ban hành quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Sở Xây dựng tỉnh Quảng Trị;',
+]
+
+/**
+ * Khối căn cứ ĐÚNG THEO ĐỐI TƯỢNG.
+ * Viên chức không do NĐ 170/2025 điều chỉnh — viện dẫn nhầm là sai căn cứ trong văn bản
+ * trình ký. Xem CAN_CU_CHUNG_NGHI_HUU_VC ở trên.
+ */
+export function canCuNghiHuu(loai: 'tb' | 'qd', doiTuong?: string | null): string {
+  const chung = doiTuong === 'VIEN_CHUC' ? CAN_CU_CHUNG_NGHI_HUU_VC : CAN_CU_CHUNG_NGHI_HUU
+  return loai === 'tb'
+    ? ['Căn cứ Bộ luật Lao động ngày 20 tháng 11 năm 2019;', ...chung].join('\n')
+    : chung.join('\n')
+}
 
 export type RetirementInput = {
+  /** CONG_CHUC | VIEN_CHUC — quyết định khối căn cứ và cách gọi đối tượng trong văn bản. */
+  doiTuong?: string | null
   soVanBan: string
   ngayVanBan?: Date | null
   hoTen: string
@@ -395,7 +417,7 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
     }),
   ]
 
-  const canCuLines = (input.canCuPhapLy || CAN_CU_TB_NGHI_HUU).split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
+  const canCuLines = (input.canCuPhapLy || canCuNghiHuu('tb', input.doiTuong)).split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
   const canCuParas = canCuLines.map((line) => new Paragraph({
     alignment: AlignmentType.JUSTIFIED, spacing: { after: 40 },
     children: [run(/^căn cứ/i.test(line) ? line : `Căn cứ ${line}`, { italics: true })],
@@ -407,7 +429,7 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
   const body: Paragraph[] = [
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED, spacing: { before: 120, after: 120 }, indent: { firstLine: 567 },
-      children: [run(`Căn cứ hồ sơ công chức và hồ sơ bảo hiểm xã hội, ${input.tenCoQuan || 'Sở Xây dựng Quảng Trị'} thông báo:`)],
+      children: [run(`Căn cứ hồ sơ ${input.doiTuong === 'VIEN_CHUC' ? 'viên chức' : 'công chức'} và hồ sơ bảo hiểm xã hội, ${input.tenCoQuan || 'Sở Xây dựng Quảng Trị'} thông báo:`)],
     }),
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED, spacing: { after: 60 },
@@ -460,7 +482,7 @@ export async function buildRetirementNoticeDocx(input: RetirementInput): Promise
       children: [
         ...heading,
         center([run('THÔNG BÁO', { bold: true, size: 28 })], { spacingAfter: 60 }),
-        center([run('Về việc nghỉ hưu đối với công chức', { bold: true })], { spacingAfter: 200 }),
+        center([run(`Về việc nghỉ hưu đối với ${input.doiTuong === 'VIEN_CHUC' ? 'viên chức' : 'công chức'}`, { bold: true })], { spacingAfter: 200 }),
         // "Kính gửi" — bắt buộc theo MẪU SỐ 2 (trước đây thiếu).
         new Paragraph({
           alignment: AlignmentType.CENTER, spacing: { after: 240 },
@@ -486,7 +508,7 @@ export function buildRetirementDecisionDocx(input: RetirementInput): Promise<Buf
     // MẪU SỐ 3 ghi tiêu đề phụ là "Về việc nghỉ hưu để hưởng chế độ bảo hiểm xã hội".
     tieuDePhu: 'Về việc nghỉ hưu để hưởng chế độ bảo hiểm xã hội',
     thamQuyen: `GIÁM ĐỐC ${(input.tenCoQuan || 'SỞ XÂY DỰNG QUẢNG TRỊ').toUpperCase()}`,
-    canCuPhapLy: input.canCuPhapLy || CAN_CU_QD_NGHI_HUU,
+    canCuPhapLy: input.canCuPhapLy || canCuNghiHuu('qd', input.doiTuong),
     // (2) trong mẫu = "Người đứng đầu đơn vị phụ trách công tác tổ chức, cán bộ" → Chánh Văn phòng Sở.
     theoDeNghi: 'Xét đề nghị của Chánh Văn phòng Sở,',
     nguoiKyHoTen: input.nguoiKyHoTen,

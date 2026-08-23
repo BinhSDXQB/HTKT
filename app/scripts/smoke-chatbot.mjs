@@ -115,11 +115,12 @@ const BO_CAU_HOI = [
   },
   {
     nhom: 'nghi-huu',
-    hoi: 'Viên chức ở đơn vị sự nghiệp của Sở nghỉ hưu theo văn bản nào?',
-    phai: [/129\/2025/, /259\/2026/],
-    // Không được áp thẳng nghị định của công chức cho viên chức
-    cam: [/viên chức[^.]{0,60}170\/2025/i],
-    ghiChu: 'Viên chức: Luật Viên chức 129/2025 + NĐ 259/2026 (chưa có toàn văn trong kho)',
+    hoi: 'Viên chức ở đơn vị sự nghiệp của Sở nghỉ hưu theo văn bản nào? Thời điểm nghỉ hưu tính thế nào?',
+    // NĐ 259/2026 Điều 54 khoản 1: thời điểm nghỉ hưu của viên chức là NGÀY 01 tháng liền kề — khác công chức
+    phai: [/129\/2025/, /259\/2026/, /01 (của )?tháng liền kề/i],
+    // Không được áp nghị định/biểu mẫu của công chức cho viên chức
+    cam: [/viên chức[^.]{0,60}170\/2025/i, /viên chức[^.]{0,80}Mẫu số [23]/i],
+    ghiChu: 'Viên chức: Luật VC 129/2025 + NĐ 259/2026 Điều 54 k1 (ngày 01 tháng liền kề); NĐ 259/2026 KHÔNG có Mẫu số 2/3',
   },
   {
     nhom: 'nghi-huu',

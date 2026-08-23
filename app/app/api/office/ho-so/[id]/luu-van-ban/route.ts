@@ -95,6 +95,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       soVanBan: '...../...-SXD', hoTen: cb.hoTen, ngaySinh: cb.ngaySinh, chucDanh, donVi,
       ngach: cb.ngachHienHuong, maNgach: cb.maNgach, bac: cb.bacLuong, heSo: cb.heSoLuong,
       ngayNghiHuu, coQuanCapTren, tenCoQuan,
+      // Viên chức dùng khối căn cứ riêng (Luật Viên chức 129/2025 + NĐ 259/2026 Điều 54);
+      // trước 24/8/2026 mọi văn bản đều viện dẫn NĐ 170/2025 của công chức → sai căn cứ.
+      doiTuong: cb.doiTuong,
       // MẪU SỐ 3 (NĐ 170/2025) yêu cầu Số sổ BHXH tại Điều 1. Mã số BHXH 10 chữ số
       // chính là số sổ BHXH theo quy định của BHXH Việt Nam nên dùng trực tiếp.
       soSoBHXH: cb.maSoBHXH,
