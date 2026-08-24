@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="su-dung-chung"
       title="Sử dụng chung công trình HTKT"
       icon={Share2}
       moTa="Quản lý sử dụng chung công trình hạ tầng kỹ thuật đô thị và khu dân cư nông thôn"

@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="chieu-sang"
       title="Chiếu sáng đô thị"
       icon={Lightbulb}
       moTa="Quản lý nhà nước về chiếu sáng đô thị"

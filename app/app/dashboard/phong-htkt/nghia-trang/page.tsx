@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="nghia-trang"
       title="Nghĩa trang & cơ sở hỏa táng"
       icon={Landmark}
       moTa="Quản lý nhà nước về nghĩa trang (trừ nghĩa trang liệt sĩ) và cơ sở hỏa táng"

@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="cay-xanh"
       title="Công viên, cây xanh đô thị"
       icon={TreePine}
       moTa="Quản lý nhà nước về công viên, cây xanh đô thị"

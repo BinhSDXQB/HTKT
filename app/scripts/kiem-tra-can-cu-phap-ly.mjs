@@ -100,9 +100,24 @@ function quetDanhMuc(cacThuMuc) {
       }
       if (!/\.tsx?$/.test(ten)) continue
       const tepTuongDoi = relative(root, p)
-      readFileSync(p, 'utf8').split('\n').forEach((l, i) => {
+      const cacDong = readFileSync(p, 'utf8').split('\n')
+      cacDong.forEach((l, i) => {
         const m = l.match(/soHieu:\s*'([^']+)'/)
-        if (m) { ra.push({ tep: tepTuongDoi, dong: i + 1, soHieu: m[1], nguon: 'soHieu' }); return }
+        if (m) {
+          // Mục trong danh mục ĐÃ TỰ KHAI là hết hiệu lực (có hieuLucDen / thayTheBoi ngay
+          // trong cùng khối) là mục lưu để ĐỐI CHIẾU LỊCH SỬ, không phải căn cứ đang viện
+          // dẫn. Không loại trừ thì mọi mục lịch sử đều thành cảnh báo giả.
+          // Cắt cửa sổ tại mục kế tiếp (soHieu: khác) hoặc dấu đóng đối tượng, để không
+          // vô tình mượn hieuLucDen của MỤC SAU rồi tha nhầm một mục còn hiệu lực.
+          const khoi = []
+          for (let j = i + 1; j < Math.min(cacDong.length, i + 10); j++) {
+            if (/soHieu:\s*'/.test(cacDong[j]) || /^\s*\},?\s*$/.test(cacDong[j])) break
+            khoi.push(cacDong[j])
+          }
+          if (/(hieuLucDen|thayTheBoi|hieuLucHet)\s*:/.test(khoi.join(' '))) return
+          ra.push({ tep: tepTuongDoi, dong: i + 1, soHieu: m[1], nguon: 'soHieu' })
+          return
+        }
         // Bỏ qua: dòng chú thích thuần, VÀ trường ghiChu/moTa (ghi chú lịch sử kiểu
         // "Thay NĐ 06/2021" — đó là thông tin đúng, không phải căn cứ đang viện dẫn),
         // kể cả dòng nối chuỗi của ghi chú (bắt đầu bằng + '...').
@@ -112,6 +127,12 @@ function quetDanhMuc(cacThuMuc) {
         let mm
         reCanCu.lastIndex = 0
         while ((mm = reCanCu.exec(l)) !== null) {
+          // Số hiệu đứng NGAY SAU một động từ thay thế ("thay", "thay thế", "bãi bỏ",
+          // "hết hiệu lực") chính là văn bản CŨ đang được nói tới, không phải căn cứ đang
+          // viện dẫn — ví dụ "TT 34/2026 thay Thông tư 06/2021/TT-BXD" là câu ĐÚNG.
+          // Chỉ soi 40 ký tự ngay trước để không nới lỏng quá mức.
+          const truoc = l.slice(Math.max(0, mm.index - 40), mm.index)
+          if (/(thay thế|thay bởi|thay cho|bãi bỏ|hết hiệu lực|đã bị thay|thay)\s+$/i.test(truoc)) continue
           ra.push({ tep: tepTuongDoi, dong: i + 1, soHieu: mm[1], nguon: 'chuỗi' })
         }
       })

@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="giao-thong-do-thi"
       title="Hạ tầng giao thông đô thị"
       icon={Route}
       moTa="Quản lý kết cấu hạ tầng giao thông đô thị, đường bộ trong đô thị (trừ quốc lộ qua đô thị)"

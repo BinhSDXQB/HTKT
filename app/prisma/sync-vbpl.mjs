@@ -106,18 +106,54 @@ function chunkText(raw, { maxChars = 1100, overlap = 150 } = {}) {
 }
 const viTriTuNoiDung = (c) => { const m = [...c.matchAll(/\[Trang (\d+)\]/g)]; return m.length ? `Trang ${m[m.length - 1][1]}` : null }
 
+/** Lỗi do TÀI KHOẢN OpenAI hết tiền / hết hạn mức — khác hẳn lỗi quá tải tạm thời. */
+function heTinDung(e) {
+  const code = e?.code || e?.error?.code || ''
+  if (code === 'credit_balance_exhausted' || code === 'insufficient_quota') return true
+  return /no credits remaining|insufficient_quota|exceeded your current quota/i.test(e?.message || '')
+}
+
+// Nhúng vector có THỬ LẠI. Lỗi 429 (quá tải) / 5xx của OpenAI từng làm đứt
+// giữa chừng và để lại "bản ghi ma" trong kho — xem ghi chú ở ingest().
 async function embedTexts(texts) {
   const out = []; const BATCH = 96
   for (let i = 0; i < texts.length; i += BATCH) {
     const batch = texts.slice(i, i + BATCH).map((t) => t.replace(/\n/g, ' ').slice(0, 8000))
-    const res = await openai.embeddings.create({ model: EMBED_MODEL, input: batch })
-    for (const d of res.data) out.push(d.embedding)
+    let lastErr
+    for (let lan = 1; lan <= 5; lan++) {
+      try {
+        const res = await openai.embeddings.create({ model: EMBED_MODEL, input: batch })
+        for (const d of res.data) out.push(d.embedding)
+        lastErr = null
+        break
+      } catch (e) {
+        lastErr = e
+        const code = e?.status ?? e?.response?.status
+        // HẾT TIỀN TRONG TÀI KHOẢN cũng trả 429 như vượt tốc độ, nhưng thử lại là vô ích:
+        // mỗi tệp mất hơn 1 phút chờ suông, chạy 130 tệp thì tác vụ 15 phút chồng lên nhau.
+        if (heTinDung(e)) throw e
+        if (code && code !== 429 && code < 500) throw e   // lỗi do mình (401, 400) → dừng ngay
+        const cho = Math.min(60_000, 2000 * 2 ** (lan - 1))
+        console.log(`   ⏳ nhúng vector lỗi (${code || e.message}) — thử lại lần ${lan}/5 sau ${cho / 1000}s`)
+        await new Promise((r) => setTimeout(r, cho))
+      }
+    }
+    if (lastErr) throw lastErr
   }
   return out
 }
 const vlit = (v) => `[${v.join(',')}]`
 const tieuDeTuTenFile = (name) => basename(name, extname(name)).replace(/^\d+\s*[.\-]\s*/, '').replace(/_/g, ' ').replace(/\s+/g, ' ').trim()
 
+// CHẶN "BẢN GHI MA" — lỗi đã xảy ra thật (phát hiện 24/8/2026):
+// ingest() tạo bản ghi tai_lieu TRƯỚC rồi mới gọi OpenAI nhúng vector. Khi OpenAI
+// trả 429 (hết hạn mức), bản ghi ở lại kho với trangThai='dang_xu_ly', soChunk=0
+// NHƯNG metadata đã có fileHash. Lần đồng bộ sau, bước chống trùng (a) khớp fileHash
+// → đếm "đã có" → bỏ qua VĨNH VIỄN. Kết quả: 9 văn bản (NĐ 258/2025 cây xanh,
+// NĐ 269/2025 đô thị thông minh, Luật CBCC 80/2025, NĐ 233, 238, 259, 300/2026,
+// NĐ 335, 365/2025) nằm trong kho mà chatbot KHÔNG đọc được đoạn nào.
+// Nay: lỗi giữa chừng → xoá sạch bản ghi dở + đánh dấu lỗi, và bước (a) coi bản ghi
+// 0 đoạn là chưa nạp để nạp lại.
 async function ingest(f, text, fileHash) {
   const tieuDe = tieuDeTuTenFile(f)
   const chunks = chunkText(text)
@@ -128,16 +164,31 @@ async function ingest(f, text, fileHash) {
     `INSERT INTO tai_lieu (id,"tieuDe",loai,"phamVi",nguon,metadata,"trangThai","soChunk","soKyTu","createdAt","updatedAt")
      VALUES ($1,$2,$3,$4,$5,$6::jsonb,'dang_xu_ly',0,$7,now(),now())`,
     [docId, tieuDe, LOAI, PHAM_VI, f, meta, text.length])
-  const vecs = await embedTexts(chunks.map((c) => c.content))
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i]
-    await client.query(
-      `INSERT INTO tai_lieu_chunk (id,"taiLieuId","chunkIndex","noiDung",embedding,"soToken","viTri","createdAt")
-       VALUES ($1,$2,$3,$4,$5::vector,$6,$7,now())`,
-      [randomUUID(), docId, c.index, c.content, vlit(vecs[i]), c.soToken, viTriTuNoiDung(c.content)])
+  try {
+    const vecs = await embedTexts(chunks.map((c) => c.content))
+    for (let i = 0; i < chunks.length; i++) {
+      const c = chunks[i]
+      await client.query(
+        `INSERT INTO tai_lieu_chunk (id,"taiLieuId","chunkIndex","noiDung",embedding,"soToken","viTri","createdAt")
+         VALUES ($1,$2,$3,$4,$5::vector,$6,$7,now())`,
+        [randomUUID(), docId, c.index, c.content, vlit(vecs[i]), c.soToken, viTriTuNoiDung(c.content)])
+    }
+    await client.query(`UPDATE tai_lieu SET "trangThai"='san_sang', "soChunk"=$2 WHERE id=$1`, [docId, chunks.length])
+    return chunks.length
+  } catch (e) {
+    // Dọn sạch để lần chạy sau nạp lại được, không để lại bản ghi rỗng chặn đường.
+    await client.query(`DELETE FROM tai_lieu_chunk WHERE "taiLieuId"=$1`, [docId])
+    await client.query(`DELETE FROM tai_lieu WHERE id=$1`, [docId])
+    throw e
   }
-  await client.query(`UPDATE tai_lieu SET "trangThai"='san_sang', "soChunk"=$2 WHERE id=$1`, [docId, chunks.length])
-  return chunks.length
+}
+
+/** Bản ghi coi như CHƯA nạp xong: chưa sẵn sàng hoặc không có đoạn nào. */
+const chuaNapXong = (r) => r.trangThai !== 'san_sang' || !r.soChunk
+
+async function xoaHanBanGhi(id) {
+  await client.query(`DELETE FROM tai_lieu_chunk WHERE "taiLieuId"=$1`, [id])
+  await client.query(`DELETE FROM tai_lieu WHERE id=$1`, [id])
 }
 
 // ── Báo cáo ──────────────────────────────────────────────────────────
@@ -190,7 +241,7 @@ if (!REPORT_ONLY) {
   const boQua = all.filter((f) => ['.doc', '.gdoc'].includes(extname(f).toLowerCase()))
   console.log(`📁 ${FOLDER}\n   ${targets.length} file PDF/DOCX · ${boQua.length} file .doc/.gdoc bỏ qua\n`)
 
-  let them = 0, daCo = 0, trungFile = 0, trungND = 0, loi = 0
+  let them = 0, daCo = 0, trungFile = 0, trungND = 0, loi = 0, napLai = 0, hetHanMuc = false
   const canOcr = []
   for (const f of targets) {
     try {
@@ -198,15 +249,26 @@ if (!REPORT_ONLY) {
       const fileHash = sha256(buf)
 
       // (a) đã có đúng file này (theo mã băm bytes)?
-      const byHash = await client.query(`SELECT nguon FROM tai_lieu WHERE metadata->>'fileHash'=$1 AND "deletedAt" IS NULL LIMIT 1`, [fileHash])
-      if (byHash.rows.length) {
+      const byHash = await client.query(`SELECT id, nguon, "trangThai", "soChunk" FROM tai_lieu WHERE metadata->>'fileHash'=$1 AND "deletedAt" IS NULL LIMIT 1`, [fileHash])
+      if (byHash.rows.length && !chuaNapXong(byHash.rows[0])) {
         if (byHash.rows[0].nguon === f) { daCo++ }
         else { console.log(`🟰 TRÙNG FILE: "${f}" giống hệt "${byHash.rows[0].nguon}" → bỏ qua`); trungFile++ }
         continue
       }
+      if (byHash.rows.length) {
+        console.log(`♻️  NẠP LẠI: "${byHash.rows[0].nguon}" có trong kho nhưng ${byHash.rows[0].soChunk} đoạn (trạng thái ${byHash.rows[0].trangThai}) → xoá bản ghi rỗng và nạp lại`)
+        await xoaHanBanGhi(byHash.rows[0].id)
+        napLai++
+      }
 
       // (b) bản ghi cũ cùng tên nhưng chưa có mã băm (nạp từ script import trước) → backfill, coi như đã có.
-      const byName = await client.query(`SELECT id, metadata FROM tai_lieu WHERE nguon=$1 AND "deletedAt" IS NULL LIMIT 1`, [f])
+      const byName = await client.query(`SELECT id, metadata, "trangThai", "soChunk" FROM tai_lieu WHERE nguon=$1 AND "deletedAt" IS NULL LIMIT 1`, [f])
+      if (byName.rows.length && chuaNapXong(byName.rows[0])) {
+        console.log(`♻️  NẠP LẠI: "${f}" có bản ghi ${byName.rows[0].soChunk} đoạn (trạng thái ${byName.rows[0].trangThai}) → xoá bản ghi rỗng và nạp lại`)
+        await xoaHanBanGhi(byName.rows[0].id)
+        napLai++
+        byName.rows.length = 0
+      }
       if (byName.rows.length) {
         const text0 = await extractText(buf, f)
         const meta = JSON.stringify({ ...(byName.rows[0].metadata || {}), fileHash, noiDungHash: noiDungHashCua(text0), thuMuc: FOLDER })
@@ -246,14 +308,25 @@ if (!REPORT_ONLY) {
     } catch (e) {
       loi++
       console.log(`❌ ${f} → ${e instanceof Error ? e.message : String(e)}`)
+      // Hết hạn mức thì mọi tệp còn lại cũng sẽ hỏng y hệt → DỪNG NGAY cả vòng lặp,
+      // không để tác vụ định kỳ chạy hàng chục phút vô ích rồi chồng lên lần chạy sau.
+      if (heTinDung(e)) {
+        console.log('\n⛔ DỪNG ĐỒNG BỘ: tài khoản OpenAI đã hết hạn mức — không nhúng được véc-tơ.')
+        console.log('   Nạp thêm hạn mức rồi chạy lại lệnh này; các tệp chưa nạp sẽ tự vào kho.')
+        hetHanMuc = true
+        break
+      }
     }
   }
 
   // (d) XOÁ ĐỒNG BỘ: tài liệu thuộc thư mục này nhưng file đã biến mất.
+  // Bỏ qua khi phải dừng giữa chừng vì hết hạn mức — lúc đó vòng quét chưa đi hết
+  // thư mục, xoá đồng bộ dễ gỡ nhầm tài liệu vẫn còn tệp.
   const trongThuMuc = new Set(all)
   const managed = await client.query(`SELECT id, nguon FROM tai_lieu WHERE metadata->>'thuMuc'=$1 AND "deletedAt" IS NULL`, [FOLDER])
   let xoa = 0
   for (const m of managed.rows) {
+    if (hetHanMuc) break
     if (!trongThuMuc.has(m.nguon)) {
       await client.query(`UPDATE tai_lieu SET "deletedAt"=now() WHERE id=$1`, [m.id])
       console.log(`🗑️  ĐÃ GỠ khỏi kho (file không còn trong thư mục): ${m.nguon}`)
@@ -262,7 +335,7 @@ if (!REPORT_ONLY) {
   }
 
   console.log(`\n──────── ĐỒNG BỘ ────────`)
-  console.log(`✅ Thêm mới: ${them}  ·  ⏭️ Đã có: ${daCo}  ·  🟰 Trùng file: ${trungFile}  ·  📑 Trùng nội dung: ${trungND}  ·  🗑️ Đã gỡ: ${xoa}  ·  ❌ Lỗi: ${loi}`)
+  console.log(`✅ Thêm mới: ${them}  ·  ♻️ Nạp lại bản rỗng: ${napLai}  ·  ⏭️ Đã có: ${daCo}  ·  🟰 Trùng file: ${trungFile}  ·  📑 Trùng nội dung: ${trungND}  ·  🗑️ Đã gỡ: ${xoa}  ·  ❌ Lỗi: ${loi}`)
   if (canOcr.length) {
     console.log(`
 🔍 ${canOcr.length} tệp CẦN OCR trước khi nạp (bản scan, không có lớp văn bản):`)

@@ -99,6 +99,14 @@ async function kiemKhoTaiLieu(c) {
   ghi('Kho tài liệu không có bản ghi rỗng', rong === 0,
     rong === 0 ? 'không có tài liệu dưới 500 ký tự' : `${rong} tài liệu gần như rỗng — sẽ nuốt mọi PDF scan nạp sau`, rong)
 
+  // Bản ghi "ma": có trong kho nhưng KHÔNG có đoạn nào → chatbot không bao giờ tìm thấy,
+  // mà cơ chế chống trùng lại coi là đã nạp nên không bao giờ nạp lại (sự cố 24/8/2026).
+  // Kiểm riêng vì các bản ghi này vẫn có soKyTu lớn nên lọt qua kiểm tra ở trên.
+  const ma = (await c.query(`SELECT count(*)::int n FROM tai_lieu
+    WHERE "deletedAt" IS NULL AND ("soChunk" = 0 OR "trangThai" <> 'san_sang')`)).rows[0].n
+  ghi('Kho tài liệu không có bản ghi 0 đoạn', ma === 0,
+    ma === 0 ? 'mọi tài liệu đều đã nhúng vector' : `${ma} tài liệu có 0 đoạn — chatbot KHÔNG đọc được. Xem: node scripts/don-ban-ghi-tai-lieu-rong.mjs (thêm --xoa để dọn), rồi node prisma/sync-vbpl.mjs`, ma)
+
   const tong = (await c.query(`SELECT count(*)::int n FROM tai_lieu WHERE "deletedAt" IS NULL`)).rows[0].n
   const canKiem = (await c.query(`SELECT count(*)::int n FROM tai_lieu
     WHERE "deletedAt" IS NULL AND "tinhTrangHieuLuc"='can_kiem_chung'`)).rows[0].n
@@ -152,6 +160,50 @@ async function kiemPhapLy() {
       n === 0 ? 'sạch' : `${n} mục đang nêu văn bản đã bãi bỏ`, n)
   } catch (e) {
     ghi('Không nêu văn bản đã bãi bỏ làm căn cứ', false, `không chạy được: ${e.message.slice(0, 60)}`)
+  }
+}
+
+// ── 8a. Nội dung chuyên môn HTKT (dữ liệu tĩnh, không tốn token) ────────────
+async function kiemNoiDungHtkt() {
+  try {
+    const { execSync } = await import('node:child_process')
+    const out = execSync('node scripts/smoke-noi-dung-htkt.mjs', { cwd: root, encoding: 'utf8', timeout: 120000 })
+    const m = String(out).match(/TỔNG:\s*(\d+)\s*đạt\s*\/\s*(\d+)\s*không đạt/)
+    const khong = m ? Number(m[2]) : -1
+    ghi('Nội dung chuyên môn HTKT', khong === 0,
+      m ? `${m[1]} đạt / ${m[2]} không đạt` : 'không đọc được kết quả', khong)
+  } catch (e) {
+    const out = String(e.stdout || '')
+    const m = out.match(/TỔNG:\s*(\d+)\s*đạt\s*\/\s*(\d+)\s*không đạt/)
+    ghi('Nội dung chuyên môn HTKT', false,
+      m ? `${m[1]} đạt / ${m[2]} không đạt` : `không chạy được: ${String(e.message).slice(0, 60)}`)
+  }
+}
+
+// ── 8b. Hạn mức dịch vụ AI (OpenAI) ─────────────────────────────────────────
+// Hết hạn mức là điểm chết KÉP: chatbot ngừng trả lời VÀ không nạp được văn bản mới
+// vào kho (nhúng vector cũng gọi OpenAI). Ngày 24/8/2026 đã xảy ra thật: 9 văn bản
+// nằm chờ không nạp được, chatbot trả lỗi 500 cho mọi câu hỏi. Gọi 1 lần nhúng
+// chuỗi rất ngắn — chi phí không đáng kể so với việc phát hiện sớm.
+async function kiemHanMucAI() {
+  const key = env('OPENAI_API_KEY')
+  if (!key) { ghi('Hạn mức dịch vụ AI (OpenAI)', false, 'thiếu OPENAI_API_KEY trong .env'); return }
+  try {
+    const res = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({ model: 'text-embedding-3-small', input: 'kiem tra han muc' }),
+      signal: AbortSignal.timeout(30000),
+    })
+    if (res.ok) { ghi('Hạn mức dịch vụ AI (OpenAI)', true, 'còn dùng được'); return }
+    const body = await res.text()
+    const hetTien = /no credits remaining|insufficient_quota|credit_balance_exhausted|exceeded your current quota/i.test(body)
+    ghi('Hạn mức dịch vụ AI (OpenAI)', false,
+      hetTien
+        ? 'HẾT HẠN MỨC — chatbot ngừng trả lời và KHÔNG nạp được văn bản mới vào kho. Cần nạp thêm hạn mức.'
+        : `HTTP ${res.status}: ${body.slice(0, 100)}`)
+  } catch (e) {
+    ghi('Hạn mức dịch vụ AI (OpenAI)', false, `không gọi được: ${String(e.message).slice(0, 80)}`)
   }
 }
 
@@ -211,6 +263,8 @@ async function main() {
   kiemSaoLuu()
   await kiemDia()
   await kiemPhapLy()
+  await kiemNoiDungHtkt()
+  await kiemHanMucAI()
   if (CHAY_CHATBOT) await kiemChatbot()
   await c.end()
 

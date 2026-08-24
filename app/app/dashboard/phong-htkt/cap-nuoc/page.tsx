@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="cap-nuoc"
       title="Cấp nước sạch đô thị"
       icon={Droplets}
       moTa="Quản lý nhà nước về cấp nước sạch đô thị (trừ nước sạch nông thôn)"

@@ -1,20 +1,26 @@
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import { NghiepVuSection } from '@/components/nghiep-vu/nghiep-vu-section'
+import { NoiDungChuyenMon } from '@/components/phong-htkt/noi-dung-chuyen-mon'
+import type { LinhVucKey } from '@/lib/htkt/phap-ly'
 
 // Khung trang con của module Phòng Hạ tầng kỹ thuật.
 // Hiển thị tiêu đề, mô tả chức năng, danh sách nhiệm vụ (trích QĐ 331/QĐ-SXD) và
-// ghi chú "đang phát triển". Nội dung nghiệp vụ sẽ bổ sung dần ở các bước sau.
+// nội dung chuyên môn theo lĩnh vực (quy trình · phân cấp công trình · quy hoạch · đô thị
+// thông minh) và khối nhập liệu nghiệp vụ.
 export function HtktSection({
   title,
   icon: Icon,
   moTa,
   nhiemVu = [],
+  linhVuc,
 }: {
   title: string
   icon: React.ElementType
   moTa: string
   nhiemVu?: string[]
+  /** Khoá lĩnh vực HTKT — dùng để lấy nội dung chuyên môn (quy trình, phân cấp, quy hoạch, thông minh). */
+  linhVuc?: LinhVucKey
 }) {
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -47,6 +53,8 @@ export function HtktSection({
           </ul>
         </div>
       )}
+
+      {linhVuc && <NoiDungChuyenMon linhVuc={linhVuc} />}
 
       <NghiepVuSection />
     </div>

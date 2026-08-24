@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="khong-gian-ngam"
       title="Không gian xây dựng ngầm"
       icon={Network}
       moTa="Quản lý nhà nước về không gian xây dựng ngầm đô thị"

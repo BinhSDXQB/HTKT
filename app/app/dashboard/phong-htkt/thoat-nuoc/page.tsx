@@ -4,6 +4,7 @@ import { HtktSection } from '@/components/phong-htkt/htkt-section'
 export default function Page() {
   return (
     <HtktSection
+      linhVuc="thoat-nuoc"
       title="Thoát nước & xử lý nước thải"
       icon={Waves}
       moTa="Quản lý thoát nước và xử lý nước thải đô thị (trừ XLNT tại chỗ, thoát nước phục vụ sản xuất nông nghiệp, sản xuất muối)"

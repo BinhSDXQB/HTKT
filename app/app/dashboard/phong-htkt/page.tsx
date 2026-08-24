@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {
   Building2, Droplets, Waves, TreePine, Lightbulb, Landmark, Route, Network, Share2, ChevronRight,
-  Gavel, ClipboardCheck, FileText, Users, BarChart3, Map, CalendarCheck, FileBarChart,
+  Gavel, ClipboardCheck, FileText, Users, BarChart3, Map, CalendarCheck, FileBarChart, Cpu,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -17,6 +17,7 @@ const nghiepVu = [
   { label: 'Quy trình thẩm định', desc: 'Thẩm định BCNCKT/BCKTKT/thiết kế, kiểm tra nghiệm thu — từng bước', icon: ClipboardCheck, href: '/dashboard/phong-htkt/tham-dinh' },
   { label: 'Công tác tham mưu', desc: 'Nội dung tham mưu & sản phẩm theo lĩnh vực; công việc thường xuyên', icon: Lightbulb, href: '/dashboard/phong-htkt/tham-muu' },
   { label: 'Mẫu biểu & văn bản', desc: 'Tờ trình, công văn, quyết định, giấy mời... thể thức NĐ 30/2020', icon: FileText, href: '/dashboard/phong-htkt/mau-bieu' },
+  { label: 'HTKT & chiếu sáng thông minh', desc: 'Chiếu sáng công cộng thông minh, 5 lĩnh vực HTKT thông minh, 3 cấp độ trưởng thành (NĐ 269/2025, TT 03/2026)', icon: Cpu, href: '/dashboard/phong-htkt/do-thi-thong-minh' },
 ]
 
 // Menu con module Phòng Hạ tầng kỹ thuật — theo chức năng QĐ 331/QĐ-SXD mục 7.

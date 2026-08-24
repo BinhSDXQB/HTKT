@@ -8,6 +8,7 @@ import { hasPermission, MODULES } from '@/lib/permissions'
 import { timPhapLy, formatPhapLyMuc, timVanBanNhanSu } from '@/lib/data/co-so-phap-ly-nhan-su'
 import { thoiDiemNghiHuu, TRUONG_HOP_LUI, thangDuTuoi, ngayKetThucLamViec, type MaTruongHopLui } from '@/lib/nghi-huu'
 import { timPhapLyChuyenNganh, formatPhapLyChuyenNganh, danhSachLinhVuc } from '@/lib/data/phap-ly-chuyen-nganh'
+import { traCuuNghiepVuHtkt, phamViNoiDung, CHU_DE_LABEL, type ChuDe } from '@/lib/htkt/tra-cuu-nghiep-vu'
 import { logAction } from '@/lib/audit'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -37,12 +38,24 @@ async function goiOpenAI(
       return await openai.chat.completions.create(params)
     } catch (e) {
       const status = (e as { status?: number })?.status
+      // HẾT TIỀN TRONG TÀI KHOẢN cũng trả 429 giống như vượt tốc độ, nhưng thử lại
+      // là vô ích: chỉ làm người dùng chờ thêm ~7 giây rồi vẫn báo lỗi chung chung.
+      // Phân biệt bằng mã lỗi để dừng ngay và trả về thông báo đúng nguyên nhân.
+      if (heTinDungOpenAI(e)) throw e
       const thuLaiDuoc = status === 429 || (typeof status === 'number' && status >= 500)
       if (!thuLaiDuoc || lan >= CHO.length) throw e
       console.warn(`OpenAI ${status} — thử lại lần ${lan + 1} sau ${CHO[lan]}ms`)
       await new Promise((r) => setTimeout(r, CHO[lan]))
     }
   }
+}
+
+/** Lỗi do TÀI KHOẢN OpenAI hết hạn mức/hết tiền — khác hẳn lỗi quá tải tạm thời. */
+function heTinDungOpenAI(e: unknown): boolean {
+  const err = e as { code?: string; message?: string; error?: { code?: string } }
+  const code = err?.code || err?.error?.code || ''
+  if (code === 'credit_balance_exhausted' || code === 'insufficient_quota') return true
+  return /no credits remaining|insufficient_quota|exceeded your current quota/i.test(err?.message || '')
 }
 
 
@@ -225,9 +238,10 @@ QUY TẮC:
 - ĐỐI TƯỢNG NÀO THEO VĂN BẢN NÀO: cán bộ — Luật CBCC 80/2025 Điều 17 khoản 2; công chức — Luật CBCC 80/2025 Điều 32 khoản 2 + thủ tục theo NĐ 170/2025 (Điều 61–63, Mẫu số 2/3), NĐ 170/2025 đã được sửa đổi bởi NĐ 300/2026 từ 01/8/2026 (KHÔNG sửa Điều 61–63 nhưng THAY Điều 57 nên thẩm quyền cho nghỉ hưu nay là: người đứng đầu cơ quan có thẩm quyền tuyển dụng với công chức không giữ chức vụ lãnh đạo–quản lý, người đứng đầu cơ quan có thẩm quyền bổ nhiệm với công chức giữ chức vụ lãnh đạo–quản lý); viên chức — Luật Viên chức 129/2025 Điều 32 khoản 2 + NĐ 259/2026 Điều 54 (hiệu lực 01/7/2026, thay NĐ 115/2020). VIÊN CHỨC KHÁC CÔNG CHỨC: (a) thời điểm nghỉ hưu của viên chức là NGÀY 01 THÁNG LIỀN KỀ sau tháng đủ tuổi (Điều 54 k1) chứ không phải hết ngày cuối tháng; (b) người quyết định LÙI là người đứng đầu cơ quan, đơn vị có thẩm quyền quản lý viên chức (k3); (c) trước 06 tháng ĐƠN VỊ SỰ NGHIỆP CÔNG LẬP ra thông báo (k4), trước 03 tháng cơ quan có thẩm quyền ra quyết định (k5 điểm a), bàn giao ít nhất trước 03 ngày làm việc (k5 điểm c); (d) NĐ 259/2026 KHÔNG ban hành mẫu thông báo/quyết định nghỉ hưu — Mẫu số 2, Mẫu số 3 là của NĐ 170/2025 chỉ dùng cho CÔNG CHỨC.
 - CĂN CỨ PHÁP LÝ THỦ TỤC NGHỈ HƯU (ĐỐI VỚI CÔNG CHỨC): hiện hành là NĐ 170/2025/NĐ-CP (Điều 61 thời điểm, Điều 62 thông báo trước 06 tháng theo Mẫu số 2, Điều 63 quyết định trước 03 tháng theo Mẫu số 3). NĐ 46/2010/NĐ-CP ĐÃ HẾT HIỆU LỰC từ 01/7/2025 (Điều 71 khoản 2 điểm b NĐ 170/2025) — chỉ được nhắc kèm chữ "đã hết hiệu lực", KHÔNG dùng làm căn cứ. Câu hỏi về mẫu biểu/điều khoản nghỉ hưu PHẢI qua tool tra_cuu_phap_ly_nhan_su, không trả lời bằng trí nhớ.
 - PHÁP LÝ CHUYÊN NGÀNH (không phải nhân sự): câu hỏi "căn cứ pháp lý về cấp nước/thoát nước/cây xanh/chiếu sáng/nghĩa trang/giao thông đô thị/không gian ngầm/sử dụng chung, thẩm định thiết kế, nghiệm thu, bảo trì, chi phí đầu tư xây dựng, hợp đồng xây dựng, vật liệu xây dựng, quy hoạch, phát triển đô thị, nhà ở – bất động sản, vận tải, kết cấu hạ tầng giao thông…" → dùng tool tra_cuu_phap_ly_chuyen_nganh (danh mục 11 phòng đã rà theo bộ văn bản hiệu lực 01/7/2026). Cần NGUYÊN VĂN điều khoản thì gọi thêm tra_cuu_tai_lieu. Ba nguồn pháp lý KHÁC NHAU, chọn đúng: tra_cuu_phap_ly_nhan_su (nhân sự, có điều/khoản) · tra_cuu_phap_ly_chuyen_nganh (danh mục chuyên môn) · tra_cuu_tai_lieu (toàn văn trong kho).
+- NGHIỆP VỤ HẠ TẦNG KỸ THUẬT (quy trình · tiêu chuẩn kỹ thuật · quy hoạch · đô thị và chiếu sáng thông minh): mọi câu hỏi dạng "quy trình/trình tự/thủ tục ... cây xanh, công viên, chiếu sáng, cấp nước, thoát nước, nghĩa trang", "xin giấy phép chặt hạ cây", "công trình này cấp mấy / thẩm quyền thẩm định", "định mức, dự toán chi phí dịch vụ chiếu sáng – cây xanh", "hạ tầng kỹ thuật trong đồ án quy hoạch", "hạ tầng kỹ thuật khung", "chiếu sáng thông minh", "đô thị thông minh", "cấp độ trưởng thành" → PHẢI gọi tool tra_cuu_nghiep_vu_htkt TRƯỚC. Nội dung tool trả về đã đối chiếu bản gốc và ghi rõ điều – khoản; trả lời bám đúng đó và dẫn lại điều – khoản. Kết quả tool có phần "⚠️ khoảng trống / chưa đủ căn cứ / lĩnh vực chưa có quy trình" — PHẢI nói lại đúng cho người dùng và KHÔNG được bù bằng kiến thức chung (đặc biệt: thông số kỹ thuật đèn chiếu sáng, chỉ tiêu quy hoạch hạ tầng, và quy trình của cấp nước – thoát nước – nghĩa trang – không gian ngầm – sử dụng chung hiện CHƯA có căn cứ trong hệ thống). Phân biệt: tra_cuu_nghiep_vu_htkt (nội dung nghiệp vụ đã biên soạn, có điều – khoản) · tra_cuu_phap_ly_chuyen_nganh (chỉ là DANH MỤC số hiệu văn bản) · tra_cuu_tai_lieu (toàn văn trong kho).
 - HIỆU LỰC VĂN BẢN: hỏi "văn bản X còn hiệu lực không", "X bị thay bởi văn bản nào", "hệ thống có văn bản X chưa" → dùng tool tra_cuu_hieu_luc_van_ban, trả lời đúng theo tình trạng tool báo. Tool báo KHÔNG có trong kho thì nói thẳng là chưa nạp, KHÔNG mô tả nội dung văn bản đó.
 - TRA CỨU NỘI DUNG TÀI LIỆU: khi người dùng hỏi về NỘI DUNG một văn bản/tài liệu/quy trình/hướng dẫn nghiệp vụ đã được nạp vào hệ thống ("tài liệu nào nói về…", "quy trình/hướng dẫn về…", "theo quy định/tài liệu thì…", "trình tự/thủ tục …"), dùng tool tra_cuu_tai_lieu. CHỈ trả lời dựa trên các đoạn tool trả về; LUÔN dẫn nguồn (tên tài liệu + trang) ở cuối; nếu tool báo không có đoạn liên quan thì nói rõ "chưa có tài liệu phù hợp trong kho", KHÔNG bịa. Phân biệt với tra_cuu_phap_ly_nhan_su (dành riêng cho cơ sở pháp lý nhân sự đã mã hoá sẵn) — câu hỏi về tài liệu chuyên ngành hạ tầng/xây dựng/quy trình do Sở nạp thì dùng tra_cuu_tai_lieu
-- ⚠️ PHÁP LUẬT XÂY DỰNG MỚI TỪ 01/7/2026: Luật Xây dựng 135/2025/QH15 và bộ nghị định/thông tư hướng dẫn đã CÓ HIỆU LỰC, thay thế văn bản cũ. Khi trả lời về pháp luật xây dựng — giao thông — quy hoạch, dùng đúng văn bản MỚI: NĐ 217/2026 (quản lý hoạt động XD — thay NĐ 175/2024, 15/2021), NĐ 207/2026 (chất lượng, thi công, bảo trì — thay NĐ 06/2021), NĐ 206/2026 (chi phí ĐTXD — thay NĐ 10/2021), NĐ 210/2026 (hợp đồng XD — thay NĐ 37/2015, 50/2021), NĐ 209/2026 (VLXD — thay NĐ 09/2021), NĐ 212/2026 (năng lực HĐXD), NĐ 193/2026 (quyết toán vốn), bộ TT 32–41/2026/TT-BXD (thay TT 06/2021 và TT 11–14/2021). Quy hoạch: Luật Quy hoạch 112/2025 (thay Luật 21/2017, hiệu lực 01/3/2026) + NĐ 70/2026; Luật QHĐT-NT 47/2024 sửa đổi bởi Luật 144/2025. Đô thị: NQ 111/2025/UBTVQH15 phân loại đô thị (thay NQ 1210/2016) + NĐ 35/2026; NĐ 269/2025 đô thị thông minh. Nhà ở-BĐS: NĐ 54/2026, NĐ 136/2026 sửa NĐ 95/96/100/2024. Vận tải: NĐ 218/2026 sửa NĐ 158/2024 (từ 10/8/2026), NĐ 238/2026 sửa NĐ 168/2024 (từ 15/8/2026), TT 30/2026 kiểm định xe. Ngân sách: Luật NSNN 89/2025 (thay 83/2015 từ năm NS 2026). TUYỆT ĐỐI không viện dẫn văn bản đã hết hiệu lực làm căn cứ hiện hành; cần nội dung chi tiết điều khoản thì PHẢI tra bằng tool tra_cuu_tai_lieu; danh mục căn cứ theo lĩnh vực thì dùng tool tra_cuu_phap_ly_chuyen_nganh. KHÔNG mặc định mọi văn bản kể trên đều đã có toàn văn trong kho — kiểm bằng tool tra_cuu_hieu_luc_van_ban; tính đến 23/8/2026 kho CHƯA có toàn văn NĐ 238/2026 và NĐ 269/2025 (chỉ có bản scan chưa OCR), nên với hai văn bản này chỉ được nói là chưa nạp, không mô tả nội dung
+- ⚠️ PHÁP LUẬT XÂY DỰNG MỚI TỪ 01/7/2026: Luật Xây dựng 135/2025/QH15 và bộ nghị định/thông tư hướng dẫn đã CÓ HIỆU LỰC, thay thế văn bản cũ. Khi trả lời về pháp luật xây dựng — giao thông — quy hoạch, dùng đúng văn bản MỚI: NĐ 217/2026 (quản lý hoạt động XD — thay NĐ 175/2024, 15/2021), NĐ 207/2026 (chất lượng, thi công, bảo trì — thay NĐ 06/2021), NĐ 206/2026 (chi phí ĐTXD — thay NĐ 10/2021), NĐ 210/2026 (hợp đồng XD — thay NĐ 37/2015, 50/2021), NĐ 209/2026 (VLXD — thay NĐ 09/2021), NĐ 212/2026 (năng lực HĐXD), NĐ 193/2026 (quyết toán vốn), bộ TT 32–41/2026/TT-BXD (thay TT 06/2021 và TT 11–14/2021). Quy hoạch: Luật Quy hoạch 112/2025 (thay Luật 21/2017, hiệu lực 01/3/2026) + NĐ 70/2026; Luật QHĐT-NT 47/2024 sửa đổi bởi Luật 144/2025. Đô thị: NQ 111/2025/UBTVQH15 phân loại đô thị (thay NQ 1210/2016) + NĐ 35/2026; NĐ 269/2025 đô thị thông minh. Nhà ở-BĐS: NĐ 54/2026, NĐ 136/2026 sửa NĐ 95/96/100/2024. Vận tải: NĐ 218/2026 sửa NĐ 158/2024 (từ 10/8/2026), NĐ 238/2026 sửa NĐ 168/2024 (từ 15/8/2026), TT 30/2026 kiểm định xe. Ngân sách: Luật NSNN 89/2025 (thay 83/2015 từ năm NS 2026). TUYỆT ĐỐI không viện dẫn văn bản đã hết hiệu lực làm căn cứ hiện hành; cần nội dung chi tiết điều khoản thì PHẢI tra bằng tool tra_cuu_tai_lieu; danh mục căn cứ theo lĩnh vực thì dùng tool tra_cuu_phap_ly_chuyen_nganh. KHÔNG mặc định mọi văn bản kể trên đều đã có toàn văn trong kho — kiểm bằng tool tra_cuu_hieu_luc_van_ban; tính đến 24/8/2026 kho CHƯA nạp được toàn văn 9 văn bản sau (tệp gốc .docx ĐỌC ĐƯỢC, nhưng chưa nhúng vector do tài khoản OpenAI hết hạn mức): Luật CBCC 80/2025, NĐ 233/2026, NĐ 238/2026, NĐ 258/2025 (công viên, cây xanh, mặt nước), NĐ 259/2026, NĐ 269/2025 (đô thị thông minh), NĐ 300/2026, NĐ 335/2025, NĐ 365/2025. Với 9 văn bản này, tool tra_cuu_tai_lieu sẽ KHÔNG tìm thấy đoạn nào — không được suy ra là văn bản không tồn tại. RIÊNG NĐ 258/2025 và NĐ 269/2025: nội dung hạ tầng kỹ thuật đã được đối chiếu bản gốc và mã hoá sẵn trong tool tra_cuu_nghiep_vu_htkt — dùng tool đó, không mô tả từ trí nhớ
 - ⛔ NGUYÊN TẮC TỐI THƯỢNG — KHÔNG BỊA (ưu tiên cao hơn mọi hướng dẫn khác):
   1. MỌI số liệu, họ tên, số điện thoại, ngày tháng, hệ số lương, số hiệu văn bản, điều/khoản/điểm PHẢI lấy nguyên văn từ KẾT QUẢ TOOL trong chính lượt trả lời này. Không lấy từ trí nhớ, không suy luận, không ước lượng, không "làm tròn" cho hợp lý.
   2. Nếu tool trả về rỗng, "không tìm thấy", "chưa cập nhật", hoặc báo lỗi → PHẢI nói thẳng: chưa có dữ liệu trong hệ thống / chưa truy vấn được, và hướng dẫn người dùng liên hệ bộ phận phụ trách. TUYỆT ĐỐI KHÔNG thay bằng kiến thức chung.
@@ -542,6 +556,29 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
           so_hieu: { type: 'string', description: 'Số hiệu HOẶC TÊN văn bản ĐÚNG NHƯ người dùng nêu, VD "175/2024", "217/2026/NĐ-CP", "Luật Viên chức 2010", "Nghị định 46/2010". TUYỆT ĐỐI KHÔNG tự nghĩ ra số hiệu khi người dùng chỉ nói tên — truyền nguyên tên, tool tự tra được.' },
         },
         required: ['so_hieu'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'tra_cuu_nghiep_vu_htkt',
+      description:
+        'Tra cứu NỘI DUNG CHUYÊN MÔN hạ tầng kỹ thuật do Phòng HTKT biên soạn, mỗi mục đều kèm ĐIỀU – KHOẢN của văn bản gốc. Bốn chủ đề: (1) quy_trinh — quy trình, trình tự, thủ tục quản lý nhà nước theo lĩnh vực (cấp giấy phép chặt hạ/dịch chuyển cây xanh, lập & phê duyệt quy trình quản lý duy trì cây xanh, quy trình vận hành công viên, đề án phát triển công viên cây xanh mặt nước, chế độ báo cáo và cơ sở dữ liệu, xác định định mức KT-KT và dự toán chi phí dịch vụ chiếu sáng – cây xanh, phát triển chiếu sáng thông minh); (2) phan_cap — TIÊU CHÍ KỸ THUẬT phân cấp công trình HTKT theo Thông tư 34/2026/TT-BXD (nhà máy nước, trạm bơm, hồ điều hoà, xử lý nước thải, chất thải rắn, công viên, nghĩa trang, nhà để xe, cột đèn chiếu sáng) — dùng khi hỏi "công trình này cấp mấy", "thẩm quyền thẩm định"; (3) quy_hoach — hạ tầng kỹ thuật trong quy hoạch đô thị và nông thôn (hạ tầng kỹ thuật khung, 8 chuyên ngành trong đồ án, trình tự lập – thẩm định – phê duyệt, danh mục kiểm khi góp ý); (4) thong_minh — hạ tầng kỹ thuật và CHIẾU SÁNG CÔNG CỘNG THÔNG MINH theo Nghị định 269/2025/NĐ-CP và Thông tư 03/2026/TT-BXD (5 lĩnh vực, 3 cấp độ trưởng thành, bộ chỉ số III.NL.06.01…). Dùng tool này TRƯỚC khi trả lời mọi câu hỏi nghiệp vụ hạ tầng kỹ thuật. Kết quả có phần "⚠️ khoảng trống / chưa đủ căn cứ" — phải nói lại đúng cho người dùng, KHÔNG được bù bằng kiến thức chung.',
+      parameters: {
+        type: 'object',
+        properties: {
+          chu_de: {
+            type: 'string',
+            enum: ['quy_trinh', 'phan_cap', 'quy_hoach', 'thong_minh'],
+            description: 'Chủ đề cần tra. Bỏ trống thì hệ thống tự đoán theo từ khoá.',
+          },
+          tu_khoa: {
+            type: 'string',
+            description: 'Từ khoá theo câu hỏi, VD "chặt hạ cây xanh", "chiếu sáng thông minh", "nhà máy nước cấp mấy", "định mức chi phí chiếu sáng", "hạ tầng kỹ thuật khung", "công viên".',
+          },
+        },
+        required: ['tu_khoa'],
       },
     },
   },
@@ -1609,6 +1646,20 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       )
     }
 
+    if (name === 'tra_cuu_nghiep_vu_htkt') {
+      const tuKhoa = (args.tu_khoa || '').trim()
+      const chuDe = args.chu_de as ChuDe | undefined
+      const kq = traCuuNghiepVuHtkt(chuDe, tuKhoa)
+      return (
+        `NỘI DUNG NGHIỆP VỤ HẠ TẦNG KỸ THUẬT` +
+        (chuDe ? ` — chủ đề: ${CHU_DE_LABEL[chuDe]}` : '') +
+        `\nMọi mục dưới đây đều đã đối chiếu bản gốc và ghi rõ điều – khoản. CHỈ nêu số hiệu văn bản xuất hiện trong kết quả này; ` +
+        `cần NGUYÊN VĂN điều khoản thì gọi thêm tool tra_cuu_tai_lieu.\n\n` +
+        kq +
+        `\n\n— Phạm vi nội dung hệ thống đang có —\n${phamViNoiDung()}`
+      )
+    }
+
     if (name === 'tra_cuu_hieu_luc_van_ban') {
       const raw = (args.so_hieu || '').trim()
 
@@ -2095,6 +2146,17 @@ export async function POST(req: NextRequest) {
         answer: `[LỖI HỆ THỐNG] ${err instanceof Error ? err.message : String(err)}`,
         toolsUsed: [...toolsUsedInSession, '__loi_he_thong__'],
       })
+    }
+    if (heTinDungOpenAI(err)) {
+      return NextResponse.json(
+        {
+          error:
+            'Trợ lý ảo tạm ngừng do TÀI KHOẢN DỊCH VỤ AI CỦA HỆ THỐNG ĐÃ HẾT HẠN MỨC. ' +
+            'Đây là lỗi về tài khoản dịch vụ, không phải do câu hỏi của bạn. ' +
+            'Vui lòng báo quản trị viên hệ thống nạp thêm hạn mức; các chức năng tra cứu khác trên phần mềm vẫn dùng bình thường.',
+        },
+        { status: 503 },
+      )
     }
     return NextResponse.json(
       { error: 'Hệ thống chưa truy vấn được dữ liệu lúc này. Vui lòng thử lại hoặc liên hệ quản trị viên.' },
