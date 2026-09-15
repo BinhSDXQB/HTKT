@@ -201,7 +201,7 @@ const navGroups: NavGroup[] = [
       { label: 'Công việc của phòng', href: '/dashboard/cong-viec', icon: ClipboardList, htktOnly: true },
       { label: 'Đơn vị hành chính (DT - dân số)', href: '/dashboard/phong-htkt/don-vi-hanh-chinh', icon: Map, htktOnly: true },
       { label: 'Kế hoạch kiểm tra QLNN', href: '/dashboard/phong-htkt/ke-hoach-kiem-tra', icon: CalendarCheck, htktOnly: true },
-      { label: 'Soạn thảo AI', href: '/dashboard/phong-htkt/soan-thao', icon: Sparkles, htktOnly: true },
+      { label: 'Kiểm kê hồ sơ & Soạn thảo AI', href: '/dashboard/phong-htkt/soan-thao', icon: Sparkles, htktOnly: true },
       { label: 'Cơ sở pháp lý', href: '/dashboard/phong-htkt/phap-ly', icon: Gavel, htktOnly: true },
       { label: 'Quy trình thẩm định', href: '/dashboard/phong-htkt/tham-dinh', icon: ClipboardCheck, htktOnly: true },
       { label: 'Công tác tham mưu', href: '/dashboard/phong-htkt/tham-muu', icon: Lightbulb, htktOnly: true },

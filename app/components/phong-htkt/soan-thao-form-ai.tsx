@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, Zap, Copy, Loader2 } from 'lucide-react'
 import {
   autoFillTuQuyMo,
@@ -12,23 +12,56 @@ import {
 import { LINH_VUC_HTKT } from '@/lib/htkt/phap-ly'
 import { CanCuPhapLyChiTiet } from './can-cu-phap-ly-chi-tiet'
 
-export function SoanThaoFormAI() {
+type LinhVucSoanThao = 'cap-nuoc' | 'thoat-nuoc' | 'cay-xanh' | 'chieu-sang' | 'nghia-trang' | 'giao-thong-do-thi' | 'khong-gian-ngam' | 'su-dung-chung'
+
+/** Dữ liệu mồi từ bước Kiểm kê hồ sơ (trang gộp) đổ sang. Mọi trường tùy chọn. */
+export type SoanThaoSeed = Partial<{
+  linhVuc: LinhVucSoanThao
+  quyMo: QuyMoCongTrinh
+  thamDinhType: 'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'
+  tenDuAn: string
+  loaiCongTrinh: string
+  capCongTrinh: 'I' | 'II' | 'III' | 'IV'
+}>
+
+export function SoanThaoFormAI({ seed, embedded = false, onDirtyChange }: {
+  seed?: SoanThaoSeed
+  embedded?: boolean
+  /** Báo cho trang gộp biết form đang có dữ liệu người dùng nhập dở, để cảnh báo trước khi ghi đè. */
+  onDirtyChange?: (dirty: boolean) => void
+} = {}) {
   const [step, setStep] = useState<'input' | 'preview' | 'result'>('input')
   const [isLoading, setIsLoading] = useState(false)
   const [generatedText, setGeneratedText] = useState('')
   const [estimatedCost, setEstimatedCost] = useState(0)
   const [error, setError] = useState('')
 
-  // Form state
-  const [linhVuc, setLinhVuc] = useState<'cap-nuoc' | 'thoat-nuoc' | 'cay-xanh' | 'chieu-sang' | 'nghia-trang' | 'giao-thong-do-thi' | 'khong-gian-ngam' | 'su-dung-chung'>('cap-nuoc')
-  const [quyMo, setQuyMo] = useState<QuyMoCongTrinh>('A')
-  const [thamDinhType, setThamDinhType] = useState<'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'>('bcnckt')
-  const [tenDuAn, setTenDuAn] = useState('')
+  // Form state — khởi tạo từ seed nếu có (component được remount bằng key khi seed đổi)
+  const [linhVuc, setLinhVuc] = useState<LinhVucSoanThao>(seed?.linhVuc ?? 'cap-nuoc')
+  const [quyMo, setQuyMo] = useState<QuyMoCongTrinh>(seed?.quyMo ?? 'A')
+  const [thamDinhType, setThamDinhType] = useState<'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'>(seed?.thamDinhType ?? 'bcnckt')
+  const [tenDuAn, setTenDuAn] = useState(seed?.tenDuAn ?? '')
   const [tenChuDauTu, setTenChuDauTu] = useState('')
   const [diaDiem, setDiaDiem] = useState('')
   const [quyMoCT, setQuyMoCT] = useState('')
-  const [loaiCongTrinh, setLoaiCongTrinh] = useState('')
-  const [capCongTrinh, setCapCongTrinh] = useState<'I' | 'II' | 'III' | 'IV'>('I')
+  const [loaiCongTrinh, setLoaiCongTrinh] = useState(seed?.loaiCongTrinh ?? '')
+  const [capCongTrinh, setCapCongTrinh] = useState<'I' | 'II' | 'III' | 'IV'>(seed?.capCongTrinh ?? 'I')
+
+  // "Dirty" = có gì đó KHÁC với giá trị khởi tạo (mồi hoặc mặc định) → người dùng đã nhập/chỉnh.
+  // Trang gộp dùng cờ này để hỏi trước khi mang kết quả kiểm kê mới sang, tránh xoá trắng dữ liệu
+  // đang nhập dở mà không báo.
+  const coDuLieuDangNhap =
+    tenChuDauTu !== '' || diaDiem !== '' || quyMoCT !== '' || step !== 'input' ||
+    tenDuAn !== (seed?.tenDuAn ?? '') ||
+    loaiCongTrinh !== (seed?.loaiCongTrinh ?? '') ||
+    linhVuc !== (seed?.linhVuc ?? 'cap-nuoc') ||
+    quyMo !== (seed?.quyMo ?? 'A') ||
+    thamDinhType !== (seed?.thamDinhType ?? 'bcnckt') ||
+    capCongTrinh !== (seed?.capCongTrinh ?? 'I')
+
+  useEffect(() => {
+    onDirtyChange?.(coDuLieuDangNhap)
+  }, [coDuLieuDangNhap, onDirtyChange])
 
   // Generate auto-fill kết quả
   const kqAutoFill = useMemo(() => {
@@ -110,16 +143,36 @@ ${kqAutoFill.ghiChuThemDo}`
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <Zap className="w-6 h-6 text-yellow-500" />
-          AI Soạn thảo VBPL — Auto-fill từ quy mô công trình
-        </h1>
-        <p className="text-sm text-slate-600 mt-2">
-          Nhập thông tin công trình → AI auto-fill dữ liệu thẩm định, nội dung, căn cứ pháp lý
-        </p>
-      </div>
+    <div className={embedded ? '' : 'max-w-6xl mx-auto p-6'}>
+      {!embedded && (
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <Zap className="w-6 h-6 text-yellow-500" />
+            AI Soạn thảo VBPL — Auto-fill từ quy mô công trình
+          </h1>
+          <p className="text-sm text-slate-600 mt-2">
+            Nhập thông tin công trình → AI auto-fill dữ liệu thẩm định, nội dung, căn cứ pháp lý
+          </p>
+        </div>
+      )}
+
+      {embedded && seed && step === 'input' && (
+        <div className="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs text-emerald-800">
+          Đã mang sang từ bước Kiểm kê hồ sơ:
+          {seed.tenDuAn ? ' tên dự án gợi ý,' : ''}
+          {seed.thamDinhType ? ' loại thẩm định,' : ''}
+          {seed.linhVuc ? ' lĩnh vực (đoán theo tên),' : ''} — các trường khác đang để MẶC ĐỊNH.
+          {!seed.thamDinhType && (
+            <span className="block mt-1 text-amber-800">
+              ⚠️ Quy trình kiểm kê không phải một loại thẩm định — ô “Loại thẩm định” đang để mặc định BCNCKT,
+              hãy chọn lại cho đúng.
+            </span>
+          )}
+          <span className="block mt-1">
+            Hãy tự xác định <strong>cấp công trình</strong>, bổ sung chủ đầu tư và quy mô cụ thể trước khi sinh tờ trình.
+          </span>
+        </div>
+      )}
 
       {step === 'input' && (
         <div className="space-y-6">

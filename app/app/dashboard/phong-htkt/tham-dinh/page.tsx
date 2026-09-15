@@ -27,13 +27,14 @@ export default function ThamDinhPage() {
 
       <div className="mb-5 rounded-xl border border-cyan-200 bg-cyan-50 p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-cyan-900">Kiểm kê hồ sơ từ thư mục dự án</p>
+          <p className="text-sm font-semibold text-cyan-900">Kiểm kê hồ sơ &amp; soạn thảo tờ trình</p>
           <p className="text-xs text-cyan-800 mt-0.5">
-            Đọc tờ trình, thuyết minh, bản vẽ, dự toán trong thư mục và đối chiếu với thành phần hồ sơ của quy trình.
+            Đọc tờ trình, thuyết minh, bản vẽ, dự toán trong thư mục, đối chiếu thành phần hồ sơ — rồi chuyển thẳng
+            sang bước soạn thảo tờ trình thẩm định.
           </p>
         </div>
         <Link
-          href="/dashboard/phong-htkt/tham-dinh/ho-so"
+          href="/dashboard/phong-htkt/soan-thao"
           className="h-9 px-4 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium inline-flex items-center gap-2 shrink-0"
         >
           <FolderSearch className="w-4 h-4" />Mở công cụ

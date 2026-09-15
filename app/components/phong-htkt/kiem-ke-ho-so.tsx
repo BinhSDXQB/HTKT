@@ -3,8 +3,11 @@
 import { useEffect, useState } from 'react'
 import {
   FolderOpen, Folder, ChevronRight, Loader2, Search, AlertTriangle,
-  FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info,
+  FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info, PenLine,
 } from 'lucide-react'
+
+/** Tín hiệu "dùng kết quả kiểm kê để sang bước soạn thảo" — do trang gộp (wizard) truyền vào. */
+export type ApplyKiemKe = { quyTrinhKey: string; tenGoiY: string }
 
 type Goc = { id: string; nhan: string; duongDan: string; truyCapDuoc: boolean }
 type QuyTrinh = { key: string; ten: string; soThanhPhan: number }
@@ -52,7 +55,7 @@ function coChu(b: number) {
   return `${(b / 1048576).toFixed(1)} MB`
 }
 
-export function KiemKeHoSo() {
+export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } = {}) {
   const [gocs, setGocs] = useState<Goc[]>([])
   const [quyTrinhs, setQuyTrinhs] = useState<QuyTrinh[]>([])
   const [chuaCauHinh, setChuaCauHinh] = useState(false)
@@ -210,17 +213,40 @@ export function KiemKeHoSo() {
         {loi && <p className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">{loi}</p>}
       </div>
 
-      {kq && <KetQuaView kq={kq} />}
+      {kq && <KetQuaView kq={kq} onApply={onApply} />}
     </div>
   )
 }
 
-function KetQuaView({ kq }: { kq: KetQua }) {
+function KetQuaView({ kq, onApply }: { kq: KetQua; onApply?: (p: ApplyKiemKe) => void }) {
   const [nhomLoc, setNhomLoc] = useState<string>('')
   const files = nhomLoc ? kq.files.filter((f) => f.nhom === nhomLoc) : kq.files
+  // Tên dự án gợi ý = tên thư mục đang kiểm kê (đoạn cuối đường dẫn con), nếu không có thì tên kho.
+  // Tách cả '/' lẫn '\' — API hiện ghép bằng '/', nhưng đây là đường dẫn Windows nên chốt phòng thủ.
+  const tenGoiY = kq.thuMuc.duongDanCon ? kq.thuMuc.duongDanCon.split(/[\\/]/).pop() || kq.thuMuc.goc : kq.thuMuc.goc
 
   return (
     <div className="space-y-4">
+      {/* Cầu nối sang bước soạn thảo — chỉ hiện khi nằm trong trang gộp (wizard) */}
+      {onApply && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-emerald-900">Chuyển sang soạn thảo tờ trình</p>
+            <p className="text-xs text-emerald-800 mt-0.5">
+              Mang tên dự án gợi ý (<strong>{tenGoiY}</strong>) sang bước 2. Nếu quy trình đang kiểm kê là một loại
+              thẩm định (BCNCKT/BCKTKT/thiết kế/nghiệm thu) thì loại đó được chọn sẵn. Cấp công trình và số liệu
+              dự toán KHÔNG tự điền — cán bộ tự xác định sau khi đối chiếu.
+            </p>
+          </div>
+          <button
+            onClick={() => onApply({ quyTrinhKey: kq.quyTrinh.key, tenGoiY })}
+            className="h-9 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium inline-flex items-center gap-2 shrink-0"
+          >
+            <PenLine className="w-4 h-4" />Dùng kết quả này để soạn thảo
+          </button>
+        </div>
+      )}
+
       {/* Cảnh báo tính chất kết quả — quan trọng nhất, luôn hiện đầu tiên */}
       <div className="rounded-xl border border-sky-200 bg-sky-50 p-4">
         <p className="text-sm text-sky-900 flex items-start gap-2">

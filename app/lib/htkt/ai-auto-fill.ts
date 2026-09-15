@@ -259,12 +259,18 @@ export function smartPredictLoaiCongTrinh(tenDuAn: string, moTa: string): {
     if (detectedLinhVuc) break
   }
 
-  // Predict cấp dựa trên từ khóa quy mô
+  // Predict cấp dựa trên từ khóa quy mô.
+  // LƯU Ý: KHÔNG match chữ La Mã trần (I/II/III/IV) vì với cờ /i chúng dính mọi chữ "i"
+  // thường trong tên dự án ("cải tạo", "tái định cư"...) → luôn ra Cấp I sai.
+  // Chỉ nhận "cấp <số La Mã>" có ngữ cảnh; xét từ cụ thể (IV/III/II) trước rồi mới tới I.
+  // c[ấâa]p để chấp cả tên không dấu ("cap iii"); vẫn bắt buộc có số La Mã theo sau.
+  // Chốt đuôi bằng (?![\p{L}\d]) + cờ u, KHÔNG dùng \b: \b chỉ hiểu chữ ASCII nên "cấp IVđường"
+  // vẫn lọt (đ không phải \w). Lookahead này chặn cả chữ có dấu lẫn "IIIA", "IVB".
   let capDuKien: 'I' | 'II' | 'III' | 'IV' | null = null
-  if (/lớn|quốc gia|chính|I|cấp I|trọng điểm/gi.test(text)) capDuKien = 'I'
-  else if (/trung bình|II|cấp II|tỉnh|huyện lớn/gi.test(text)) capDuKien = 'II'
-  else if (/nhỏ|III|cấp III|phường|tiểu quy mô/gi.test(text)) capDuKien = 'III'
-  else if (/IV|cấp IV|rất nhỏ|hộ dân/gi.test(text)) capDuKien = 'IV'
+  if (/c[ấâa]p\s*iv(?![\p{L}\d])|rất nhỏ|hộ dân/iu.test(text)) capDuKien = 'IV'
+  else if (/c[ấâa]p\s*iii(?![\p{L}\d])|tiểu quy mô/iu.test(text)) capDuKien = 'III'
+  else if (/c[ấâa]p\s*ii(?![\p{L}\d])|trung bình|huyện lớn/iu.test(text)) capDuKien = 'II'
+  else if (/c[ấâa]p\s*i(?![\p{L}\d])|quốc gia|trọng điểm|quy mô lớn/iu.test(text)) capDuKien = 'I'
 
   return {
     linhVuc: detectedLinhVuc,
