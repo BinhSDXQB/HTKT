@@ -3,7 +3,6 @@
 
 import type { LinhVucKey } from './phap-ly'
 import { getHuongDan, smartFillTuQuyMo } from './huong-dan-soan-thao'
-import { NHOM_CONG_TRINH, QUY_MO_LINH_VUC } from './ke-hoach-kiem-tra'
 
 export type QuyMoCongTrinh = 'A' | 'B' | 'C'
 
@@ -45,11 +44,11 @@ export function autoFillTuQuyMo(data: FormSoanThaoData): KetQuaAutoFill {
   const hdKey = data.thamDinhType === 'bcnckt' ? 'to-trinh-bcnckt' : 'cong-van-lay-y-kien'
   const hd = getHuongDan(hdKey)
 
-  // 3. Lấy thông tin quy mô công trình
-  const nhomCT = NHOM_CONG_TRINH.find(
-    (n) => n.linhVuc === data.linhVuc && n.cap === data.capCongTrinh
-  )
-  const quyMoLV = QUY_MO_LINH_VUC.find((q) => q.linhVuc === data.linhVuc)
+  // 3. CHƯA LÀM: trước đây có tra NHOM_CONG_TRINH (theo lĩnh vực + cấp) và QUY_MO_LINH_VUC
+  // rồi BỎ KHÔNG DÙNG — kết quả auto-fill không hề phản ánh phân nhóm/quy mô công trình.
+  // Đã gỡ phần tra cứu chết đó. Việc có đưa phân nhóm/quy mô vào thẩm quyền, nội dung thẩm định
+  // hay ghi chú hay không là quyết định NGHIỆP VỤ, phải do cán bộ chuyên môn chốt căn cứ pháp lý,
+  // không tự suy diễn ở đây.
 
   // 4. Sinh hoàn cảnh dự án chi tiết
   const hoanCanhDuAn = `Dự án: ${data.tenDuAn}
@@ -84,7 +83,7 @@ Thẩm quyền: ${coBanFill.thamQuyen}`
  * Sinh nội dung thẩm định chi tiết dựa trên loại thẩm định + lĩnh vực
  */
 function generateNoiDungThanhDinh(data: FormSoanThaoData): string {
-  const { thamDinhType, linhVuc, capCongTrinh } = data
+  const { thamDinhType, linhVuc } = data
 
   const noiDungBase = {
     bcnckt: `1. Quy hoạch & tiêu chí thiết kế cơ sở

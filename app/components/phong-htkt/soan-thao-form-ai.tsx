@@ -6,22 +6,27 @@ import {
   autoFillTuQuyMo,
   smartPredictLoaiCongTrinh,
   generateOpenAIPrompt,
-  type FormSoanThaoData,
   type QuyMoCongTrinh,
 } from '@/lib/htkt/ai-auto-fill'
-import { LINH_VUC_HTKT } from '@/lib/htkt/phap-ly'
+import { LINH_VUC_HTKT, type LinhVucKey } from '@/lib/htkt/phap-ly'
 import { CanCuPhapLyChiTiet } from './can-cu-phap-ly-chi-tiet'
 
-type LinhVucSoanThao = 'cap-nuoc' | 'thoat-nuoc' | 'cay-xanh' | 'chieu-sang' | 'nghia-trang' | 'giao-thong-do-thi' | 'khong-gian-ngam' | 'su-dung-chung'
+// Các union này phải khớp ĐÚNG với <option> của select tương ứng bên dưới — nhờ vậy ép kiểu
+// e.target.value về chúng là trung thực, không cần 'any'.
+// Lĩnh vực SUY THẲNG từ LINH_VUC_HTKT (nguồn sinh ra <option>), không chép tay — thêm/bớt lĩnh vực
+// ở phap-ly.ts là kiểu ở đây tự đúng theo, không sinh ép kiểu nói dối.
+type LinhVucSoanThao = LinhVucKey
+type LoaiThamDinh = 'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'
+type CapCongTrinh = 'I' | 'II' | 'III' | 'IV'
 
 /** Dữ liệu mồi từ bước Kiểm kê hồ sơ (trang gộp) đổ sang. Mọi trường tùy chọn. */
 export type SoanThaoSeed = Partial<{
   linhVuc: LinhVucSoanThao
   quyMo: QuyMoCongTrinh
-  thamDinhType: 'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'
+  thamDinhType: LoaiThamDinh
   tenDuAn: string
   loaiCongTrinh: string
-  capCongTrinh: 'I' | 'II' | 'III' | 'IV'
+  capCongTrinh: CapCongTrinh
 }>
 
 export function SoanThaoFormAI({ seed, embedded = false, onDirtyChange }: {
@@ -39,13 +44,13 @@ export function SoanThaoFormAI({ seed, embedded = false, onDirtyChange }: {
   // Form state — khởi tạo từ seed nếu có (component được remount bằng key khi seed đổi)
   const [linhVuc, setLinhVuc] = useState<LinhVucSoanThao>(seed?.linhVuc ?? 'cap-nuoc')
   const [quyMo, setQuyMo] = useState<QuyMoCongTrinh>(seed?.quyMo ?? 'A')
-  const [thamDinhType, setThamDinhType] = useState<'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'>(seed?.thamDinhType ?? 'bcnckt')
+  const [thamDinhType, setThamDinhType] = useState<LoaiThamDinh>(seed?.thamDinhType ?? 'bcnckt')
   const [tenDuAn, setTenDuAn] = useState(seed?.tenDuAn ?? '')
   const [tenChuDauTu, setTenChuDauTu] = useState('')
   const [diaDiem, setDiaDiem] = useState('')
   const [quyMoCT, setQuyMoCT] = useState('')
   const [loaiCongTrinh, setLoaiCongTrinh] = useState(seed?.loaiCongTrinh ?? '')
-  const [capCongTrinh, setCapCongTrinh] = useState<'I' | 'II' | 'III' | 'IV'>(seed?.capCongTrinh ?? 'I')
+  const [capCongTrinh, setCapCongTrinh] = useState<CapCongTrinh>(seed?.capCongTrinh ?? 'I')
 
   // "Dirty" = có gì đó KHÁC với giá trị khởi tạo (mồi hoặc mặc định) → người dùng đã nhập/chỉnh.
   // Trang gộp dùng cờ này để hỏi trước khi mang kết quả kiểm kê mới sang, tránh xoá trắng dữ liệu
@@ -184,7 +189,7 @@ ${kqAutoFill.ghiChuThemDo}`
                 <label className="block text-xs font-semibold text-slate-700 mb-2">Lĩnh vực HTKT</label>
                 <select
                   value={linhVuc}
-                  onChange={(e) => setLinhVuc(e.target.value as any)}
+                  onChange={(e) => setLinhVuc(e.target.value as LinhVucSoanThao)}
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
                   {LINH_VUC_HTKT.map((lv) => (
@@ -212,7 +217,7 @@ ${kqAutoFill.ghiChuThemDo}`
                 <label className="block text-xs font-semibold text-slate-700 mb-2">Loại thẩm định</label>
                 <select
                   value={thamDinhType}
-                  onChange={(e) => setThamDinhType(e.target.value as any)}
+                  onChange={(e) => setThamDinhType(e.target.value as LoaiThamDinh)}
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
                   <option value="bcnckt">Thẩm định BCNCKT</option>
@@ -226,7 +231,7 @@ ${kqAutoFill.ghiChuThemDo}`
                 <label className="block text-xs font-semibold text-slate-700 mb-2">Cấp công trình</label>
                 <select
                   value={capCongTrinh}
-                  onChange={(e) => setCapCongTrinh(e.target.value as any)}
+                  onChange={(e) => setCapCongTrinh(e.target.value as CapCongTrinh)}
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
                   <option value="I">Cấp I</option>

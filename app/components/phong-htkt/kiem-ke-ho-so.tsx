@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   FolderOpen, Folder, ChevronRight, Loader2, Search, AlertTriangle,
   FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info, PenLine,
@@ -69,6 +69,40 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
   const [loi, setLoi] = useState('')
   const [kq, setKq] = useState<KetQua | null>(null)
 
+  // Đếm lượt duyệt để bỏ phản hồi cũ: đổi kho/thư mục liên tiếp thì request trước có thể về
+  // SAU request sau, ghi đè danh sách của kho đang xem (UI hiện nhãn kho B nhưng nội dung kho A,
+  // rồi bấm "Kiểm kê" là quét nhầm thư mục). Chỉ lượt mới nhất mới được phép ghi state.
+  const luotDuyet = useRef(0)
+
+  // Duyệt thư mục: luôn nhận idGoc TƯỜNG MINH thay vì đọc rootId từ closure, vì ngay sau
+  // setRootId(...) thì state chưa kịp cập nhật. Nhờ vậy deps rỗng → hàm ổn định.
+  const duyet = useCallback(async (dc: string, idGoc: string) => {
+    if (!idGoc) return
+    const luot = ++luotDuyet.current
+    setDangDuyet(true); setLoi('')
+    try {
+      const r = await fetch(`/api/htkt/tham-dinh-ho-so?hanhDong=duyet&rootId=${encodeURIComponent(idGoc)}&duongDanCon=${encodeURIComponent(dc)}`)
+      const d = await r.json()
+      if (luot !== luotDuyet.current) return // đã có lượt mới hơn → bỏ kết quả này
+      if (!r.ok) { setLoi(d.error ?? 'Không duyệt được thư mục'); return }
+      setDuongDanCon(dc); setThuMucCon(d.thuMucCon ?? []); setSoFileTrucTiep(d.soFileTrucTiep ?? 0)
+    } catch {
+      // Mất mạng / body không phải JSON. Không có catch thì promise reject mà không ai bắt
+      // (call site là onClick/onChange, không await) → người dùng chỉ thấy treo, không thấy lỗi.
+      if (luot === luotDuyet.current) setLoi('Lỗi kết nối máy chủ')
+    } finally {
+      if (luot === luotDuyet.current) setDangDuyet(false)
+    }
+  }, [])
+
+  // Gom việc đổi kho vào một chỗ để không ai quên duyệt lại khi thêm nơi gọi mới.
+  const chonKho = useCallback((id: string) => {
+    setRootId(id); setKq(null); void duyet('', id)
+  }, [duyet])
+
+  // Nạp cấu hình kho + quy trình, rồi duyệt luôn kho đầu tiên NGAY TRONG callback này.
+  // Trước đây việc duyệt nằm ở một useEffect riêng nghe [rootId] → gọi setState đồng bộ trong
+  // thân effect, gây render dây chuyền (react-hooks/set-state-in-effect).
   useEffect(() => {
     fetch('/api/htkt/tham-dinh-ho-so?hanhDong=goc')
       .then((r) => r.json())
@@ -77,24 +111,11 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
         setQuyTrinhs(d.quyTrinh ?? [])
         setChuaCauHinh(!!d.chuaCauHinh)
         const dau = (d.goc ?? []).find((g: Goc) => g.truyCapDuoc)
-        if (dau) setRootId(dau.id)
+        if (dau) chonKho(dau.id)
         if ((d.quyTrinh ?? []).length) setQuyTrinh(d.quyTrinh[0].key)
       })
       .catch(() => setLoi('Không tải được cấu hình thư mục'))
-  }, [])
-
-  async function duyet(dc: string) {
-    if (!rootId) return
-    setDangDuyet(true); setLoi('')
-    try {
-      const r = await fetch(`/api/htkt/tham-dinh-ho-so?hanhDong=duyet&rootId=${encodeURIComponent(rootId)}&duongDanCon=${encodeURIComponent(dc)}`)
-      const d = await r.json()
-      if (!r.ok) { setLoi(d.error ?? 'Không duyệt được thư mục'); return }
-      setDuongDanCon(dc); setThuMucCon(d.thuMucCon ?? []); setSoFileTrucTiep(d.soFileTrucTiep ?? 0)
-    } finally { setDangDuyet(false) }
-  }
-
-  useEffect(() => { if (rootId) duyet('') /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [rootId])
+  }, [chonKho])
 
   async function quet() {
     setDangQuet(true); setLoi(''); setKq(null)
@@ -141,7 +162,7 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-slate-700">Kho hồ sơ</label>
             <select
-              value={rootId} onChange={(e) => { setRootId(e.target.value); setKq(null) }}
+              value={rootId} onChange={(e) => chonKho(e.target.value)}
               className="w-full h-9 px-3 text-sm border rounded-lg bg-white outline-none focus:ring-2 focus:ring-cyan-500"
             >
               {gocs.map((g) => (
@@ -164,14 +185,14 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
 
         {/* Đường dẫn đang đứng */}
         <div className="flex flex-wrap items-center gap-1 text-sm">
-          <button onClick={() => duyet('')} className="flex items-center gap-1 text-cyan-700 hover:underline">
+          <button onClick={() => duyet('', rootId)} className="flex items-center gap-1 text-cyan-700 hover:underline">
             <Home className="w-3.5 h-3.5" />{gocs.find((g) => g.id === rootId)?.nhan ?? 'Gốc'}
           </button>
           {mucBreadcrumb.map((m, i) => (
             <span key={i} className="flex items-center gap-1">
               <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               <button
-                onClick={() => duyet(mucBreadcrumb.slice(0, i + 1).join('/'))}
+                onClick={() => duyet(mucBreadcrumb.slice(0, i + 1).join('/'), rootId)}
                 className="text-cyan-700 hover:underline"
               >{m}</button>
             </span>
@@ -188,7 +209,7 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
             <ul className="divide-y">
               {thuMucCon.map((t) => (
                 <li key={t.duongDanCon}>
-                  <button onClick={() => duyet(t.duongDanCon)} className="w-full text-left px-3 py-2 text-sm hover:bg-white flex items-center gap-2">
+                  <button onClick={() => duyet(t.duongDanCon, rootId)} className="w-full text-left px-3 py-2 text-sm hover:bg-white flex items-center gap-2">
                     <Folder className="w-4 h-4 text-amber-500 shrink-0" />{t.ten}
                   </button>
                 </li>
