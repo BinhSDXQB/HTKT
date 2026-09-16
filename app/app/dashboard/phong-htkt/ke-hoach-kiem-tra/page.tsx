@@ -4,7 +4,7 @@ import {
   NOI_DUNG_KIEM_TRA, QUY_MO_LINH_VUC, KE_HOACH_KIEM_TRA_NAM,
 } from '@/lib/htkt/ke-hoach-kiem-tra'
 import { LOAI_CONG_TRINH_TT34, THU_TU_CAP, TT34 } from '@/lib/htkt/cap-cong-trinh-tt34'
-import { PHU_LUC_IV_HTKT, ND217, ND207 } from '@/lib/htkt/tham-quyen-tham-dinh'
+import { PHU_LUC_IV_HTKT, PHU_LUC_IX_207, NHANH_THAM_QUYEN_KIEM_TRA, ND217, ND207 } from '@/lib/htkt/tham-quyen-tham-dinh'
 
 export const dynamic = 'force-dynamic'
 
@@ -115,10 +115,87 @@ export default function KeHoachKiemTraPage() {
               Phụ lục IV. Đừng suy ra là &quot;không thuộc diện&quot; — công trình cụ thể vẫn có thể rơi vào dòng thuộc
               loại khác của Phụ lục IV, phải mở bản gốc đối chiếu.
             </p>
-            <p className="mt-1">
-              Ngoài Phụ lục IV còn nhóm &quot;dự án quan trọng quốc gia, công trình quy mô lớn, kỹ thuật phức tạp&quot; theo
-              <strong> Phụ lục IX NĐ {ND207.so}</strong> do Hội đồng kiểm tra nhà nước kiểm tra (Đ25 khoản 1 điểm a) —
-              chưa chép vào công cụ, phải tra riêng.
+          </div>
+        </div>
+
+        <div className="mb-5 rounded-lg border bg-white overflow-x-auto">
+          <div className="px-4 py-3 border-b bg-slate-50">
+            <p className="text-sm font-semibold text-slate-800">
+              Nhánh riêng — Phụ lục IX NĐ {ND207.so} (công trình quy mô lớn, kỹ thuật phức tạp)
+            </p>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Công trình thuộc dự án quan trọng quốc gia, <strong>hoặc</strong> công trình thuộc danh mục này (hai
+              trường hợp <strong>thay thế nhau</strong>, bản gốc ngăn bằng dấu phẩy chứ không phải điều kiện đồng thời) do
+              <strong> Hội đồng kiểm tra nhà nước</strong> về công tác nghiệm thu kiểm tra (Đ25 khoản 1 điểm a;
+              Đ26 khoản 1 điểm a) — <strong>không phải</strong> cơ quan chuyên môn như nhánh Phụ lục IV.
+            </p>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 border-b">
+              <tr>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">STT</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Loại công trình</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Tiêu chí</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Quy mô</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {PHU_LUC_IX_207.map((d) => (
+                <tr key={d.stt} className={d.linhVuc.length ? 'bg-amber-50' : 'hover:bg-slate-50'}>
+                  <td className="px-3 py-2 text-xs text-slate-500">{d.stt}</td>
+                  <td className="px-3 py-2 text-xs text-slate-900">
+                    {d.ten}
+                    {d.linhVuc.length > 0 && (
+                      <span className="block text-amber-800 mt-0.5">
+                        Dòng duy nhất của Phụ lục IX <strong>có thể</strong> chạm tới hạ tầng kỹ thuật đô thị. Bản gốc ghi
+                        &quot;Cầu&quot; chung, không giới hạn cầu quốc gia hay cầu đô thị — chỉ áp dụng khi hạng mục đúng là
+                        cầu VÀ đạt ngưỡng nhịp ≥ 350 m. Đường đô thị, hay cầu dưới ngưỡng, không thuộc dòng này.
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2 text-xs text-slate-600">{d.tieuChi}</td>
+                  <td className="px-3 py-2 text-xs font-semibold text-slate-800 whitespace-nowrap">{d.quyMo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="px-4 py-3 bg-slate-50 text-xs text-slate-600 border-t">
+            <p>Đủ 6 dòng của Phụ lục IX · 5 dòng còn lại ngoài phạm vi hạ tầng kỹ thuật của Sở, chép để khỏi phải tra lại.</p>
+          </div>
+        </div>
+
+        <div className="mb-5 rounded-lg border bg-white overflow-x-auto">
+          <div className="px-4 py-3 border-b bg-slate-50">
+            <p className="text-sm font-semibold text-slate-800">
+              Ai kiểm tra công tác nghiệm thu — NĐ {ND207.so} Điều 26
+            </p>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Phụ thuộc cơ quan chủ quản, nguồn vốn và địa bàn — <strong>không suy ra được từ cấp công trình</strong>.
+              Bảng để cán bộ tự đối chiếu; nhánh thường gặp của Sở Xây dựng được tô sáng.
+            </p>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 border-b">
+              <tr>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Điều khoản</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Cơ quan kiểm tra</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Trường hợp</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {NHANH_THAM_QUYEN_KIEM_TRA.map((n) => (
+                <tr key={n.dieuKhoan} className={n.truongHop.includes('THƯỜNG GẶP') ? 'bg-emerald-50' : 'hover:bg-slate-50'}>
+                  <td className="px-3 py-2 text-xs font-mono text-slate-500 whitespace-nowrap">{n.dieuKhoan}</td>
+                  <td className="px-3 py-2 text-xs text-slate-900">{n.coQuan}</td>
+                  <td className="px-3 py-2 text-xs text-slate-600">{n.truongHop}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="px-4 py-3 bg-slate-50 text-xs text-slate-600 border-t">
+            <p>
+              Trình tự, nội dung, chi phí kiểm tra (Đ27) và trường hợp dự án nhiều công trình (Đ25 khoản 1 điểm c)
+              chưa chép — tra bản gốc khi cần.
             </p>
           </div>
         </div>
