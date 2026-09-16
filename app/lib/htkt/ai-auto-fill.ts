@@ -15,7 +15,8 @@ export type FormSoanThaoData = {
   diaDiem: string
   quyMoCT: string // vd "Công suất 50.000 m³/ngày"
   loaiCongTrinh: string
-  capCongTrinh: 'I' | 'II' | 'III' | 'IV'
+  // Thang cấp của TT 34/2026 có 5 bậc — bậc "Đặc biệt" cao hơn cấp I, KHÔNG được bỏ.
+  capCongTrinh: 'Đặc biệt' | 'I' | 'II' | 'III' | 'IV'
 }
 
 export type KetQuaAutoFill = {

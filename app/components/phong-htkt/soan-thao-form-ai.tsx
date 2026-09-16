@@ -9,6 +9,10 @@ import {
   type QuyMoCongTrinh,
 } from '@/lib/htkt/ai-auto-fill'
 import { LINH_VUC_HTKT, type LinhVucKey } from '@/lib/htkt/phap-ly'
+import {
+  LOAI_CONG_TRINH_TT34, TT34, traCapCongTrinh,
+  type CapCongTrinhTT34, type LoaiCongTrinhTT34,
+} from '@/lib/htkt/cap-cong-trinh-tt34'
 import { CanCuPhapLyChiTiet } from './can-cu-phap-ly-chi-tiet'
 
 // Các union này phải khớp ĐÚNG với <option> của select tương ứng bên dưới — nhờ vậy ép kiểu
@@ -17,7 +21,8 @@ import { CanCuPhapLyChiTiet } from './can-cu-phap-ly-chi-tiet'
 // ở phap-ly.ts là kiểu ở đây tự đúng theo, không sinh ép kiểu nói dối.
 type LinhVucSoanThao = LinhVucKey
 type LoaiThamDinh = 'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'
-type CapCongTrinh = 'I' | 'II' | 'III' | 'IV'
+// Dùng thẳng thang cấp của TT 34/2026 (5 bậc, có "Đặc biệt") thay vì tự khai lại I–IV.
+type CapCongTrinh = CapCongTrinhTT34
 
 /** Dữ liệu mồi từ bước Kiểm kê hồ sơ (trang gộp) đổ sang. Mọi trường tùy chọn. */
 export type SoanThaoSeed = Partial<{
@@ -52,11 +57,43 @@ export function SoanThaoFormAI({ seed, embedded = false, onDirtyChange }: {
   const [loaiCongTrinh, setLoaiCongTrinh] = useState(seed?.loaiCongTrinh ?? '')
   const [capCongTrinh, setCapCongTrinh] = useState<CapCongTrinh>(seed?.capCongTrinh ?? 'I')
 
+  // ── Tra cấp công trình theo TT 34/2026 ────────────────────────────────────
+  // Chỉ GỢI Ý: máy tra đúng mục đã chọn, cán bộ tự đối chiếu Phụ lục II và Điều 2 rồi mới chốt.
+  const [maLoaiTT34, setMaLoaiTT34] = useState('')
+  const [giaTriTieuChi, setGiaTriTieuChi] = useState<Record<string, string>>({})
+  const [luaChonTT34, setLuaChonTT34] = useState('')
+
+  const loaiTT34: LoaiCongTrinhTT34 | undefined = useMemo(
+    () => LOAI_CONG_TRINH_TT34.find((l) => l.ma === maLoaiTT34),
+    [maLoaiTT34],
+  )
+  // Danh sách mục theo lĩnh vực đang chọn; đổi lĩnh vực thì bỏ mục cũ cho khỏi lệch.
+  const dsLoaiTT34 = useMemo(
+    () => LOAI_CONG_TRINH_TT34.filter((l) => l.linhVuc === linhVuc),
+    [linhVuc],
+  )
+  const ketQuaTraCap = useMemo(() => {
+    if (!maLoaiTT34) return null
+    const so: Record<string, number | null> = {}
+    for (const [k, v] of Object.entries(giaTriTieuChi)) {
+      const n = Number(String(v).replace(/,/g, '.'))
+      so[k] = v.trim() === '' || Number.isNaN(n) ? null : n
+    }
+    return traCapCongTrinh(maLoaiTT34, so, luaChonTT34 || undefined)
+  }, [maLoaiTT34, giaTriTieuChi, luaChonTT34])
+
+  function chonLoaiTT34(ma: string) {
+    setMaLoaiTT34(ma)
+    setGiaTriTieuChi({})
+    setLuaChonTT34('')
+  }
+
   // "Dirty" = có gì đó KHÁC với giá trị khởi tạo (mồi hoặc mặc định) → người dùng đã nhập/chỉnh.
   // Trang gộp dùng cờ này để hỏi trước khi mang kết quả kiểm kê mới sang, tránh xoá trắng dữ liệu
   // đang nhập dở mà không báo.
   const coDuLieuDangNhap =
     tenChuDauTu !== '' || diaDiem !== '' || quyMoCT !== '' || step !== 'input' ||
+    maLoaiTT34 !== '' ||
     tenDuAn !== (seed?.tenDuAn ?? '') ||
     loaiCongTrinh !== (seed?.loaiCongTrinh ?? '') ||
     linhVuc !== (seed?.linhVuc ?? 'cap-nuoc') ||
@@ -189,7 +226,7 @@ ${kqAutoFill.ghiChuThemDo}`
                 <label className="block text-xs font-semibold text-slate-700 mb-2">Lĩnh vực HTKT</label>
                 <select
                   value={linhVuc}
-                  onChange={(e) => setLinhVuc(e.target.value as LinhVucSoanThao)}
+                  onChange={(e) => { setLinhVuc(e.target.value as LinhVucSoanThao); chonLoaiTT34('') }}
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
                   {LINH_VUC_HTKT.map((lv) => (
@@ -234,6 +271,7 @@ ${kqAutoFill.ghiChuThemDo}`
                   onChange={(e) => setCapCongTrinh(e.target.value as CapCongTrinh)}
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
+                  <option value="Đặc biệt">Cấp đặc biệt</option>
                   <option value="I">Cấp I</option>
                   <option value="II">Cấp II</option>
                   <option value="III">Cấp III</option>
@@ -241,6 +279,116 @@ ${kqAutoFill.ghiChuThemDo}`
                 </select>
               </div>
             </div>
+          </div>
+
+          {/* 1b. Tra cấp công trình theo TT 34/2026 — GỢI Ý, không phải kết luận */}
+          <div className="rounded-lg border bg-white p-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-1">
+              1️⃣b Tra cấp công trình theo TT {TT34.so}
+            </h2>
+            <p className="text-xs text-slate-600 mb-4">
+              Chép từ bản gốc Phụ lục I và II, hiệu lực {TT34.hieuLucTu}. Kết quả là <strong>gợi ý</strong> theo đúng
+              mục đã chọn — cán bộ phải tự đối chiếu bản gốc trước khi chốt.
+            </p>
+
+            {dsLoaiTT34.length === 0 ? (
+              <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+                Lĩnh vực này chưa có mục nào được chép vào công cụ. Phải tra thẳng bản gốc Thông tư.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-2">Loại công trình (theo mục của Thông tư)</label>
+                  <select
+                    value={maLoaiTT34}
+                    onChange={(e) => chonLoaiTT34(e.target.value)}
+                    className="w-full rounded border bg-white px-3 py-2 text-sm"
+                  >
+                    <option value="">— Chọn mục để tra cấp —</option>
+                    {dsLoaiTT34.map((l) => (
+                      <option key={l.ma} value={l.ma}>{l.ma} — {l.ten}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {loaiTT34 && (
+                  <>
+                    {loaiTT34.tieuChi.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {loaiTT34.tieuChi.map((tc) => (
+                          <div key={tc.ten}>
+                            <label className="block text-xs font-semibold text-slate-700 mb-2">{tc.ten}</label>
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              value={giaTriTieuChi[tc.ten] ?? ''}
+                              onChange={(e) => setGiaTriTieuChi((cu) => ({ ...cu, [tc.ten]: e.target.value }))}
+                              placeholder="Nhập trị số"
+                              className="w-full rounded border bg-white px-3 py-2 text-sm"
+                            />
+                            <p className="text-[11px] text-slate-500 mt-1">
+                              {tc.bac.map((b) => `${b.cap}: ${b.moTa}`).join(' · ')}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {loaiTT34.luaChon && loaiTT34.luaChon.length > 0 && (
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-2">
+                          Trường hợp (mục này phân theo mức độ quan trọng)
+                        </label>
+                        <select
+                          value={luaChonTT34}
+                          onChange={(e) => setLuaChonTT34(e.target.value)}
+                          className="w-full rounded border bg-white px-3 py-2 text-sm"
+                        >
+                          <option value="">— Chưa chọn —</option>
+                          {loaiTT34.luaChon.map((x) => (
+                            <option key={x.nhan} value={x.nhan}>{x.nhan} → cấp {x.cap}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    {ketQuaTraCap && (
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 space-y-2">
+                        <p className="text-sm">
+                          <span className="text-slate-600">Cấp gợi ý: </span>
+                          {ketQuaTraCap.cap ? (
+                            <strong className="text-emerald-700 text-base">Cấp {ketQuaTraCap.cap}</strong>
+                          ) : (
+                            <em className="text-slate-500">chưa đủ căn cứ để tra</em>
+                          )}
+                        </p>
+                        {ketQuaTraCap.chiTiet.filter((c) => c.giaTri !== null).map((c) => (
+                          <p key={c.tieuChi} className="text-xs text-slate-600">
+                            {c.tieuChi} = {c.giaTri} → {c.cap ? `cấp ${c.cap} (ô "${c.moTa}")` : 'không rơi vào bậc nào'}
+                          </p>
+                        ))}
+                        <p className="text-xs text-slate-500">Căn cứ: {ketQuaTraCap.canCu}</p>
+                        <ul className="text-[11px] text-amber-800 list-disc pl-4 space-y-0.5">
+                          {ketQuaTraCap.canhBao.map((c, i) => <li key={i}>{c}</li>)}
+                        </ul>
+                        {ketQuaTraCap.cap && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCapCongTrinh(ketQuaTraCap.cap as CapCongTrinh)
+                              if (loaiTT34) setLoaiCongTrinh(loaiTT34.ten)
+                            }}
+                            className="h-9 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium"
+                          >
+                            Điền cấp {ketQuaTraCap.cap} vào form
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* 2. Nhập thông tin công trình */}

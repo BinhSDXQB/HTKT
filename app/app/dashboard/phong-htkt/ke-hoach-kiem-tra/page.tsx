@@ -1,13 +1,14 @@
 import { CalendarCheck, Grid3X3, CheckCircle2 } from 'lucide-react'
 import { LINH_VUC_HTKT } from '@/lib/htkt/phap-ly'
 import {
-  NHOM_CONG_TRINH, NOI_DUNG_KIEM_TRA, QUY_MO_LINH_VUC, KE_HOACH_KIEM_TRA_NAM,
+  NOI_DUNG_KIEM_TRA, QUY_MO_LINH_VUC, KE_HOACH_KIEM_TRA_NAM,
 } from '@/lib/htkt/ke-hoach-kiem-tra'
+import { LOAI_CONG_TRINH_TT34, THU_TU_CAP, TT34 } from '@/lib/htkt/cap-cong-trinh-tt34'
 
 export const dynamic = 'force-dynamic'
 
 export default function KeHoachKiemTraPage() {
-  const tongCongTrinh = NHOM_CONG_TRINH.length
+  const tongCongTrinh = LOAI_CONG_TRINH_TT34.length
   const tongLinhVuc = LINH_VUC_HTKT.length
   const tongNoiDung = NOI_DUNG_KIEM_TRA.length
 
@@ -34,9 +35,9 @@ export default function KeHoachKiemTraPage() {
           <p className="text-xs text-slate-500 mt-1">Cấp nước, thoát nước, cây xanh, chiếu sáng...</p>
         </div>
         <div className="rounded-lg border bg-blue-50/50 p-4">
-          <p className="text-xs text-slate-600 mb-1">Nhóm công trình (Cấp I–IV)</p>
+          <p className="text-xs text-slate-600 mb-1">Mục phân cấp công trình</p>
           <p className="text-2xl font-bold text-blue-700">{tongCongTrinh}</p>
-          <p className="text-xs text-slate-500 mt-1">Phân loại theo quy mô & thẩm quyền</p>
+          <p className="text-xs text-slate-500 mt-1">Thang 5 bậc: Đặc biệt, I, II, III, IV</p>
         </div>
         <div className="rounded-lg border bg-purple-50/50 p-4">
           <p className="text-xs text-slate-600 mb-1">Nội dung kiểm tra định kỳ</p>
@@ -51,41 +52,80 @@ export default function KeHoachKiemTraPage() {
           <Grid3X3 className="w-5 h-5 text-emerald-600" />
           1. Ma trận phân loại công trình HTKT
         </h2>
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900">
+          <p className="font-semibold">Bảng dưới chép từ bản gốc {TT34.so} (hiệu lực {TT34.hieuLucTu}), Phụ lục I và II.</p>
+          <p className="mt-1">
+            Hai cột <strong>&quot;Thẩm quyền thẩm định&quot;</strong> và <strong>&quot;Kiểm tra nghiệm thu&quot;</strong> trước đây
+            hiển thị ở bảng này <strong>đã được gỡ bỏ</strong>: số liệu cũ không đối chiếu được với Thông tư, và bản thân
+            {' '}{TT34.so} <strong>không quy định ngưỡng thẩm quyền</strong>. Theo Điều 3, cấp công trình chỉ là
+            <em> cơ sở</em> để xác định thẩm quyền thẩm định và kiểm tra nghiệm thu — ngưỡng cụ thể nằm ở nghị định
+            về quản lý hoạt động xây dựng, phải tra riêng.
+          </p>
+          <p className="mt-1">
+            Điều 2 khoản 2: cấp công trình là cấp <strong>cao nhất</strong> xác định theo <strong>cả</strong> Phụ lục I và
+            Phụ lục II. Bảng này chỉ liệt kê tiêu chí của từng mục, <strong>không thay việc đối chiếu bản gốc</strong>.
+          </p>
+        </div>
         <div className="rounded-lg border bg-white overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b">
               <tr>
-                <th className="text-left px-4 py-2 font-semibold text-slate-700">Lĩnh vực</th>
-                <th className="text-left px-4 py-2 font-semibold text-slate-700">Loại công trình</th>
-                <th className="text-center px-4 py-2 font-semibold text-slate-700">Cấp</th>
-                <th className="text-left px-4 py-2 font-semibold text-slate-700">Quy mô</th>
-                <th className="text-left px-4 py-2 font-semibold text-slate-700">Thẩm quyền</th>
-                <th className="text-center px-4 py-2 font-semibold text-slate-700">KT-NT</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Mục</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Loại công trình</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Tiêu chí phân cấp</th>
+                {THU_TU_CAP.map((c) => (
+                  <th key={c} className="text-center px-3 py-2 font-semibold text-slate-700 whitespace-nowrap">{c}</th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y">
-              {NHOM_CONG_TRINH.slice(0, 20).map((nh, i) => {
-                const lv = LINH_VUC_HTKT.find((l) => l.key === nh.linhVuc)
-                return (
-                  <tr key={i} className="hover:bg-slate-50">
-                    <td className="px-4 py-2 text-slate-900 font-medium text-xs">{lv?.ten}</td>
-                    <td className="px-4 py-2 text-slate-700 text-xs">{nh.loai}</td>
-                    <td className="px-4 py-2 text-center font-semibold text-slate-700">{nh.cap}</td>
-                    <td className="px-4 py-2 text-slate-600 text-xs">{nh.quyMo}</td>
-                    <td className="px-4 py-2 text-slate-600 text-xs">
-                      {nh.thamQuyenThamDinh === 'So_XD' ? 'Sở XD' : 'HĐNT/CĐT'}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      {nh.doiTuongKiemTraNT && <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto" />}
-                    </td>
+              {LOAI_CONG_TRINH_TT34.map((loai) => {
+                const lv = LINH_VUC_HTKT.find((l) => l.key === loai.linhVuc)
+                // Mục phân theo "mức độ quan trọng" hoặc cấp cố định: không có dải số để xếp cột.
+                if (!loai.tieuChi.length) {
+                  const moTa = loai.capCoDinh
+                    ? `Cấp ${loai.capCoDinh} với mọi quy mô`
+                    : (loai.luaChon ?? []).map((x) => `${x.nhan} → cấp ${x.cap}`).join(' · ')
+                  return (
+                    <tr key={loai.ma} className="hover:bg-slate-50">
+                      <td className="px-3 py-2 text-xs font-mono text-slate-500 whitespace-nowrap">{loai.ma}</td>
+                      <td className="px-3 py-2 text-xs text-slate-900">
+                        {loai.ten}
+                        <span className="block text-slate-400">{lv?.ten} · Phụ lục {loai.phuLuc}</span>
+                      </td>
+                      <td className="px-3 py-2 text-xs text-slate-600">Mức độ quan trọng</td>
+                      <td className="px-3 py-2 text-xs text-slate-700" colSpan={THU_TU_CAP.length}>{moTa}</td>
+                    </tr>
+                  )
+                }
+                return loai.tieuChi.map((tc, j) => (
+                  <tr key={`${loai.ma}-${j}`} className="hover:bg-slate-50">
+                    {j === 0 && (
+                      <>
+                        <td className="px-3 py-2 text-xs font-mono text-slate-500 whitespace-nowrap" rowSpan={loai.tieuChi.length}>{loai.ma}</td>
+                        <td className="px-3 py-2 text-xs text-slate-900" rowSpan={loai.tieuChi.length}>
+                          {loai.ten}
+                          <span className="block text-slate-400">{lv?.ten} · Phụ lục {loai.phuLuc}</span>
+                        </td>
+                      </>
+                    )}
+                    <td className="px-3 py-2 text-xs text-slate-600">{tc.ten}</td>
+                    {THU_TU_CAP.map((c) => {
+                      const bac = tc.bac.find((b) => b.cap === c)
+                      return (
+                        <td key={c} className={`px-3 py-2 text-xs text-center whitespace-nowrap ${bac ? 'text-slate-800' : 'text-slate-300'}`}>
+                          {bac ? bac.moTa : '—'}
+                        </td>
+                      )
+                    })}
                   </tr>
-                )
+                ))
               })}
             </tbody>
           </table>
           <div className="px-4 py-3 bg-slate-50 text-xs text-slate-600 border-t">
-            <p>Hiển thị {Math.min(20, NHOM_CONG_TRINH.length)} / {NHOM_CONG_TRINH.length} nhóm công trình</p>
-            <p className="text-slate-500 mt-1">KT-NT = Cơ quan chuyên môn kiểm tra nghiệm thu · TT 34/2026/TT-BXD</p>
+            <p>Đủ {LOAI_CONG_TRINH_TT34.length} mục thuộc 8 lĩnh vực hạ tầng kỹ thuật · ô &quot;—&quot; là bảng gốc để trống</p>
+            <p className="text-slate-500 mt-1">Nguồn: {TT34.so} — {TT34.ten}</p>
           </div>
         </div>
       </div>
