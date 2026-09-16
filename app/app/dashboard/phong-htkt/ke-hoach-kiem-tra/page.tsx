@@ -4,6 +4,7 @@ import {
   NOI_DUNG_KIEM_TRA, QUY_MO_LINH_VUC, KE_HOACH_KIEM_TRA_NAM,
 } from '@/lib/htkt/ke-hoach-kiem-tra'
 import { LOAI_CONG_TRINH_TT34, THU_TU_CAP, TT34 } from '@/lib/htkt/cap-cong-trinh-tt34'
+import { PHU_LUC_IV_HTKT, ND217, ND207 } from '@/lib/htkt/tham-quyen-tham-dinh'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,19 +53,74 @@ export default function KeHoachKiemTraPage() {
           <Grid3X3 className="w-5 h-5 text-emerald-600" />
           1. Ma trận phân loại công trình HTKT
         </h2>
-        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900">
+        <div className="mb-4 rounded-lg border border-sky-200 bg-sky-50 p-4 text-xs text-sky-900 space-y-2">
           <p className="font-semibold">Bảng dưới chép từ bản gốc {TT34.so} (hiệu lực {TT34.hieuLucTu}), Phụ lục I và II.</p>
-          <p className="mt-1">
-            Hai cột <strong>&quot;Thẩm quyền thẩm định&quot;</strong> và <strong>&quot;Kiểm tra nghiệm thu&quot;</strong> trước đây
-            hiển thị ở bảng này <strong>đã được gỡ bỏ</strong>: số liệu cũ không đối chiếu được với Thông tư, và bản thân
-            {' '}{TT34.so} <strong>không quy định ngưỡng thẩm quyền</strong>. Theo Điều 3, cấp công trình chỉ là
-            <em> cơ sở</em> để xác định thẩm quyền thẩm định và kiểm tra nghiệm thu — ngưỡng cụ thể nằm ở nghị định
-            về quản lý hoạt động xây dựng, phải tra riêng.
+          <p>
+            Trước đây bảng này có hai cột <strong>&quot;Thẩm quyền thẩm định&quot;</strong> và <strong>&quot;KT-NT&quot;</strong> gán
+            theo cấp (Cấp I–II → Sở XD, Cấp III–IV → HĐNT/Chủ đầu tư). Cách gán đó <strong>sai mô hình</strong>:
+            thẩm quyền KHÔNG phải là hàm của cấp công trình. Theo <strong>NĐ {ND217.so} Điều 32, 33</strong>, thẩm quyền
+            thẩm định xác định theo <em>loại dự án</em> (đầu tư công / PPP / đầu tư kinh doanh), <em>cơ quan chủ quản</em> và
+            <em> địa bàn</em> — không có bảng ánh xạ &quot;cấp nào → cơ quan nào&quot;.
           </p>
-          <p className="mt-1">
-            Điều 2 khoản 2: cấp công trình là cấp <strong>cao nhất</strong> xác định theo <strong>cả</strong> Phụ lục I và
-            Phụ lục II. Bảng này chỉ liệt kê tiêu chí của từng mục, <strong>không thay việc đối chiếu bản gốc</strong>.
+          <p>
+            Cấp công trình <strong>vẫn tham gia</strong>, nhưng theo cách khác: công trình <strong>cấp đặc biệt</strong> thì
+            cơ quan chuyên môn thuộc bộ thẩm định (Đ32 khoản 2) và kiểm tra nghiệm thu (<strong>NĐ {ND207.so} Đ26</strong>
+            khoản 1 điểm b); dự án nhiều công trình thì lấy <strong>công trình chính có cấp cao nhất</strong> làm căn cứ
+            (Đ33 khoản 3 NĐ {ND217.so}; Đ26 khoản 3 NĐ {ND207.so}); dự án thành phần, phân kỳ đầu tư, sửa chữa cải tạo có
+            quy tắc riêng (Đ33 khoản 4, 5, 6). Tức là cấp quyết định <em>lấy công trình nào làm căn cứ</em>, chứ không tự
+            nó chỉ ra cơ quan.
           </p>
+          <p>
+            Thứ <em>thực sự</em> khoá theo cấp là <strong>ngưỡng thuộc diện</strong> — xem bảng Phụ lục IV ngay dưới.
+            Điều 2 khoản 2 TT {TT34.so}: cấp công trình là cấp <strong>cao nhất</strong> theo <strong>cả</strong> Phụ lục I và II;
+            bảng này không thay việc đối chiếu bản gốc.
+          </p>
+        </div>
+
+        <div className="mb-5 rounded-lg border bg-white overflow-x-auto">
+          <div className="px-4 py-3 border-b bg-slate-50">
+            <p className="text-sm font-semibold text-slate-800">
+              Ngưỡng thuộc diện — Phụ lục IV NĐ {ND217.so} (công trình ảnh hưởng lớn đến an toàn, lợi ích cộng đồng)
+            </p>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Đạt ngưỡng ⇒ phải <strong>kiểm tra công tác nghiệm thu</strong> (NĐ {ND207.so} Đ25 khoản 1 điểm b);
+              và với dự án <strong>đầu tư kinh doanh</strong> thì thuộc diện cơ quan chuyên môn thẩm định BCNCKT
+              (NĐ {ND217.so} Đ32 khoản 1 điểm d). Dự án đầu tư công và PPP vốn đã thuộc diện thẩm định theo điểm a, b.
+            </p>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 border-b">
+              <tr>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Mã</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Loại công trình</th>
+                <th className="text-left px-3 py-2 font-semibold text-slate-700">Ngưỡng</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {PHU_LUC_IV_HTKT.map((d) => (
+                <tr key={d.ma} className="hover:bg-slate-50">
+                  <td className="px-3 py-2 text-xs font-mono text-slate-500 whitespace-nowrap">{d.ma}</td>
+                  <td className="px-3 py-2 text-xs text-slate-900">
+                    {d.ten}
+                    {d.chiTiet && <span className="block text-slate-500 mt-0.5">{d.chiTiet}</span>}
+                  </td>
+                  <td className="px-3 py-2 text-xs font-semibold text-slate-800 whitespace-nowrap">{d.nguong}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="px-4 py-3 bg-amber-50 text-xs text-amber-900 border-t">
+            <p>
+              <strong>Cây xanh/công viên và chiếu sáng đô thị KHÔNG có dòng nào</strong> trong phần hạ tầng kỹ thuật của
+              Phụ lục IV. Đừng suy ra là &quot;không thuộc diện&quot; — công trình cụ thể vẫn có thể rơi vào dòng thuộc
+              loại khác của Phụ lục IV, phải mở bản gốc đối chiếu.
+            </p>
+            <p className="mt-1">
+              Ngoài Phụ lục IV còn nhóm &quot;dự án quan trọng quốc gia, công trình quy mô lớn, kỹ thuật phức tạp&quot; theo
+              <strong> Phụ lục IX NĐ {ND207.so}</strong> do Hội đồng kiểm tra nhà nước kiểm tra (Đ25 khoản 1 điểm a) —
+              chưa chép vào công cụ, phải tra riêng.
+            </p>
+          </div>
         </div>
         <div className="rounded-lg border bg-white overflow-x-auto">
           <table className="w-full text-sm">
