@@ -111,6 +111,17 @@ function parseVuotKhung(raw: string): number | null | undefined {
   return n > 1 ? n / 100 : n
 }
 
+// Lọc theo NĂM SINH khi trùng tên (VD "1973") — vì chức danh/đơn vị có thể giống
+// hệt nhau giữa 2 người trùng tên, năm sinh thường là tiêu chí phân biệt còn lại.
+function namSinhWhere(raw: string): { gte: Date; lt: Date } | undefined {
+  const s = (raw || '').trim()
+  if (!/^\d{4}$/.test(s)) return undefined
+  const y = +s
+  return { gte: new Date(Date.UTC(y, 0, 1)), lt: new Date(Date.UTC(y + 1, 0, 1)) }
+}
+
+const fmtNamSinh = (d: Date | null | undefined) => (d ? `sinh ${new Date(d).getUTCFullYear()}` : 'chưa rõ năm sinh')
+
 /**
  * Mô tả THỜI ĐIỂM NGHỈ HƯU cho chatbot — luôn nói rõ đang là DỰ KIẾN hay ĐÃ QUYẾT ĐỊNH LÙI.
  *
@@ -222,7 +233,7 @@ QUY TẮC:
 - Khi hỏi thông tin chi tiết/CCCD/căn cước/ngày sinh/ngày nâng lương của MỘT cán bộ cụ thể, dùng ho_so_can_bo (chỉ tài khoản Sở). Khi chỉ cần SĐT/email/liên hệ cán bộ SỞ, dùng tim_can_bo
 - Khi hỏi LÃNH ĐẠO/TRƯỞNG PHÒNG KINH TẾ của XÃ/PHƯỜNG (Bí thư, Chủ tịch/Phó Chủ tịch HĐND-UBND, Trưởng/Phó phòng Kinh tế), hoặc SĐT của họ, hoặc "số điện thoại 09xx này là của lãnh đạo xã nào", dùng tra_cuu_lanh_dao_xa (truyền xa_phuong và/hoặc tu_khoa). Tool này dùng được cho cả tài khoản Sở lẫn phường/xã
 - NHẬP/CẬP NHẬT DANH BẠ lãnh đạo xã/phường (CHỈ ADMIN): khi admin muốn "nhập danh bạ", "thêm/cập nhật số điện thoại lãnh đạo xã …", hãy thu thập theo thứ tự và GỢI Ý rõ từng trường: (1) Tên xã/phường, (2) Họ tên, (3) Chức vụ — gợi ý các mẫu phổ biến: "Chủ tịch HĐND xã", "Phó Chủ tịch HĐND xã", "Chủ tịch UBND xã", "Phó Chủ tịch UBND xã", "Bí thư Đảng ủy", "Trưởng phòng Kinh tế", (4) Số điện thoại. Phòng ban KHÔNG cần hỏi — tự suy từ chức vụ (4 nhóm: Thường trực HĐND / Lãnh đạo UBND / Thường trực Đảng ủy / Phòng Kinh tế - Hạ tầng - Đô thị). Khi đã đủ tên xã + họ tên (và chức vụ nếu thêm mới), gọi luu_lanh_dao_xa. Có thể nhập NHIỀU người liên tiếp; mỗi người gọi tool một lần. Nếu admin dán cả danh sách, lần lượt gọi tool cho từng dòng
-- QUAN TRỌNG — TRÙNG TÊN: khi tra cứu/thao tác trên MỘT cán bộ theo tên (ho_so_can_bo, xem_luong_can_bo, cap_nhat_luong_can_bo, dự thảo QĐ cho 1 người...) mà có NHIỀU người trùng tên, tool sẽ trả về danh sách đánh số kèm chức danh + đơn vị. TUYỆT ĐỐI KHÔNG tự chọn 1 người — hãy HỎI LẠI người dùng "ở phòng/đơn vị nào?" (hoặc chức danh nào). Khi người dùng trả lời bằng SỐ THỨ TỰ hoặc nêu phòng/chức danh, GỌI LẠI đúng tool đó kèm tham số don_vi hoặc chuc_danh tương ứng dòng họ chọn — KHÔNG hỏi lại tên
+- QUAN TRỌNG — TRÙNG TÊN: khi tra cứu/thao tác trên MỘT cán bộ theo tên (ho_so_can_bo, xem_luong_can_bo, cap_nhat_luong_can_bo, dự thảo QĐ cho 1 người...) mà có NHIỀU người trùng tên, tool sẽ trả về danh sách đánh số kèm chức danh + đơn vị + NĂM SINH. TUYỆT ĐỐI KHÔNG tự chọn 1 người, và TUYỆT ĐỐI KHÔNG nói "không phân biệt được bằng năm sinh" — năm sinh LUÔN có trong danh sách tool trả về, hãy dùng nó. Nếu người dùng NGAY TỪ CÂU HỎI ĐẦU đã nêu năm sinh (VD "Lê Anh Tuấn sinh năm 1973"), GỌI LUÔN tool kèm tham số nam_sinh — không cần hỏi lại. Nếu chưa biết, HỎI LẠI người dùng "ở phòng/đơn vị nào, chức danh gì, hay năm sinh bao nhiêu?" — đặc biệt khi chức danh/đơn vị của các người trùng tên GIỐNG HỆT NHAU thì PHẢI hỏi năm sinh (chức danh/đơn vị lúc đó vô nghĩa để phân biệt). Khi người dùng trả lời bằng SỐ THỨ TỰ, nêu phòng/chức danh, hoặc nêu năm sinh, GỌI LẠI đúng tool đó kèm tham số don_vi/chuc_danh/nam_sinh tương ứng — KHÔNG hỏi lại tên
 - Nếu trường nào hiển thị "chưa cập nhật" thì báo đúng là chưa có dữ liệu, KHÔNG tự bịa
 - LINK TẢI FILE: khi kết quả tool chứa link markdown (VD [Tải dự thảo QĐ (.docx)](/api/office/nang-luong/du-thao?canBoId=...)), phải giữ NGUYÊN VẸN đường dẫn khi trả lời — TUYỆT ĐỐI KHÔNG thêm tiền tố "sandbox:" hay domain, không rút gọn hay thay đổi tham số của link
 - Khi tra cứu thông tin cán bộ hoặc tổ chức, luôn dùng function được cung cấp
@@ -273,13 +284,14 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     type: 'function',
     function: {
       name: 'ho_so_can_bo',
-      description: 'Lấy HỒ SƠ ĐẦY ĐỦ của một cán bộ Sở: họ tên, chức danh, đơn vị, SĐT, email, số CCCD (căn cước), ngày sinh, hệ số lương, ngày nâng lương tiếp theo, THỜI ĐIỂM NGHỈ HƯU (ghi rõ là DỰ KIẾN theo NĐ 135/2020 hay ĐÃ QUYẾT ĐỊNH LÙI theo NĐ 170/2025 Điều 61 kèm số văn bản). Dùng khi hỏi thông tin chi tiết/căn cước/CCCD/ngày sinh/ngày nâng lương/NGÀY NGHỈ HƯU của MỘT cán bộ cụ thể theo tên. Nếu trùng tên nhiều người, tool trả danh sách đánh số; khi người dùng chọn (gõ số hoặc nêu chức danh/đơn vị), gọi lại tool kèm chuc_danh hoặc don_vi để lọc đúng người.',
+      description: 'Lấy HỒ SƠ ĐẦY ĐỦ của một cán bộ Sở: họ tên, chức danh, đơn vị, SĐT, email, số CCCD (căn cước), ngày sinh, hệ số lương, ngày nâng lương tiếp theo, THỜI ĐIỂM NGHỈ HƯU (ghi rõ là DỰ KIẾN theo NĐ 135/2020 hay ĐÃ QUYẾT ĐỊNH LÙI theo NĐ 170/2025 Điều 61 kèm số văn bản). Dùng khi hỏi thông tin chi tiết/căn cước/CCCD/ngày sinh/ngày nâng lương/NGÀY NGHỈ HƯU của MỘT cán bộ cụ thể theo tên. Nếu trùng tên nhiều người, tool trả danh sách đánh số KÈM NĂM SINH; khi người dùng chọn (gõ số, nêu chức danh/đơn vị, HOẶC nêu năm sinh), gọi lại tool kèm chuc_danh/don_vi/nam_sinh để lọc đúng người — chức danh và đơn vị có thể giống hệt nhau giữa 2 người trùng tên, khi đó PHẢI dùng năm sinh để phân biệt.',
       parameters: {
         type: 'object',
         properties: {
           ho_ten: { type: 'string', description: 'Họ và tên (hoặc một phần tên) cán bộ cần tra hồ sơ' },
           chuc_danh: { type: 'string', description: 'Lọc thêm theo chức danh khi trùng tên (VD: "Phó Giám đốc", "Trưởng phòng"). Để trống nếu không cần.' },
           don_vi: { type: 'string', description: 'Lọc thêm theo đơn vị/phòng khi trùng tên (VD: "Lãnh đạo Sở", "Phòng Quy hoạch"). Để trống nếu không cần.' },
+          nam_sinh: { type: 'string', description: 'Lọc thêm theo năm sinh khi trùng tên (VD "1973"), dùng khi chức danh/đơn vị giống nhau hoặc người dùng tự nêu năm sinh. Để trống nếu không cần.' },
         },
         required: ['ho_ten'],
       },
@@ -289,13 +301,14 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     type: 'function',
     function: {
       name: 'xem_luong_can_bo',
-      description: 'Xem thông tin hệ số lương, phụ cấp của một cán bộ. Dùng khi hỏi về lương hoặc hệ số lương. Nếu nhiều người trùng tên, tool sẽ liệt kê để hỏi lại đơn vị/chức danh.',
+      description: 'Xem thông tin hệ số lương, phụ cấp của một cán bộ. Dùng khi hỏi về lương hoặc hệ số lương. Nếu nhiều người trùng tên, tool sẽ liệt kê KÈM NĂM SINH để hỏi lại đơn vị/chức danh/năm sinh — chức danh và đơn vị có thể giống hệt nhau giữa 2 người trùng tên, khi đó PHẢI dùng năm sinh để phân biệt.',
       parameters: {
         type: 'object',
         properties: {
           ho_ten: { type: 'string', description: 'Họ và tên cán bộ cần xem' },
           don_vi: { type: 'string', description: 'Phòng/đơn vị để phân biệt khi trùng tên (vd "Quy hoạch", "Lãnh đạo Sở"). Tuỳ chọn.' },
           chuc_danh: { type: 'string', description: 'Chức danh để phân biệt khi trùng tên (vd "Phó Giám đốc"). Tuỳ chọn.' },
+          nam_sinh: { type: 'string', description: 'Năm sinh để phân biệt khi trùng tên (VD "1973"). Tuỳ chọn.' },
         },
         required: ['ho_ten'],
       },
@@ -377,13 +390,14 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     type: 'function',
     function: {
       name: 'cap_nhat_luong_can_bo',
-      description: 'CHỈ ADMIN. Cập nhật / thêm mới thông tin NÂNG LƯƠNG THƯỜNG XUYÊN của MỘT cán bộ Sở: hệ số lương, phụ cấp chức vụ, phụ cấp thâm niên vượt khung (%), và NGÀY NÂNG LƯƠNG tiếp theo. Dùng khi admin yêu cầu "cập nhật lương", "thêm ngày nâng lương cho …", "đặt hệ số lương …". Nếu TRÙNG TÊN nhiều người, tool trả danh sách đánh số kèm chức danh + đơn vị để chọn; khi admin chọn (số thứ tự hoặc nêu chức danh/đơn vị), gọi LẠI tool kèm chuc_danh hoặc don_vi để xác định đúng người.',
+      description: 'CHỈ ADMIN. Cập nhật / thêm mới thông tin NÂNG LƯƠNG THƯỜNG XUYÊN của MỘT cán bộ Sở: hệ số lương, phụ cấp chức vụ, phụ cấp thâm niên vượt khung (%), và NGÀY NÂNG LƯƠNG tiếp theo. Dùng khi admin yêu cầu "cập nhật lương", "thêm ngày nâng lương cho …", "đặt hệ số lương …". Nếu TRÙNG TÊN nhiều người, tool trả danh sách đánh số kèm chức danh + đơn vị + NĂM SINH để chọn; khi admin chọn (số thứ tự, nêu chức danh/đơn vị, hoặc nêu năm sinh), gọi LẠI tool kèm chuc_danh/don_vi/nam_sinh để xác định đúng người — chức danh và đơn vị có thể giống hệt nhau giữa 2 người trùng tên, khi đó PHẢI dùng năm sinh.',
       parameters: {
         type: 'object',
         properties: {
           ho_ten: { type: 'string', description: 'Họ và tên cán bộ cần cập nhật. Bắt buộc.' },
           chuc_danh: { type: 'string', description: 'Lọc theo chức danh khi trùng tên (VD "Phó Giám đốc", "Chuyên viên"). Để trống nếu không cần.' },
           don_vi: { type: 'string', description: 'Lọc theo đơn vị/phòng khi trùng tên (VD "Phòng Quy hoạch"). Để trống nếu không cần.' },
+          nam_sinh: { type: 'string', description: 'Lọc theo năm sinh khi trùng tên (VD "1973"). Để trống nếu không cần.' },
           he_so_luong: { type: 'string', description: 'Hệ số lương mới (VD "3.66"). Để trống nếu không đổi.' },
           phu_cap: { type: 'string', description: 'Phụ cấp chức vụ (VD "0.3"). Để trống nếu không đổi.' },
           vuot_khung: { type: 'string', description: 'Phụ cấp thâm niên vượt khung theo % (VD "5" = 5%/năm). Để trống nếu không vượt khung / không đổi.' },
@@ -681,12 +695,14 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (!hoTen) return 'Vui lòng cho biết tên cán bộ cần tra hồ sơ.'
       const chucDanhLoc = (args.chuc_danh || '').trim()
       const donViLoc = (args.don_vi || '').trim()
+      const namSinhLoc = namSinhWhere(args.nam_sinh || '')
 
       const ds = await db.canBo.findMany({
         where: {
           hoTen: { contains: hoTen, mode: 'insensitive' },
           ...(chucDanhLoc ? { chucDanh: { ten: { contains: chucDanhLoc, mode: 'insensitive' } } } : {}),
           ...(donViLoc ? { toChuc: { ten: { contains: donViLoc, mode: 'insensitive' } } } : {}),
+          ...(namSinhLoc ? { ngaySinh: namSinhLoc } : {}),
         },
         select: {
           hoTen: true, cccd: true, ngaySinh: true, gioiTinh: true, soDienThoai: true, email: true,
@@ -702,11 +718,12 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
 
       if (ds.length === 0) return `Không tìm thấy cán bộ tên "${hoTen}" trong hệ thống.`
 
-      // Nhiều người trùng tên → liệt kê có đánh số để chọn
+      // Nhiều người trùng tên → liệt kê có đánh số, KÈM NĂM SINH để chọn (chức danh/đơn vị
+      // có thể giống hệt nhau giữa 2 người trùng tên, năm sinh thường là điểm khác biệt)
       if (ds.length > 1) {
         return (
-          `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn xem hồ sơ ai? (trả lời số thứ tự, hoặc nêu chức danh/đơn vị):\n` +
-          ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}`).join('\n')
+          `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn xem hồ sơ ai? (trả lời số thứ tự, nêu chức danh/đơn vị, hoặc nêu năm sinh):\n` +
+          ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}`).join('\n')
         )
       }
 
@@ -741,15 +758,17 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (!hoTen) return 'Vui lòng cho biết tên cán bộ cần xem lương.'
       const chucDanhLoc = (args.chuc_danh || '').trim()
       const donViLoc = (args.don_vi || '').trim()
+      const namSinhLoc = namSinhWhere(args.nam_sinh || '')
 
       const ds = await db.canBo.findMany({
         where: {
           hoTen: { contains: hoTen, mode: 'insensitive' },
           ...(chucDanhLoc ? { chucDanh: { ten: { contains: chucDanhLoc, mode: 'insensitive' } } } : {}),
           ...(donViLoc ? { toChuc: { ten: { contains: donViLoc, mode: 'insensitive' } } } : {}),
+          ...(namSinhLoc ? { ngaySinh: namSinhLoc } : {}),
         },
         select: {
-          hoTen: true, heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true, ngayNangLuongKeTiep: true,
+          hoTen: true, ngaySinh: true, heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true, ngayNangLuongKeTiep: true,
           toChuc: { select: { ten: true } },
           chucDanh: { select: { ten: true } },
         },
@@ -759,11 +778,12 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
 
       if (ds.length === 0) return `Không tìm thấy cán bộ tên "${hoTen}" trong hệ thống.`
 
-      // Trùng tên → KHÔNG tự chọn, hỏi lại đơn vị/chức danh
+      // Trùng tên → KHÔNG tự chọn, hỏi lại đơn vị/chức danh/năm sinh (chức danh/đơn vị
+      // có thể giống hệt nhau giữa 2 người trùng tên, năm sinh thường là điểm khác biệt)
       if (ds.length > 1) {
         return (
-          `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn xem lương của ai? (nêu phòng/đơn vị hoặc chức danh):\n` +
-          ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}`).join('\n')
+          `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn xem lương của ai? (nêu phòng/đơn vị, chức danh, hoặc năm sinh):\n` +
+          ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}`).join('\n')
         )
       }
 
@@ -1050,15 +1070,17 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (!hoTen) return 'Vui lòng cho biết họ tên cán bộ cần cập nhật lương.'
       const chucDanhLoc = (args.chuc_danh || '').trim()
       const donViLoc = (args.don_vi || '').trim()
+      const namSinhLoc = namSinhWhere(args.nam_sinh || '')
 
       const ds = await db.canBo.findMany({
         where: {
           hoTen: { contains: hoTen, mode: 'insensitive' },
           ...(chucDanhLoc ? { chucDanh: { ten: { contains: chucDanhLoc, mode: 'insensitive' } } } : {}),
           ...(donViLoc ? { toChuc: { ten: { contains: donViLoc, mode: 'insensitive' } } } : {}),
+          ...(namSinhLoc ? { ngaySinh: namSinhLoc } : {}),
         },
         select: {
-          id: true, hoTen: true, heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true,
+          id: true, hoTen: true, ngaySinh: true, heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true,
           toChuc: { select: { ten: true } },
           chucDanh: { select: { ten: true } },
         },
@@ -1069,13 +1091,14 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (ds.length === 0)
         return `Không tìm thấy cán bộ tên "${hoTen}". Nếu đây là cán bộ MỚI, hãy cung cấp số CCCD (12 số) cùng đơn vị/chức danh để TẠO MỚI hồ sơ (tool them_can_bo).`
 
-      // Trùng tên → liệt kê đánh số kèm chức danh + đơn vị để admin chọn
+      // Trùng tên → liệt kê đánh số kèm chức danh + đơn vị + năm sinh để admin chọn
+      // (chức danh/đơn vị có thể giống hệt nhau giữa 2 người trùng tên)
       if (ds.length > 1) {
         const fmtD = (d: Date | null) => (d ? new Date(d).toLocaleDateString('vi-VN') : 'chưa có')
         return (
-          `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn cập nhật lương cho ai? (trả lời số thứ tự, hoặc nêu chức danh/đơn vị):\n` +
+          `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn cập nhật lương cho ai? (trả lời số thứ tự, nêu chức danh/đơn vị, hoặc nêu năm sinh):\n` +
           ds.map((c, i) =>
-            `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}` +
+            `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}` +
             `  (hệ số: ${c.heSoLuong ?? '—'}, ngày lên lương: ${fmtD(c.ngayNangLuong)})`
           ).join('\n')
         )
