@@ -1,0 +1,5 @@
+# Cai cho tools/doc_reader.py:
+#   pip install -r tools/requirements-doc-reader.txt
+# CHI cai extras can dung (pdf/docx/pptx/xlsx/xls) - KHONG cai [all]
+# (tranh audio-transcription/az-doc-intel/OCR plugin qua nang cho may 6GB RAM).
+markitdown[pdf,docx,pptx,xlsx,xls]==0.1.8

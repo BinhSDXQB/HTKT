@@ -67,3 +67,7 @@ app/.next-old/
 
 # Ket qua healthcheck sinh moi lan chay (gia tri la so sanh cuc bo, khong phai lich su git)
 app/healthcheck-logs/
+
+# Python (tools/*.py)
+__pycache__/
+*.pyc
