@@ -233,7 +233,7 @@ QUY TẮC:
 - Khi hỏi thông tin chi tiết/CCCD/căn cước/ngày sinh/ngày nâng lương của MỘT cán bộ cụ thể, dùng ho_so_can_bo (chỉ tài khoản Sở). Khi chỉ cần SĐT/email/liên hệ cán bộ SỞ, dùng tim_can_bo
 - Khi hỏi LÃNH ĐẠO/TRƯỞNG PHÒNG KINH TẾ của XÃ/PHƯỜNG (Bí thư, Chủ tịch/Phó Chủ tịch HĐND-UBND, Trưởng/Phó phòng Kinh tế), hoặc SĐT của họ, hoặc "số điện thoại 09xx này là của lãnh đạo xã nào", dùng tra_cuu_lanh_dao_xa (truyền xa_phuong và/hoặc tu_khoa). Tool này dùng được cho cả tài khoản Sở lẫn phường/xã
 - NHẬP/CẬP NHẬT DANH BẠ lãnh đạo xã/phường (CHỈ ADMIN): khi admin muốn "nhập danh bạ", "thêm/cập nhật số điện thoại lãnh đạo xã …", hãy thu thập theo thứ tự và GỢI Ý rõ từng trường: (1) Tên xã/phường, (2) Họ tên, (3) Chức vụ — gợi ý các mẫu phổ biến: "Chủ tịch HĐND xã", "Phó Chủ tịch HĐND xã", "Chủ tịch UBND xã", "Phó Chủ tịch UBND xã", "Bí thư Đảng ủy", "Trưởng phòng Kinh tế", (4) Số điện thoại. Phòng ban KHÔNG cần hỏi — tự suy từ chức vụ (4 nhóm: Thường trực HĐND / Lãnh đạo UBND / Thường trực Đảng ủy / Phòng Kinh tế - Hạ tầng - Đô thị). Khi đã đủ tên xã + họ tên (và chức vụ nếu thêm mới), gọi luu_lanh_dao_xa. Có thể nhập NHIỀU người liên tiếp; mỗi người gọi tool một lần. Nếu admin dán cả danh sách, lần lượt gọi tool cho từng dòng
-- QUAN TRỌNG — TRÙNG TÊN: khi tra cứu/thao tác trên MỘT cán bộ theo tên (ho_so_can_bo, xem_luong_can_bo, cap_nhat_luong_can_bo, dự thảo QĐ cho 1 người...) mà có NHIỀU người trùng tên, tool sẽ trả về danh sách đánh số kèm chức danh + đơn vị + NĂM SINH. TUYỆT ĐỐI KHÔNG tự chọn 1 người, và TUYỆT ĐỐI KHÔNG nói "không phân biệt được bằng năm sinh" — năm sinh LUÔN có trong danh sách tool trả về, hãy dùng nó. Nếu người dùng NGAY TỪ CÂU HỎI ĐẦU đã nêu năm sinh (VD "Lê Anh Tuấn sinh năm 1973"), GỌI LUÔN tool kèm tham số nam_sinh — không cần hỏi lại. Nếu chưa biết, HỎI LẠI người dùng "ở phòng/đơn vị nào, chức danh gì, hay năm sinh bao nhiêu?" — đặc biệt khi chức danh/đơn vị của các người trùng tên GIỐNG HỆT NHAU thì PHẢI hỏi năm sinh (chức danh/đơn vị lúc đó vô nghĩa để phân biệt). Khi người dùng trả lời bằng SỐ THỨ TỰ, nêu phòng/chức danh, hoặc nêu năm sinh, GỌI LẠI đúng tool đó kèm tham số don_vi/chuc_danh/nam_sinh tương ứng — KHÔNG hỏi lại tên
+- QUAN TRỌNG — TRÙNG TÊN: khi tra cứu/thao tác trên MỘT cán bộ theo tên (ho_so_can_bo, xem_luong_can_bo, cap_nhat_luong_can_bo, dự thảo QĐ cho 1 người...) mà có NHIỀU người trùng tên, tool sẽ trả về danh sách đánh số kèm chức danh + đơn vị + NĂM SINH (ghi "chưa rõ năm sinh" nếu hồ sơ chưa cập nhật). TUYỆT ĐỐI KHÔNG tự chọn 1 người, và TUYỆT ĐỐI KHÔNG nói "không phân biệt được bằng năm sinh" khi CHƯA thử gọi tool kèm nam_sinh — năm sinh có sẵn trong danh sách tool trả về (trừ khi ghi rõ "chưa rõ"), hãy dùng nó trước. Nếu người dùng NGAY TỪ CÂU HỎI ĐẦU đã nêu năm sinh (VD "Lê Anh Tuấn sinh năm 1973"), GỌI LUÔN tool kèm tham số nam_sinh — không cần hỏi lại. Nếu chưa biết, HỎI LẠI người dùng "ở phòng/đơn vị nào, chức danh gì, hay năm sinh bao nhiêu?" — đặc biệt khi chức danh/đơn vị của các người trùng tên GIỐNG HỆT NHAU thì PHẢI hỏi năm sinh (chức danh/đơn vị lúc đó vô nghĩa để phân biệt). Khi người dùng trả lời bằng SỐ THỨ TỰ, nêu phòng/chức danh, hoặc nêu năm sinh, GỌI LẠI đúng tool đó kèm tham số don_vi/chuc_danh/nam_sinh tương ứng — KHÔNG hỏi lại tên. Nếu đã lọc theo nam_sinh mà tool VẪN báo còn nhiều người trùng (trùng cả năm sinh, hoặc có người chưa rõ năm sinh), tool sẽ tự báo hết cách phân biệt và hướng dẫn dùng CCCD/liên hệ quản trị viên — đọc đúng nguyên văn, KHÔNG tự hỏi lại năm sinh lần nữa
 - Nếu trường nào hiển thị "chưa cập nhật" thì báo đúng là chưa có dữ liệu, KHÔNG tự bịa
 - LINK TẢI FILE: khi kết quả tool chứa link markdown (VD [Tải dự thảo QĐ (.docx)](/api/office/nang-luong/du-thao?canBoId=...)), phải giữ NGUYÊN VẸN đường dẫn khi trả lời — TUYỆT ĐỐI KHÔNG thêm tiền tố "sandbox:" hay domain, không rút gọn hay thay đổi tham số của link
 - Khi tra cứu thông tin cán bộ hoặc tổ chức, luôn dùng function được cung cấp
@@ -721,6 +721,15 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       // Nhiều người trùng tên → liệt kê có đánh số, KÈM NĂM SINH để chọn (chức danh/đơn vị
       // có thể giống hệt nhau giữa 2 người trùng tên, năm sinh thường là điểm khác biệt)
       if (ds.length > 1) {
+        // Đã lọc theo năm sinh mà vẫn còn nhiều người (trùng cả năm sinh, hoặc có người
+        // chưa rõ năm sinh) → đừng lặp lại đúng câu hỏi cũ, hết cách tự động phân biệt
+        if (namSinhLoc) {
+          return (
+            `Vẫn còn ${ds.length} cán bộ trùng tên "${hoTen}" và trùng cả năm sinh đã nêu (hoặc có người chưa cập nhật năm sinh) — hệ thống không đủ dữ liệu để tự phân biệt thêm:\n` +
+            ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}`).join('\n') +
+            `\nVui lòng cho số CCCD, hoặc liên hệ quản trị viên để tra chính xác.`
+          )
+        }
         return (
           `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn xem hồ sơ ai? (trả lời số thứ tự, nêu chức danh/đơn vị, hoặc nêu năm sinh):\n` +
           ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}`).join('\n')
@@ -781,6 +790,15 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       // Trùng tên → KHÔNG tự chọn, hỏi lại đơn vị/chức danh/năm sinh (chức danh/đơn vị
       // có thể giống hệt nhau giữa 2 người trùng tên, năm sinh thường là điểm khác biệt)
       if (ds.length > 1) {
+        // Đã lọc theo năm sinh mà vẫn còn nhiều người (trùng cả năm sinh, hoặc có người
+        // chưa rõ năm sinh) → đừng lặp lại đúng câu hỏi cũ, hết cách tự động phân biệt
+        if (namSinhLoc) {
+          return (
+            `Vẫn còn ${ds.length} cán bộ trùng tên "${hoTen}" và trùng cả năm sinh đã nêu (hoặc có người chưa cập nhật năm sinh) — hệ thống không đủ dữ liệu để tự phân biệt thêm:\n` +
+            ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}`).join('\n') +
+            `\nVui lòng dùng ho_so_can_bo với số CCCD, hoặc liên hệ quản trị viên để tra chính xác.`
+          )
+        }
         return (
           `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn xem lương của ai? (nêu phòng/đơn vị, chức danh, hoặc năm sinh):\n` +
           ds.map((c, i) => `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}`).join('\n')
@@ -1095,6 +1113,18 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       // (chức danh/đơn vị có thể giống hệt nhau giữa 2 người trùng tên)
       if (ds.length > 1) {
         const fmtD = (d: Date | null) => (d ? new Date(d).toLocaleDateString('vi-VN') : 'chưa có')
+        // Đã lọc theo năm sinh mà vẫn còn nhiều người (trùng cả năm sinh, hoặc có người
+        // chưa rõ năm sinh) → đừng lặp lại đúng câu hỏi cũ, hết cách tự động phân biệt
+        if (namSinhLoc) {
+          return (
+            `Vẫn còn ${ds.length} cán bộ trùng tên "${hoTen}" và trùng cả năm sinh đã nêu (hoặc có người chưa cập nhật năm sinh) — hệ thống không đủ dữ liệu để tự phân biệt thêm:\n` +
+            ds.map((c, i) =>
+              `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}` +
+              `  (hệ số: ${c.heSoLuong ?? '—'}, ngày lên lương: ${fmtD(c.ngayNangLuong)})`
+            ).join('\n') +
+            `\nVui lòng dùng ho_so_can_bo với số CCCD để xác định đúng người trước, rồi thực hiện lại.`
+          )
+        }
         return (
           `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn cập nhật lương cho ai? (trả lời số thứ tự, nêu chức danh/đơn vị, hoặc nêu năm sinh):\n` +
           ds.map((c, i) =>
