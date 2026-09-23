@@ -1,5 +1,6 @@
 // Tính lương thực lĩnh (tạm tính) theo hệ số × MỨC LƯƠNG CƠ SỞ.
-// Mức lương cơ sở hiện hành: 2.340.000 đồng/tháng — Nghị định 73/2024/NĐ-CP (từ 01/7/2024).
+// Mức lương cơ sở hiện hành: 2.530.000 đồng/tháng — Nghị định 161/2026/NĐ-CP (từ 01/7/2026),
+// thay thế NĐ 73/2024/NĐ-CP (2.340.000đ, hết hiệu lực 30/6/2026).
 // Khi Chính phủ điều chỉnh mức cơ sở, chỉ cần sửa hằng số dưới đây (hoặc chuyển vào bảng cấu hình).
 //
 // LƯU Ý: chỉ áp dụng cho CÔNG CHỨC/VIÊN CHỨC hưởng lương theo ngạch/bậc. Người lao động (NLĐ)
@@ -7,8 +8,8 @@
 // Đây là số TẠM TÍNH (lương ngạch bậc + phụ cấp chức vụ + thâm niên vượt khung); chưa gồm
 // thâm niên nghề, phụ cấp ưu đãi/khu vực/trách nhiệm và các khoản khác.
 
-export const LUONG_CO_SO = 2_340_000
-export const LUONG_CO_SO_CAN_CU = 'NĐ 73/2024/NĐ-CP (2.340.000đ, từ 01/7/2024)'
+export const LUONG_CO_SO = 2_530_000
+export const LUONG_CO_SO_CAN_CU = 'NĐ 161/2026/NĐ-CP (2.530.000đ, từ 01/7/2026, thay NĐ 73/2024)'
 
 export type LuongInput = {
   heSoLuong?: number | null

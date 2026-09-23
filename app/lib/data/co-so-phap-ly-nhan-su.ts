@@ -160,14 +160,22 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
   {
     id: 'luong_co_so',
     tieuDe: 'Mức lương cơ sở',
-    tuKhoa: ['lương cơ sở', 'luong co so', 'mức lương', '2.340.000', '2340000', 'tiền lương'],
-    yeuCauQuanLy: 'Tính lương = hệ số × mức lương cơ sở. Mức hiện hành 2.340.000đ/tháng. Khi Chính phủ điều chỉnh, cập nhật mức cơ sở trong hệ thống.',
+    tuKhoa: ['lương cơ sở', 'luong co so', 'mức lương', '2.530.000', '2530000', '2.340.000', '2340000', 'tiền lương'],
+    yeuCauQuanLy: 'Tính lương = hệ số × mức lương cơ sở. Mức hiện hành (từ 01/7/2026) là 2.530.000đ/tháng. Khi Chính phủ điều chỉnh, cập nhật mức cơ sở trong hệ thống (xem app/lib/luong.ts hằng số LUONG_CO_SO).',
     vanBan: [
+      {
+        soHieu: 'Nghị định 161/2026/NĐ-CP',
+        ngayBanHanh: '15/5/2026',
+        hieuLucTu: '01/7/2026',
+        trichYeu: 'Quy định MỨC LƯƠNG CƠ SỞ 2.530.000 đồng/tháng và chế độ tiền thưởng đối với CBCCVC và lực lượng vũ trang — thay thế NĐ 73/2024/NĐ-CP.',
+      },
       {
         soHieu: 'Nghị định 73/2024/NĐ-CP',
         ngayBanHanh: '30/6/2024',
         hieuLucTu: '01/7/2024',
-        trichYeu: 'Quy định MỨC LƯƠNG CƠ SỞ 2.340.000 đồng/tháng và chế độ tiền thưởng đối với CBCCVC và lực lượng vũ trang.',
+        hieuLucDen: '30/6/2026',
+        thayTheBoi: 'Nghị định 161/2026/NĐ-CP (hiệu lực 01/7/2026, mức lương cơ sở 2.530.000đ/tháng)',
+        trichYeu: 'Quy định MỨC LƯƠNG CƠ SỞ 2.340.000 đồng/tháng và chế độ tiền thưởng đối với CBCCVC và lực lượng vũ trang. ĐÃ HẾT HIỆU LỰC từ 01/7/2026.',
       },
     ],
   },
