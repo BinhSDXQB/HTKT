@@ -72,23 +72,41 @@ function quyVeDong(soRaw: string, donVi: string): { giaTri: number; donViGoc: st
   return { giaTri: n, donViGoc }
 }
 
+/**
+ * Bỏ dấu tiếng Việt của `s` NHƯNG giữ ÁNH XẠ CHÍNH XÁC vị trí ký tự: `anhXa[i]` = vị trí trong
+ * chuỗi GỐC của ký tự thứ `i` trong chuỗi không dấu. Xử lý từng ký tự một (không NFD/strip cả
+ * chuỗi rồi đoán lại) nên luôn đúng 1 ký tự gốc → 0 hoặc 1 ký tự không dấu, không cần suy theo
+ * tỷ lệ độ dài (cách cũ suy sai vị trí khi câu có nhiều dấu, đã bị Codex chỉ ra 24/9/26).
+ */
+function boDauCoAnhXa(s: string): { khongDau: string; anhXa: number[] } {
+  const raChar: string[] = []
+  const anhXa: number[] = []
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i]
+    let doiThanh: string
+    if (ch === 'đ') doiThanh = 'd'
+    else if (ch === 'Đ') doiThanh = 'D'
+    else doiThanh = ch.normalize('NFD').replace(/[̀-ͯ]/g, '')
+    for (const c2 of doiThanh) { raChar.push(c2); anhXa.push(i) }
+  }
+  return { khongDau: raChar.join('').toLowerCase(), anhXa }
+}
+
 function bocSoTien(tep: string, text: string): SoTienToTrinh[] {
   const ra: SoTienToTrinh[] = []
   const goc = text.replace(/\s+/g, ' ')
-  const kd = boDau(goc)   // cùng độ dài? boDau bỏ dấu tổ hợp → độ dài đổi. Dùng regex trên bản gốc thay vì ánh xạ chỉ số.
-  void kd
   // Tách câu; trong mỗi câu tìm nhãn rồi số phía sau nhãn (tối đa 160 ký tự)
   const cau = goc.split(/(?<=[.;:])\s+(?=[A-ZĐ0-9(+\-*])|\n/)
   const reSo = /(\d{1,3}(?:[.,]\d{3})+(?:,\d+)?|\d+(?:,\d+)?)\s*(tỷ đồng|triệu đồng|nghìn đồng|ngàn đồng|đồng|đ\b|VNĐ|VND)?/gi
   for (const c of cau) {
-    const ckd = boDau(c)
+    const { khongDau: ckd, anhXa } = boDauCoAnhXa(c)
     for (const nh of NHAN) {
       let viTri = -1
       for (const tu of nh.tu) { const i = ckd.indexOf(tu); if (i >= 0 && (viTri < 0 || i < viTri)) viTri = i }
       if (viTri < 0) continue
-      // Lấy đoạn sau nhãn trong bản gốc: vì boDau đổi độ dài, tìm lại bằng cách cắt theo tỷ lệ gần đúng rồi mở rộng
-      const tyLe = c.length / Math.max(ckd.length, 1)
-      const batDau = Math.max(0, Math.floor(viTri * tyLe) - 5)
+      // Vị trí CHÍNH XÁC trong bản gốc (không phải suy theo tỷ lệ độ dài).
+      const viTriGoc = anhXa[viTri] ?? 0
+      const batDau = Math.max(0, viTriGoc - 5)
       const doan = c.slice(batDau, batDau + 200)
       reSo.lastIndex = 0
       let m: RegExpExecArray | null

@@ -14,7 +14,9 @@ import { napDuLieuDuToanAI, traTyLe, type DuLieuDuToanAI } from './du-lieu-dutoa
  *   - TT 36/2026/TT-BXD: Phụ lục I (TMĐT, Bảng 1.2, k_ps ≤ 10%), Phụ lục II (dự toán
  *     XDCT, công thức 2.1, Bảng 2.1, k_ps ≤ 5%), Phụ lục III (chi phí xây dựng, Bảng 3.3,
  *     3.5, 3.6, 3.7 và Bảng 3.8: T = VL+NC+M; GT = C + TT; TL = (T+GT)×tỷ lệ;
- *     G_XDTT = T+GT+TL; GTGT = G_XDTT×thuế; nhà tạm LT = G_XDTT × tỷ lệ × thuế — KHOẢN RIÊNG).
+ *     G_XDTT = T+GT+TL; GTGT = G_XDTT×thuế; nhà tạm LT = G_XDTT × tỷ lệ (giá trị TRƯỚC thuế,
+ *     KHOẢN RIÊNG ngoài GT — khi tính vào TỔNG chi phí xây dựng thì LT cũng chịu GTGT riêng,
+ *     nhưng bản thân số LT ở Bảng 3.8 KHÔNG nhân thêm thuế suất).
  *
  * NGUYÊN TẮC (giống toàn bộ lib/tham-dinh): công cụ CHỈ PHÁT HIỆN và chỉ rõ ô nguồn.
  * Không kết luận thay cán bộ; mọi mức "LỖI" đều là "sai số học so với chính số liệu trong
@@ -35,7 +37,9 @@ export const NHAN_LOAI_CONG_TRINH: Record<LoaiCongTrinhChiPhi, string> = {
 }
 
 export type TuyChonKiemTra = {
-  loaiCongTrinh: LoaiCongTrinhChiPhi
+  /** null = cán bộ CHƯA chọn loại công trình — không đối chiếu tỷ lệ với bảng TT 36/2026, tránh
+   *  âm thầm dùng "hạ tầng kỹ thuật" mặc định rồi báo lệch tỷ lệ sai cho công trình dân dụng/khác. */
+  loaiCongTrinh: LoaiCongTrinhChiPhi | null
   /** Công trình xây dựng theo tuyến (Bảng 3.7 TT 36/2026) — quyết định tỷ lệ nhà tạm. */
   theoTuyen: boolean
   /** Thuế suất GTGT áp dụng cho xây dựng, dạng phân số (0.1 = 10%). */
@@ -45,7 +49,7 @@ export type TuyChonKiemTra = {
 }
 
 export const TUY_CHON_MAC_DINH: TuyChonKiemTra = {
-  loaiCongTrinh: 'ha-tang-ky-thuat', theoTuyen: false, thueSuat: 0.1, quyMoTyDong: null,
+  loaiCongTrinh: null, theoTuyen: false, thueSuat: 0.1, quyMoTyDong: null,
 }
 
 export type MucDo = 'LOI' | 'CANH_BAO' | 'THONG_TIN'
@@ -148,6 +152,11 @@ function soTuO(c: XLSX.CellObject | undefined): number | null {
   if (c.t === 's' && typeof c.v === 'string') return soTuChuoi(c.v)
   return null
 }
+// "12.000" (một nhóm nghìn kiểu Việt) hoặc "1.234.567" (nhiều nhóm) — dấu chấm là phân tách nghìn.
+// Số đầu KHÔNG được là 0: "0.055" phải hiểu là thập phân (hệ số tỷ lệ), không phải "0055".
+const RE_NGHIN_CHAM = /^-?[1-9]\d{0,2}(\.\d{3})+$/
+const RE_NGHIN_PHAY = /^-?[1-9]\d{0,2}(,\d{3})+$/
+
 function soTuChuoi(s: string): number | null {
   const t = s.trim().replace(/\s+/g, '')
   if (!t || /[a-zA-Z]/.test(t)) return null
@@ -155,15 +164,24 @@ function soTuChuoi(s: string): number | null {
   if (!m) return null
   const phanTram = t.endsWith('%')
   let so = t.replace('%', '')
-  // "1.234.567,89" (VN) hoặc "1,234,567.89" (EN) hoặc "5,5"
+  if (!so) return null
+  // "1.234.567,89" (VN) hoặc "1,234,567.89" (EN): dấu cuối cùng trong chuỗi là thập phân.
   if (so.includes(',') && so.includes('.')) {
     if (so.lastIndexOf(',') > so.lastIndexOf('.')) so = so.replace(/\./g, '').replace(',', '.')
     else so = so.replace(/,/g, '')
+  } else if (RE_NGHIN_CHAM.test(so)) {
+    // "12.000" — QUAN TRỌNG: dù chỉ MỘT nhóm 3 số sau dấu chấm vẫn là phân tách nghìn, KHÔNG phải
+    // thập phân (12.000 nghĩa là 12000, không phải 12). Kiểm regex trước khi coi "." là thập phân.
+    so = so.replace(/\./g, '')
+  } else if (RE_NGHIN_PHAY.test(so)) {
+    // "12,000" kiểu Anh — cùng một dạng nhóm nghìn nhưng dùng dấu phẩy.
+    so = so.replace(/,/g, '')
   } else if (so.includes(',')) {
-    const phan = so.split(',')
-    so = phan.length > 2 || phan[phan.length - 1].length === 3 && phan[0].length <= 3 && phan.length === 2 && !phanTram
-      ? so.replace(/,/g, '') : so.replace(',', '.')
+    // Còn lại: một dấu phẩy không khớp nhóm nghìn 3 số → thập phân kiểu Việt "5,5".
+    so = so.replace(',', '.')
   } else if ((so.match(/\./g) || []).length > 1) {
+    // Nhiều dấu chấm nhưng không khớp đúng nhóm 3 số (vd lỗi gõ) — vẫn coi là phân tách nghìn,
+    // an toàn hơn là để Number() thất bại.
     so = so.replace(/\./g, '')
   }
   const n = Number(so)
@@ -206,6 +224,15 @@ export function tinhBieuThuc(dienGiai: string): number | null {
   s = s.replace(/[x×X]/g, '*').replace(/\s+/g, '')
   if (!/^[\d.,+\-*/()]+$/.test(s)) return null
   if (!/[\d]/.test(s)) return null
+  // Diễn giải khối lượng thật luôn ngắn (vd "210*0,5*0,8/100"). Chặn chuỗi/độ sâu ngoặc bất
+  // thường trước khi đệ quy — tránh stack overflow / tốn CPU từ ô lỗi dán nhầm chuỗi rất dài.
+  if (s.length > 120) return null
+  let doSau = 0, doSauMax = 0
+  for (const ch of s) {
+    if (ch === '(') { doSau++; doSauMax = Math.max(doSauMax, doSau); if (doSauMax > 20) return null }
+    else if (ch === ')') doSau--
+  }
+  if (doSau !== 0) return null
   // Dấu thập phân: nếu có cả , và . → . là ngàn; chỉ , → thập phân
   const chuanHoaSo = (tok: string): number | null => soTuChuoi(tok)
   // Tokenize
@@ -354,17 +381,33 @@ function timCotChiTietKl(l: LuoiO): CotChiTietKl | null {
 }
 
 const KY_HIEU_THKP = new Set(['VL', 'NC', 'M', 'T', 'C', 'TT', 'LT', 'GT', 'TL', 'G', 'GXDTT', 'GTGT', 'GXD', 'VAT'])
+// Chỉ coi là ứng viên ký hiệu nếu CHÍNH VĂN BẢN GỐC (chưa xử lý) đã thuần chữ cái ASCII, dài ≤ 6.
+// KHÔNG được tự ý bóc bỏ dấu câu/số/dấu tiếng Việt rồi mới so khớp — làm vậy biến "Đạt" (còn dữ
+// liệu khảo sát dân tộc thiểu số, thấy khi rà chéo với Codex trên hồ sơ không liên quan) thành "T",
+// biến mã hiệu "M101.0104"/"A33.0570" thành "M"/"A" — gây nhận nhầm sheet không phải THKP.
+const RE_UNG_VIEN_KY_HIEU = /^[A-Za-z]{1,6}$/
 
-/** Sheet THKP: cột ký hiệu có ≥ 5 ký hiệu chuẩn. Trả cột ký hiệu. */
+/**
+ * Sheet THKP thật liệt kê MỖI ký hiệu ĐÚNG MỘT LẦN (VL, NC, M, T, C, TT, GT, TL, GXDTT/G, GTGT,
+ * GXD, có thể thêm LT) — khác hẳn sheet "chiết tính" tính lặp lại T/C/TT/GT cho từng công tác
+ * (hàng trăm dòng, cùng ký hiệu lặp hàng chục lần). Vì vậy đòi hỏi CẢ HAI: đủ số ký hiệu KHÁC NHAU
+ * (≥5/14) VÀ tỷ lệ lặp thấp (tổng số dòng khớp / số ký hiệu khác nhau ≤ 2) mới nhận là cột ký hiệu
+ * THKP. Đã kiểm chứng bằng cách đọc trực tiếp cả hồ sơ mẫu thật lẫn hồ sơ không liên quan.
+ */
 function timCotKyHieuThkp(l: LuoiO): number | null {
-  let tot: { c: number; n: number } | null = null
+  let tot: { c: number; n: number; distinct: number } | null = null
   for (let c = l.c0; c <= Math.min(l.c1, l.c0 + 12); c++) {
     let n = 0
-    for (let r = l.r0; r <= Math.min(l.r1, l.r0 + 80); r++) {
-      const t = chuoiO(o(l, r, c)).toUpperCase().replace(/[^A-Z]/g, '')
-      if (t && KY_HIEU_THKP.has(t)) n++
+    const distinct = new Set<string>()
+    for (let r = l.r0; r <= Math.min(l.r1, l.r0 + 300); r++) {
+      const goc = chuoiO(o(l, r, c))
+      if (!RE_UNG_VIEN_KY_HIEU.test(goc)) continue
+      const t = goc.toUpperCase()
+      if (KY_HIEU_THKP.has(t)) { n++; distinct.add(t) }
     }
-    if (n >= 5 && (!tot || n > tot.n)) tot = { c, n }
+    if (distinct.size >= 5 && n / distinct.size <= 2 && (!tot || distinct.size > tot.distinct)) {
+      tot = { c, n, distinct: distinct.size }
+    }
   }
   return tot?.c ?? null
 }
@@ -612,7 +655,12 @@ function docChiTietKl(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, cot: Co
 
 /** Gộp chi tiết ↔ dự toán theo (mã, tên, đơn vị). */
 function doiChieuKhoiLuong(bc: BoiCanh, tep: string, chiTiet: DongChiTiet[], duToan: DongHangMuc[]): KhoiLuongTongHop[] {
-  const khoa = (ma: string, ten: string, donVi: string) => `${boDau(ma)}|${boDau(ten)}|${boDau(donVi)}`
+  // So khớp theo khoá tuyệt đối (mã, tên, đơn vị) — chấp nhận rủi ro false positive/negative đã
+  // biết (tên/đơn vị viết khác chút là mất match): đây là công cụ HỖ TRỢ rà soát, không phải kết
+  // luận. Chuẩn hoá đơn vị bỏ khoảng trắng nội bộ ("100 m3" == "100m3") để giảm bớt trường hợp lệch
+  // vô nghĩa; các trường hợp còn lại (viết tắt khác, thêm quy cách) hiện ra ở CHI_CO_CHI_TIET/
+  // CHI_CO_DU_TOAN để cán bộ tự đối chiếu, không báo LỖI cứng.
+  const khoa = (ma: string, ten: string, donVi: string) => `${boDau(ma)}|${boDau(ten)}|${boDau(donVi).replace(/\s+/g, '')}`
   const gop = new Map<string, KhoiLuongTongHop>()
   for (const d of chiTiet) {
     const k = khoa(d.ma, d.ten, d.donVi)
@@ -666,8 +714,15 @@ function docThkp(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, cKy: number,
   const demSo = new Map<number, number>()
   const dongKy: { r: number; ky: string }[] = []
   for (let r = l.r0; r <= l.r1; r++) {
-    const ky = chuoiO(o(l, r, cKy)).toUpperCase().replace(/[^A-Z]/g, '')
-    if (!ky || !KY_HIEU_THKP.has(ky)) continue
+    // PHẢI dùng cùng bộ lọc chặt như timCotKyHieuThkp: chỉ nhận ô có văn bản GỐC thuần chữ ASCII
+    // ≤ 6 ký tự. Nếu bóc số/dấu câu trước rồi mới so khớp, dòng tham chiếu nội bộ "C1"/"A1"/"B1"
+    // (dưới mỗi khoản mục, dùng làm ký hiệu trung gian, KHÔNG phải symbol THKP) sẽ bị rút gọn
+    // thành "C"/"A"/"B" và đè nhầm lên dòng "C" (chi phí chung) THẬT — đã bắt được lỗi này khi
+    // chạy thử trên hồ sơ thật (dòng "C1" của mục Máy thi công lấn dòng "C" của Chi phí chung).
+    const goc = chuoiO(o(l, r, cKy))
+    if (!RE_UNG_VIEN_KY_HIEU.test(goc)) continue
+    const ky = goc.toUpperCase()
+    if (!KY_HIEU_THKP.has(ky)) continue
     dongKy.push({ r, ky })
     for (let c = cKy + 1; c <= l.c1; c++) { const v = o(l, r, c); if (v && v.t === 'n' && laSo(v.v) && Math.abs(v.v) >= 1) demSo.set(c, (demSo.get(c) ?? 0) + 1) }
   }
@@ -725,16 +780,16 @@ function docThkp(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, cKy: number,
   if (cauTruc === 'TT11_2021_CU') {
     ghi(bc, {
       ma: 'THKP_CAU_TRUC_CU', mucDo: 'CANH_BAO', tep, sheet, o: oc('GT'), hienTai: 'GT = C + LT + TT',
-      noiDung: 'Bảng tổng hợp gộp nhà tạm (LT) vào chi phí gián tiếp và tính LT trên chi phí trực tiếp — đây là cấu trúc theo TT 11/2021/TT-BXD cũ. Từ 01/7/2026, Bảng 3.8 TT 36/2026: GT = C + TT; nhà tạm là mục V riêng, tính bằng G_XDTT × tỷ lệ Bảng 3.7 (kèm thuế GTGT).',
+      noiDung: 'Bảng tổng hợp gộp nhà tạm (LT) vào chi phí gián tiếp và tính LT trên chi phí trực tiếp — đây là cấu trúc theo TT 11/2021/TT-BXD cũ. Từ 01/7/2026, Bảng 3.8 TT 36/2026: GT = C + TT (không gồm LT); nhà tạm là mục V riêng, giá trị trước thuế = G_XDTT × tỷ lệ Bảng 3.7, cộng GTGT riêng khi tính vào tổng chi phí xây dựng.',
       kienNghi: 'Nếu dự toán lập/điều chỉnh sau 01/7/2026 phải lập lại THKP theo Bảng 3.8 TT 36/2026; nếu lập trước đó, ghi rõ quy định chuyển tiếp áp dụng (NĐ 206/2026 Điều 36).', canCu: 'TT 36/2026 PL III mục 5, 6; NĐ 206/2026 Đ12 k2, Đ36',
     })
   }
 
-  // Đối chiếu tỷ lệ với bảng TT 36 (qua gói DuToanAI)
+  // Đối chiếu tỷ lệ với bảng TT 36 (qua gói DuToanAI) — CHỈ khi cán bộ đã chọn loại công trình.
   const bang = bc.dl.bangTyLe
-  const loai = NHAN_LOAI_CONG_TRINH[bc.tuyChon.loaiCongTrinh]
+  const loai = bc.tuyChon.loaiCongTrinh ? NHAN_LOAI_CONG_TRINH[bc.tuyChon.loaiCongTrinh] : null
   const quyMo = bc.tuyChon.quyMoTyDong ?? (G !== null ? G / 1e9 : null)
-  if (bang && quyMo !== null) {
+  if (bang && loai && quyMo !== null) {
     const soSanh = (ky: string, ten: string, tyTrongTep: number | null | undefined, maBang: string, loaiBang: string, bangSo: string) => {
       if (tyTrongTep == null) return
       const tra = traTyLe(bang, maBang, loaiBang, quyMo)
@@ -796,8 +851,15 @@ function docTongHopKinhPhi(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, th
     for (let r = l.r0; r <= l.r1; r++) for (let c = l.c1; c > cNhan; c--) { const v = o(l, r, c); if (v && v.t === 'n' && laSo(v.v) && Math.abs(v.v) > 1000) { cSau = Math.max(cSau, c); break } }
     if (cSau < 0) return null
   }
-  const tieuDe = boDau(chuoiO(o(l, l.r0, l.c0)) + ' ' + chuoiO(o(l, l.r0 + 1, l.c0)))
-  const loai: KetQuaTongHopKinhPhi['loai'] = tieuDe.includes('tong muc dau tu') ? 'TMDT' : 'DU_TOAN_XDCT'
+  // Dò tiêu đề TMĐT/dự toán trong 10 dòng × 6 cột đầu — tiêu đề nằm ở ô gộp nên vị trí lệch,
+  // không chỉ ở đúng (l.r0, l.c0). Còn PHẢI đối chiếu lại bằng nội dung sau khi đọc khoanMuc
+  // (bên dưới): "Chi phí bồi thường, hỗ trợ và tái định cư" CHỈ có ở TMĐT (Đ5 NĐ 206/2026),
+  // KHÔNG có ở dự toán XDCT (Đ12) — tín hiệu này chắc hơn nhiều so với dò chữ tiêu đề.
+  let tieuDe = ''
+  for (let r = l.r0; r <= Math.min(l.r1, l.r0 + 10); r++) {
+    for (let c = l.c0; c <= Math.min(l.c1, l.c0 + 6); c++) tieuDe += ' ' + boDau(chuoiO(o(l, r, c)))
+  }
+  let loai: KetQuaTongHopKinhPhi['loai'] = tieuDe.includes('tong muc dau tu') ? 'TMDT' : 'DU_TOAN_XDCT'
 
   const khoanMuc: KhoanMucChiPhi[] = []
   const daCo = new Set<string>()
@@ -830,6 +892,8 @@ function docTongHopKinhPhi(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, th
   if (khoanMuc.length < 3) return null
 
   const lay = (ma: KhoanMucChiPhi['ma']) => khoanMuc.find((k) => k.ma === ma)
+  // BT_TDC chỉ tồn tại trong TMĐT (NĐ 206/2026 Đ5 k1 điểm a) — chắc hơn dò chữ tiêu đề ở ô gộp.
+  if (lay('BT_TDC')) loai = 'TMDT'
   const tong = lay('TONG')
   const thanhPhan = khoanMuc.filter((k) => k.ma !== 'TONG')
   const bangSo = loai === 'TMDT' ? 'TT 36/2026 PL I Bảng 1.2 (công thức 1.4)' : 'TT 36/2026 PL II Bảng 2.1 (công thức 2.1)'
@@ -846,9 +910,14 @@ function docTongHopKinhPhi(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, th
       }
     }
   }
-  const thieu = (['XD', 'QLDA', 'TV', 'K', 'DP'] as const).filter((m) => !lay(m))
+  // Dự toán XDCT (Đ12 NĐ 206/2026, công thức 2.1): XD+TB+QLDA+TV+K+DP — không có BT_TDC.
+  // TMĐT (Đ5, công thức 1.4): thêm BT_TDC. Thiếu TB trước đây không bị báo — bỏ sót khoản mục thật.
+  const khoanMucBatBuoc = loai === 'TMDT'
+    ? (['BT_TDC', 'XD', 'TB', 'QLDA', 'TV', 'K', 'DP'] as const)
+    : (['XD', 'TB', 'QLDA', 'TV', 'K', 'DP'] as const)
+  const thieu = khoanMucBatBuoc.filter((m) => !lay(m))
   if (thieu.length) {
-    ghi(bc, { ma: 'THIEU_KHOAN_MUC', mucDo: 'CANH_BAO', tep, sheet, o: '', hienTai: khoanMuc.map((k) => k.ma).join(', '), noiDung: `Bảng tổng hợp không nhận ra khoản mục: ${thieu.map((m) => NHAN_KHOAN_MUC.find((k) => k.ma === m)?.ten).join('; ')}.`, kienNghi: 'Đối chiếu bằng tay đủ 6 khoản mục dự toán (7 với TMĐT); có thể bảng đặt tên khác.', canCu: `NĐ 206/2026 Đ5 k1, Đ12; ${bangSo}` })
+    ghi(bc, { ma: 'THIEU_KHOAN_MUC', mucDo: 'CANH_BAO', tep, sheet, o: '', hienTai: khoanMuc.map((k) => k.ma).join(', '), noiDung: `Bảng tổng hợp (${loai === 'TMDT' ? 'TMĐT' : 'dự toán XDCT'}) không nhận ra khoản mục: ${thieu.map((m) => NHAN_KHOAN_MUC.find((k) => k.ma === m)?.ten).join('; ')}.`, kienNghi: `Đối chiếu bằng tay đủ ${khoanMucBatBuoc.length} khoản mục; có thể bảng đặt tên khác hoặc khoản mục bằng 0 nên không có dòng riêng.`, canCu: `NĐ 206/2026 Đ5 k1, Đ12; ${bangSo}` })
   }
   const xd = lay('XD')
   if (xd && thkpGxd !== null) {
@@ -857,19 +926,44 @@ function docTongHopKinhPhi(bc: BoiCanh, tep: string, sheet: string, l: LuoiO, th
       ghi(bc, { ma: 'GXD_KHAC_THKP', mucDo: 'CANH_BAO', tep, sheet, o: refO(xd.dong - 1, cSau >= 0 ? cSau : cTruoc), hienTai: fmt(trongTep), noiDung: `Chi phí xây dựng trong bảng tổng hợp ${fmt(trongTep)} khác chi phí xây dựng sau thuế của THKP ${fmt(thkpGxd)}.`, giaTriAnhHuong: trongTep - thkpGxd, kienNghi: 'Xác định bảng tổng hợp gồm những hạng mục nào; chênh lệch phải giải thích được bằng các THKP thành phần.', canCu: 'Prompt thẩm định mục 15.2' })
     }
   }
-  // Dự phòng: DP1 ≤ 5% (dự toán) / ≤ 10% (TMĐT); tỷ lệ DP trên phần còn lại
+  // Dự phòng: DP1 (khối lượng, công việc phát sinh) ≤ 5% (dự toán XDCT) / ≤ 10% (TMĐT) —
+  // TRẦN CHỈ ÁP CHO DP1, KHÔNG áp cho tổng DP = DP1 + DP2 (DP2 trượt giá không có trần cứng,
+  // phụ thuộc thời gian thực hiện và chỉ số giá). Bản `NHAN_KHOAN_MUC` cố tình loại trừ dòng con
+  // "khối lượng/trượt giá/phát sinh" khỏi khoanMuc (tránh lẫn với dòng DP tổng) nên phải dò riêng.
   const dp = lay('DP')
   if (dp) {
+    let dp1: number | null = null
+    for (let r = Math.max(dongTd, l.r0) + 1; r <= l.r1; r++) {
+      const t = boDau(chuoiO(o(l, r, cNhan)))
+      if (t.includes('du phong') && (t.includes('khoi luong') || t.includes('phat sinh')) && !t.includes('truot gia')) {
+        dp1 = (cSau >= 0 ? soTuO(o(l, r, cSau)) : null) ?? (cTruoc >= 0 ? soTuO(o(l, r, cTruoc)) : null)
+        if (dp1 !== null) break
+      }
+    }
     const conLai = thanhPhan.filter((k) => k.ma !== 'DP').reduce((a, k) => a + (k.sauThue ?? k.truocThue ?? 0), 0)
     const gtDp = dp.sauThue ?? dp.truocThue ?? 0
-    if (conLai > 0) {
-      const ty = (gtDp / conLai) * 100
-      const tran = loai === 'TMDT' ? 10 : 5
-      ghi(bc, {
-        ma: 'TY_LE_DU_PHONG', mucDo: ty > tran + 0.01 ? 'CANH_BAO' : 'THONG_TIN', tep, sheet, o: refO(dp.dong - 1, cSau >= 0 ? cSau : cTruoc), hienTai: `${ty.toFixed(2)}%`,
-        noiDung: `Dự phòng ${fmt(gtDp)} = ${ty.toFixed(2)}% của các khoản mục còn lại (${fmt(conLai)}). Trần dự phòng khối lượng phát sinh k_ps ≤ ${tran}%; phần vượt phải là dự phòng trượt giá (DP2) tính theo chỉ số giá và thời gian thực hiện.`,
-        kienNghi: ty > tran ? 'Yêu cầu tách DP1/DP2 và thuyết minh cách tính DP2 (chỉ số giá, kế hoạch vốn theo năm).' : 'Kiểm tra bảng tính DP2 nếu có.', canCu: loai === 'TMDT' ? 'TT 36/2026 PL I công thức 1.12–1.13' : 'TT 36/2026 PL II công thức 2.8–2.9',
-      })
+    const tran = loai === 'TMDT' ? 10 : 5
+    if (dp1 !== null && conLai > 0) {
+      const tyDp1 = (dp1 / conLai) * 100
+      if (tyDp1 > tran + 0.01) {
+        ghi(bc, {
+          ma: 'TY_LE_DU_PHONG', mucDo: 'CANH_BAO', tep, sheet, o: refO(dp.dong - 1, cSau >= 0 ? cSau : cTruoc), hienTai: `${tyDp1.toFixed(2)}%`,
+          noiDung: `Dự phòng khối lượng, công việc phát sinh (DP1) = ${fmt(dp1)} = ${tyDp1.toFixed(2)}% của các khoản mục còn lại (${fmt(conLai)}), vượt trần k_ps ≤ ${tran}%.`,
+          giaTriAnhHuong: dp1 - (conLai * tran) / 100,
+          kienNghi: 'Giảm DP1 về đúng trần hoặc giải trình mức độ phức tạp/điều kiện địa chất theo quy định.', canCu: loai === 'TMDT' ? 'TT 36/2026 PL I công thức 1.12 (k_ps ≤ 10%)' : 'TT 36/2026 PL II công thức 2.8 (k_ps ≤ 5%)',
+        })
+      }
+    } else if (conLai > 0) {
+      // Không tách được DP1/DP2 riêng — chỉ cảnh báo khi TỔNG dự phòng vượt xa mọi giới hạn hợp
+      // lý (ngưỡng nới hơn nhiều so với trần DP1 vì DP2 trượt giá có thể cộng thêm đáng kể).
+      const tyTong = (gtDp / conLai) * 100
+      if (tyTong > tran * 2.5) {
+        ghi(bc, {
+          ma: 'TY_LE_DU_PHONG_TONG', mucDo: 'THONG_TIN', tep, sheet, o: refO(dp.dong - 1, cSau >= 0 ? cSau : cTruoc), hienTai: `${tyTong.toFixed(2)}%`,
+          noiDung: `Tổng dự phòng (DP1+DP2, KHÔNG tách được riêng DP1) = ${fmt(gtDp)} = ${tyTong.toFixed(2)}% của các khoản mục còn lại — cao bất thường so với trần DP1 ≤ ${tran}% dù đã cộng cả trượt giá.`,
+          kienNghi: 'Yêu cầu bảng tính tách rõ DP1 (≤ trần k_ps) và DP2 (thuyết minh chỉ số giá, kế hoạch vốn theo năm).', canCu: loai === 'TMDT' ? 'TT 36/2026 PL I công thức 1.11–1.13' : 'TT 36/2026 PL II công thức 2.7–2.9',
+        })
+      }
     }
   }
   for (const m of ['QLDA', 'TV'] as const) {
@@ -894,6 +988,7 @@ export async function kiemTraDuToan(goc: string, files: FileHoSo[], tuyChonDauVa
     khoiLuong: [], thkp: [], tongHopKinhPhi: [], trucTiepTuHangMuc: [], canhBao: [],
   }
   if (!dl.coDuLieu) ra.canhBao.push(`Không đối chiếu được tỷ lệ chi phí với bảng TT 36/2026: ${dl.ghiChu}`)
+  if (!tuyChon.loaiCongTrinh) ra.canhBao.push('Chưa chọn loại công trình → không đối chiếu tỷ lệ chi phí chung/TNCTTT/nhà tạm với Bảng 3.3/3.5/3.6/3.7 TT 36/2026 (mỗi loại công trình có tỷ lệ khác nhau, không tự chọn "hạ tầng kỹ thuật" mặc định).')
 
   const bangTinh = files.filter((f) => ['xlsx', 'xls', 'xlsm'].includes(f.duoi)).slice(0, 12)
   for (const f of bangTinh) {
@@ -944,8 +1039,19 @@ export async function kiemTraDuToan(goc: string, files: FileHoSo[], tuyChonDauVa
     }
     // Bảng chi tiết ↔ bảng dự toán trong CÙNG tệp. Bảng dự toán lấy sheet hạng mục đầu tiên có KL
     // (tránh cộng trùng khi tệp có nhiều bảng chép cùng khối lượng: "Công trình", "Giá tổng hợp"...).
+    // Chọn sheet hạng mục "chính" để đối chiếu khối lượng — KHÔNG lấy sheet xuất hiện đầu tiên
+    // theo thứ tự trong workbook (thứ tự sheet không phản ánh vai trò; tệp thật có nhiều sheet
+    // hạng mục: "Giá tổng hợp", "Công trình", có khi cả "Dự thầu"...). Chấm điểm theo bằng chứng:
+    // càng nhiều dòng có MÃ HIỆU công tác + thành tiền → càng giống bảng dự toán chính thức.
     const sheetsHm = [...new Set(hangMuc.map((d) => d.sheet))]
-    const duToanDeSoSanh = sheetsHm.length ? hangMuc.filter((d) => d.sheet === sheetsHm[0]) : []
+    let sheetChinh = sheetsHm[0] ?? ''
+    let diemCao = -1
+    for (const s of sheetsHm) {
+      const dong = hangMuc.filter((d) => d.sheet === s)
+      const diem = dong.filter((d) => d.ma && d.thanhTien.tong !== null).length
+      if (diem > diemCao) { diemCao = diem; sheetChinh = s }
+    }
+    const duToanDeSoSanh = sheetsHm.length ? hangMuc.filter((d) => d.sheet === sheetChinh) : []
     if (chiTiet.length && duToanDeSoSanh.length) ra.khoiLuong.push(...doiChieuKhoiLuong(bc, tep, chiTiet, duToanDeSoSanh))
     else if (chiTiet.length === 0 && duToanDeSoSanh.length) {
       ghi(bc, { ma: 'KHONG_CO_BANG_CHI_TIET', mucDo: 'CANH_BAO', tep, sheet: '', o: '', hienTai: `${duToanDeSoSanh.length} công tác`, noiDung: 'Tệp có bảng dự toán nhưng không có bảng chi tiết khối lượng (diễn giải từ bản vẽ) — không đối chiếu được chi tiết → tổng hợp.', kienNghi: 'Yêu cầu nộp bảng tính khối lượng chi tiết kèm diễn giải theo bản vẽ.', canCu: 'NĐ 206/2026 Đ16 k3b; Prompt thẩm định mục 17' })

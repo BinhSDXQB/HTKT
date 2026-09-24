@@ -6,7 +6,14 @@ import { logAction } from '@/lib/audit'
 import { danhSachThuMucGoc, giaiDuongDan } from '@/lib/tham-dinh/duong-dan'
 import { quetThuMuc, bocTrichYeu, doiChieu, GIOI_HAN } from '@/lib/tham-dinh/quet-ho-so'
 import { docDuToan } from '@/lib/tham-dinh/doc-du-toan'
+import { kiemTraDuToan, NHAN_LOAI_CONG_TRINH, type LoaiCongTrinhChiPhi } from '@/lib/tham-dinh/kiem-tra-du-toan'
+import { docToTrinh } from '@/lib/tham-dinh/doc-to-trinh'
+import { napDuLieuDuToanAI } from '@/lib/tham-dinh/du-lieu-dutoanai'
 import { QUY_TRINH_THAM_DINH } from '@/lib/htkt/tham-dinh'
+
+const LOAI_CONG_TRINH_HOP_LE = new Set<LoaiCongTrinhChiPhi>([
+  'dan-dung', 'cong-nghiep', 'giao-thong', 'nong-nghiep-moi-truong', 'ha-tang-ky-thuat',
+])
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -44,9 +51,12 @@ export async function GET(req: NextRequest) {
         }
       }),
     )
+    const dl = await napDuLieuDuToanAI()
     return NextResponse.json({
       goc: ds,
       quyTrinh: QUY_TRINH_THAM_DINH.map((q) => ({ key: q.key, ten: q.ten, soThanhPhan: q.hoSo.length })),
+      duLieuDuToanAI: { coDuLieu: dl.coDuLieu, ghiChu: dl.ghiChu, phienBan: dl.phienBan, ngay: dl.ngay },
+      loaiCongTrinhChiPhi: Object.entries(NHAN_LOAI_CONG_TRINH).map(([ma, ten]) => ({ ma, ten })),
       chuaCauHinh: gocs.length === 0,
     })
   }
@@ -89,6 +99,13 @@ export async function POST(req: NextRequest) {
   const rootId = String(body?.rootId ?? '')
   const duongDanCon = String(body?.duongDanCon ?? '')
   const quyTrinhKey = String(body?.quyTrinh ?? '')
+  // Bước kiểm tra dự toán (đọc lại toàn bộ công thức Excel, nặng hơn kiểm kê thường) —
+  // TẮT MẶC ĐỊNH, chỉ chạy khi cán bộ chủ động bấm ở bước 2 để tránh chậm bước kiểm kê 1.
+  const kiemTraChiPhi = body?.kiemTraChiPhi === true
+  const loaiCongTrinhRaw = String(body?.loaiCongTrinh ?? '')
+  const loaiCongTrinh: LoaiCongTrinhChiPhi | null = LOAI_CONG_TRINH_HOP_LE.has(loaiCongTrinhRaw as LoaiCongTrinhChiPhi)
+    ? (loaiCongTrinhRaw as LoaiCongTrinhChiPhi) : null
+  const theoTuyen = body?.theoTuyen === true
 
   const giai = await giaiDuongDan(rootId, duongDanCon)
   if (!giai.ok) return NextResponse.json({ error: giai.loi }, { status: 400 })
@@ -101,6 +118,16 @@ export async function POST(req: NextRequest) {
   const doc = await bocTrichYeu(giai.duongDanThat, quet.files)
   const duToan = await docDuToan(giai.duongDanThat, quet.files)
   const dc = doiChieu(qt.hoSo, quet.files)
+
+  // Kiểm tra khối lượng → THKP → tổng hợp dự toán/TMĐT, đối chiếu với tờ trình.
+  // Chạy tuần tự (không Promise.all) — cả hai đều đọc lại cùng những tệp Excel/Word,
+  // chạy song song trên máy 6GB RAM dễ đội bộ nhớ hơn là chậm thêm vài trăm ms.
+  let kiemTraChiPhiKq: Awaited<ReturnType<typeof kiemTraDuToan>> | null = null
+  let doiChieuToTrinh: Awaited<ReturnType<typeof docToTrinh>> | null = null
+  if (kiemTraChiPhi) {
+    kiemTraChiPhiKq = await kiemTraDuToan(giai.duongDanThat, quet.files, { loaiCongTrinh, theoTuyen })
+    doiChieuToTrinh = await docToTrinh(giai.duongDanThat, quet.files, kiemTraChiPhiKq.tongHopKinhPhi)
+  }
 
   // Đây là hồ sơ hành chính — ghi nhật ký ai đã quét thư mục nào.
   await logAction({
@@ -118,6 +145,8 @@ export async function POST(req: NextRequest) {
     files: quet.files,
     doiChieu: dc,
     duToan,
+    kiemTraChiPhi: kiemTraChiPhiKq,
+    doiChieuToTrinh,
     thongKeDoc: { ...doc, gioiHan: GIOI_HAN },
     thoiGianMs: Date.now() - batDau,
   })

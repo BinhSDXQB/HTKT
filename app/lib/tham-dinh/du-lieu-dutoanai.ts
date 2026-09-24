@@ -12,8 +12,16 @@ import path from 'node:path'
  * có quy trình cập nhật riêng. Ứng dụng này chỉ ĐỌC gói đó để đối chiếu tỷ lệ chi phí
  * trong dự toán trình thẩm định. Gói đổi phiên bản → kết quả đối chiếu tự đổi theo.
  *
- * An toàn: gói phải khớp SHA-512 ghi trong du-lieu-danh-muc.json (tệp danh mục đã ký số
- * bởi DuToanAI, chỉ chép nguyên byte). Không khớp → coi như KHÔNG có dữ liệu, không dùng.
+ * An toàn: gói phải khớp SHA-512 ghi trong du-lieu-danh-muc.json. Không khớp → coi như KHÔNG có
+ * dữ liệu, không dùng.
+ *
+ * ⚠️ GIỚI HẠN ĐÃ BIẾT (Codex rà chéo 24/9/26): SHA-512 chỉ bảo đảm gói .goi.gz KHỚP với entry
+ * "tenFile"/"sha512" đang ghi TRONG CHÍNH tệp danh mục — KHÔNG xác thực chữ ký "# chu-ky-dutoanai"
+ * ở cuối tệp (chưa có public key DuToanAI để verify, nên KHÔNG giả vờ đã kiểm chứng). Nghĩa là
+ * nếu ai đó có quyền ghi vào C:\PhatHanh\dutoanai (chỉ script đồng bộ máy chủ — dong-bo-dutoanai.ps1
+ * — và admin mới ghi được) sửa cả danh mục lẫn gói kèm sha mới thì vẫn qua được. Chấp nhận được vì
+ * thư mục này do máy chủ ứng dụng (Administrator) kiểm soát hoàn toàn, không phải nguồn bên ngoài
+ * ghi trực tiếp được — nhưng KHÔNG được coi đây là "đã xác thực nguồn gốc Bộ Xây dựng".
  */
 
 export type DongTyLe = { quyMo: number; tyLe: number }
@@ -76,7 +84,8 @@ export async function napDuLieuDuToanAI(): Promise<DuLieuDuToanAI> {
       if (sha512Base64(buf) !== goi.sha512) {
         data = { coDuLieu: false, ghiChu: `Gói ${goi.tenFile} không khớp SHA-512 trong danh mục — không dùng.` }
       } else {
-        const noiDung = JSON.parse(gunzipSync(buf).toString('utf8')) as { ma: string; phienBan: string; tep: Record<string, unknown> }
+        // Giới hạn kích thước sau giải nén — phòng gói bất thường làm nổ bộ nhớ trên máy 6GB RAM.
+        const noiDung = JSON.parse(gunzipSync(buf, { maxOutputLength: 64 * 1024 * 1024 }).toString('utf8')) as { ma: string; phienBan: string; tep: Record<string, unknown> }
         const bang = noiDung.tep?.['db/bang-ty-le.json'] as BangTyLe | undefined
         if (!bang || typeof bang !== 'object') {
           data = { coDuLieu: false, ghiChu: 'Gói bảng tra không có db/bang-ty-le.json.' }
