@@ -24,12 +24,21 @@ export const LUONG_CO_SO_CAN_CU = 'NĐ 161/2026/NĐ-CP (2.530.000đ, từ 01/7/2
  * CSDL trong khi công thức tính lương (tinhLuongThucLinh dưới đây) lại chia 100 lần nữa, khiến tiền
  * vượt khung tính ra sai lệch ~100 lần. Dùng hàm này ở MỌI nơi ghi vuotKhung vào CSDL (form thủ
  * công lẫn import Excel) để tự sửa nếu lỡ nhận giá trị dạng phân số, không chỉ sửa hiển thị.
+ *
+ * GIỚI HẠN ĐÃ BIẾT (Codex rà chốt 24/9/26): hàm này chỉ sửa ĐƠN VỊ (phân số ↔ số nguyên), KHÔNG
+ * validate đủ theo luật ("phải nguyên, ≥ 5, không âm"). Đã làm tròn số thập phân lẻ (vd nhập nhầm
+ * "5.5" từ làm tròn dấu phẩy) vì đó chắc chắn luôn sai — nhưng CỐ TÌNH không chặn/xoá giá trị < 5
+ * hay số âm: hàm này chạy ở cả đường "sửa hồ sơ" (ghi đè toàn bộ), nếu tự ý trả về null cho một số
+ * âm do gõ nhầm dấu trừ thì sẽ ÂM THẦM XÁÐ MẤT % vượt khung đang có của người đó khi lưu — rủi ro
+ * mất dữ liệu nặng hơn việc hiển thị tạm một số vô lý dễ nhận ra bằng mắt. Ngưỡng "≥ 5" còn phụ
+ * thuộc loại cán bộ (A/B/C, xem TT 04/2005/TT-BNV) nên không đủ căn cứ để tự chặn cứng ở đây; cán
+ * bộ nghiệp vụ vẫn phải tự đối chiếu khi thấy số bất thường (0, số âm, < 5) trên màn hình.
  */
 export function chuanHoaPhanTramVuotKhung(raw: number | null | undefined): number | null {
   if (raw == null || !Number.isFinite(raw)) return null
   if (raw === 0) return null            // 0% = không hưởng — coi như chưa có, khớp quy ước "vuotKhung > 0" ở nơi khác
-  if (raw > 0 && raw < 1) return raw * 100   // dạng phân số kiểu Excel (0.09) → 9
-  return raw
+  if (raw > 0 && raw < 1) return Math.round(raw * 100)   // dạng phân số kiểu Excel (0.09) → 9
+  return Math.round(raw)   // % vượt khung theo TT 04/2005/TT-BNV luôn là số nguyên — làm tròn phần lẻ
 }
 
 export type LuongInput = {
