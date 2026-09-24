@@ -3,7 +3,7 @@ import { requireOfficeAccess, canViewOfficeSensitive } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getSoToChucIds } from '@/lib/office-scope'
 import { classifySalaryAlert, salaryAlertBadgeClass, type SalaryAlert, type SalaryAlertBucket } from '@/lib/salary-alert'
-import { huongLuongNgachBac, fmtVND } from '@/lib/luong'
+import { huongLuongNgachBac, fmtVND, fmtSo } from '@/lib/luong'
 import { Briefcase, ChevronRight, Wallet, ChevronRight as Chev } from 'lucide-react'
 
 const NO_ALERT: SalaryAlert = { bucket: null, daysLeft: null, label: '' }
@@ -101,7 +101,7 @@ export default async function QuanLyLuongPage() {
               <tr key={cb.id} className="hover:bg-slate-50">
                 <td className="px-4 py-2.5 font-medium text-slate-900">{cb.hoTen}</td>
                 <td className="px-4 py-2.5 text-slate-600">{cb.chucDanh?.ten ?? cb.chucVu ?? '—'}</td>
-                <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? (cb.heSoLuong ?? '—') : '—'}</td>
+                <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? fmtSo(cb.heSoLuong) : '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : !apDung && cb.heSoLuong != null ? fmtVND(cb.heSoLuong) : '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? (cb.vuotKhung != null && cb.vuotKhung > 0 ? `${cb.vuotKhung.toFixed(0)}%` : '—') : '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600">{!canSee ? '•••' : apDung ? fmtDate(cb.ngayNangLuong) : '—'}</td>

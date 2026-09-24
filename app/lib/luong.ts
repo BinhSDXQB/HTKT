@@ -90,3 +90,15 @@ export function tinhLuongThucLinh(cb: LuongInput, luongCoSo: number = LUONG_CO_S
 export function fmtVND(n: number): string {
   return Math.round(n).toLocaleString('vi-VN') + 'đ'
 }
+
+/**
+ * Định dạng số thập phân kiểu Việt Nam (dấu PHẨY ngăn thập phân) cho hệ số lương/phụ cấp — vd
+ * 4.98 (JS number) → "4,98". Dùng ở MỌI nơi hiển thị heSoLuong/phuCap cho người dùng thay vì
+ * `.toString()`/`.toFixed()` (luôn ra dấu chấm kiểu Mỹ, sai định dạng số Việt Nam). null/undefined
+ * → "—". Không dùng cho tiền (xem fmtVND) hay % nguyên (vuotKhung hiển thị thẳng, không có phần
+ * thập phân theo quy ước — xem chuanHoaPhanTramVuotKhung).
+ */
+export function fmtSo(n: number | null | undefined): string {
+  if (n === null || n === undefined || !Number.isFinite(n)) return '—'
+  return n.toLocaleString('vi-VN')
+}

@@ -10,7 +10,7 @@ import { thoiDiemNghiHuu, TRUONG_HOP_LUI, thangDuTuoi, ngayKetThucLamViec, type 
 import { timPhapLyChuyenNganh, formatPhapLyChuyenNganh, danhSachLinhVuc } from '@/lib/data/phap-ly-chuyen-nganh'
 import { traCuuNghiepVuHtkt, phamViNoiDung, CHU_DE_LABEL, type ChuDe } from '@/lib/htkt/tra-cuu-nghiep-vu'
 import { logAction } from '@/lib/audit'
-import { chuanHoaPhanTramVuotKhung } from '@/lib/luong'
+import { chuanHoaPhanTramVuotKhung, fmtSo } from '@/lib/luong'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
@@ -93,6 +93,12 @@ function parseNgay(raw: string): Date | null {
   m = s.match(/^(\d{4})[/\-.](\d{1,2})[/\-.](\d{1,2})$/)
   if (m) return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]))
   return null
+}
+
+/** Hiển thị số kiểu Việt Nam (dấu phẩy) cho chat, hoặc "chưa cập nhật" nếu trống — khác fmtSo() ở
+ *  lib/luong.ts (fmtSo dùng cho UI thẻ/bảng, ra "—" khi trống; văn phong chat cần câu tự nhiên). */
+function fmtSoChat(n: number | null | undefined): string {
+  return n == null ? 'chưa cập nhật' : fmtSo(n)
 }
 
 // Phân tích số thập phân (chấp nhận dấu phẩy). Trả undefined nếu rỗng, null nếu sai.
@@ -757,8 +763,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
         `• Ngày sinh: ${fmt(cb.ngaySinh)}\n` +
         `• Điện thoại: ${cb.soDienThoai || 'chưa cập nhật'}\n` +
         `• Email: ${cb.email || 'chưa cập nhật'}\n` +
-        `• Hệ số lương: ${cb.heSoLuong ?? 'chưa cập nhật'}\n` +
-        `• Phụ cấp chức vụ: ${cb.phuCap ?? 'chưa cập nhật'}\n` +
+        `• Hệ số lương: ${fmtSoChat(cb.heSoLuong)}\n` +
+        `• Phụ cấp chức vụ: ${fmtSoChat(cb.phuCap)}\n` +
         `• Phụ cấp vượt khung: ${isVK ? (cb.vuotKhung!).toFixed(0) + '%' : 'không'}\n` +
         `• Ngày lên lương: ${fmt(cb.ngayNangLuong)}\n` +
         `• Ngày nâng lương kế tiếp: ${fmt(cb.ngayNangLuongKeTiep)}${cb.ngayNangLuongKeTiep ? ` (${loaiNang})` : ''}\n` +
@@ -816,8 +822,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       const loaiNang = isVK ? 'nâng phụ cấp thâm niên vượt khung (+1%/năm)' : 'nâng bậc lương thường xuyên'
       return (
         `Thông tin lương của ${cb.hoTen} (${cb.chucDanh?.ten || '—'}, ${cb.toChuc?.ten || '—'}):\n` +
-        `• Hệ số lương: ${cb.heSoLuong ?? 'chưa cập nhật'}\n` +
-        `• Phụ cấp chức vụ: ${cb.phuCap ?? 'chưa cập nhật'}\n` +
+        `• Hệ số lương: ${fmtSoChat(cb.heSoLuong)}\n` +
+        `• Phụ cấp chức vụ: ${fmtSoChat(cb.phuCap)}\n` +
         `• Phụ cấp vượt khung: ${isVK ? (cb.vuotKhung!).toFixed(0) + '%' : 'không'}\n` +
         `• Ngày lên lương: ${ngayLen}\n` +
         `• Ngày nâng lương kế tiếp: ${ngayKT}${cb.ngayNangLuongKeTiep ? ` (${loaiNang})` : ''}`
@@ -1124,7 +1130,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
             `Vẫn còn ${ds.length} cán bộ trùng tên "${hoTen}" và trùng cả năm sinh đã nêu (hoặc có người chưa cập nhật năm sinh) — hệ thống không đủ dữ liệu để tự phân biệt thêm:\n` +
             ds.map((c, i) =>
               `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}` +
-              `  (hệ số: ${c.heSoLuong ?? '—'}, ngày lên lương: ${fmtD(c.ngayNangLuong)})`
+              `  (hệ số: ${fmtSo(c.heSoLuong)}, ngày lên lương: ${fmtD(c.ngayNangLuong)})`
             ).join('\n') +
             `\nVui lòng dùng ho_so_can_bo với số CCCD để xác định đúng người trước, rồi thực hiện lại.`
           )
@@ -1133,7 +1139,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
           `Có ${ds.length} cán bộ khớp "${hoTen}". Bạn muốn cập nhật lương cho ai? (trả lời số thứ tự, nêu chức danh/đơn vị, hoặc nêu năm sinh):\n` +
           ds.map((c, i) =>
             `${i + 1}. **${c.hoTen}** — ${c.chucDanh?.ten || '—'}, ${c.toChuc?.ten || '—'}, ${fmtNamSinh(c.ngaySinh)}` +
-            `  (hệ số: ${c.heSoLuong ?? '—'}, ngày lên lương: ${fmtD(c.ngayNangLuong)})`
+            `  (hệ số: ${fmtSo(c.heSoLuong)}, ngày lên lương: ${fmtD(c.ngayNangLuong)})`
           ).join('\n')
         )
       }
@@ -1175,8 +1181,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       const loaiNang = isVK ? 'nâng phụ cấp thâm niên vượt khung (+1%/năm)' : 'nâng bậc lương thường xuyên'
       return (
         `✅ Đã cập nhật lương — **${cb.hoTen}** (${cb.chucDanh?.ten || '—'}, ${cb.toChuc?.ten || '—'}):\n` +
-        `• Hệ số lương: ${cb.heSoLuong ?? 'chưa cập nhật'}\n` +
-        `• Phụ cấp chức vụ: ${cb.phuCap ?? 'chưa cập nhật'}\n` +
+        `• Hệ số lương: ${fmtSoChat(cb.heSoLuong)}\n` +
+        `• Phụ cấp chức vụ: ${fmtSoChat(cb.phuCap)}\n` +
         `• Phụ cấp vượt khung: ${isVK ? (cb.vuotKhung!).toFixed(0) + '%' : 'không'}\n` +
         `• Ngày lên lương: ${fmt(cb.ngayNangLuong)}\n` +
         `• Ngày nâng lương kế tiếp: ${fmt(cb.ngayNangLuongKeTiep)}${cb.ngayNangLuongKeTiep ? ` (${loaiNang})` : ''}`
@@ -1294,8 +1300,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
         `• Ngày sinh: ${fmt(cb.ngaySinh)}\n` +
         `• Điện thoại: ${cb.soDienThoai || 'chưa cập nhật'}\n` +
         `• Email: ${cb.email || 'chưa cập nhật'}\n` +
-        `• Hệ số lương: ${cb.heSoLuong ?? 'chưa cập nhật'}\n` +
-        `• Phụ cấp chức vụ: ${cb.phuCap ?? 'chưa cập nhật'}\n` +
+        `• Hệ số lương: ${fmtSoChat(cb.heSoLuong)}\n` +
+        `• Phụ cấp chức vụ: ${fmtSoChat(cb.phuCap)}\n` +
         `• Phụ cấp vượt khung: ${isVK ? (cb.vuotKhung!).toFixed(0) + '%' : 'không'}\n` +
         `• Ngày lên lương: ${fmt(cb.ngayNangLuong)}\n` +
         `• Ngày nâng lương kế tiếp: ${fmt(cb.ngayNangLuongKeTiep)}`
@@ -1392,8 +1398,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
 
       const lines = rows.map(r => {
         const ngay = r.ngayNangLuongKeTiep ? new Date(r.ngayNangLuongKeTiep).toLocaleDateString('vi-VN') : '—'
-        const hesoStr = r.heSoLuong != null ? ` | Hệ số hiện tại: ${r.heSoLuong}` : ''
-        const phucapStr = r.phuCap != null ? ` | PC chức vụ: ${r.phuCap}` : ''
+        const hesoStr = r.heSoLuong != null ? ` | Hệ số hiện tại: ${fmtSo(r.heSoLuong)}` : ''
+        const phucapStr = r.phuCap != null ? ` | PC chức vụ: ${fmtSo(r.phuCap)}` : ''
         return `• ${r.hoTen} (${r.chucVu || '—'} | ${r.phongBan || '—'})\n  📅 Ngày lên lương: ${ngay}${hesoStr}${phucapStr}`
       }).join('\n')
 
@@ -1420,7 +1426,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
 
       const lines = rows.map(r => {
         const ngay = r.ngayNangLuongKeTiep ? new Date(r.ngayNangLuongKeTiep).toLocaleDateString('vi-VN') : '—'
-        const heso = r.heSoLuong != null ? ` | Hệ số: ${r.heSoLuong}` : ''
+        const heso = r.heSoLuong != null ? ` | Hệ số: ${fmtSo(r.heSoLuong)}` : ''
         return `• **${r.hoTen}** (${r.chucVu || '—'} | ${r.phongBan || '—'}) — lên lương ${ngay}${heso}\n  📄 [Tải dự thảo QĐ (.docx)](/api/office/nang-luong/du-thao?canBoId=${r.id})`
       }).join('\n')
 
@@ -1510,8 +1516,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
         const sorted = [...bienChe].sort((a, b) =>
           tieuChi === 'he_so_cao_nhat' ? b.heSoLuong! - a.heSoLuong! : a.heSoLuong! - b.heSoLuong!)
         const lines = sorted.slice(0, topN).map((c, i) =>
-          `${i + 1}. ${ten(c)} — hệ số **${c.heSoLuong}**` +
-          (c.phuCap ? ` + phụ cấp chức vụ ${c.phuCap}` : '') +
+          `${i + 1}. ${ten(c)} — hệ số **${fmtSo(c.heSoLuong)}**` +
+          (c.phuCap ? ` + phụ cấp chức vụ ${fmtSo(c.phuCap)}` : '') +
           (c.vuotKhung ? ` + vượt khung ${(c.vuotKhung).toFixed(0)}%` : '')
         ).join('\n')
         return `🏆 Top ${topN} hệ số lương ${tieuChi === 'he_so_cao_nhat' ? 'CAO' : 'THẤP'} nhất (${bienChe.length} công chức/viên chức biên chế đang công tác, không tính nhân viên hợp đồng hưởng lương khoán):\n\n${lines}`
@@ -1520,7 +1526,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (tieuChi === 'vuot_khung') {
         const vk = all.filter(c => (c.vuotKhung ?? 0) > 0).sort((a, b) => b.vuotKhung! - a.vuotKhung!)
         if (vk.length === 0) return 'Hiện không có cán bộ nào đang hưởng phụ cấp thâm niên vượt khung.'
-        const lines = vk.map((c, i) => `${i + 1}. ${ten(c)} — vượt khung **${(c.vuotKhung!).toFixed(0)}%** (hệ số ${c.heSoLuong ?? '—'})`).join('\n')
+        const lines = vk.map((c, i) => `${i + 1}. ${ten(c)} — vượt khung **${(c.vuotKhung!).toFixed(0)}%** (hệ số ${fmtSo(c.heSoLuong)})`).join('\n')
         return `📈 Cán bộ đang hưởng phụ cấp thâm niên vượt khung: **${vk.length}** người\n\n${lines}`
       }
 
@@ -1598,7 +1604,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
         return (
           `${cb.hoTen}, hồ sơ của bạn chưa có dữ liệu "Ngày nâng lương kế tiếp" nên chưa xác định được khi nào đến hạn nâng lương.\n` +
           `• Ngày lên lương (bậc hiện tại): ${ngayLen}\n` +
-          `• Hệ số hiện tại: ${cb.heSoLuong ?? 'chưa cập nhật'}. Vui lòng đề nghị Văn phòng Sở bổ sung ngày nâng lương kế tiếp.`
+          `• Hệ số hiện tại: ${fmtSoChat(cb.heSoLuong)}. Vui lòng đề nghị Văn phòng Sở bổ sung ngày nâng lương kế tiếp.`
         )
       }
 
@@ -1607,7 +1613,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
         `${cb.hoTen} (${cb.chucDanh?.ten || '—'}${cb.toChuc?.ten ? ', ' + cb.toChuc.ten : ''}):\n` +
         `• Ngày nâng lương kế tiếp của bạn: **${ngayKT}** (${loai})\n` +
         `• Ngày lên lương (bậc hiện tại): ${ngayLen}\n` +
-        `• Hệ số lương hiện tại: ${cb.heSoLuong ?? 'chưa cập nhật'}` +
+        `• Hệ số lương hiện tại: ${fmtSoChat(cb.heSoLuong)}` +
         (isVK ? `\n• Phụ cấp vượt khung: ${(cb.vuotKhung!).toFixed(0)}%` : '')
       )
     }

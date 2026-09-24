@@ -3,6 +3,7 @@ import { requireOfficeAccess, canViewOfficeSensitive, canManageCanBo } from '@/l
 import { db } from '@/lib/db'
 import { getSoToChucIds, getSoDonViOptions } from '@/lib/office-scope'
 import { boDauTiengViet } from '@/lib/utils'
+import { huongLuongNgachBac, fmtVND, fmtSo } from '@/lib/luong'
 import { Briefcase, ChevronRight, Users, Search, FileSpreadsheet, UserPlus } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -105,7 +106,7 @@ export default async function HoSoListPage({ searchParams }: { searchParams: Pro
               <th className="px-4 py-2.5 font-semibold">Đơn vị</th>
               <th className="px-4 py-2.5 font-semibold">Chức danh</th>
               <th className="px-4 py-2.5 font-semibold">CCCD</th>
-              <th className="px-4 py-2.5 font-semibold text-right">Hệ số lương</th>
+              <th className="px-4 py-2.5 font-semibold text-right">Hệ số/Lương</th>
               <th className="px-4 py-2.5"></th>
             </tr>
           </thead>
@@ -116,7 +117,9 @@ export default async function HoSoListPage({ searchParams }: { searchParams: Pro
                 <td className="px-4 py-2.5 text-slate-600 text-xs">{cb.toChuc?.ten ?? '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600">{cb.chucVu ?? cb.chucDanh?.ten ?? '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600 font-mono text-xs">{maskCccd(cb.cccd, canSee)}</td>
-                <td className="px-4 py-2.5 text-right text-slate-700">{canSee ? (cb.heSoLuong ?? '—') : '•••'}</td>
+                <td className="px-4 py-2.5 text-right text-slate-700">
+                  {canSee ? (huongLuongNgachBac(cb) ? fmtSo(cb.heSoLuong) : (cb.heSoLuong != null ? fmtVND(cb.heSoLuong) : '—')) : '•••'}
+                </td>
                 <td className="px-4 py-2.5 text-right">
                   <Link href={`/dashboard/van-phong-so/ho-so/${cb.id}`} className="text-indigo-600 hover:underline text-sm font-medium inline-flex items-center gap-1">
                     Chi tiết <ChevronRight className="w-3.5 h-3.5" />

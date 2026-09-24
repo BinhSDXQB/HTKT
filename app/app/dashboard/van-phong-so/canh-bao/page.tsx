@@ -9,7 +9,7 @@ import { missingRequiredChoCanhBao } from '@/lib/ho-so-alert'
 import { checkSalaryConsistency } from '@/lib/bang-luong'
 import { classifyRetireAlert, retireAlertBadgeClass } from '@/lib/nghi-huu-alert'
 import { classifySalaryAlert, salaryAlertBadgeClass } from '@/lib/salary-alert'
-import { huongLuongNgachBac } from '@/lib/luong'
+import { huongLuongNgachBac, fmtSo } from '@/lib/luong'
 import { classifyContractAlert } from '@/lib/hop-dong-alert'
 import { DOI_TUONG_NHAN_SU_LABEL, doiTuongBadgeClass } from '@/lib/office-labels'
 import { CO_SO_PHAP_LY } from '@/lib/data/co-so-phap-ly-nhan-su'
@@ -213,11 +213,11 @@ export default async function CanhBaoPage() {
                     <td className="px-3 py-2 font-medium text-slate-900">{cb.hoTen}</td>
                     <td className="px-3 py-2 text-slate-600 text-xs">{cb.ngachHienHuong ?? cb.maNgach ?? '—'}</td>
                     <td className="px-3 py-2 text-center text-slate-700">{cb.bacLuong ?? '—'}</td>
-                    <td className="px-3 py-2 text-center text-slate-700">{cb.heSoLuong ?? '—'}</td>
+                    <td className="px-3 py-2 text-center text-slate-700">{fmtSo(cb.heSoLuong)}</td>
                     <td className="px-3 py-2 text-rose-700 text-xs">
                       {'message' in kq ? kq.message : ''}
                       {kq.status === 'MISMATCH' && (
-                        <span className="block text-emerald-700 mt-0.5">Hệ số chuẩn: {kq.heSoChuan.toFixed(2)}</span>
+                        <span className="block text-emerald-700 mt-0.5">Hệ số chuẩn: {fmtSo(kq.heSoChuan)}</span>
                       )}
                     </td>
                     <td className="px-3 py-2 text-right">

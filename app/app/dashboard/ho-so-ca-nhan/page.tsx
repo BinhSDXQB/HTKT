@@ -6,15 +6,13 @@ import {
   TRANG_THAI_NGHI_PHEP_LABEL,
   trangThaiNghiPhepBadgeClass,
 } from '@/lib/office-labels'
+import { huongLuongNgachBac, fmtVND, fmtSo } from '@/lib/luong'
 import { UserCircle2, Wallet, Award, CalendarDays, TrendingUp, IdCard } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 function fmtDate(d: Date | null | undefined): string {
   return d ? new Date(d).toLocaleDateString('vi-VN') : '—'
-}
-function fmtNum(n: number | null | undefined): string {
-  return n === null || n === undefined ? '—' : n.toLocaleString('vi-VN')
 }
 
 export default async function HoSoCaNhanPage() {
@@ -81,9 +79,19 @@ export default async function HoSoCaNhanPage() {
           <h2 className="font-semibold text-slate-800">Lương & ngày nâng lương</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-slate-100">
-          <Stat label="Hệ số lương" value={canBo.heSoLuong != null ? canBo.heSoLuong.toFixed(2) : '—'} />
-          <Stat label="Phụ cấp (hệ số)" value={fmtNum(canBo.phuCap)} />
-          <Stat label="Vượt khung" value={canBo.vuotKhung != null ? `${fmtNum(canBo.vuotKhung)}%` : '—'} />
+          {huongLuongNgachBac(canBo) ? (
+            <>
+              <Stat label="Hệ số lương" value={fmtSo(canBo.heSoLuong)} />
+              <Stat label="Phụ cấp (hệ số)" value={fmtSo(canBo.phuCap)} />
+              <Stat label="Vượt khung" value={canBo.vuotKhung != null ? `${canBo.vuotKhung}%` : '—'} />
+            </>
+          ) : (
+            <>
+              <Stat label="Hình thức lương" value="Khoán theo hợp đồng" />
+              <Stat label="Lương khoán (tháng)" value={canBo.heSoLuong != null ? fmtVND(canBo.heSoLuong) : '—'} />
+              <Stat label="Phụ cấp (hệ số)" value={fmtSo(canBo.phuCap)} />
+            </>
+          )}
           <Stat label="Ngày hưởng bậc hiện tại" value={fmtDate(canBo.ngayNangLuong)} />
           <Stat
             label="Đến hạn nâng lương lần sau"

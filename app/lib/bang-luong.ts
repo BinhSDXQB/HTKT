@@ -7,6 +7,8 @@
 //    ngạch, hệ số = hệ số bậc cuối; % vượt khung cộng thêm ngoài hệ số.
 //  - Đây là công cụ rà soát; quyết định cuối cùng do Văn phòng Sở đối chiếu hồ sơ gốc.
 
+import { fmtSo } from './luong'
+
 export type BangLuongNhom = {
   ma: string          // mã nhóm bảng lương, vd 'A1', 'A2.1'
   ten: string         // tên loại công chức
@@ -120,7 +122,7 @@ export function checkSalaryConsistency(cb: SalaryCheckInput): SalaryConsistency 
     return {
       status: 'MISMATCH',
       nhom, heSoChuan,
-      message: `Bậc ${bac} ngạch ${nhom.ma} có hệ số chuẩn ${heSoChuan.toFixed(2)} nhưng hồ sơ ghi ${cb.heSoLuong}.`,
+      message: `Bậc ${bac} ngạch ${nhom.ma} có hệ số chuẩn ${fmtSo(heSoChuan)} nhưng hồ sơ ghi ${fmtSo(cb.heSoLuong)}.`,
     }
   }
   return { status: 'OK', nhom, heSoChuan }

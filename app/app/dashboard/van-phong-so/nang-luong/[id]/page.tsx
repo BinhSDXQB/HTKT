@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { requireOfficeAccess, isOfficeLeader } from '@/lib/auth'
 import { hasPermission, MODULES } from '@/lib/permissions'
 import { db } from '@/lib/db'
+import { fmtSo } from '@/lib/luong'
 import { SalaryCaseWorkflow } from '@/components/van-phong-so/salary-case-workflow'
 import {
   TRANG_THAI_RA_SOAT_LABEL, trangThaiRaSoatBadgeClass, KET_LUAN_RA_SOAT_LABEL, LOAI_NANG_LUONG_LABEL,
@@ -42,8 +43,8 @@ export default async function NangLuongDetailPage({ params }: { params: Promise<
     { label: 'Năm rà soát', value: String(c.namRaSoat) },
     { label: 'Đợt', value: c.dotRaSoat ?? '—' },
     { label: 'Mốc đến hạn', value: fmtDate(c.ngayDenHan) },
-    { label: 'Hệ số hiện tại', value: c.heSoHienTai?.toString() ?? '—' },
-    { label: 'Hệ số đề xuất', value: c.heSoDeXuat?.toString() ?? '—' },
+    { label: 'Hệ số hiện tại', value: fmtSo(c.heSoHienTai) },
+    { label: 'Hệ số đề xuất', value: fmtSo(c.heSoDeXuat) },
     { label: 'Kết luận rà soát', value: c.ketLuanRaSoat ? KET_LUAN_RA_SOAT_LABEL[c.ketLuanRaSoat] : '—' },
     { label: 'Căn cứ pháp lý', value: c.canCuPhapLy ?? '—' },
     { label: 'Người rà soát', value: c.nguoiRaSoat?.name ?? '—' },

@@ -2,6 +2,7 @@ import 'server-only'
 import {
   Document, Packer, Paragraph, TextRun, TabStopType, AlignmentType, BorderStyle,
 } from 'docx'
+import { fmtSo } from './luong'
 
 /**
  * Sinh Quyết định hành chính (.docx) theo thể thức văn bản nhà nước.
@@ -212,9 +213,9 @@ export function buildSalaryDecisionDocx(input: SalaryDecisionInput): Promise<Buf
   const loai = (input.loaiLabel || 'thường xuyên').trim()
   const chucVuDonVi = [input.chucDanh, input.donVi].filter(Boolean).join(', ')
   const bacCu = input.bacCu != null ? String(input.bacCu) : PLACEHOLDER
-  const heSoCu = input.heSoCu != null ? String(input.heSoCu) : PLACEHOLDER
+  const heSoCu = input.heSoCu != null ? fmtSo(input.heSoCu) : PLACEHOLDER
   const bacMoi = input.bacMoi != null ? String(input.bacMoi) : PLACEHOLDER
-  const heSoMoi = input.heSoMoi != null ? String(input.heSoMoi) : PLACEHOLDER
+  const heSoMoi = input.heSoMoi != null ? fmtSo(input.heSoMoi) : PLACEHOLDER
 
   return decisionDocx({
     coQuanCapTren: input.coQuanCapTren,
@@ -270,7 +271,7 @@ export type VuotKhungDecisionInput = {
 export function buildVuotKhungDecisionDocx(input: VuotKhungDecisionInput): Promise<Buffer> {
   const chucVuDonVi = [input.chucDanh, input.donVi].filter(Boolean).join(', ')
   const bac = input.bac != null ? String(input.bac) : PLACEHOLDER
-  const heSo = input.heSo != null ? String(input.heSo) : PLACEHOLDER
+  const heSo = input.heSo != null ? fmtSo(input.heSo) : PLACEHOLDER
   const pcCu = input.phuCapCu != null ? `${input.phuCapCu}%` : PLACEHOLDER
   const pcMoi = input.phuCapMoi != null ? `${input.phuCapMoi}%` : PLACEHOLDER
 

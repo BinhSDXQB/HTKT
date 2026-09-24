@@ -8,7 +8,7 @@ import { logSensitiveView } from '@/app/actions/office'
 import { db } from '@/lib/db'
 import { classifySalaryAlert, salaryAlertBadgeClass } from '@/lib/salary-alert'
 import { classifyContractAlert } from '@/lib/hop-dong-alert'
-import { tinhLuongThucLinh, fmtVND, LUONG_CO_SO_CAN_CU } from '@/lib/luong'
+import { tinhLuongThucLinh, fmtVND, fmtSo, LUONG_CO_SO_CAN_CU } from '@/lib/luong'
 import { DOI_TUONG_NHAN_SU_LABEL } from '@/lib/office-labels'
 import { SalaryHistoryForm } from '@/components/van-phong-so/salary-history-form'
 import { WorkHistoryForm } from '@/components/van-phong-so/work-history-form'
@@ -304,9 +304,19 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Stat label="Hệ số hiện tại" value={canSee ? (cb.heSoLuong?.toString() ?? '—') : '•••'} />
-          <Stat label="Phụ cấp (hệ số)" value={canSee ? (cb.phuCap?.toString() ?? '—') : '•••'} />
-          <Stat label="% Vượt khung" value={canSee ? (cb.vuotKhung != null ? `${cb.vuotKhung}%` : '—') : '•••'} />
+          {luong.apDung ? (
+            <>
+              <Stat label="Hệ số hiện tại" value={canSee ? fmtSo(cb.heSoLuong) : '•••'} />
+              <Stat label="Phụ cấp (hệ số)" value={canSee ? fmtSo(cb.phuCap) : '•••'} />
+              <Stat label="% Vượt khung" value={canSee ? (cb.vuotKhung != null ? `${cb.vuotKhung}%` : '—') : '•••'} />
+            </>
+          ) : (
+            <>
+              <Stat label="Hình thức lương" value="Khoán theo hợp đồng" />
+              <Stat label="Lương khoán (tháng)" value={canSee ? (cb.heSoLuong != null ? fmtVND(cb.heSoLuong) : '—') : '•••'} />
+              <Stat label="Phụ cấp (hệ số)" value={canSee ? fmtSo(cb.phuCap) : '•••'} />
+            </>
+          )}
           <Stat label="Ngày lên lương" value={canSee ? fmtDate(cb.ngayNangLuong) : '•••'} />
         </div>
 
@@ -347,8 +357,8 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
                     <td className="px-3 py-2 text-slate-700">{fmtDate(s.ngayHuong)}</td>
                     <td className="px-3 py-2 text-slate-600">{LOAI_LABEL[s.loai] ?? s.loai}</td>
                     <td className="px-3 py-2 text-right text-slate-700">{s.bacLuong ?? '—'}</td>
-                    <td className="px-3 py-2 text-right font-medium text-slate-900">{s.heSoLuong}</td>
-                    <td className="px-3 py-2 text-right text-slate-600">{s.phuCapChucVu ?? '—'}</td>
+                    <td className="px-3 py-2 text-right font-medium text-slate-900">{luong.apDung ? fmtSo(s.heSoLuong) : fmtVND(s.heSoLuong)}</td>
+                    <td className="px-3 py-2 text-right text-slate-600">{fmtSo(s.phuCapChucVu)}</td>
                     <td className="px-3 py-2 text-slate-600">{s.soQuyetDinh ?? '—'}</td>
                     <td className="px-3 py-2 text-slate-600">{fmtDate(s.ngayNangTiep)}</td>
                   </tr>
