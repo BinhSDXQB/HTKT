@@ -3,8 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   FolderOpen, Folder, ChevronRight, Loader2, Search, AlertTriangle,
-  FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info, PenLine,
+  FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info, PenLine, Calculator,
 } from 'lucide-react'
+import {
+  KiemTraDuToanPanel, type KetQuaKiemTraDuToanUI, type KetQuaDoiChieuToTrinhUI,
+} from './kiem-tra-du-toan-panel'
 
 /** Tín hiệu "dùng kết quả kiểm kê để sang bước soạn thảo" — do trang gộp (wizard) truyền vào. */
 export type ApplyKiemKe = { quyTrinhKey: string; tenGoiY: string }
@@ -33,6 +36,8 @@ type KetQua = {
   files: FileHoSo[]
   doiChieu: DoiChieuTP[]
   duToan: { ungVien: UngVienTien[]; tepDaDoc: string[]; canhBao: string[] }
+  kiemTraChiPhi: KetQuaKiemTraDuToanUI | null
+  doiChieuToTrinh: KetQuaDoiChieuToTrinhUI | null
   thongKeDoc: { daDoc: number; tongByte: number }
   thoiGianMs: number
 }
@@ -68,6 +73,13 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
   const [dangQuet, setDangQuet] = useState(false)
   const [loi, setLoi] = useState('')
   const [kq, setKq] = useState<KetQua | null>(null)
+
+  // Bước kiểm tra dự toán/TMĐT — tắt mặc định (đọc lại toàn bộ công thức Excel, chậm hơn kiểm kê).
+  const [kiemTraChiPhi, setKiemTraChiPhi] = useState(false)
+  const [loaiCongTrinhDs, setLoaiCongTrinhDs] = useState<{ ma: string; ten: string }[]>([])
+  const [loaiCongTrinh, setLoaiCongTrinh] = useState('')
+  const [theoTuyen, setTheoTuyen] = useState(false)
+  const [duLieuDuToanAI, setDuLieuDuToanAI] = useState<{ coDuLieu: boolean; ghiChu: string } | null>(null)
 
   // Đếm lượt duyệt để bỏ phản hồi cũ: đổi kho/thư mục liên tiếp thì request trước có thể về
   // SAU request sau, ghi đè danh sách của kho đang xem (UI hiện nhãn kho B nhưng nội dung kho A,
@@ -110,6 +122,8 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
         setGocs(d.goc ?? [])
         setQuyTrinhs(d.quyTrinh ?? [])
         setChuaCauHinh(!!d.chuaCauHinh)
+        setLoaiCongTrinhDs(d.loaiCongTrinhChiPhi ?? [])
+        setDuLieuDuToanAI(d.duLieuDuToanAI ?? null)
         const dau = (d.goc ?? []).find((g: Goc) => g.truyCapDuoc)
         if (dau) chonKho(dau.id)
         if ((d.quyTrinh ?? []).length) setQuyTrinh(d.quyTrinh[0].key)
@@ -122,7 +136,7 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
     try {
       const r = await fetch('/api/htkt/tham-dinh-ho-so', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rootId, duongDanCon, quyTrinh }),
+        body: JSON.stringify({ rootId, duongDanCon, quyTrinh, kiemTraChiPhi, loaiCongTrinh, theoTuyen }),
       })
       const d = await r.json()
       if (!r.ok) { setLoi(d.error ?? 'Quét thất bại'); return }
@@ -220,6 +234,37 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
         {soFileTrucTiep > 0 && thuMucCon.length > 0 && (
           <p className="text-xs text-slate-500">Thư mục hiện tại có {soFileTrucTiep} tệp trực tiếp (chưa tính thư mục con).</p>
         )}
+
+        {/* Kiểm tra dự toán/TMĐT — tuỳ chọn, đọc lại toàn bộ công thức Excel nên chậm hơn */}
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2.5">
+          <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+            <input type="checkbox" checked={kiemTraChiPhi} onChange={(e) => setKiemTraChiPhi(e.target.checked)}
+              className="w-4 h-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500" />
+            <Calculator className="w-4 h-4 text-cyan-600" />
+            <span className="font-medium">Kiểm tra khối lượng → THKP → dự toán/TMĐT</span>
+            <span className="text-xs text-slate-400">(tính lại theo TT 36/2026, chậm hơn — chỉ chạy khi bấm)</span>
+          </label>
+          {kiemTraChiPhi && (
+            <div className="grid sm:grid-cols-2 gap-3 pl-6">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-slate-600">Loại công trình (để tra đúng tỷ lệ Bảng 3.3/3.5/3.6/3.7)</label>
+                <select value={loaiCongTrinh} onChange={(e) => setLoaiCongTrinh(e.target.value)}
+                  className="w-full h-8 px-2 text-sm border rounded-lg bg-white outline-none focus:ring-2 focus:ring-cyan-500">
+                  <option value="">— Chưa chọn (bỏ qua đối chiếu tỷ lệ) —</option>
+                  {loaiCongTrinhDs.map((l) => <option key={l.ma} value={l.ma}>{l.ten}</option>)}
+                </select>
+              </div>
+              <label className="flex items-center gap-2 text-xs text-slate-600 pt-5">
+                <input type="checkbox" checked={theoTuyen} onChange={(e) => setTheoTuyen(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500" />
+                Công trình xây dựng theo tuyến (đường ống, đường dây… — ảnh hưởng tỷ lệ nhà tạm Bảng 3.7)
+              </label>
+              {duLieuDuToanAI && !duLieuDuToanAI.coDuLieu && (
+                <p className="sm:col-span-2 text-xs text-amber-700">⚠️ {duLieuDuToanAI.ghiChu}</p>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-3">
           <button
@@ -431,6 +476,9 @@ function KetQuaView({ kq, onApply }: { kq: KetQua; onApply?: (p: ApplyKiemKe) =>
           </table>
         </div>
       </div>
+
+      {/* Kiểm tra dự toán/TMĐT — chỉ hiện khi cán bộ đã bật ở bước kiểm kê */}
+      {kq.kiemTraChiPhi && <KiemTraDuToanPanel kq={kq.kiemTraChiPhi} doiChieu={kq.doiChieuToTrinh} />}
     </div>
   )
 }
