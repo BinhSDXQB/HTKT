@@ -13,6 +13,8 @@
  */
 export const CCCD_12 = /^\d{12}$/
 export const CMND_9 = /^\d{9}$/
+export const MA_XA_5 = /^\d{5}$/
+export const CCCD_THIEU_SO_0_11 = /^\d{11}$/ // CCCD bị mất số 0 đầu (Excel cắt) — chỉ dùng để NHẬN DIỆN/gợi ý, không phải giá trị hợp lệ để tạo mới
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /** Bỏ khoảng trắng, dấu chấm/gạch người dùng hay gõ xen giữa số CCCD. */
@@ -40,4 +42,37 @@ export function kiemTraTenDangNhap(raw: string): KetQuaTenDangNhap {
     return { ok: false, loi: `Số CCCD phải đủ 12 chữ số (đang nhập ${v.length} chữ số).${goiY} CMND cũ 9 số cũng được chấp nhận.` }
   }
   return { ok: false, loi: 'Tên đăng nhập phải là số CCCD 12 chữ số (hoặc email đối với tài khoản quản trị)' }
+}
+
+/**
+ * Chính sách RIÊNG cho "Quên mật khẩu" — khoan dung hơn kiemTraTenDangNhap() vì mục đích
+ * là TRA CỨU tài khoản đã có sẵn (không phải tạo mới): chấp nhận CCCD 12 số, CCCD thiếu số 0
+ * đầu (11 số — lỗi Excel cắt số 0 hay gặp ở dữ liệu cũ), hoặc MÃ PHƯỜNG/XÃ 5 số. KHÔNG chấp
+ * nhận email — tài khoản dùng email (admin) không đi qua luồng này.
+ * Giữ NGUYÊN hành vi gốc (trước đây viết tay trong forgotPasswordAction) — chỉ gộp về 1 chỗ
+ * để tránh 2 nguồn quy tắc lệch nhau theo thời gian.
+ */
+export function chapNhanChoQuenMatKhau(raw: string): { ok: true; digits: string } | { ok: false } {
+  const s = (raw ?? '').trim()
+  const chiGomSoVaPhanCach = /^[\d\s.\-]+$/.test(s)
+  const digits = s.replace(/\D/g, '')
+  const dungDinhDang = chiGomSoVaPhanCach && (MA_XA_5.test(digits) || CCCD_THIEU_SO_0_11.test(digits) || CCCD_12.test(digits))
+  return dungDinhDang ? { ok: true, digits } : { ok: false }
+}
+
+export type LoaiTenDangNhap = 'CCCD' | 'CMND' | 'MA_XA' | 'EMAIL' | 'KHONG_XAC_DINH'
+
+/**
+ * Phân loại tên đăng nhập để HIỂN THỊ (badge trong danh sách quản trị) — không dùng để validate.
+ * Ưu tiên field `wardId` từ CSDL hơn là đoán theo định dạng số: tài khoản phường/xã luôn có
+ * wardId khác NULL bất kể chuỗi trông giống gì (an toàn hơn suy đoán thuần theo regex).
+ */
+export function phanLoaiTenDangNhap(tenDangNhap: string, wardId?: string | null): LoaiTenDangNhap {
+  if (wardId) return 'MA_XA'
+  const v = chuanHoaTenDangNhap(tenDangNhap)
+  if (EMAIL.test(v)) return 'EMAIL'
+  if (CCCD_12.test(v)) return 'CCCD'
+  if (CMND_9.test(v)) return 'CMND'
+  if (MA_XA_5.test(v)) return 'MA_XA'
+  return 'KHONG_XAC_DINH'
 }

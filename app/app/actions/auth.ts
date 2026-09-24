@@ -9,6 +9,7 @@ import { createSession, deleteSession, getSession } from '@/lib/session'
 import { deptCodeFromToChucMa } from '@/lib/permissions'
 import { logAction } from '@/lib/audit'
 import { sendMail, isMailConfigured, getAppUrl } from '@/lib/mailer'
+import { chapNhanChoQuenMatKhau } from '@/lib/ten-dang-nhap'
 
 const LoginSchema = z.object({
   email: z.string().min(1, { message: 'Vui lòng nhập tên đăng nhập' }),
@@ -225,12 +226,11 @@ export async function forgotPasswordAction(prev: ForgotState, formData: FormData
     : ' Vui lòng liên hệ quản trị viên để được hỗ trợ.'
 
   // YÊU CẦU: tên đăng nhập phải đúng SỐ CCCD (12 số) hoặc MÃ PHƯỜNG/XÃ (5 số) — nhập khác là từ chối.
-  const digits = username.replace(/\D/g, '')
-  const chiGomSoVaPhanCach = /^[\d\s.\-]+$/.test(username)
-  const dungDinhDang = chiGomSoVaPhanCach && (digits.length === 5 || digits.length === 11 || digits.length === 12)
-  if (!dungDinhDang) {
+  const kqTenDangNhap = chapNhanChoQuenMatKhau(username)
+  if (!kqTenDangNhap.ok) {
     return { error: 'Từ chối: Tên đăng nhập không hợp lệ. Chỉ chấp nhận SỐ CCCD gồm 12 chữ số (đối với cán bộ) hoặc MÃ PHƯỜNG/XÃ gồm 5 chữ số (đối với đơn vị). Vui lòng nhập đúng, không nhập ký tự hay định dạng khác.' + lienHe }
   }
+  const digits = kqTenDangNhap.digits
 
   if (!isMailConfigured()) {
     return { error: 'Hệ thống gửi email (SMTP) chưa được cấu hình.' + lienHe }
