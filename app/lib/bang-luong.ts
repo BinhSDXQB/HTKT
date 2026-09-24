@@ -34,7 +34,7 @@ const MA_NGACH_NHOM: Record<string, string> = {
   '01.001': 'A3.1', // Chuyên viên cao cấp
   '01.002': 'A2.1', // Chuyên viên chính
   '01.003': 'A1',   // Chuyên viên
-  '01.004': 'A0',   // Cán sự (yêu cầu cao đẳng → A0)
+  '01.004': 'B',    // Cán sự (trung cấp → B) — xác nhận qua 2 QĐ nâng lương độc lập 2026 (Dương Thị Kim Huệ bậc 8=3,26; Trần Thị Liên bậc 12=4,06, đều khớp nhóm B, không khớp A0)
   '01.005': 'B',    // Nhân viên
   '01.007': 'B',    // Văn thư trung cấp (cũ)
   '01.008': 'A1',   // Văn thư viên
