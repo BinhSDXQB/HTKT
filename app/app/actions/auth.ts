@@ -247,12 +247,11 @@ export async function forgotPasswordAction(prev: ForgotState, formData: FormData
   }
 
   // CẤP LẠI MẬT KHẨU TẠM mới (đúng chính sách) — gửi qua email để dùng ngay rồi đổi sau.
+  // LƯU Ý: CHƯA ghi vào CSDL ở đây — chỉ ghi SAU KHI gửi email thành công (xem dưới), để
+  // tránh trường hợp gửi email lỗi (SMTP tạm trục trặc) mà mật khẩu cũ đã bị đổi, khiến
+  // người dùng mất quyền truy cập hoàn toàn mà không nhận được mật khẩu mới.
   const tempPassword = genTempPassword()
   const hashedTemp = await bcrypt.hash(tempPassword, 12)
-  await db.user.update({
-    where: { id: user.id },
-    data: { password: hashedTemp, mustChangePassword: true, failedLoginCount: 0, resetTokenHash: null, resetTokenExpiresAt: null },
-  })
 
   // Thông tin định danh tài khoản — TỰ ĐỘNG đưa CCCD / mã phường-xã + đơn vị vào email
   const canBo = await db.canBo.findUnique({
@@ -315,8 +314,14 @@ export async function forgotPasswordAction(prev: ForgotState, formData: FormData
     await sendMail({ to: recipient, subject, html })
   } catch (e) {
     console.error('[Auth] sendMail reset error:', e)
-    return { error: 'Không gửi được email lúc này. Vui lòng thử lại sau.' + lienHe }
+    return { error: 'Không gửi được email lúc này. Mật khẩu CHƯA bị thay đổi — vui lòng thử lại sau.' + lienHe }
   }
+
+  // Gửi email THÀNH CÔNG rồi mới ghi mật khẩu mới vào CSDL (xem lưu ý ở trên).
+  await db.user.update({
+    where: { id: user.id },
+    data: { password: hashedTemp, mustChangePassword: true, failedLoginCount: 0, resetTokenHash: null, resetTokenExpiresAt: null },
+  })
 
   await logAction({
     userId: user.id, action: 'RESET_PASSWORD', module: 'admin',
