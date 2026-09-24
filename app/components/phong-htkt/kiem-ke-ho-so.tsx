@@ -91,6 +91,10 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
   const duyet = useCallback(async (dc: string, idGoc: string) => {
     if (!idGoc) return
     const luot = ++luotDuyet.current
+    // Rời thư mục đang xem (Home/breadcrumb/thư mục con) phải xoá kết quả kiểm kê CŨ ngay —
+    // nếu không, kết quả "Kiểm tra dự toán/TMĐT" của thư mục trước đó vẫn hiện ra như thể đang
+    // áp dụng cho thư mục mới, tới khi người dùng bấm "Kiểm kê hồ sơ" lại mới nhận ra là sai chỗ.
+    setKq(null)
     setDangDuyet(true); setLoi('')
     try {
       const r = await fetch(`/api/htkt/tham-dinh-ho-so?hanhDong=duyet&rootId=${encodeURIComponent(idGoc)}&duongDanCon=${encodeURIComponent(dc)}`)
