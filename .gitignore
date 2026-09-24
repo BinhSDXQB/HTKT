@@ -71,3 +71,6 @@ app/healthcheck-logs/
 # Python (tools/*.py)
 __pycache__/
 *.pyc
+
+# Claude Code local tool state (khoá phiên, pid, timestamp — không phải cấu hình dùng chung)
+.claude/scheduled_tasks.lock

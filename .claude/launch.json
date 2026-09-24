@@ -1,0 +1,10 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "qlhtkt-dev-preview",
+      "port": 3099,
+      "url": "http://localhost:3099"
+    }
+  ]
+}
