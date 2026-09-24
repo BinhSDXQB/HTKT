@@ -22,8 +22,12 @@ export default async function HoSoListPage({ searchParams }: { searchParams: Pro
 
   const [soIds, donViOptions] = await Promise.all([getSoToChucIds(), getSoDonViOptions()])
 
+  // Chỉ hiện cán bộ thuộc đơn vị CÒN HOẠT ĐỘNG — đơn vị đã chuyển đi/giải thể (isActive=false,
+  // vd Ban QLDA GT: prisma/khoa-dang-nhap-ban-qlda-gt.ts) không còn thuộc Văn phòng Sở quản lý,
+  // dù hồ sơ can_bo của họ vẫn GIỮ NGUYÊN trong CSDL để tra cứu lịch sử khi cần (không xoá dữ liệu,
+  // chỉ bớt khỏi danh sách hiển thị ở đây).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = { toChucId: { in: sp.donVi ? [sp.donVi] : soIds } }
+  const where: any = { toChucId: { in: sp.donVi ? [sp.donVi] : soIds }, toChuc: { isActive: true } }
 
   let list = await db.canBo.findMany({
     where,

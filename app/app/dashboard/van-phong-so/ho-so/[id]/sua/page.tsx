@@ -28,6 +28,18 @@ export default async function SuaCanBoPage({ params }: { params: Promise<{ id: s
     db.chucDanh.findMany({ orderBy: { capQuanLy: 'asc' }, select: { id: true, ten: true } }),
   ])
 
+  // getSoDonViOptions() giờ chỉ liệt kê đơn vị CÒN HOẠT ĐỘNG (không cho gán hồ sơ vào đơn vị đã
+  // chuyển đi/giải thể). Nhưng nếu người NÀY đang thuộc một đơn vị như vậy (hồ sơ cũ giữ lại để
+  // tra cứu lịch sử — vd Ban QLDA GT), <select defaultValue> sẽ không khớp option nào và trình
+  // duyệt tự rơi về option đầu tiên (rỗng) — bấm Lưu mà không đụng ô này sẽ VÔ TÌNH xoá mất
+  // toChucId. Phải bổ sung riêng đơn vị hiện tại của họ vào danh sách, dù đã ngừng hoạt động.
+  if (cb.toChucId && !toChucOptions.some((t) => t.id === cb.toChucId)) {
+    const donViHienTai = await db.toChuc.findUnique({
+      where: { id: cb.toChucId }, select: { id: true, ten: true, ma: true },
+    })
+    if (donViHienTai) toChucOptions.unshift({ ...donViHienTai, ten: `${donViHienTai.ten} (đã ngừng hoạt động)` })
+  }
+
   const defaults: CanBoDefaults = {
     id: cb.id,
     hoTen: cb.hoTen, cccd: cb.cccd, gioiTinh: cb.gioiTinh ?? undefined, ngaySinh: iso(cb.ngaySinh),

@@ -34,11 +34,19 @@ export async function getSoToChucIds(): Promise<string[]> {
   return ids
 }
 
-/** Danh sách đơn vị (cấp 2+) thuộc Sở để hiển thị bộ lọc theo phòng. */
+/**
+ * Danh sách đơn vị (cấp 2+) thuộc Sở để hiển thị bộ lọc theo phòng / ô chọn "đơn vị" khi thêm
+ * mới. CHỈ đơn vị còn hoạt động (isActive=true) — đơn vị đã chuyển đi/giải thể (như Ban QLDA GT,
+ * xem prisma/khoa-dang-nhap-ban-qlda-gt.ts) không được chọn cho hồ sơ MỚI/thêm mới. Hồ sơ can_bo
+ * CŨ đã gắn với đơn vị ngừng hoạt động vẫn giữ nguyên trong CSDL — không hàm nào ở đây xoá dữ liệu,
+ * chỉ bớt khỏi danh sách để CHỌN. Nơi sửa hồ sơ của người thuộc đơn vị đã ngừng hoạt động phải tự
+ * bổ sung riêng đơn vị hiện tại của người đó vào options (xem ho-so/[id]/sua/page.tsx) để không
+ * vô tình xoá mất toChucId khi lưu.
+ */
 export async function getSoDonViOptions(): Promise<{ id: string; ten: string; ma: string }[]> {
   const ids = await getSoToChucIds()
   const rows = await db.toChuc.findMany({
-    where: { id: { in: ids }, ma: { not: SO_ROOT_MA } },
+    where: { id: { in: ids }, ma: { not: SO_ROOT_MA }, isActive: true },
     orderBy: [{ cap: 'asc' }, { thuTu: 'asc' }],
     select: { id: true, ten: true, ma: true },
   })
