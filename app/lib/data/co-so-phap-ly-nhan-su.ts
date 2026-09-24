@@ -74,6 +74,10 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 62/2020/NĐ-CP',
         ngayBanHanh: '01/6/2020',
         hieuLucTu: '20/7/2020',
+        canhBao: 'CHƯA XÁC ĐỊNH DỨT ĐIỂM (rà 24/9/2026, qua Codex phản biện chéo): phần "vị trí việc làm công chức" '
+          + 'đã có Nghị định 361/2025/NĐ-CP (hiệu lực 31/12/2025) quy định lại, nhưng KHÔNG có nguồn xác nhận toàn '
+          + 'bộ NĐ 62/2020 (kể cả phần "biên chế công chức") đã bị bãi bỏ. Ưu tiên dùng NĐ 361/2025/NĐ-CP cho nội '
+          + 'dung vị trí việc làm; đối chiếu văn bản gốc trước khi khẳng định NĐ 62/2020 còn/hết hiệu lực phần biên chế.',
         trichYeu: 'Về VỊ TRÍ VIỆC LÀM và biên chế công chức.',
         dieuKhoan: [
           'Điều 3: Căn cứ xác định vị trí việc làm (chức năng, nhiệm vụ, tổ chức bộ máy; tính chất, đặc điểm, khối lượng công việc).',
@@ -82,9 +86,21 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         ],
       },
       {
+        soHieu: 'Nghị định 361/2025/NĐ-CP',
+        ngayBanHanh: '31/12/2025',
+        hieuLucTu: '31/12/2025',
+        canhBao: 'Rà 24/9/2026 qua WebSearch + Codex (nguồn tổng hợp, CHƯA đọc toàn văn/Công báo) — cần đối chiếu '
+          + 'văn bản gốc để trích dẫn điều/khoản chi tiết. Gồm 4 Chương 15 Điều; hạn chót bố trí công chức theo '
+          + 'vị trí việc làm là 01/7/2027 (với công chức tuyển dụng trước 01/7/2025).',
+        trichYeu: 'Quy định (mới) về VỊ TRÍ VIỆC LÀM CÔNG CHỨC — thay thế nội dung tương ứng của NĐ 62/2020/NĐ-CP.',
+      },
+      {
         soHieu: 'Nghị định 106/2020/NĐ-CP',
         ngayBanHanh: '10/9/2020',
         hieuLucTu: '15/11/2020',
+        canhBao: 'CHƯA RÀ (24/9/2026): vị trí việc làm VIÊN CHỨC. Nghị định 259/2026/NĐ-CP (tuyển dụng/sử dụng/quản '
+          + 'lý viên chức, hiệu lực 01/7/2026 — xem mục nghi_huu) KHÔNG được xác nhận là có thay thế NĐ 106/2020 hay '
+          + 'không; cần tra riêng trước khi khẳng định còn/hết hiệu lực.',
         trichYeu: 'Về VỊ TRÍ VIỆC LÀM và số lượng người làm việc trong đơn vị sự nghiệp công lập (áp dụng cho viên chức).',
         dieuKhoan: [
           'Điều 3–4: Căn cứ, nguyên tắc xác định vị trí việc làm và số lượng người làm việc.',
@@ -461,16 +477,39 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
     yeuCauQuanLy: 'Đánh giá, xếp loại hằng năm làm căn cứ nâng lương, khen thưởng, quy hoạch; cập nhật kết quả xếp loại từng năm cho từng người.',
     vanBan: [
       {
+        soHieu: 'Nghị định 335/2025/NĐ-CP',
+        ngayBanHanh: '21/12/2025',
+        hieuLucTu: '01/01/2026',
+        trichYeu: 'Đánh giá, xếp loại chất lượng CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC và CÔNG CHỨC — bãi bỏ phần tương ứng của NĐ 90/2020/NĐ-CP.',
+        dieuKhoan: [
+          'Nguyên văn (đã xác minh qua xaydungchinhsach.chinhphu.vn 24/9/2026): "Bãi bỏ các quy định về đánh giá, xếp loại chất lượng đối với công chức tại Nghị định số 90/2020/NĐ-CP ngày 13/8/2020" (được sửa đổi tại Nghị định 48/2023/NĐ-CP).',
+        ],
+        canhBao: 'Phạm vi xác nhận được là CÔNG CHỨC + cơ quan hành chính (không áp dụng Quân đội, Công an, tổ chức cơ yếu). CHƯA xác minh văn bản nào bãi bỏ phần "CÁN BỘ" (chức danh bầu cử) của NĐ 90/2020 — nếu phát sinh câu hỏi về đánh giá CÁN BỘ, cần tra thêm.',
+      },
+      {
+        soHieu: 'Nghị định 233/2026/NĐ-CP',
+        ngayBanHanh: '26/6/2026',
+        hieuLucTu: '01/7/2026',
+        trichYeu: 'Đánh giá, xếp loại chất lượng ĐƠN VỊ SỰ NGHIỆP CÔNG LẬP và VIÊN CHỨC — thay thế phần viên chức của NĐ 90/2020/NĐ-CP.',
+        canhBao: 'Rà 24/9/2026 qua WebSearch + Codex — đã xác nhận ngày ban hành/hiệu lực và đối tượng áp dụng qua trang '
+          + 'xaydungchinhsach.chinhphu.vn, nhưng CHƯA đọc được nguyên văn điều khoản bãi bỏ NĐ 90/2020. Cần đối chiếu '
+          + 'văn bản gốc trước khi trích dẫn điều/khoản cụ thể.',
+      },
+      {
         soHieu: 'Nghị định 90/2020/NĐ-CP',
         ngayBanHanh: '13/8/2020',
         hieuLucTu: '20/8/2020',
-        trichYeu: 'Đánh giá, xếp loại chất lượng cán bộ, công chức, viên chức (4 mức: HTXSNV, HTTNV, HTNV, không HTNV).',
+        hieuLucDen: '30/6/2026',
+        thayTheBoi: 'Nghị định 335/2025/NĐ-CP (công chức, từ 01/01/2026) và Nghị định 233/2026/NĐ-CP (viên chức, từ 01/7/2026)',
+        trichYeu: 'Đánh giá, xếp loại chất lượng cán bộ, công chức, viên chức (4 mức: HTXSNV, HTTNV, HTNV, không HTNV). ĐÃ HẾT HIỆU LỰC (phần công chức thay từ 01/01/2026, phần viên chức thay từ 01/7/2026 — cả hai mốc đã qua tính đến hiện tại). Phần "cán bộ" (chức danh bầu cử) CHƯA xác minh văn bản thay thế, xem canhBao ở NĐ 335/2025/NĐ-CP.',
       },
       {
         soHieu: 'Nghị định 48/2023/NĐ-CP',
         ngayBanHanh: '17/7/2023',
         hieuLucTu: '15/9/2023',
-        trichYeu: 'Sửa đổi, bổ sung Nghị định 90/2020/NĐ-CP về đánh giá, xếp loại chất lượng CBCCVC.',
+        hieuLucDen: '30/6/2026',
+        thayTheBoi: 'Nghị định 335/2025/NĐ-CP và Nghị định 233/2026/NĐ-CP (cùng NĐ 90/2020/NĐ-CP mà nó sửa đổi)',
+        trichYeu: 'Sửa đổi, bổ sung Nghị định 90/2020/NĐ-CP về đánh giá, xếp loại chất lượng CBCCVC. ĐÃ HẾT HIỆU LỰC theo NĐ 90/2020.',
       },
     ],
   },
@@ -481,16 +520,38 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
     yeuCauQuanLy: 'Ghi nhận hình thức, thời hạn kỷ luật và hệ quả KÉO DÀI thời gian nâng lương; theo dõi để gỡ ràng buộc đúng hạn.',
     vanBan: [
       {
+        soHieu: 'Nghị định 172/2025/NĐ-CP',
+        ngayBanHanh: '30/6/2025',
+        hieuLucTu: '01/7/2025',
+        trichYeu: 'Xử lý kỷ luật CÁN BỘ, CÔNG CHỨC (không áp dụng viên chức) — bãi bỏ phần cán bộ/công chức của NĐ 112/2020/NĐ-CP.',
+        dieuKhoan: [
+          'Điều 1: áp dụng cho cán bộ, công chức theo Điều 1 Luật Cán bộ, công chức năm 2025 và người đã thôi việc, nghỉ hưu.',
+          'Nguyên văn Điều 29 (đã xác minh qua xaydungchinhsach.chinhphu.vn 24/9/2026): "Bãi bỏ các quy định về xử lý kỷ luật cán bộ, công chức tại Nghị định số 112/2020/NĐ-CP ngày 18 tháng 9 năm 2020" và Nghị định số 71/2023/NĐ-CP sửa đổi, bổ sung.',
+        ],
+        canhBao: 'Nguồn: bài trên cổng chính sách chinhphu.vn (xaydungchinhsach.chinhphu.vn), CHƯA đối chiếu bản Công báo/toàn văn gốc như các mục nghi_huu — đối chiếu thêm nếu cần trích dẫn điều khoản khác ngoài Điều 1, Điều 29.',
+      },
+      {
+        soHieu: 'Nghị định 234/2026/NĐ-CP',
+        ngayBanHanh: '26/6/2026',
+        hieuLucTu: '01/7/2026',
+        trichYeu: 'Xử lý kỷ luật VIÊN CHỨC — thay thế phần viên chức của NĐ 112/2020/NĐ-CP. Hội đồng kỷ luật rút gọn còn 3 thành viên.',
+        canhBao: 'Rà 24/9/2026 qua WebSearch + Codex (nguồn tổng hợp, CHƯA đọc toàn văn/Công báo) — cần đối chiếu văn bản gốc trước khi trích dẫn điều/khoản cụ thể.',
+      },
+      {
         soHieu: 'Nghị định 112/2020/NĐ-CP',
         ngayBanHanh: '18/9/2020',
         hieuLucTu: '20/9/2020',
-        trichYeu: 'Xử lý kỷ luật cán bộ, công chức, viên chức (hình thức, thẩm quyền, thời hiệu, thời hạn).',
+        hieuLucDen: '30/6/2026',
+        thayTheBoi: 'Nghị định 172/2025/NĐ-CP (cán bộ, công chức, từ 01/7/2025) và Nghị định 234/2026/NĐ-CP (viên chức, từ 01/7/2026)',
+        trichYeu: 'Xử lý kỷ luật cán bộ, công chức, viên chức (hình thức, thẩm quyền, thời hiệu, thời hạn). ĐÃ HẾT HIỆU LỰC (phần cán bộ/công chức thay từ 01/7/2025, phần viên chức thay từ 01/7/2026 — cả hai mốc đã qua tính đến hiện tại).',
       },
       {
         soHieu: 'Nghị định 71/2023/NĐ-CP',
         ngayBanHanh: '20/9/2023',
         hieuLucTu: '20/9/2023',
-        trichYeu: 'Sửa đổi, bổ sung Nghị định 112/2020/NĐ-CP về xử lý kỷ luật CBCCVC.',
+        hieuLucDen: '30/6/2026',
+        thayTheBoi: 'Nghị định 172/2025/NĐ-CP và Nghị định 234/2026/NĐ-CP (cùng NĐ 112/2020/NĐ-CP mà nó sửa đổi)',
+        trichYeu: 'Sửa đổi, bổ sung Nghị định 112/2020/NĐ-CP về xử lý kỷ luật CBCCVC. ĐÃ HẾT HIỆU LỰC theo NĐ 112/2020.',
       },
     ],
   },
