@@ -82,8 +82,8 @@ export default async function HoSoCaNhanPage() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-slate-100">
           <Stat label="Hệ số lương" value={canBo.heSoLuong != null ? canBo.heSoLuong.toFixed(2) : '—'} />
-          <Stat label="Phụ cấp (%)" value={fmtNum(canBo.phuCap)} />
-          <Stat label="Vượt khung (%)" value={fmtNum(canBo.vuotKhung)} />
+          <Stat label="Phụ cấp (hệ số)" value={fmtNum(canBo.phuCap)} />
+          <Stat label="Vượt khung" value={canBo.vuotKhung != null ? `${fmtNum(canBo.vuotKhung)}%` : '—'} />
           <Stat label="Ngày hưởng bậc hiện tại" value={fmtDate(canBo.ngayNangLuong)} />
           <Stat
             label="Đến hạn nâng lương lần sau"

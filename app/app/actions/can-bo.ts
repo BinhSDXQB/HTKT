@@ -9,6 +9,7 @@ import { MODULES } from '@/lib/permissions'
 import { logAction } from '@/lib/audit'
 import { convertQueQuan } from '@/lib/que-quan'
 import { tinhNgayNghiHuu, TRUONG_HOP_LUI, hanLuiToiDa, type MaTruongHopLui } from '@/lib/nghi-huu'
+import { chuanHoaPhanTramVuotKhung } from '@/lib/luong'
 import type { OfficeFormState } from './office'
 
 // Hồ sơ cán bộ đầy đủ theo biểu QLNS 53 cột — thêm/sửa/xoá (gate: canManageCanBo)
@@ -146,7 +147,7 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
     bacLuong: n(f.bacLuong) != null ? Math.round(n(f.bacLuong) as number) : null,
     heSoLuong: n(f.heSoLuong),
     phuCap: n(f.phuCap),
-    vuotKhung: n(f.vuotKhung),
+    vuotKhung: chuanHoaPhanTramVuotKhung(n(f.vuotKhung)),
     ngayNangLuong,
     ngayNangLuongKeTiep: addYears(ngayNangLuong, 3),                // = Y + 3 năm
     ngachHienHuong: s(f.ngachHienHuong),

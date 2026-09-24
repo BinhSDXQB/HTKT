@@ -16,7 +16,7 @@ import {
 import { hasPermission, MODULES } from '@/lib/permissions'
 import { getSoToChucIds } from '@/lib/office-scope'
 import { logAction } from '@/lib/audit'
-import { huongLuongNgachBac } from '@/lib/luong'
+import { huongLuongNgachBac, chuanHoaPhanTramVuotKhung } from '@/lib/luong'
 
 // ----- Phân quyền nghiệp vụ trong module Văn phòng Sở -----
 function canManagePersonnel(user: CurrentUser): boolean {
@@ -93,6 +93,10 @@ export async function addSalaryHistoryAction(prev: OfficeFormState, formData: Fo
 
   const bac = d.bacLuong ? parseInt(d.bacLuong, 10) : null
 
+  // Chuẩn hoá % vượt khung: staff dán nhầm số kiểu Excel phần trăm (0.09) thay vì 9 — vẫn hay gặp
+  // dù ô này nhập tay, vì hay copy từ file Excel gốc. Xem lib/luong.ts.
+  const vuotKhungChuan = chuanHoaPhanTramVuotKhung(num(d.vuotKhung))
+
   await db.officeSalaryHistory.create({
     data: {
       canBoId:       d.canBoId,
@@ -100,7 +104,7 @@ export async function addSalaryHistoryAction(prev: OfficeFormState, formData: Fo
       bacLuong:      Number.isFinite(bac as number) ? bac : null,
       heSoLuong:     heSo,
       phuCapChucVu:  num(d.phuCapChucVu),
-      vuotKhung:     num(d.vuotKhung),
+      vuotKhung:     vuotKhungChuan,
       ngayHuong:     new Date(d.ngayHuong),
       ngayNangTiep:  d.ngayNangTiep ? new Date(d.ngayNangTiep) : null,
       soQuyetDinh:   d.soQuyetDinh || null,
@@ -117,7 +121,7 @@ export async function addSalaryHistoryAction(prev: OfficeFormState, formData: Fo
     data: {
       heSoLuong:           heSo,
       phuCap:              num(d.phuCapChucVu) ?? canBo.phuCap,
-      vuotKhung:           num(d.vuotKhung) ?? canBo.vuotKhung,
+      vuotKhung:           vuotKhungChuan ?? canBo.vuotKhung,
       ngayNangLuong:       d.ngayHuong ? new Date(d.ngayHuong) : canBo.ngayNangLuong,
       ngayNangLuongKeTiep: d.ngayNangTiep ? new Date(d.ngayNangTiep) : canBo.ngayNangLuongKeTiep,
     },

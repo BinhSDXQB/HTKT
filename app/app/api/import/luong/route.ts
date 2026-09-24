@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx'
 import { db } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 import { canImportSalary } from '@/lib/salary-perms'
+import { chuanHoaPhanTramVuotKhung } from '@/lib/luong'
 
 // Cột trong sheet "Theodoi" (0-based), dữ liệu bắt đầu từ dòng 12 (index 11)
 const COL = {
@@ -12,7 +13,11 @@ const COL = {
   maNgach: 10,
   bac: 11,
   heSoLuong: 13,   // N — hệ số đang hưởng
-  vuotKhung: 14,   // O — phụ cấp thâm niên vượt khung (vd 0.09)
+  // O — phụ cấp thâm niên vượt khung. Excel LƯU ô định dạng "Phần trăm" dưới dạng phân số
+  // (9% → 0.09 trong cell.v, chỉ hiển thị là "9%") — chuanHoaPhanTramVuotKhung() quy đổi lại
+  // về đúng số nguyên % mà hệ thống dùng (xem lib/luong.ts). ĐÃ từng ghi nhầm 0.09 thẳng vào
+  // CSDL trước khi vá (24/9/26).
+  vuotKhung: 14,   // O — phụ cấp thâm niên vượt khung
   ngayHuong: 15,   // P — ngày hưởng lương hiện tại
   ngayMoi: 22,     // W — ngày nâng lương kế tiếp (đã tính sẵn)
 }
@@ -82,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     const heSoLuong  = toNum(cell(r, COL.heSoLuong))
     const vkRaw      = toNum(cell(r, COL.vuotKhung))
-    const vuotKhung  = vkRaw && vkRaw > 0 ? vkRaw : null
+    const vuotKhung  = chuanHoaPhanTramVuotKhung(vkRaw)
     const ngaySinh   = serialToDate(cell(r, COL.ngaySinh))
     // Cột P = "ngày hưởng" = NGÀY LÊN LƯƠNG (bậc hiện tại) → ngayNangLuong
     const ngayLenLuong = serialToDate(cell(r, COL.ngayHuong))

@@ -11,6 +11,11 @@
 // to_chuc nhưng cá nhân CHƯA có hồ sơ can_bo, và QĐ lương không ghi số CCCD nên
 // không thể tạo hồ sơ mới (cccd là khoá duy nhất bắt buộc, dùng để đăng nhập).
 // Cần bổ sung CCCD rồi tạo hồ sơ theo quy trình thường trước khi nhập 2 QĐ này.
+//
+// 24/9/26: 3 dòng vuotKhungMoi từng ghi PHÂN SỐ (0.05/0.06) thay vì SỐ NGUYÊN % (5/6) — đã sửa ở
+// đây (script này đã chạy trước đó nên dữ liệu CŨ trong CSDL được sửa riêng bằng
+// prisma/sua-vuot-khung-sai-don-vi.ts; sửa cả ở đây để không lặp lại nếu có ai chạy lại). Xem
+// lib/luong.ts hàm chuanHoaPhanTramVuotKhung để biết quy ước đúng (số nguyên % — vd 5 = 5%).
 
 import { PrismaClient } from '../lib/generated/prisma'
 import { PrismaPg } from '@prisma/adapter-pg'
@@ -29,19 +34,19 @@ const CAP_NHAT = [
   },
   {
     id: 'cmprqtota001qcgume1tr6up5', hoTen: 'Lê Anh Tuấn (cccd 044073000751)', soQD: '621/QĐ-SXD', ngayQD: utc(2026, 6, 30),
-    loai: 'VUOT_KHUNG' as const, bacMoi: null, heSoMoi: null, vuotKhungMoi: 0.05,
+    loai: 'VUOT_KHUNG' as const, bacMoi: null, heSoMoi: null, vuotKhungMoi: 5,
     ngayHuong: utc(2026, 7, 1), ngayNangTiep: utc(2027, 7, 1),
     ghiChu: 'Hưởng phụ cấp thâm niên vượt khung lần đầu: 5%.',
   },
   {
     id: 'cmq7urycp000i3kumroalnt96', hoTen: 'Phạm Xuân Thảo', soQD: '757/QĐ-SXD', ngayQD: utc(2026, 7, 28),
-    loai: 'VUOT_KHUNG' as const, bacMoi: null, heSoMoi: null, vuotKhungMoi: 0.06,
+    loai: 'VUOT_KHUNG' as const, bacMoi: null, heSoMoi: null, vuotKhungMoi: 6,
     ngayHuong: utc(2026, 8, 1), ngayNangTiep: utc(2027, 8, 1),
     ghiChu: 'Nâng phụ cấp thâm niên vượt khung: 5% → 6%.',
   },
   {
     id: 'cmq7uryce000g3kumbuusph3k', hoTen: 'Phan Thị Lệ Nhung', soQD: '214/QĐ-SXD', ngayQD: utc(2026, 4, 3),
-    loai: 'VUOT_KHUNG' as const, bacMoi: null, heSoMoi: null, vuotKhungMoi: 0.05,
+    loai: 'VUOT_KHUNG' as const, bacMoi: null, heSoMoi: null, vuotKhungMoi: 5,
     ngayHuong: utc(2026, 4, 1), ngayNangTiep: utc(2027, 4, 1),
     ghiChu: 'Hưởng phụ cấp thâm niên vượt khung lần đầu: 5%.',
   },

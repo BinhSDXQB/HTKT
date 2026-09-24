@@ -247,7 +247,7 @@ export function CanBoProfileForm({ defaults, toChucOptions, chucDanhOptions }: {
           <Input name="phuCap" defaultValue={defaults.phuCap} className="h-9" placeholder="VD: 0.5" />
         </Field>
         <Field label="% Vượt khung">
-          <Input name="vuotKhung" defaultValue={defaults.vuotKhung} className="h-9" />
+          <Input name="vuotKhung" defaultValue={defaults.vuotKhung} className="h-9" placeholder="VD: 9 (số nguyên %, không phải 0,09)" />
         </Field>
         <Field label="Ngày hưởng lương (lên lương tự +3 năm)">
           <Input name="ngayNangLuong" type="date" defaultValue={defaults.ngayNangLuong} className="h-9" />

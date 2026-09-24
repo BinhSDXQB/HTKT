@@ -103,7 +103,7 @@ export default async function QuanLyLuongPage() {
                 <td className="px-4 py-2.5 text-slate-600">{cb.chucDanh?.ten ?? cb.chucVu ?? '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? (cb.heSoLuong ?? '—') : '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : !apDung && cb.heSoLuong != null ? fmtVND(cb.heSoLuong) : '—'}</td>
-                <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? (cb.vuotKhung != null && cb.vuotKhung > 0 ? `${(cb.vuotKhung * 100).toFixed(0)}%` : '—') : '—'}</td>
+                <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? (cb.vuotKhung != null && cb.vuotKhung > 0 ? `${cb.vuotKhung.toFixed(0)}%` : '—') : '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600">{!canSee ? '•••' : apDung ? fmtDate(cb.ngayNangLuong) : '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600">{!canSee ? '•••' : apDung ? fmtDate(cb.ngayNangLuongKeTiep) : '—'}</td>
                 <td className="px-4 py-2.5">

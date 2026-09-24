@@ -7,6 +7,7 @@ import { PrismaClient } from '../lib/generated/prisma'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { convertQueQuan } from '../lib/que-quan'
 import { tinhNgayNghiHuu } from '../lib/nghi-huu'
+import { chuanHoaPhanTramVuotKhung } from '../lib/luong'
 
 const FILE = 'C:/QLNS - SXD QUANG TRI (mới gửi 14.5.26)s.xlsx'
 const DB_URL = process.env.DATABASE_URL ?? 'postgresql://postgres:Postgres%402025@localhost:5432/ql_htkt'
@@ -216,7 +217,11 @@ async function main() {
       bacLuong: toNum(cell('U')) != null ? Math.round(toNum(cell('U')) as number) : null,
       heSoLuong: toNum(cell('V')),
       phuCap: toNum(cell('W')),
-      vuotKhung: toNum(cell('X')),
+      // Cột X: % vượt khung. File Excel gốc lưu ô "Phần trăm" dưới dạng phân số (9% → cell.v=0.09)
+      // — chuẩn hoá về số nguyên % (xem lib/luong.ts). Sửa 24/9/26 sau khi phát hiện 5 hồ sơ từ
+      // lần chạy trước bị ghi nhầm 0.05/0.06/0.09 thẳng vào CSDL — đã có script vá riêng
+      // (prisma/sua-vuot-khung-sai-don-vi.ts) cho dữ liệu cũ; sửa ở đây để lần chạy sau không lặp lại.
+      vuotKhung: chuanHoaPhanTramVuotKhung(toNum(cell('X'))),
       ngayNangLuong: ngayHuongLuong,
       ngayNangLuongKeTiep: toDate(cell('AA')) ?? addYears(ngayHuongLuong, 3),
       ngachHienHuong: txt('AB'),

@@ -21,7 +21,7 @@ async function main() {
   const coLuong = all.filter(c => c.heSoLuong != null)
   const sorted = [...coLuong].sort((a, b) => b.heSoLuong! - a.heSoLuong!)
   console.log('— Hệ số lương CAO nhất (top 3):')
-  sorted.slice(0, 3).forEach(c => console.log(`  ${nv(c)} — hệ số ${c.heSoLuong}${c.vuotKhung ? ` + VK ${(c.vuotKhung * 100).toFixed(0)}%` : ''}${c.phuCap ? ` + PC ${c.phuCap}` : ''}`))
+  sorted.slice(0, 3).forEach(c => console.log(`  ${nv(c)} — hệ số ${c.heSoLuong}${c.vuotKhung ? ` + VK ${c.vuotKhung.toFixed(0)}%` : ''}${c.phuCap ? ` + PC ${c.phuCap}` : ''}`))
   console.log('— Hệ số lương THẤP nhất (top 3):')
   sorted.slice(-3).reverse().forEach(c => console.log(`  ${nv(c)} — hệ số ${c.heSoLuong}`))
   console.log(`  (${all.length - coLuong.length} người chưa có dữ liệu hệ số)\n`)
@@ -29,7 +29,7 @@ async function main() {
   // 2. Vượt khung
   const vk = all.filter(c => (c.vuotKhung ?? 0) > 0).sort((a, b) => b.vuotKhung! - a.vuotKhung!)
   console.log(`— Hưởng phụ cấp VƯỢT KHUNG: ${vk.length} người. Cao nhất:`)
-  vk.slice(0, 3).forEach(c => console.log(`  ${nv(c)} — VK ${(c.vuotKhung! * 100).toFixed(0)}% (hệ số ${c.heSoLuong})`))
+  vk.slice(0, 3).forEach(c => console.log(`  ${nv(c)} — VK ${c.vuotKhung!.toFixed(0)}% (hệ số ${c.heSoLuong})`))
   console.log()
 
   // 3. Về hưu sớm nhất / trong năm 2026-2027

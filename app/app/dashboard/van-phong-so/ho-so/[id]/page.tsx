@@ -305,8 +305,8 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <Stat label="Hệ số hiện tại" value={canSee ? (cb.heSoLuong?.toString() ?? '—') : '•••'} />
-          <Stat label="Phụ cấp" value={canSee ? (cb.phuCap?.toString() ?? '—') : '•••'} />
-          <Stat label="% Vượt khung" value={canSee ? (cb.vuotKhung?.toString() ?? '—') : '•••'} />
+          <Stat label="Phụ cấp (hệ số)" value={canSee ? (cb.phuCap?.toString() ?? '—') : '•••'} />
+          <Stat label="% Vượt khung" value={canSee ? (cb.vuotKhung != null ? `${cb.vuotKhung}%` : '—') : '•••'} />
           <Stat label="Ngày lên lương" value={canSee ? fmtDate(cb.ngayNangLuong) : '•••'} />
         </div>
 
