@@ -736,6 +736,7 @@ export type CanBoWhereInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseListRelationFilter
   generatedDocuments?: Prisma.OfficeGeneratedDocumentListRelationFilter
   leaveRequests?: Prisma.OfficeLeaveRequestListRelationFilter
+  conCai?: Prisma.ConCanBoListRelationFilter
 }
 
 export type CanBoOrderByWithRelationInput = {
@@ -818,6 +819,7 @@ export type CanBoOrderByWithRelationInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseOrderByRelationAggregateInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentOrderByRelationAggregateInput
   leaveRequests?: Prisma.OfficeLeaveRequestOrderByRelationAggregateInput
+  conCai?: Prisma.ConCanBoOrderByRelationAggregateInput
 }
 
 export type CanBoWhereUniqueInput = Prisma.AtLeast<{
@@ -903,6 +905,7 @@ export type CanBoWhereUniqueInput = Prisma.AtLeast<{
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseListRelationFilter
   generatedDocuments?: Prisma.OfficeGeneratedDocumentListRelationFilter
   leaveRequests?: Prisma.OfficeLeaveRequestListRelationFilter
+  conCai?: Prisma.ConCanBoListRelationFilter
 }, "id" | "cccd" | "userId">
 
 export type CanBoOrderByWithAggregationInput = {
@@ -1130,6 +1133,7 @@ export type CanBoCreateInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateInput = {
@@ -1209,6 +1213,7 @@ export type CanBoUncheckedCreateInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUpdateInput = {
@@ -1288,6 +1293,7 @@ export type CanBoUpdateInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateInput = {
@@ -1367,6 +1373,7 @@ export type CanBoUncheckedUpdateInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateManyInput = {
@@ -2072,6 +2079,20 @@ export type CanBoUpdateOneRequiredWithoutLeaveRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CanBoUpdateToOneWithWhereWithoutLeaveRequestsInput, Prisma.CanBoUpdateWithoutLeaveRequestsInput>, Prisma.CanBoUncheckedUpdateWithoutLeaveRequestsInput>
 }
 
+export type CanBoCreateNestedOneWithoutConCaiInput = {
+  create?: Prisma.XOR<Prisma.CanBoCreateWithoutConCaiInput, Prisma.CanBoUncheckedCreateWithoutConCaiInput>
+  connectOrCreate?: Prisma.CanBoCreateOrConnectWithoutConCaiInput
+  connect?: Prisma.CanBoWhereUniqueInput
+}
+
+export type CanBoUpdateOneRequiredWithoutConCaiNestedInput = {
+  create?: Prisma.XOR<Prisma.CanBoCreateWithoutConCaiInput, Prisma.CanBoUncheckedCreateWithoutConCaiInput>
+  connectOrCreate?: Prisma.CanBoCreateOrConnectWithoutConCaiInput
+  upsert?: Prisma.CanBoUpsertWithoutConCaiInput
+  connect?: Prisma.CanBoWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CanBoUpdateToOneWithWhereWithoutConCaiInput, Prisma.CanBoUpdateWithoutConCaiInput>, Prisma.CanBoUncheckedUpdateWithoutConCaiInput>
+}
+
 export type CanBoCreateWithoutUserInput = {
   id?: string
   cccd: string
@@ -2148,6 +2169,7 @@ export type CanBoCreateWithoutUserInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutUserInput = {
@@ -2226,6 +2248,7 @@ export type CanBoUncheckedCreateWithoutUserInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutUserInput = {
@@ -2320,6 +2343,7 @@ export type CanBoUpdateWithoutUserInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutUserInput = {
@@ -2398,6 +2422,7 @@ export type CanBoUncheckedUpdateWithoutUserInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutToChucInput = {
@@ -2476,6 +2501,7 @@ export type CanBoCreateWithoutToChucInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutToChucInput = {
@@ -2554,6 +2580,7 @@ export type CanBoUncheckedCreateWithoutToChucInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutToChucInput = {
@@ -2731,6 +2758,7 @@ export type CanBoCreateWithoutChucDanhInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutChucDanhInput = {
@@ -2809,6 +2837,7 @@ export type CanBoUncheckedCreateWithoutChucDanhInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutChucDanhInput = {
@@ -2913,6 +2942,7 @@ export type CanBoCreateWithoutPhanCongsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutPhanCongsInput = {
@@ -2991,6 +3021,7 @@ export type CanBoUncheckedCreateWithoutPhanCongsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutPhanCongsInput = {
@@ -3085,6 +3116,7 @@ export type CanBoUpdateWithoutPhanCongsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutPhanCongsInput = {
@@ -3163,6 +3195,7 @@ export type CanBoUncheckedUpdateWithoutPhanCongsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutSalaryHistoryInput = {
@@ -3241,6 +3274,7 @@ export type CanBoCreateWithoutSalaryHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutSalaryHistoryInput = {
@@ -3319,6 +3353,7 @@ export type CanBoUncheckedCreateWithoutSalaryHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutSalaryHistoryInput = {
@@ -3413,6 +3448,7 @@ export type CanBoUpdateWithoutSalaryHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutSalaryHistoryInput = {
@@ -3491,6 +3527,7 @@ export type CanBoUncheckedUpdateWithoutSalaryHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutWorkHistoryInput = {
@@ -3569,6 +3606,7 @@ export type CanBoCreateWithoutWorkHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutWorkHistoryInput = {
@@ -3647,6 +3685,7 @@ export type CanBoUncheckedCreateWithoutWorkHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutWorkHistoryInput = {
@@ -3741,6 +3780,7 @@ export type CanBoUpdateWithoutWorkHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutWorkHistoryInput = {
@@ -3819,6 +3859,7 @@ export type CanBoUncheckedUpdateWithoutWorkHistoryInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutRewardRecordsInput = {
@@ -3897,6 +3938,7 @@ export type CanBoCreateWithoutRewardRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutRewardRecordsInput = {
@@ -3975,6 +4017,7 @@ export type CanBoUncheckedCreateWithoutRewardRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutRewardRecordsInput = {
@@ -4069,6 +4112,7 @@ export type CanBoUpdateWithoutRewardRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutRewardRecordsInput = {
@@ -4147,6 +4191,7 @@ export type CanBoUncheckedUpdateWithoutRewardRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutAnnualEvaluationsInput = {
@@ -4225,6 +4270,7 @@ export type CanBoCreateWithoutAnnualEvaluationsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutAnnualEvaluationsInput = {
@@ -4303,6 +4349,7 @@ export type CanBoUncheckedCreateWithoutAnnualEvaluationsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutAnnualEvaluationsInput = {
@@ -4397,6 +4444,7 @@ export type CanBoUpdateWithoutAnnualEvaluationsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutAnnualEvaluationsInput = {
@@ -4475,6 +4523,7 @@ export type CanBoUncheckedUpdateWithoutAnnualEvaluationsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutDisciplineRecordsInput = {
@@ -4553,6 +4602,7 @@ export type CanBoCreateWithoutDisciplineRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutDisciplineRecordsInput = {
@@ -4631,6 +4681,7 @@ export type CanBoUncheckedCreateWithoutDisciplineRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutDisciplineRecordsInput = {
@@ -4725,6 +4776,7 @@ export type CanBoUpdateWithoutDisciplineRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutDisciplineRecordsInput = {
@@ -4803,6 +4855,7 @@ export type CanBoUncheckedUpdateWithoutDisciplineRecordsInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutSalaryReviewCasesInput = {
@@ -4881,6 +4934,7 @@ export type CanBoCreateWithoutSalaryReviewCasesInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutSalaryReviewCasesInput = {
@@ -4959,6 +5013,7 @@ export type CanBoUncheckedCreateWithoutSalaryReviewCasesInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutSalaryReviewCasesInput = {
@@ -5053,6 +5108,7 @@ export type CanBoUpdateWithoutSalaryReviewCasesInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutSalaryReviewCasesInput = {
@@ -5131,6 +5187,7 @@ export type CanBoUncheckedUpdateWithoutSalaryReviewCasesInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutGeneratedDocumentsInput = {
@@ -5209,6 +5266,7 @@ export type CanBoCreateWithoutGeneratedDocumentsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordCreateNestedManyWithoutCanBoInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutGeneratedDocumentsInput = {
@@ -5287,6 +5345,7 @@ export type CanBoUncheckedCreateWithoutGeneratedDocumentsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedCreateNestedManyWithoutCanBoInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutGeneratedDocumentsInput = {
@@ -5381,6 +5440,7 @@ export type CanBoUpdateWithoutGeneratedDocumentsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUpdateManyWithoutCanBoNestedInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutGeneratedDocumentsInput = {
@@ -5459,6 +5519,7 @@ export type CanBoUncheckedUpdateWithoutGeneratedDocumentsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedUpdateManyWithoutCanBoNestedInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateWithoutLeaveRequestsInput = {
@@ -5537,6 +5598,7 @@ export type CanBoCreateWithoutLeaveRequestsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordCreateNestedManyWithoutCanBoInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoUncheckedCreateWithoutLeaveRequestsInput = {
@@ -5615,6 +5677,7 @@ export type CanBoUncheckedCreateWithoutLeaveRequestsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedCreateNestedManyWithoutCanBoInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
+  conCai?: Prisma.ConCanBoUncheckedCreateNestedManyWithoutCanBoInput
 }
 
 export type CanBoCreateOrConnectWithoutLeaveRequestsInput = {
@@ -5709,6 +5772,7 @@ export type CanBoUpdateWithoutLeaveRequestsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUpdateManyWithoutCanBoNestedInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutLeaveRequestsInput = {
@@ -5787,6 +5851,339 @@ export type CanBoUncheckedUpdateWithoutLeaveRequestsInput = {
   disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedUpdateManyWithoutCanBoNestedInput
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
+}
+
+export type CanBoCreateWithoutConCaiInput = {
+  id?: string
+  cccd: string
+  hoTen: string
+  chucVu?: string | null
+  phongBan?: string | null
+  email?: string | null
+  soDienThoai?: string | null
+  ngaySinh?: Date | string | null
+  heSoLuong?: number | null
+  phuCap?: number | null
+  vuotKhung?: number | null
+  ngayNangLuong?: Date | string | null
+  ngayNangLuongKeTiep?: Date | string | null
+  gioiTinh?: $Enums.GioiTinh | null
+  queQuanTruoc?: string | null
+  queQuanSau?: string | null
+  noiOTruoc?: string | null
+  noiOHienNay?: string | null
+  quangTriCuRa?: string | null
+  doiTuong?: $Enums.DoiTuongNhanSu | null
+  viTriViecLam?: string | null
+  loaiHopDong?: string | null
+  ngayKetThucHopDong?: Date | string | null
+  loaiHinh?: string | null
+  ngayVaoBienChe?: Date | string | null
+  ngayVaoCongChucCoQuanNN?: Date | string | null
+  boNhiemLanDau?: string | null
+  ngayBoNhiemGanNhat?: Date | string | null
+  ngayBoNhiemTiepTheo?: Date | string | null
+  ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
+  maNgach?: string | null
+  bacLuong?: number | null
+  ngachHienHuong?: string | null
+  ngayBoNhiemNgach?: Date | string | null
+  trinhDoChuyenMon?: string | null
+  chuyenNganh?: string | null
+  namTotNghiep?: string | null
+  heDaoTao?: string | null
+  trinhDoQLNN?: string | null
+  namDaoTaoQLNN?: string | null
+  trinhDoLLCT?: string | null
+  namDaoTaoLLCT?: string | null
+  trinhDoNgoaiNgu?: string | null
+  namDaoTaoNgoaiNgu?: string | null
+  trinhDoTinHoc?: string | null
+  namDaoTaoTinHoc?: string | null
+  namDaoTaoCapPhong?: string | null
+  namDaoTaoCapSo?: string | null
+  qpAn?: string | null
+  namDaoTaoQPAN?: string | null
+  soTheDang?: string | null
+  ngayKetNapDang?: Date | string | null
+  ngayVaoDangChinhThuc?: Date | string | null
+  chiBo?: string | null
+  maSoBHXH?: string | null
+  ngayThamGiaBHXH?: Date | string | null
+  maSoThue?: string | null
+  trangThai?: string
+  ghiChu?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  toChuc?: Prisma.ToChucCreateNestedOneWithoutCanBosInput
+  chucDanh?: Prisma.ChucDanhCreateNestedOneWithoutCanBosInput
+  user?: Prisma.UserCreateNestedOneWithoutCanBoInput
+  phanCongs?: Prisma.PhanCongCreateNestedManyWithoutCanBoInput
+  salaryHistory?: Prisma.OfficeSalaryHistoryCreateNestedManyWithoutCanBoInput
+  workHistory?: Prisma.OfficeWorkHistoryCreateNestedManyWithoutCanBoInput
+  rewardRecords?: Prisma.OfficeRewardRecordCreateNestedManyWithoutCanBoInput
+  annualEvaluations?: Prisma.OfficeAnnualEvaluationCreateNestedManyWithoutCanBoInput
+  disciplineRecords?: Prisma.OfficeDisciplineRecordCreateNestedManyWithoutCanBoInput
+  salaryReviewCases?: Prisma.OfficeSalaryReviewCaseCreateNestedManyWithoutCanBoInput
+  generatedDocuments?: Prisma.OfficeGeneratedDocumentCreateNestedManyWithoutCanBoInput
+  leaveRequests?: Prisma.OfficeLeaveRequestCreateNestedManyWithoutCanBoInput
+}
+
+export type CanBoUncheckedCreateWithoutConCaiInput = {
+  id?: string
+  cccd: string
+  hoTen: string
+  chucVu?: string | null
+  phongBan?: string | null
+  email?: string | null
+  soDienThoai?: string | null
+  ngaySinh?: Date | string | null
+  heSoLuong?: number | null
+  phuCap?: number | null
+  vuotKhung?: number | null
+  ngayNangLuong?: Date | string | null
+  ngayNangLuongKeTiep?: Date | string | null
+  gioiTinh?: $Enums.GioiTinh | null
+  queQuanTruoc?: string | null
+  queQuanSau?: string | null
+  noiOTruoc?: string | null
+  noiOHienNay?: string | null
+  quangTriCuRa?: string | null
+  doiTuong?: $Enums.DoiTuongNhanSu | null
+  viTriViecLam?: string | null
+  loaiHopDong?: string | null
+  ngayKetThucHopDong?: Date | string | null
+  loaiHinh?: string | null
+  ngayVaoBienChe?: Date | string | null
+  ngayVaoCongChucCoQuanNN?: Date | string | null
+  boNhiemLanDau?: string | null
+  ngayBoNhiemGanNhat?: Date | string | null
+  ngayBoNhiemTiepTheo?: Date | string | null
+  ngayVeHuu?: Date | string | null
+  ngayNghiHuuLui?: Date | string | null
+  truongHopLui?: string | null
+  vanBanLuiNghiHuu?: string | null
+  maNgach?: string | null
+  bacLuong?: number | null
+  ngachHienHuong?: string | null
+  ngayBoNhiemNgach?: Date | string | null
+  trinhDoChuyenMon?: string | null
+  chuyenNganh?: string | null
+  namTotNghiep?: string | null
+  heDaoTao?: string | null
+  trinhDoQLNN?: string | null
+  namDaoTaoQLNN?: string | null
+  trinhDoLLCT?: string | null
+  namDaoTaoLLCT?: string | null
+  trinhDoNgoaiNgu?: string | null
+  namDaoTaoNgoaiNgu?: string | null
+  trinhDoTinHoc?: string | null
+  namDaoTaoTinHoc?: string | null
+  namDaoTaoCapPhong?: string | null
+  namDaoTaoCapSo?: string | null
+  qpAn?: string | null
+  namDaoTaoQPAN?: string | null
+  soTheDang?: string | null
+  ngayKetNapDang?: Date | string | null
+  ngayVaoDangChinhThuc?: Date | string | null
+  chiBo?: string | null
+  maSoBHXH?: string | null
+  ngayThamGiaBHXH?: Date | string | null
+  maSoThue?: string | null
+  trangThai?: string
+  ghiChu?: string | null
+  toChucId?: string | null
+  chucDanhId?: string | null
+  userId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  phanCongs?: Prisma.PhanCongUncheckedCreateNestedManyWithoutCanBoInput
+  salaryHistory?: Prisma.OfficeSalaryHistoryUncheckedCreateNestedManyWithoutCanBoInput
+  workHistory?: Prisma.OfficeWorkHistoryUncheckedCreateNestedManyWithoutCanBoInput
+  rewardRecords?: Prisma.OfficeRewardRecordUncheckedCreateNestedManyWithoutCanBoInput
+  annualEvaluations?: Prisma.OfficeAnnualEvaluationUncheckedCreateNestedManyWithoutCanBoInput
+  disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedCreateNestedManyWithoutCanBoInput
+  salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedCreateNestedManyWithoutCanBoInput
+  generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedCreateNestedManyWithoutCanBoInput
+  leaveRequests?: Prisma.OfficeLeaveRequestUncheckedCreateNestedManyWithoutCanBoInput
+}
+
+export type CanBoCreateOrConnectWithoutConCaiInput = {
+  where: Prisma.CanBoWhereUniqueInput
+  create: Prisma.XOR<Prisma.CanBoCreateWithoutConCaiInput, Prisma.CanBoUncheckedCreateWithoutConCaiInput>
+}
+
+export type CanBoUpsertWithoutConCaiInput = {
+  update: Prisma.XOR<Prisma.CanBoUpdateWithoutConCaiInput, Prisma.CanBoUncheckedUpdateWithoutConCaiInput>
+  create: Prisma.XOR<Prisma.CanBoCreateWithoutConCaiInput, Prisma.CanBoUncheckedCreateWithoutConCaiInput>
+  where?: Prisma.CanBoWhereInput
+}
+
+export type CanBoUpdateToOneWithWhereWithoutConCaiInput = {
+  where?: Prisma.CanBoWhereInput
+  data: Prisma.XOR<Prisma.CanBoUpdateWithoutConCaiInput, Prisma.CanBoUncheckedUpdateWithoutConCaiInput>
+}
+
+export type CanBoUpdateWithoutConCaiInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cccd?: Prisma.StringFieldUpdateOperationsInput | string
+  hoTen?: Prisma.StringFieldUpdateOperationsInput | string
+  chucVu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phongBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soDienThoai?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngaySinh?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heSoLuong?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  phuCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vuotKhung?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ngayNangLuong?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNangLuongKeTiep?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gioiTinh?: Prisma.NullableEnumGioiTinhFieldUpdateOperationsInput | $Enums.GioiTinh | null
+  queQuanTruoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  queQuanSau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noiOTruoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noiOHienNay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quangTriCuRa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doiTuong?: Prisma.NullableEnumDoiTuongNhanSuFieldUpdateOperationsInput | $Enums.DoiTuongNhanSu | null
+  viTriViecLam?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiHopDong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayKetThucHopDong?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loaiHinh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayVaoBienChe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayVaoCongChucCoQuanNN?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  boNhiemLanDau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayBoNhiemNgach?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  trinhDoChuyenMon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chuyenNganh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namTotNghiep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heDaoTao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoQLNN?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoQLNN?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoLLCT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoLLCT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoNgoaiNgu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoNgoaiNgu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoTinHoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoTinHoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoCapPhong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoCapSo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qpAn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoQPAN?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soTheDang?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayKetNapDang?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayVaoDangChinhThuc?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  chiBo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoBHXH?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayThamGiaBHXH?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  toChuc?: Prisma.ToChucUpdateOneWithoutCanBosNestedInput
+  chucDanh?: Prisma.ChucDanhUpdateOneWithoutCanBosNestedInput
+  user?: Prisma.UserUpdateOneWithoutCanBoNestedInput
+  phanCongs?: Prisma.PhanCongUpdateManyWithoutCanBoNestedInput
+  salaryHistory?: Prisma.OfficeSalaryHistoryUpdateManyWithoutCanBoNestedInput
+  workHistory?: Prisma.OfficeWorkHistoryUpdateManyWithoutCanBoNestedInput
+  rewardRecords?: Prisma.OfficeRewardRecordUpdateManyWithoutCanBoNestedInput
+  annualEvaluations?: Prisma.OfficeAnnualEvaluationUpdateManyWithoutCanBoNestedInput
+  disciplineRecords?: Prisma.OfficeDisciplineRecordUpdateManyWithoutCanBoNestedInput
+  salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
+  generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
+  leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+}
+
+export type CanBoUncheckedUpdateWithoutConCaiInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  cccd?: Prisma.StringFieldUpdateOperationsInput | string
+  hoTen?: Prisma.StringFieldUpdateOperationsInput | string
+  chucVu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phongBan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soDienThoai?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngaySinh?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heSoLuong?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  phuCap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vuotKhung?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ngayNangLuong?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNangLuongKeTiep?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gioiTinh?: Prisma.NullableEnumGioiTinhFieldUpdateOperationsInput | $Enums.GioiTinh | null
+  queQuanTruoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  queQuanSau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noiOTruoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noiOHienNay?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quangTriCuRa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doiTuong?: Prisma.NullableEnumDoiTuongNhanSuFieldUpdateOperationsInput | $Enums.DoiTuongNhanSu | null
+  viTriViecLam?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiHopDong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayKetThucHopDong?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loaiHinh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayVaoBienChe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayVaoCongChucCoQuanNN?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  boNhiemLanDau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayBoNhiemGanNhat?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayBoNhiemTiepTheo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayVeHuu?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayNghiHuuLui?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  truongHopLui?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vanBanLuiNghiHuu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maNgach?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bacLuong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ngachHienHuong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayBoNhiemNgach?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  trinhDoChuyenMon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chuyenNganh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namTotNghiep?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  heDaoTao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoQLNN?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoQLNN?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoLLCT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoLLCT?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoNgoaiNgu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoNgoaiNgu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinhDoTinHoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoTinHoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoCapPhong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoCapSo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qpAn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDaoTaoQPAN?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soTheDang?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayKetNapDang?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngayVaoDangChinhThuc?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  chiBo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maSoBHXH?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngayThamGiaBHXH?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maSoThue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trangThai?: Prisma.StringFieldUpdateOperationsInput | string
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toChucId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chucDanhId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  phanCongs?: Prisma.PhanCongUncheckedUpdateManyWithoutCanBoNestedInput
+  salaryHistory?: Prisma.OfficeSalaryHistoryUncheckedUpdateManyWithoutCanBoNestedInput
+  workHistory?: Prisma.OfficeWorkHistoryUncheckedUpdateManyWithoutCanBoNestedInput
+  rewardRecords?: Prisma.OfficeRewardRecordUncheckedUpdateManyWithoutCanBoNestedInput
+  annualEvaluations?: Prisma.OfficeAnnualEvaluationUncheckedUpdateManyWithoutCanBoNestedInput
+  disciplineRecords?: Prisma.OfficeDisciplineRecordUncheckedUpdateManyWithoutCanBoNestedInput
+  salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
+  generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
+  leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoCreateManyToChucInput = {
@@ -5934,6 +6331,7 @@ export type CanBoUpdateWithoutToChucInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutToChucInput = {
@@ -6012,6 +6410,7 @@ export type CanBoUncheckedUpdateWithoutToChucInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateManyWithoutToChucInput = {
@@ -6228,6 +6627,7 @@ export type CanBoUpdateWithoutChucDanhInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateWithoutChucDanhInput = {
@@ -6306,6 +6706,7 @@ export type CanBoUncheckedUpdateWithoutChucDanhInput = {
   salaryReviewCases?: Prisma.OfficeSalaryReviewCaseUncheckedUpdateManyWithoutCanBoNestedInput
   generatedDocuments?: Prisma.OfficeGeneratedDocumentUncheckedUpdateManyWithoutCanBoNestedInput
   leaveRequests?: Prisma.OfficeLeaveRequestUncheckedUpdateManyWithoutCanBoNestedInput
+  conCai?: Prisma.ConCanBoUncheckedUpdateManyWithoutCanBoNestedInput
 }
 
 export type CanBoUncheckedUpdateManyWithoutChucDanhInput = {
@@ -6392,6 +6793,7 @@ export type CanBoCountOutputType = {
   salaryReviewCases: number
   generatedDocuments: number
   leaveRequests: number
+  conCai: number
 }
 
 export type CanBoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6404,6 +6806,7 @@ export type CanBoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   salaryReviewCases?: boolean | CanBoCountOutputTypeCountSalaryReviewCasesArgs
   generatedDocuments?: boolean | CanBoCountOutputTypeCountGeneratedDocumentsArgs
   leaveRequests?: boolean | CanBoCountOutputTypeCountLeaveRequestsArgs
+  conCai?: boolean | CanBoCountOutputTypeCountConCaiArgs
 }
 
 /**
@@ -6477,6 +6880,13 @@ export type CanBoCountOutputTypeCountGeneratedDocumentsArgs<ExtArgs extends runt
  */
 export type CanBoCountOutputTypeCountLeaveRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.OfficeLeaveRequestWhereInput
+}
+
+/**
+ * CanBoCountOutputType without action
+ */
+export type CanBoCountOutputTypeCountConCaiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConCanBoWhereInput
 }
 
 
@@ -6560,6 +6970,7 @@ export type CanBoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   salaryReviewCases?: boolean | Prisma.CanBo$salaryReviewCasesArgs<ExtArgs>
   generatedDocuments?: boolean | Prisma.CanBo$generatedDocumentsArgs<ExtArgs>
   leaveRequests?: boolean | Prisma.CanBo$leaveRequestsArgs<ExtArgs>
+  conCai?: boolean | Prisma.CanBo$conCaiArgs<ExtArgs>
   _count?: boolean | Prisma.CanBoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["canBo"]>
 
@@ -6793,6 +7204,7 @@ export type CanBoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   salaryReviewCases?: boolean | Prisma.CanBo$salaryReviewCasesArgs<ExtArgs>
   generatedDocuments?: boolean | Prisma.CanBo$generatedDocumentsArgs<ExtArgs>
   leaveRequests?: boolean | Prisma.CanBo$leaveRequestsArgs<ExtArgs>
+  conCai?: boolean | Prisma.CanBo$conCaiArgs<ExtArgs>
   _count?: boolean | Prisma.CanBoCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CanBoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6821,6 +7233,7 @@ export type $CanBoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     salaryReviewCases: Prisma.$OfficeSalaryReviewCasePayload<ExtArgs>[]
     generatedDocuments: Prisma.$OfficeGeneratedDocumentPayload<ExtArgs>[]
     leaveRequests: Prisma.$OfficeLeaveRequestPayload<ExtArgs>[]
+    conCai: Prisma.$ConCanBoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -7296,6 +7709,7 @@ export interface Prisma__CanBoClient<T, Null = never, ExtArgs extends runtime.Ty
   salaryReviewCases<T extends Prisma.CanBo$salaryReviewCasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CanBo$salaryReviewCasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficeSalaryReviewCasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   generatedDocuments<T extends Prisma.CanBo$generatedDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CanBo$generatedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficeGeneratedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaveRequests<T extends Prisma.CanBo$leaveRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CanBo$leaveRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficeLeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conCai<T extends Prisma.CanBo$conCaiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CanBo$conCaiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConCanBoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8063,6 +8477,30 @@ export type CanBo$leaveRequestsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.OfficeLeaveRequestScalarFieldEnum | Prisma.OfficeLeaveRequestScalarFieldEnum[]
+}
+
+/**
+ * CanBo.conCai
+ */
+export type CanBo$conCaiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ConCanBo
+   */
+  select?: Prisma.ConCanBoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ConCanBo
+   */
+  omit?: Prisma.ConCanBoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConCanBoInclude<ExtArgs> | null
+  where?: Prisma.ConCanBoWhereInput
+  orderBy?: Prisma.ConCanBoOrderByWithRelationInput | Prisma.ConCanBoOrderByWithRelationInput[]
+  cursor?: Prisma.ConCanBoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConCanBoScalarFieldEnum | Prisma.ConCanBoScalarFieldEnum[]
 }
 
 /**

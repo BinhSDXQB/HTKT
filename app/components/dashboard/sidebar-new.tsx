@@ -59,6 +59,7 @@ import {
   Scale,
   CalendarCheck,
   Sparkles,
+  Baby,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SALARY_IMPORT_EMAILS } from '@/lib/salary-perms'
@@ -175,6 +176,7 @@ const navGroups: NavGroup[] = [
       { label: 'Cảnh báo & việc cần làm', href: '/dashboard/van-phong-so/canh-bao', icon: BellRing, officeOnly: true },
       { label: 'Hồ sơ cán bộ', href: '/dashboard/van-phong-so/ho-so', icon: Users, officeOnly: true },
       { label: 'Quản lý lương', href: '/dashboard/van-phong-so/luong', icon: Wallet, officeOnly: true },
+      { label: 'Các cháu & thành tích', href: '/dashboard/van-phong-so/cac-chau', icon: Baby, officeOnly: true },
       { label: 'Nâng lương (quy trình)', href: '/dashboard/van-phong-so/nang-luong', icon: ScrollText, officeOnly: true },
       { label: 'Thi đua, khen thưởng', href: '/dashboard/van-phong-so/thi-dua-khen-thuong', icon: Award, officeOnly: true },
       { label: 'Đánh giá, xếp loại & kỷ luật', href: '/dashboard/van-phong-so/danh-gia', icon: ClipboardCheck, officeOnly: true },

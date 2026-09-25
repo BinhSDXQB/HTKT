@@ -185,7 +185,9 @@ export const ModelName = {
   qd72_water_intake_points: 'qd72_water_intake_points',
   qd72_water_sources: 'qd72_water_sources',
   qd72_water_test_results: 'qd72_water_test_results',
-  qd72_workflow_history: 'qd72_workflow_history'
+  qd72_workflow_history: 'qd72_workflow_history',
+  ConCanBo: 'ConCanBo',
+  ThanhTichCon: 'ThanhTichCon'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -3037,6 +3039,46 @@ export const Qd72_workflow_historyScalarFieldEnum = {
 } as const
 
 export type Qd72_workflow_historyScalarFieldEnum = (typeof Qd72_workflow_historyScalarFieldEnum)[keyof typeof Qd72_workflow_historyScalarFieldEnum]
+
+
+export const ConCanBoScalarFieldEnum = {
+  id: 'id',
+  canBoId: 'canBoId',
+  hoTen: 'hoTen',
+  gioiTinh: 'gioiTinh',
+  ngaySinh: 'ngaySinh',
+  namSinh: 'namSinh',
+  namSinhUocTinh: 'namSinhUocTinh',
+  lopGoc: 'lopGoc',
+  mamNonGoc: 'mamNonGoc',
+  namHocGoc: 'namHocGoc',
+  dangKyNPT: 'dangKyNPT',
+  phuHuynhDaXacNhan: 'phuHuynhDaXacNhan',
+  ghiChu: 'ghiChu',
+  nguon: 'nguon',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConCanBoScalarFieldEnum = (typeof ConCanBoScalarFieldEnum)[keyof typeof ConCanBoScalarFieldEnum]
+
+
+export const ThanhTichConScalarFieldEnum = {
+  id: 'id',
+  conId: 'conId',
+  namHoc: 'namHoc',
+  loai: 'loai',
+  capDo: 'capDo',
+  mon: 'mon',
+  xepGiai: 'xepGiai',
+  noiDung: 'noiDung',
+  coGiayKhen: 'coGiayKhen',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ThanhTichConScalarFieldEnum = (typeof ThanhTichConScalarFieldEnum)[keyof typeof ThanhTichConScalarFieldEnum]
 
 
 export const SortOrder = {

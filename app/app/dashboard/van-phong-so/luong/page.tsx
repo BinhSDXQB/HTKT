@@ -3,7 +3,8 @@ import { requireOfficeAccess, canViewOfficeSensitive } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getSoToChucIds } from '@/lib/office-scope'
 import { classifySalaryAlert, salaryAlertBadgeClass, type SalaryAlert, type SalaryAlertBucket } from '@/lib/salary-alert'
-import { huongLuongNgachBac, fmtVND, fmtSo } from '@/lib/luong'
+import { huongLuongNgachBac, tinhBangLuongThang, fmtVND, fmtSo } from '@/lib/luong'
+import { demNguoiPhuThuoc } from '@/lib/con-can-bo'
 import { Briefcase, ChevronRight, Wallet, ChevronRight as Chev } from 'lucide-react'
 
 const NO_ALERT: SalaryAlert = { bucket: null, daysLeft: null, label: '' }
@@ -24,13 +25,17 @@ export default async function QuanLyLuongPage() {
   const soIds = await getSoToChucIds()
   const list = await db.canBo.findMany({
     where: { toChucId: { in: soIds } },
-    include: { chucDanh: true },
+    include: { chucDanh: true, toChuc: { select: { loai: true } }, conCai: true },
   })
 
   // NLĐ (hợp đồng) hưởng lương khoán cố định → không tính cảnh báo nâng lương; cột
   // "Hệ số" của họ thực chất là LƯƠNG HĐ CỐ ĐỊNH (xem cột riêng bên dưới).
   const rows = list
-    .map((cb) => ({ cb, apDung: huongLuongNgachBac(cb), alert: huongLuongNgachBac(cb) ? classifySalaryAlert(cb.ngayNangLuongKeTiep) : NO_ALERT }))
+    .map((cb) => ({
+      cb, apDung: huongLuongNgachBac(cb), alert: huongLuongNgachBac(cb) ? classifySalaryAlert(cb.ngayNangLuongKeTiep) : NO_ALERT,
+      // Bảng lương tháng tạm tính đầy đủ (PC công vụ, BH theo đối tượng, thuế TNCN có giảm trừ con) — lib/luong.ts
+      bl: tinhBangLuongThang({ ...cb, loaiToChuc: cb.toChuc?.loai, soNguoiPhuThuoc: demNguoiPhuThuoc(cb.conCai) }),
+    }))
     .sort((a, b) => {
       const oa = a.alert.bucket ? BUCKET_ORDER[a.alert.bucket] : 99
       const ob = b.alert.bucket ? BUCKET_ORDER[b.alert.bucket] : 99
@@ -51,7 +56,7 @@ export default async function QuanLyLuongPage() {
   ]
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-5">
+    <div className="p-6 max-w-7xl mx-auto space-y-5">
       <nav className="flex items-center gap-1.5 text-sm text-slate-500">
         <Link href="/dashboard/van-phong-so" className="hover:text-indigo-700 flex items-center gap-1">
           <Briefcase className="w-3.5 h-3.5" />Văn phòng Sở
@@ -90,6 +95,10 @@ export default async function QuanLyLuongPage() {
               <th className="px-4 py-2.5 font-semibold text-right">Hệ số</th>
               <th className="px-4 py-2.5 font-semibold text-right">Lương HĐ cố định</th>
               <th className="px-4 py-2.5 font-semibold text-right">Vượt khung</th>
+              <th className="px-4 py-2.5 font-semibold text-right" title="Tổng thu nhập tạm tính (gồm PC công vụ 25% với công chức)">Thu nhập</th>
+              <th className="px-4 py-2.5 font-semibold text-right" title="BHXH 8% + BHYT 1,5% (+ BHTN 1% trừ công chức) + thuế TNCN">Khấu trừ</th>
+              <th className="px-4 py-2.5 font-semibold text-right" title="Số con được tính người phụ thuộc">NPT</th>
+              <th className="px-4 py-2.5 font-semibold text-right">Thực lĩnh</th>
               <th className="px-4 py-2.5 font-semibold">Ngày lên lương</th>
               <th className="px-4 py-2.5 font-semibold">Ngày đến hạn KT</th>
               <th className="px-4 py-2.5 font-semibold">Cảnh báo</th>
@@ -97,13 +106,17 @@ export default async function QuanLyLuongPage() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {rows.map(({ cb, apDung, alert }) => (
+            {rows.map(({ cb, apDung, alert, bl }) => (
               <tr key={cb.id} className="hover:bg-slate-50">
                 <td className="px-4 py-2.5 font-medium text-slate-900">{cb.hoTen}</td>
                 <td className="px-4 py-2.5 text-slate-600">{cb.chucDanh?.ten ?? cb.chucVu ?? '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? fmtSo(cb.heSoLuong) : '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : !apDung && cb.heSoLuong != null ? fmtVND(cb.heSoLuong) : '—'}</td>
                 <td className="px-4 py-2.5 text-right text-slate-700">{!canSee ? '•••' : apDung ? (cb.vuotKhung != null && cb.vuotKhung > 0 ? `${cb.vuotKhung.toFixed(0)}%` : '—') : '—'}</td>
+                <td className="px-4 py-2.5 text-right text-slate-700 tabular-nums">{!canSee ? '•••' : bl.apDung ? fmtVND(bl.tongThuNhap) : '—'}</td>
+                <td className="px-4 py-2.5 text-right text-rose-700 tabular-nums">{!canSee ? '•••' : bl.apDung ? fmtVND(bl.tongKhauTru) : '—'}</td>
+                <td className="px-4 py-2.5 text-right text-slate-600">{!canSee ? '•••' : bl.apDung ? bl.soNguoiPhuThuoc : '—'}</td>
+                <td className="px-4 py-2.5 text-right font-semibold text-emerald-700 tabular-nums">{!canSee ? '•••' : bl.apDung ? fmtVND(bl.thucLinh) : '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600">{!canSee ? '•••' : apDung ? fmtDate(cb.ngayNangLuong) : '—'}</td>
                 <td className="px-4 py-2.5 text-slate-600">{!canSee ? '•••' : apDung ? fmtDate(cb.ngayNangLuongKeTiep) : '—'}</td>
                 <td className="px-4 py-2.5">
@@ -125,7 +138,7 @@ export default async function QuanLyLuongPage() {
               </tr>
             ))}
             {rows.length === 0 && (
-              <tr><td colSpan={9} className="px-4 py-8 text-center text-slate-400">Chưa có dữ liệu cán bộ.</td></tr>
+              <tr><td colSpan={13} className="px-4 py-8 text-center text-slate-400">Chưa có dữ liệu cán bộ.</td></tr>
             )}
           </tbody>
         </table>

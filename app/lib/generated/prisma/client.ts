@@ -718,3 +718,14 @@ export type qd72_water_test_results = Prisma.qd72_water_test_resultsModel
  * 
  */
 export type qd72_workflow_history = Prisma.qd72_workflow_historyModel
+/**
+ * Model ConCanBo
+ * Con của cán bộ (migration 046). Nhập 1 lần; tuổi/lớp tự tăng theo năm học; là người phụ thuộc
+ * để tính giảm trừ gia cảnh thuế TNCN khi dangKyNPT && phuHuynhDaXacNhan.
+ */
+export type ConCanBo = Prisma.ConCanBoModel
+/**
+ * Model ThanhTichCon
+ * Thành tích học tập của con cán bộ theo năm học (mỗi năm thêm dòng mới, không sửa năm cũ).
+ */
+export type ThanhTichCon = Prisma.ThanhTichConModel

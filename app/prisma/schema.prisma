@@ -1633,6 +1633,7 @@ model CanBo {
   salaryReviewCases  OfficeSalaryReviewCase[]
   generatedDocuments OfficeGeneratedDocument[]
   leaveRequests      OfficeLeaveRequest[]
+  conCai             ConCanBo[]
 
   @@index([phongBan])
   @@index([toChucId])
@@ -4091,4 +4092,51 @@ model qd72_workflow_history {
   qd72_survey_cases  qd72_survey_cases? @relation(fields: [survey_case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([survey_case_id], map: "idx_qd72_wf_case")
+}
+
+
+/// Con của cán bộ (migration 046). Nhập 1 lần; tuổi/lớp tự tăng theo năm học; là người phụ thuộc
+/// để tính giảm trừ gia cảnh thuế TNCN khi dangKyNPT && phuHuynhDaXacNhan.
+model ConCanBo {
+  id                String         @id @default(cuid())
+  canBoId           String
+  canBo             CanBo          @relation(fields: [canBoId], references: [id], onDelete: Cascade)
+  hoTen             String
+  gioiTinh          String?
+  ngaySinh          DateTime?      @db.Date
+  namSinh           Int
+  namSinhUocTinh    Boolean        @default(true)
+  lopGoc            Int?
+  mamNonGoc         Boolean        @default(false)
+  namHocGoc         Int            @default(2025)
+  dangKyNPT         Boolean        @default(true)
+  phuHuynhDaXacNhan Boolean        @default(true)
+  ghiChu            String?
+  nguon             String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @default(now()) @updatedAt
+  thanhTich         ThanhTichCon[]
+
+  @@index([canBoId])
+  @@map("con_can_bo")
+}
+
+/// Thành tích học tập của con cán bộ theo năm học (mỗi năm thêm dòng mới, không sửa năm cũ).
+model ThanhTichCon {
+  id          String   @id @default(cuid())
+  conId       String
+  con         ConCanBo @relation(fields: [conId], references: [id], onDelete: Cascade)
+  namHoc      Int
+  loai        String
+  capDo       String?
+  mon         String?
+  xepGiai     String?
+  noiDung     String
+  coGiayKhen  Boolean?
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@index([conId, namHoc])
+  @@map("thanh_tich_con")
 }

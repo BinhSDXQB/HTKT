@@ -518,7 +518,9 @@ export const ModelName = {
   qd72_water_intake_points: 'qd72_water_intake_points',
   qd72_water_sources: 'qd72_water_sources',
   qd72_water_test_results: 'qd72_water_test_results',
-  qd72_workflow_history: 'qd72_workflow_history'
+  qd72_workflow_history: 'qd72_workflow_history',
+  ConCanBo: 'ConCanBo',
+  ThanhTichCon: 'ThanhTichCon'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -534,7 +536,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "rolePermission" | "auditLog" | "administrativeUnit" | "lanhDaoXa" | "street" | "assetType" | "executingUnit" | "denChieuSang" | "cayXanhDuong" | "hoGa" | "congThoatNuoc" | "ongCapNuoc" | "vanCapNuoc" | "capVienThong" | "viaHe" | "tuyenMangLuoi" | "doanTuyenCong" | "doanTuyenOng" | "nhaMayXuLyNuocThai" | "tramBom" | "asset" | "maintenanceSchedule" | "inspectionTemplate" | "inspectionTemplateItem" | "inspection" | "inspectionResult" | "incident" | "workOrder" | "workOrderMaterial" | "project" | "projectMilestone" | "materialCategory" | "material" | "stockTransaction" | "systemAlert" | "assetImportBatch" | "integrationConfig" | "integrationLog" | "chatbotLog" | "toChuc" | "chucDanh" | "phanCong" | "canBo" | "reportDuong" | "reportDienCS" | "reportThoatNuoc" | "reportCayXanh" | "reportCongVien" | "reportCapNuoc" | "reportBaiDoXe" | "wardReport" | "wardGisLength" | "wardKhaiBao" | "facilityConfig" | "officeSalaryHistory" | "officeWorkHistory" | "officeSalaryRule" | "officeRewardTitle" | "officeEmulationMovement" | "officeRewardRecord" | "officeCollectiveRewardRecord" | "officeAnnualEvaluation" | "officeDisciplineRecord" | "officeSalaryReviewCase" | "officeGeneratedDocument" | "officeLeaveRequest" | "officeLeaveSignature" | "permitVehicle" | "oversizedVehiclePermit" | "permitRoute" | "roadConnectionApplication" | "roadConnectionLocation" | "roadConnectionInspection" | "roadConnectionPermit" | "roadLegalReference" | "roadPermitStatusLog" | "overtimeTimesheet" | "overtimeSignature" | "overtimeEntry" | "bimModel" | "bimModelVersion" | "bimFile" | "bimValidationCheck" | "bimConsistencyReview" | "bimViewPermission" | "taiLieu" | "taiLieuChunk" | "congViecLoai" | "congViec" | "congViecThanhVien" | "congViecNhatKy" | "congViecCheckList" | "lichCaNhan" | "nghiepVuBanGhi" | "phanCongLinhVuc" | "phanCongDinhKy" | "dsDuAnGpmb" | "dsDuAnThanhPhan" | "dsKeHoachVon" | "dsLienHe" | "httt_dinh_danh" | "httt_dong_bo_log" | "httt_nang_luc_ca_nhan" | "httt_nang_luc_to_chuc" | "qd72_administrative_unit_assignments" | "qd72_attachments" | "qd72_clearance_measurements" | "qd72_comments" | "qd72_fire_hydrants" | "qd72_fire_parking_areas" | "qd72_legal_documents" | "qd72_overhead_utility_lines" | "qd72_passing_bays" | "qd72_public_lighting_assets" | "qd72_renovation_plans" | "qd72_renovation_tasks" | "qd72_road_obstacles" | "qd72_road_segments" | "qd72_shared_technical_infrastructure" | "qd72_survey_cases" | "qd72_technical_rules" | "qd72_undergrounding_proposals" | "qd72_urban_areas" | "qd72_utility_crossings" | "qd72_utility_owners" | "qd72_utility_poles" | "qd72_verification_items" | "qd72_verification_records" | "qd72_water_intake_points" | "qd72_water_sources" | "qd72_water_test_results" | "qd72_workflow_history"
+    modelProps: "user" | "role" | "permission" | "rolePermission" | "auditLog" | "administrativeUnit" | "lanhDaoXa" | "street" | "assetType" | "executingUnit" | "denChieuSang" | "cayXanhDuong" | "hoGa" | "congThoatNuoc" | "ongCapNuoc" | "vanCapNuoc" | "capVienThong" | "viaHe" | "tuyenMangLuoi" | "doanTuyenCong" | "doanTuyenOng" | "nhaMayXuLyNuocThai" | "tramBom" | "asset" | "maintenanceSchedule" | "inspectionTemplate" | "inspectionTemplateItem" | "inspection" | "inspectionResult" | "incident" | "workOrder" | "workOrderMaterial" | "project" | "projectMilestone" | "materialCategory" | "material" | "stockTransaction" | "systemAlert" | "assetImportBatch" | "integrationConfig" | "integrationLog" | "chatbotLog" | "toChuc" | "chucDanh" | "phanCong" | "canBo" | "reportDuong" | "reportDienCS" | "reportThoatNuoc" | "reportCayXanh" | "reportCongVien" | "reportCapNuoc" | "reportBaiDoXe" | "wardReport" | "wardGisLength" | "wardKhaiBao" | "facilityConfig" | "officeSalaryHistory" | "officeWorkHistory" | "officeSalaryRule" | "officeRewardTitle" | "officeEmulationMovement" | "officeRewardRecord" | "officeCollectiveRewardRecord" | "officeAnnualEvaluation" | "officeDisciplineRecord" | "officeSalaryReviewCase" | "officeGeneratedDocument" | "officeLeaveRequest" | "officeLeaveSignature" | "permitVehicle" | "oversizedVehiclePermit" | "permitRoute" | "roadConnectionApplication" | "roadConnectionLocation" | "roadConnectionInspection" | "roadConnectionPermit" | "roadLegalReference" | "roadPermitStatusLog" | "overtimeTimesheet" | "overtimeSignature" | "overtimeEntry" | "bimModel" | "bimModelVersion" | "bimFile" | "bimValidationCheck" | "bimConsistencyReview" | "bimViewPermission" | "taiLieu" | "taiLieuChunk" | "congViecLoai" | "congViec" | "congViecThanhVien" | "congViecNhatKy" | "congViecCheckList" | "lichCaNhan" | "nghiepVuBanGhi" | "phanCongLinhVuc" | "phanCongDinhKy" | "dsDuAnGpmb" | "dsDuAnThanhPhan" | "dsKeHoachVon" | "dsLienHe" | "httt_dinh_danh" | "httt_dong_bo_log" | "httt_nang_luc_ca_nhan" | "httt_nang_luc_to_chuc" | "qd72_administrative_unit_assignments" | "qd72_attachments" | "qd72_clearance_measurements" | "qd72_comments" | "qd72_fire_hydrants" | "qd72_fire_parking_areas" | "qd72_legal_documents" | "qd72_overhead_utility_lines" | "qd72_passing_bays" | "qd72_public_lighting_assets" | "qd72_renovation_plans" | "qd72_renovation_tasks" | "qd72_road_obstacles" | "qd72_road_segments" | "qd72_shared_technical_infrastructure" | "qd72_survey_cases" | "qd72_technical_rules" | "qd72_undergrounding_proposals" | "qd72_urban_areas" | "qd72_utility_crossings" | "qd72_utility_owners" | "qd72_utility_poles" | "qd72_verification_items" | "qd72_verification_records" | "qd72_water_intake_points" | "qd72_water_sources" | "qd72_water_test_results" | "qd72_workflow_history" | "conCanBo" | "thanhTichCon"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -10528,6 +10530,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ConCanBo: {
+      payload: Prisma.$ConCanBoPayload<ExtArgs>
+      fields: Prisma.ConCanBoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConCanBoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConCanBoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>
+        }
+        findFirst: {
+          args: Prisma.ConCanBoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConCanBoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>
+        }
+        findMany: {
+          args: Prisma.ConCanBoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>[]
+        }
+        create: {
+          args: Prisma.ConCanBoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>
+        }
+        createMany: {
+          args: Prisma.ConCanBoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConCanBoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>[]
+        }
+        delete: {
+          args: Prisma.ConCanBoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>
+        }
+        update: {
+          args: Prisma.ConCanBoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>
+        }
+        deleteMany: {
+          args: Prisma.ConCanBoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConCanBoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConCanBoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>[]
+        }
+        upsert: {
+          args: Prisma.ConCanBoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConCanBoPayload>
+        }
+        aggregate: {
+          args: Prisma.ConCanBoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConCanBo>
+        }
+        groupBy: {
+          args: Prisma.ConCanBoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConCanBoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConCanBoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConCanBoCountAggregateOutputType> | number
+        }
+      }
+    }
+    ThanhTichCon: {
+      payload: Prisma.$ThanhTichConPayload<ExtArgs>
+      fields: Prisma.ThanhTichConFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ThanhTichConFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ThanhTichConFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>
+        }
+        findFirst: {
+          args: Prisma.ThanhTichConFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ThanhTichConFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>
+        }
+        findMany: {
+          args: Prisma.ThanhTichConFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>[]
+        }
+        create: {
+          args: Prisma.ThanhTichConCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>
+        }
+        createMany: {
+          args: Prisma.ThanhTichConCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ThanhTichConCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>[]
+        }
+        delete: {
+          args: Prisma.ThanhTichConDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>
+        }
+        update: {
+          args: Prisma.ThanhTichConUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>
+        }
+        deleteMany: {
+          args: Prisma.ThanhTichConDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ThanhTichConUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ThanhTichConUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>[]
+        }
+        upsert: {
+          args: Prisma.ThanhTichConUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThanhTichConPayload>
+        }
+        aggregate: {
+          args: Prisma.ThanhTichConAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateThanhTichCon>
+        }
+        groupBy: {
+          args: Prisma.ThanhTichConGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ThanhTichConGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ThanhTichConCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ThanhTichConCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -13402,6 +13552,46 @@ export const Qd72_workflow_historyScalarFieldEnum = {
 export type Qd72_workflow_historyScalarFieldEnum = (typeof Qd72_workflow_historyScalarFieldEnum)[keyof typeof Qd72_workflow_historyScalarFieldEnum]
 
 
+export const ConCanBoScalarFieldEnum = {
+  id: 'id',
+  canBoId: 'canBoId',
+  hoTen: 'hoTen',
+  gioiTinh: 'gioiTinh',
+  ngaySinh: 'ngaySinh',
+  namSinh: 'namSinh',
+  namSinhUocTinh: 'namSinhUocTinh',
+  lopGoc: 'lopGoc',
+  mamNonGoc: 'mamNonGoc',
+  namHocGoc: 'namHocGoc',
+  dangKyNPT: 'dangKyNPT',
+  phuHuynhDaXacNhan: 'phuHuynhDaXacNhan',
+  ghiChu: 'ghiChu',
+  nguon: 'nguon',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConCanBoScalarFieldEnum = (typeof ConCanBoScalarFieldEnum)[keyof typeof ConCanBoScalarFieldEnum]
+
+
+export const ThanhTichConScalarFieldEnum = {
+  id: 'id',
+  conId: 'conId',
+  namHoc: 'namHoc',
+  loai: 'loai',
+  capDo: 'capDo',
+  mon: 'mon',
+  xepGiai: 'xepGiai',
+  noiDung: 'noiDung',
+  coGiayKhen: 'coGiayKhen',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ThanhTichConScalarFieldEnum = (typeof ThanhTichConScalarFieldEnum)[keyof typeof ThanhTichConScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -14533,6 +14723,8 @@ export type GlobalOmitConfig = {
   qd72_water_sources?: Prisma.qd72_water_sourcesOmit
   qd72_water_test_results?: Prisma.qd72_water_test_resultsOmit
   qd72_workflow_history?: Prisma.qd72_workflow_historyOmit
+  conCanBo?: Prisma.ConCanBoOmit
+  thanhTichCon?: Prisma.ThanhTichConOmit
 }
 
 /* Types for Logging */

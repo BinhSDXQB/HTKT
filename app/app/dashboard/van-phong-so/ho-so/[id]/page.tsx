@@ -8,7 +8,9 @@ import { logSensitiveView } from '@/app/actions/office'
 import { db } from '@/lib/db'
 import { classifySalaryAlert, salaryAlertBadgeClass } from '@/lib/salary-alert'
 import { classifyContractAlert } from '@/lib/hop-dong-alert'
-import { tinhLuongThucLinh, fmtVND, fmtSo, LUONG_CO_SO_CAN_CU } from '@/lib/luong'
+import { tinhLuongThucLinh, tinhBangLuongThang, CHINH_SACH_LUONG, fmtVND, fmtSo, LUONG_CO_SO_CAN_CU } from '@/lib/luong'
+import { tuoiCon, lopHienTai, nhanCapHoc, xetNguoiPhuThuoc, namHocHienTai, nhanNamHoc, CAP_DO_LABEL } from '@/lib/con-can-bo'
+import { CapNhatConForm, ThemThanhTichForm, ThemConForm } from '@/components/van-phong-so/con-can-bo-forms'
 import { DOI_TUONG_NHAN_SU_LABEL } from '@/lib/office-labels'
 import { SalaryHistoryForm } from '@/components/van-phong-so/salary-history-form'
 import { WorkHistoryForm } from '@/components/van-phong-so/work-history-form'
@@ -76,6 +78,7 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
       annualEvaluations: { orderBy: { nam: 'desc' } },
       disciplineRecords: { orderBy: { tuNgay: 'desc' } },
       leaveRequests: { orderBy: { tuNgay: 'desc' }, take: 20 },
+      conCai: { include: { thanhTich: { orderBy: [{ namHoc: 'desc' }, { createdAt: 'asc' }] } }, orderBy: { namSinh: 'asc' } },
     },
   })
   if (!cb) notFound()
@@ -95,6 +98,10 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
   const alert = classifySalaryAlert(cb.ngayNangLuongKeTiep)
   const contractAlert = classifyContractAlert(cb.ngayKetThucHopDong)
   const luong = tinhLuongThucLinh(cb)
+  const nay = new Date()
+  const conXet = cb.conCai.map((c) => ({ c, npt: xetNguoiPhuThuoc(c, nay), tuoi: tuoiCon(c, nay), lop: lopHienTai(c, namHocHienTai(nay)) }))
+  const soNPT = conXet.filter((x) => x.npt.duocTinh).length
+  const bangLuong = tinhBangLuongThang({ ...cb, loaiToChuc: cb.toChuc?.loai, soNguoiPhuThuoc: soNPT })
   const canEdit = canManageCanBo(user)
   const canSetLeader = isLeadership(user)
 
@@ -293,6 +300,75 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
         </dl>
       </section>
 
+      {/* Con — người phụ thuộc (giảm trừ gia cảnh) & thành tích học tập */}
+      <section className="rounded-xl border bg-white p-5 space-y-3">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-pink-500" />
+            <h2 className="text-base font-bold text-slate-900">Con — người phụ thuộc &amp; thành tích học tập</h2>
+            <span className="text-xs text-slate-500">({cb.conCai.length} cháu · {soNPT} được tính giảm trừ gia cảnh)</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard/van-phong-so/cac-chau" className="text-xs text-indigo-700 hover:underline">Danh sách toàn Sở →</Link>
+            {canEdit && <ThemConForm canBoOpts={[]} canBoId={cb.id} />}
+          </div>
+        </div>
+        {cb.conCai.length === 0 ? (
+          <p className="text-sm text-slate-400 italic">Chưa có thông tin con.</p>
+        ) : (
+          <div className="rounded-lg border overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-slate-600 text-left text-xs">
+                <tr>
+                  <th className="px-3 py-2">Họ tên</th>
+                  <th className="px-3 py-2 whitespace-nowrap">Tuổi · lớp ({nhanNamHoc(namHocHienTai(nay))})</th>
+                  <th className="px-3 py-2">Thành tích gần nhất</th>
+                  <th className="px-3 py-2">Người phụ thuộc</th>
+                  {canEdit && <th className="px-3 py-2"></th>}
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {conXet.map(({ c, npt, tuoi, lop }) => {
+                  const namMoi = c.thanhTich[0]?.namHoc
+                  const ttMoi = c.thanhTich.filter((t) => t.namHoc === namMoi)
+                  return (
+                    <tr key={c.id} className="align-top">
+                      <td className="px-3 py-2">
+                        <p className="font-medium text-slate-800">{c.hoTen}</p>
+                        <p className="text-xs text-slate-500">sinh {c.ngaySinh ? fmtDate(c.ngaySinh) : `${c.namSinh}${c.namSinhUocTinh ? ' (ước tính)' : ''}`}</p>
+                        {c.ghiChu && <p className="text-xs text-amber-700">⚠️ {c.ghiChu}</p>}
+                      </td>
+                      <td className="px-3 py-2 text-slate-700 whitespace-nowrap">{tuoi} tuổi · {nhanCapHoc(lop, tuoi)}</td>
+                      <td className="px-3 py-2 text-xs text-slate-700">
+                        {ttMoi.length === 0 ? '—' : (
+                          <>
+                            <span className="text-slate-400">{nhanNamHoc(namMoi!)}: </span>
+                            {ttMoi.map((t) => `${t.noiDung}${t.loai !== 'DANH_HIEU' && t.capDo ? ` (${CAP_DO_LABEL[t.capDo]})` : ''}`).join('; ')}
+                          </>
+                        )}
+                        {canEdit && <div className="mt-1"><ThemThanhTichForm conId={c.id} namHoc={namHocHienTai(nay)} /></div>}
+                      </td>
+                      <td className="px-3 py-2 text-xs max-w-[220px]">
+                        <span className={npt.duocTinh ? 'text-emerald-700 font-medium' : 'text-slate-500'}>{npt.duocTinh ? '✓ Được tính' : '✗ Không tính'}</span>
+                        <p className="text-slate-500">{npt.lyDo}</p>
+                      </td>
+                      {canEdit && (
+                        <td className="px-3 py-2">
+                          <CapNhatConForm
+                            canBoOpts={[{ id: cb.id, label: cb.hoTen }]}
+                            con={{ id: c.id, canBoId: c.canBoId, hoTen: c.hoTen, gioiTinh: c.gioiTinh, ngaySinh: c.ngaySinh ? new Date(c.ngaySinh).toISOString().slice(0, 10) : null, dangKyNPT: c.dangKyNPT, phuHuynhDaXacNhan: c.phuHuynhDaXacNhan, ghiChu: c.ghiChu }}
+                          />
+                        </td>
+                      )}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
       {/* Lương hiện hành + lịch sử */}
       <section className="rounded-xl border bg-white p-5 space-y-4">
         <div className="flex items-center justify-between gap-3">
@@ -320,17 +396,29 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
           <Stat label="Ngày lên lương" value={canSee ? fmtDate(cb.ngayNangLuong) : '•••'} />
         </div>
 
-        {canSee && luong.apDung && (
-          <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3">
+        {canSee && bangLuong.apDung && (
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3 space-y-2">
             <div className="flex items-baseline justify-between gap-2 flex-wrap">
-              <p className="text-sm text-emerald-900">Lương thực lĩnh (tạm tính)</p>
-              <p className="text-xl font-bold text-emerald-700">{fmtVND(luong.tongCong)}/tháng</p>
+              <p className="text-sm text-emerald-900">Lương thực lĩnh tháng (tạm tính) — <strong>{bangLuong.doiTuongNhan}</strong></p>
+              <p className="text-xl font-bold text-emerald-700">{fmtVND(bangLuong.thucLinh)}/tháng</p>
             </div>
-            <p className="mt-1 text-xs text-slate-600">
-              Lương ngạch bậc {fmtVND(luong.luongNgachBac)}
-              {luong.phuCapChucVu > 0 && <> + PC chức vụ {fmtVND(luong.phuCapChucVu)}</>}
-              {luong.vuotKhungTien > 0 && <> + vượt khung {fmtVND(luong.vuotKhungTien)}</>}
-              {' '}· mức cơ sở {LUONG_CO_SO_CAN_CU}. {luong.ghiChu}
+            <table className="w-full text-xs">
+              <tbody className="divide-y divide-emerald-100">
+                {bangLuong.thuNhap.map((d) => (
+                  <tr key={d.ma}><td className="py-1 text-slate-700">{d.nhan}{d.ghiChu && <span className="text-slate-400"> · {d.ghiChu}</span>}</td><td className="py-1 text-right tabular-nums">{fmtVND(d.soTien)}</td></tr>
+                ))}
+                <tr className="font-semibold"><td className="py-1">Tổng thu nhập</td><td className="py-1 text-right tabular-nums">{fmtVND(bangLuong.tongThuNhap)}</td></tr>
+                {bangLuong.khauTru.map((d) => (
+                  <tr key={d.ma} className="text-rose-700"><td className="py-1">− {d.nhan}{d.ghiChu && <span className="text-slate-400"> · {d.ghiChu}</span>}</td><td className="py-1 text-right tabular-nums">{fmtVND(d.soTien)}</td></tr>
+                ))}
+                <tr className="text-slate-500"><td className="py-1">Giảm trừ gia cảnh: bản thân + {bangLuong.soNguoiPhuThuoc} người phụ thuộc</td><td className="py-1 text-right tabular-nums">{fmtVND(bangLuong.giamTruGiaCanh)}</td></tr>
+                <tr className="font-bold text-emerald-800"><td className="py-1">Thực lĩnh</td><td className="py-1 text-right tabular-nums">{fmtVND(bangLuong.thucLinh)}</td></tr>
+              </tbody>
+            </table>
+            {bangLuong.luuY.map((l) => <p key={l} className="text-xs text-amber-700">⚠️ {l}</p>)}
+            <p className="text-[11px] text-slate-500">
+              Mức cơ sở {LUONG_CO_SO_CAN_CU}. Phụ cấp công vụ: {CHINH_SACH_LUONG.canCu.pcCongVu}. Bảo hiểm: {CHINH_SACH_LUONG.canCu.baoHiem}. Thuế: {CHINH_SACH_LUONG.canCu.thue}.
+              Chưa gồm PC trách nhiệm/kiêm nhiệm, thâm niên nghề, truy lĩnh, đoàn phí công đoàn — bảng lương chính thức do Phòng KH-TC lập.
             </p>
           </div>
         )}
