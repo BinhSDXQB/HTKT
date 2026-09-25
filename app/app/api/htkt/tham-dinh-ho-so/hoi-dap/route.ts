@@ -120,8 +120,10 @@ ${nguCanh.replace(/<\/?HO_SO>/gi, '')}
         if (req.signal.aborted) return
         const status = (e as { status?: number })?.status
         const code = (e as { code?: string })?.code
-        const text = code === 'insufficient_quota'
-          ? 'Tài khoản OpenAI đã hết hạn mức — liên hệ quản trị viên nạp thêm.'
+        const type = (e as { type?: string })?.type
+        // Hết tiền cũng trả HTTP 429 như quá tải — phải phân biệt theo mã lỗi để báo đúng nguyên nhân.
+        const text = code === 'insufficient_quota' || code === 'credit_balance_exhausted' || type === 'insufficient_quota'
+          ? 'Tài khoản OpenAI của hệ thống đã hết số dư — liên hệ quản trị viên nạp thêm. (Phần kiểm kê hồ sơ ở mục ② vẫn dùng được.)'
           : status === 429 ? 'Hệ thống AI đang quá tải, vui lòng thử lại sau ít phút.'
           : `Lỗi khi xử lý: ${e instanceof Error ? e.message.slice(0, 200) : String(e)}`
         gui({ loai: 'loi', text })
