@@ -57,8 +57,8 @@ export function SoanThaoWizard() {
           Kiểm kê hồ sơ &amp; Soạn thảo tờ trình thẩm định
         </h1>
         <p className="text-sm text-slate-600 mt-2">
-          Một luồng liền mạch: kiểm kê hồ sơ dự án từ thư mục máy chủ → chuyển thẳng dữ liệu sang bước soạn thảo,
-          khỏi gõ lại thông tin.
+          Một luồng liền mạch: chọn thư mục hồ sơ của dự án → kiểm kê thành phần hồ sơ → hỏi đáp nội dung hồ sơ
+          → chuyển thẳng dữ liệu sang bước soạn thảo, khỏi gõ lại thông tin.
         </p>
       </div>
 
@@ -107,8 +107,9 @@ export function SoanThaoWizard() {
           <div>
             <h2 className="text-lg font-bold text-slate-900">Bước 1 — Kiểm kê hồ sơ thẩm định từ thư mục</h2>
             <p className="text-sm text-slate-600">
-              Trỏ tới thư mục dự án trên máy chủ; hệ thống đọc tờ trình, thuyết minh, bản vẽ, dự toán và đối chiếu
-              thành phần hồ sơ. Kết quả là <strong>gợi ý cần xác nhận</strong>, không phải kết luận thẩm định.
+              ① Chọn thư mục của dự án (trên máy tính của bạn hoặc trong kho máy chủ) → ② hệ thống đọc tờ trình,
+              thuyết minh, bản vẽ, dự toán và đối chiếu thành phần hồ sơ → ③ hỏi đáp nội dung hồ sơ có trích nguồn.
+              Kết quả là <strong>gợi ý cần xác nhận</strong>, không phải kết luận thẩm định.
             </p>
           </div>
         </div>
