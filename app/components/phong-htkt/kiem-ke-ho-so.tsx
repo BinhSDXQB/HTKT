@@ -3,11 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   FolderOpen, Folder, ChevronRight, Loader2, Search, AlertTriangle,
-  FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info, PenLine, Calculator,
+  FileText, CheckCircle2, HelpCircle, XCircle, Home, Table2, Info, PenLine, Calculator, Laptop, Server,
 } from 'lucide-react'
 import {
   KiemTraDuToanPanel, type KetQuaKiemTraDuToanUI, type KetQuaDoiChieuToTrinhUI,
 } from './kiem-tra-du-toan-panel'
+import { ChonThuMucMayTinh, type PhienHoSo } from './chon-thu-muc-may-tinh'
+import { HoiDapHoSo, type NguonHoiDap } from './hoi-dap-ho-so'
 
 /** Tín hiệu "dùng kết quả kiểm kê để sang bước soạn thảo" — do trang gộp (wizard) truyền vào. */
 export type ApplyKiemKe = { quyTrinhKey: string; tenGoiY: string }
@@ -61,6 +63,11 @@ function coChu(b: number) {
 }
 
 export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } = {}) {
+  // Nguồn hồ sơ do cán bộ chọn theo TỪNG dự án — không có thư mục mặc định:
+  //  'may-tinh' (mặc định) = cán bộ chọn thư mục dự án trên máy mình, tải lên phiên tạm;
+  //  'may-chu' = duyệt tới thư mục dự án trong kho máy chủ (nếu quản trị viên đã cấu hình THAM_DINH_ROOTS).
+  const [cheDo, setCheDo] = useState<'may-tinh' | 'may-chu'>('may-tinh')
+  const [phien, setPhien] = useState<PhienHoSo | null>(null)
   const [gocs, setGocs] = useState<Goc[]>([])
   const [quyTrinhs, setQuyTrinhs] = useState<QuyTrinh[]>([])
   const [chuaCauHinh, setChuaCauHinh] = useState(false)
@@ -140,7 +147,10 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
     try {
       const r = await fetch('/api/htkt/tham-dinh-ho-so', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rootId, duongDanCon, quyTrinh, kiemTraChiPhi, loaiCongTrinh, theoTuyen }),
+        body: JSON.stringify({
+          ...(cheDo === 'may-tinh' ? { phienId: phien?.phienId } : { rootId, duongDanCon }),
+          quyTrinh, kiemTraChiPhi, loaiCongTrinh, theoTuyen,
+        }),
       })
       const d = await r.json()
       if (!r.ok) { setLoi(d.error ?? 'Quét thất bại'); return }
@@ -149,33 +159,55 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
   }
 
   const mucBreadcrumb = duongDanCon ? duongDanCon.split('/') : []
+  const tenKho = gocs.find((g) => g.id === rootId)?.nhan ?? 'Kho'
 
-  if (chuaCauHinh) {
-    return (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-5">
-        <p className="font-semibold text-amber-900 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4" />Chưa cấu hình thư mục hồ sơ
-        </p>
-        <p className="text-sm text-amber-800 mt-2">
-          Quản trị viên cần khai biến <code className="bg-white px-1 rounded">THAM_DINH_ROOTS</code> trong tệp
-          <code className="bg-white px-1 rounded mx-1">.env</code>, ví dụ:
-        </p>
-        <pre className="mt-2 text-xs bg-white border rounded p-2 overflow-x-auto">THAM_DINH_ROOTS=&quot;Hồ sơ thẩm định|G:\HoSo_ThamDinh;Lưu trữ|E:\LuuTru&quot;</pre>
-        <p className="text-xs text-amber-700 mt-2">
-          Chỉ những thư mục khai ở đây mới được phép đọc. Sau khi sửa .env phải khởi động lại ứng dụng.
-        </p>
-      </div>
-    )
+  // Nguồn cho khung hỏi đáp: chỉ có khi cán bộ ĐÃ chọn thư mục dự án cụ thể.
+  const nguonHoiDap: NguonHoiDap | null = cheDo === 'may-tinh'
+    ? (phien ? { phienId: phien.phienId, nhan: phien.tenThuMuc } : null)
+    : (rootId && duongDanCon ? { rootId, duongDanCon, nhan: `${tenKho} › ${mucBreadcrumb.at(-1)}` } : null)
+  const khoaNguon = nguonHoiDap ? (nguonHoiDap.phienId ?? `${nguonHoiDap.rootId}/${nguonHoiDap.duongDanCon}`) : ''
+  // Kho máy chủ: bắt buộc đi vào thư mục con của dự án — quét cả gốc kho là đọc lẫn nhiều dự án.
+  const sanSangKiemKe = cheDo === 'may-tinh' ? !!phien : !!(rootId && duongDanCon)
+
+  function doiCheDo(c: 'may-tinh' | 'may-chu') {
+    if (c === cheDo) return
+    setCheDo(c); setKq(null); setLoi('')
   }
 
   return (
     <div className="space-y-4">
-      {/* ── Chọn nguồn hồ sơ ─────────────────────────────────── */}
+      {/* ── Bước 1a: chọn thư mục hồ sơ của dự án ─────────────── */}
       <div className="rounded-xl border bg-white p-5 space-y-4">
         <p className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
-          <FolderOpen className="w-4 h-4 text-cyan-600" />Chọn thư mục hồ sơ dự án
+          <FolderOpen className="w-4 h-4 text-cyan-600" />① Chọn thư mục hồ sơ dự án
         </p>
 
+        <div className="inline-flex rounded-lg border bg-slate-50 p-0.5 text-sm" role="tablist" aria-label="Nguồn hồ sơ">
+          <button role="tab" aria-selected={cheDo === 'may-tinh'} onClick={() => doiCheDo('may-tinh')}
+            className={`h-8 px-3 rounded-md inline-flex items-center gap-1.5 ${cheDo === 'may-tinh' ? 'bg-white shadow-sm text-cyan-700 font-medium' : 'text-slate-600'}`}>
+            <Laptop className="w-4 h-4" />Từ máy tính của tôi
+          </button>
+          <button role="tab" aria-selected={cheDo === 'may-chu'} onClick={() => doiCheDo('may-chu')}
+            className={`h-8 px-3 rounded-md inline-flex items-center gap-1.5 ${cheDo === 'may-chu' ? 'bg-white shadow-sm text-cyan-700 font-medium' : 'text-slate-600'}`}>
+            <Server className="w-4 h-4" />Kho hồ sơ trên máy chủ
+          </button>
+        </div>
+
+        {cheDo === 'may-tinh' ? (
+          <ChonThuMucMayTinh phien={phien} onXong={(p) => { setPhien(p); setKq(null) }} />
+        ) : chuaCauHinh ? (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+            <p className="font-semibold text-amber-900 flex items-center gap-2 text-sm">
+              <AlertTriangle className="w-4 h-4" />Máy chủ chưa khai báo kho hồ sơ
+            </p>
+            <p className="text-sm text-amber-800 mt-1">
+              Dùng mục <strong>“Từ máy tính của tôi”</strong> để chọn thư mục dự án. Muốn duyệt kho trên máy chủ, quản trị viên
+              khai biến <code className="bg-white px-1 rounded">THAM_DINH_ROOTS</code> trong <code className="bg-white px-1 rounded">.env</code>
+              {' '}(vd <code className="bg-white px-1 rounded">Hồ sơ thẩm định|G:\HoSo_ThamDinh</code>) rồi khởi động lại ứng dụng.
+            </p>
+          </div>
+        ) : (
+        <>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-slate-700">Kho hồ sơ</label>
@@ -190,15 +222,9 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
               ))}
             </select>
           </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-700">Quy trình thẩm định</label>
-            <select
-              value={quyTrinh} onChange={(e) => { setQuyTrinh(e.target.value); setKq(null) }}
-              className="w-full h-9 px-3 text-sm border rounded-lg bg-white outline-none focus:ring-2 focus:ring-cyan-500"
-            >
-              {quyTrinhs.map((q) => <option key={q.key} value={q.key}>{q.ten} ({q.soThanhPhan} thành phần)</option>)}
-            </select>
-          </div>
+          <p className="text-xs text-slate-500 md:pt-7">
+            Bấm vào thư mục để đi xuống tới <strong>đúng thư mục của dự án</strong> cần kiểm kê (mỗi dự án một thư mục).
+          </p>
         </div>
 
         {/* Đường dẫn đang đứng */}
@@ -238,6 +264,24 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
         {soFileTrucTiep > 0 && thuMucCon.length > 0 && (
           <p className="text-xs text-slate-500">Thư mục hiện tại có {soFileTrucTiep} tệp trực tiếp (chưa tính thư mục con).</p>
         )}
+        </>
+        )}
+      </div>
+
+      {/* ── Bước 1b: kiểm kê theo quy trình ─────────────────────── */}
+      <div className="rounded-xl border bg-white p-5 space-y-4">
+        <p className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+          <Search className="w-4 h-4 text-cyan-600" />② Kiểm kê thành phần hồ sơ theo quy trình
+        </p>
+        <div className="space-y-1.5 max-w-xl">
+          <label className="text-sm font-medium text-slate-700">Quy trình thẩm định</label>
+          <select
+            value={quyTrinh} onChange={(e) => { setQuyTrinh(e.target.value); setKq(null) }}
+            className="w-full h-9 px-3 text-sm border rounded-lg bg-white outline-none focus:ring-2 focus:ring-cyan-500"
+          >
+            {quyTrinhs.map((q) => <option key={q.key} value={q.key}>{q.ten} ({q.soThanhPhan} thành phần)</option>)}
+          </select>
+        </div>
 
         {/* Kiểm tra dự toán/TMĐT — tuỳ chọn, đọc lại toàn bộ công thức Excel nên chậm hơn */}
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2.5">
@@ -272,18 +316,35 @@ export function KiemKeHoSo({ onApply }: { onApply?: (p: ApplyKiemKe) => void } =
 
         <div className="flex items-center gap-3">
           <button
-            onClick={quet} disabled={dangQuet || !rootId || !quyTrinh}
+            onClick={quet} disabled={dangQuet || !sanSangKiemKe || !quyTrinh}
             className="h-9 px-4 rounded-lg bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 text-white text-sm font-medium flex items-center gap-2"
           >
             {dangQuet ? <><Loader2 className="w-4 h-4 animate-spin" />Đang kiểm kê…</> : <><Search className="w-4 h-4" />Kiểm kê hồ sơ</>}
           </button>
-          <span className="text-xs text-slate-500">Đọc tệp trong thư mục đang đứng và toàn bộ thư mục con.</span>
+          <span className="text-xs text-slate-500">
+            {sanSangKiemKe
+              ? (cheDo === 'may-tinh' ? `Kiểm kê thư mục “${phien?.tenThuMuc}” vừa tải lên.` : 'Đọc tệp trong thư mục đang đứng và toàn bộ thư mục con.')
+              : cheDo === 'may-chu' && rootId
+                ? 'Hãy đi vào thư mục của dự án (không kiểm kê cả gốc kho).'
+                : 'Chọn thư mục hồ sơ dự án ở mục ① trước.'}
+          </span>
         </div>
 
         {loi && <p className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">{loi}</p>}
       </div>
 
       {kq && <KetQuaView kq={kq} onApply={onApply} />}
+
+      {/* ── ③ Hỏi đáp nội dung hồ sơ (kiểu ChatGPT) — đổi thư mục là bắt đầu cuộc hỏi đáp mới ── */}
+      {nguonHoiDap ? (
+        <HoiDapHoSo key={khoaNguon} nguon={nguonHoiDap} />
+      ) : (
+        <div className="rounded-xl border border-dashed bg-white p-4 text-sm text-slate-500 flex items-center gap-2">
+          <Info className="w-4 h-4 text-cyan-600 shrink-0" />
+          ③ Hỏi đáp nội dung hồ sơ sẽ mở khi bạn đã chọn thư mục của một dự án cụ thể
+          {cheDo === 'may-chu' && ' (đi vào thư mục con của dự án, không dùng thư mục gốc của kho)'}.
+        </div>
+      )}
     </div>
   )
 }

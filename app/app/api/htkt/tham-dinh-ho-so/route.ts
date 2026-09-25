@@ -4,6 +4,8 @@ import path from 'node:path'
 import { requireHtktAccess } from '@/lib/auth'
 import { logAction } from '@/lib/audit'
 import { danhSachThuMucGoc, giaiDuongDan } from '@/lib/tham-dinh/duong-dan'
+import { giaiNguonHoSo } from '@/lib/tham-dinh/nguon-ho-so'
+import { donPhienHetHan } from '@/lib/tham-dinh/phien-tai-len'
 import { quetThuMuc, bocTrichYeu, doiChieu, GIOI_HAN } from '@/lib/tham-dinh/quet-ho-so'
 import { docDuToan } from '@/lib/tham-dinh/doc-du-toan'
 import { kiemTraDuToan, NHAN_LOAI_CONG_TRINH, type LoaiCongTrinhChiPhi } from '@/lib/tham-dinh/kiem-tra-du-toan'
@@ -38,6 +40,8 @@ export async function GET(req: NextRequest) {
   const hanhDong = sp.get('hanhDong') ?? 'goc'
 
   if (hanhDong === 'goc') {
+    // Mở trang Kiểm kê = dịp dọn phiên tải lên quá 24 giờ (không chặn phản hồi).
+    void donPhienHetHan().catch(() => {})
     const gocs = danhSachThuMucGoc()
     // Kiểm tra máy chủ có thật sự với tới từng thư mục gốc không — báo sớm,
     // thay vì để người dùng chọn xong mới báo lỗi khó hiểu.
@@ -107,7 +111,9 @@ export async function POST(req: NextRequest) {
     ? (loaiCongTrinhRaw as LoaiCongTrinhChiPhi) : null
   const theoTuyen = body?.theoTuyen === true
 
-  const giai = await giaiDuongDan(rootId, duongDanCon)
+  // Nguồn hồ sơ: phiên tải lên từ máy cán bộ (phienId) HOẶC thư mục trong kho máy chủ (rootId).
+  const phienId = String(body?.phienId ?? '')
+  const giai = await giaiNguonHoSo({ phienId, rootId, duongDanCon }, user.id)
   if (!giai.ok) return NextResponse.json({ error: giai.loi }, { status: 400 })
 
   const qt = QUY_TRINH_THAM_DINH.find((q) => q.key === quyTrinhKey)
@@ -132,12 +138,12 @@ export async function POST(req: NextRequest) {
   // Đây là hồ sơ hành chính — ghi nhật ký ai đã quét thư mục nào.
   await logAction({
     userId: user.id, action: 'READ', module: 'htkt',
-    targetId: rootId, targetType: 'ThamDinhHoSo',
-    detail: `Kiểm kê hồ sơ thẩm định: ${giai.goc.nhan}${duongDanCon ? '/' + duongDanCon : ''} · quy trình ${qt.key} · ${quet.tongFile} tệp`,
+    targetId: phienId || rootId, targetType: 'ThamDinhHoSo',
+    detail: `Kiểm kê hồ sơ thẩm định: ${giai.nhan}${!phienId && duongDanCon ? '/' + duongDanCon : ''} · quy trình ${qt.key} · ${quet.tongFile} tệp`,
   }).catch(() => {})
 
   return NextResponse.json({
-    thuMuc: { goc: giai.goc.nhan, duongDanCon },
+    thuMuc: { goc: giai.nhan, duongDanCon: phienId ? '' : duongDanCon },
     quyTrinh: { key: qt.key, ten: qt.ten, hoSo: qt.hoSo },
     tongFile: quet.tongFile,
     theoNhom: quet.theoNhom,

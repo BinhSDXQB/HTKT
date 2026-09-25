@@ -47,7 +47,7 @@ export function danhSachThuMucGoc(): ThuMucGoc[] {
 }
 
 /** Ký tự/dạng đường dẫn con bị từ chối thẳng, không cần chạm đĩa. */
-function duongDanConHopLe(dc: string): string | null {
+export function duongDanConHopLe(dc: string): string | null {
   if (dc === '') return null                       // rỗng = chính thư mục gốc, hợp lệ
   if (dc.length > 400) return 'Đường dẫn quá dài'
   if (dc.includes('\0')) return 'Đường dẫn chứa ký tự không hợp lệ'
