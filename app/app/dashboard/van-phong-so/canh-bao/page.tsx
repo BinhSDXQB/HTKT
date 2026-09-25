@@ -55,7 +55,7 @@ export default async function CanhBaoPage() {
 
   const saiLuong = canSensitive
     ? list.map((cb) => ({ cb, kq: checkSalaryConsistency(cb) }))
-        .filter((x) => x.kq.status === 'MISMATCH' || x.kq.status === 'BAC_OUT_OF_RANGE')
+        .filter((x) => x.kq.status === 'MISMATCH' || x.kq.status === 'BAC_OUT_OF_RANGE' || x.kq.status === 'CAN_RA_SOAT')
     : []
 
   // Người lao động (hợp đồng) KHÔNG nghỉ hưu theo tuổi (NĐ 135/2020) — chấm dứt/gia
@@ -214,7 +214,7 @@ export default async function CanhBaoPage() {
                     <td className="px-3 py-2 text-slate-600 text-xs">{cb.ngachHienHuong ?? cb.maNgach ?? '—'}</td>
                     <td className="px-3 py-2 text-center text-slate-700">{cb.bacLuong ?? '—'}</td>
                     <td className="px-3 py-2 text-center text-slate-700">{fmtSo(cb.heSoLuong)}</td>
-                    <td className="px-3 py-2 text-rose-700 text-xs">
+                    <td className={`px-3 py-2 text-xs ${kq.status === 'CAN_RA_SOAT' ? 'text-amber-700' : 'text-rose-700'}`}>
                       {'message' in kq ? kq.message : ''}
                       {kq.status === 'MISMATCH' && (
                         <span className="block text-emerald-700 mt-0.5">Hệ số chuẩn: {fmtSo(kq.heSoChuan)}</span>

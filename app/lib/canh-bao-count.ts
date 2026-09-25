@@ -38,7 +38,7 @@ async function computeCount(includeSensitive: boolean): Promise<number> {
       // Chưa có tài khoản đăng nhập
       !cb.userId ||
       // Sai lương (chỉ với người được xem dữ liệu nhạy cảm)
-      (includeSensitive && ['MISMATCH', 'BAC_OUT_OF_RANGE'].includes(checkSalaryConsistency(cb).status))
+      (includeSensitive && ['MISMATCH', 'BAC_OUT_OF_RANGE', 'CAN_RA_SOAT'].includes(checkSalaryConsistency(cb).status))
 
     if (flagged) n++
   }
