@@ -100,7 +100,7 @@ ${nguCanh.replace(/<\/?HO_SO>/gi, '')}
         const res = await aiChat().chat.completions.create({
           model: CHAT_MODEL,
           temperature: 0.1,
-          max_tokens: 1800,
+          max_completion_tokens: 1800,
           stream: true,
           messages: [{ role: 'system', content: system }, { role: 'system', content: duLieu }, ...lichSu],
         }, { signal: req.signal })

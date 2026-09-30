@@ -2203,7 +2203,7 @@ export async function POST(req: NextRequest) {
           tool_choice: allowedTools.length > 0 ? 'auto' : undefined,
           // Nhiệt độ thấp: bám sát dữ liệu tool, hạn chế "sáng tác" số liệu/điều khoản
           temperature: 0.1,
-          max_tokens: 2048,
+          max_completion_tokens: 2048,
         })
       } catch (e) {
         // Lỗi của hệ thống (CSDL, mã) → để catch ngoài xử lý như cũ.

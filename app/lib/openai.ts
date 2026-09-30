@@ -29,7 +29,7 @@ export async function generateVanBanWithStreaming(prompt: string) {
       { role: 'user', content: prompt },
     ],
     temperature: 0.7,
-    max_tokens: 2000,
+    max_completion_tokens: 2000,
     stream: true,
   })
 
@@ -47,7 +47,7 @@ export async function generateVanBanFull(prompt: string): Promise<string> {
       { role: 'user', content: prompt },
     ],
     temperature: 0.7,
-    max_tokens: 2000,
+    max_completion_tokens: 2000,
   })
 
   const content = response.choices[0]?.message?.content || ''
