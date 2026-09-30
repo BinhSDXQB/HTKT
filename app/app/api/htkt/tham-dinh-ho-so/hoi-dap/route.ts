@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { aiChat, aiDaCauHinh, laLoiHetHanMuc, AI_CHAT_MODEL, AI_TEN_NHA_CUNG_CAP } from '@/lib/ai/cau-hinh'
 import { requireHtktAccess } from '@/lib/auth'
 import { logAction } from '@/lib/audit'
 import { giaiNguonHoSo } from '@/lib/tham-dinh/nguon-ho-so'
@@ -9,7 +9,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
 
-const CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4.1-mini'
+const CHAT_MODEL = AI_CHAT_MODEL
 const MAX_LICH_SU = 10
 const MAX_KY_TU_CAU_HOI = 2000
 
@@ -27,7 +27,7 @@ type TinNhan = { role: 'user' | 'assistant'; content: string }
 export async function POST(req: NextRequest) {
   let user
   try { user = await requireHtktAccess() } catch { return NextResponse.json({ error: 'Không có quyền' }, { status: 403 }) }
-  if (!process.env.OPENAI_API_KEY) return NextResponse.json({ error: 'Máy chủ chưa cấu hình OPENAI_API_KEY' }, { status: 503 })
+  if (!aiDaCauHinh()) return NextResponse.json({ error: 'Máy chủ chưa cấu hình khoá dịch vụ AI (AI_API_KEY / OPENAI_API_KEY)' }, { status: 503 })
 
   const body = await req.json().catch(() => null)
   const lichSu: TinNhan[] = (Array.isArray(body?.messages) ? body.messages : [])
@@ -95,10 +95,9 @@ CÁC ĐOẠN TRÍCH LIÊN QUAN NHẤT:
 ${nguCanh.replace(/<\/?HO_SO>/gi, '')}
 </HO_SO>`
 
-        // Người dùng bấm "Dừng"/đóng trang → huỷ luôn lời gọi OpenAI để khỏi tốn token.
+        // Người dùng bấm "Dừng"/đóng trang → huỷ luôn lời gọi dịch vụ AI để khỏi tốn token.
         if (req.signal.aborted) return
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-        const res = await openai.chat.completions.create({
+        const res = await aiChat().chat.completions.create({
           model: CHAT_MODEL,
           temperature: 0.1,
           max_tokens: 1800,
@@ -119,11 +118,9 @@ ${nguCanh.replace(/<\/?HO_SO>/gi, '')}
       } catch (e) {
         if (req.signal.aborted) return
         const status = (e as { status?: number })?.status
-        const code = (e as { code?: string })?.code
-        const type = (e as { type?: string })?.type
         // Hết tiền cũng trả HTTP 429 như quá tải — phải phân biệt theo mã lỗi để báo đúng nguyên nhân.
-        const text = code === 'insufficient_quota' || code === 'credit_balance_exhausted' || type === 'insufficient_quota'
-          ? 'Tài khoản OpenAI của hệ thống đã hết số dư — liên hệ quản trị viên nạp thêm. (Phần kiểm kê hồ sơ ở mục ② vẫn dùng được.)'
+        const text = laLoiHetHanMuc(e)
+          ? `Tài khoản dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) của hệ thống đã hết số dư — liên hệ quản trị viên nạp thêm. (Phần kiểm kê hồ sơ ở mục ② vẫn dùng được.)`
           : status === 429 ? 'Hệ thống AI đang quá tải, vui lòng thử lại sau ít phút.'
           : `Lỗi khi xử lý: ${e instanceof Error ? e.message.slice(0, 200) : String(e)}`
         gui({ loai: 'loi', text })

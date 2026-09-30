@@ -26,14 +26,20 @@ const REPORT_ONLY = ARGS.includes('--report')
 const FOLDER = ARGS.find((a) => !a.startsWith('--')) || 'G:\\My Drive\\Tailieu_VBPL'
 const LOAI = 'VB_PHAP_LUAT'
 const PHAM_VI = 'CONG_KHAI'
-const EMBED_MODEL = 'text-embedding-3-small'
 
 const env = {}
 for (const line of readFileSync(new URL('../.env', import.meta.url), 'utf-8').split('\n')) {
   const m = line.match(/^([A-Z0-9_]+)="?(.*?)"?\s*$/)
   if (m) env[m[1]] = m[2]
 }
-const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
+// Cùng cấu hình NHÚNG với lib/ai/cau-hinh.ts (AI_EMBED_*): véc-tơ nạp kho và véc-tơ câu hỏi
+// của chatbot PHẢI cùng một model, nếu không phép so khoảng cách ra kết quả rác mà không báo lỗi.
+const EMBED_MODEL = env.AI_EMBED_MODEL || env.OPENAI_EMBED_MODEL || 'text-embedding-3-small'
+const EMBED_DIM = 1536
+const openai = new OpenAI({
+  apiKey: env.AI_EMBED_API_KEY || env.OPENAI_API_KEY,
+  baseURL: env.AI_EMBED_BASE_URL || 'https://api.openai.com/v1',
+})
 const client = new pg.Client({ connectionString: env.DATABASE_URL })
 
 // Bảng đăng ký hiệu lực (tuỳ chọn — không có cũng chạy được).
@@ -122,7 +128,7 @@ async function embedTexts(texts) {
     let lastErr
     for (let lan = 1; lan <= 5; lan++) {
       try {
-        const res = await openai.embeddings.create({ model: EMBED_MODEL, input: batch })
+        const res = await openai.embeddings.create({ model: EMBED_MODEL, input: batch, ...(env.AI_EMBED_SEND_DIM === '1' ? { dimensions: EMBED_DIM } : {}) })
         for (const d of res.data) out.push(d.embedding)
         lastErr = null
         break

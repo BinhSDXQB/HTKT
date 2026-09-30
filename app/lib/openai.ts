@@ -1,25 +1,11 @@
-import { OpenAI } from 'openai'
+import { aiChat, AI_VANBAN_MODEL } from '@/lib/ai/cau-hinh'
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY chưa được set trong .env')
-}
+// Nhà cung cấp/model lấy từ lib/ai/cau-hinh.ts (AI_BASE_URL, AI_VANBAN_MODEL…).
+// Trước đây file này ném lỗi ngay khi import nếu thiếu OPENAI_API_KEY và ghi cứng
+// gpt-3.5-turbo — nay khởi tạo lười và đổi model qua .env.
+export const VANBAN_MODEL = AI_VANBAN_MODEL
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-
-/**
- * Sinh tờ trình / công văn chi tiết từ prompt
- * Sử dụng gpt-3.5-turbo (nhanh + chi phí thấp)
- * Hỗ trợ streaming để return dần-dần
- */
-export async function generateVanBanWithStreaming(prompt: string) {
-  const stream = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
-    messages: [
-      {
-        role: 'system',
-        content: `Bạn là chuyên gia soạn thảo văn bản hành chính tại Sở Xây dựng Quảng Trị.
+const SYSTEM_SOAN_VAN_BAN = `Bạn là chuyên gia soạn thảo văn bản hành chính tại Sở Xây dựng Quảng Trị.
 Nhiệm vụ: Soạn thảo tờ trình, công văn, thông báo kết quả thẩm định VBPL Xây dựng.
 Yêu cầu:
 - Chi tiết, cụ thể, không nêu chung chung
@@ -29,12 +15,18 @@ Yêu cầu:
 - Tên cơ quan: "SỞ XÂY DỰNG" (chữ hoa)
 - Địa danh: "Quảng Trị"
 - Chữ ký: "GIÁM ĐỐC" hoặc "TRƯỞNG PHÒNG"
-- Không dùng placeholder "…" mà phải ghi cụ thể`,
-      },
-      {
-        role: 'user',
-        content: prompt,
-      },
+- Không dùng placeholder "…" mà phải ghi cụ thể`
+
+/**
+ * Sinh tờ trình / công văn chi tiết từ prompt
+ * Hỗ trợ streaming để return dần-dần
+ */
+export async function generateVanBanWithStreaming(prompt: string) {
+  const stream = await aiChat().chat.completions.create({
+    model: VANBAN_MODEL,
+    messages: [
+      { role: 'system', content: SYSTEM_SOAN_VAN_BAN },
+      { role: 'user', content: prompt },
     ],
     temperature: 0.7,
     max_tokens: 2000,
@@ -48,27 +40,11 @@ Yêu cầu:
  * Sinh tờ trình mà không dùng streaming (response toàn bộ)
  */
 export async function generateVanBanFull(prompt: string): Promise<string> {
-  const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+  const response = await aiChat().chat.completions.create({
+    model: VANBAN_MODEL,
     messages: [
-      {
-        role: 'system',
-        content: `Bạn là chuyên gia soạn thảo văn bản hành chính tại Sở Xây dựng Quảng Trị.
-Nhiệm vụ: Soạn thảo tờ trình, công văn, thông báo kết quả thẩm định VBPL Xây dựng.
-Yêu cầu:
-- Chi tiết, cụ thể, không nêu chung chung
-- Phong cách chính thức, chuẩn mực hành chính Việt Nam
-- Tuân thủ format NĐ 30/2020 (thể thức văn bản)
-- Tham chiếu đầy đủ các VBPL (số/năm/NĐ/TT)
-- Tên cơ quan: "SỞ XÂY DỰNG" (chữ hoa)
-- Địa danh: "Quảng Trị"
-- Chữ ký: "GIÁM ĐỐC" hoặc "TRƯỞNG PHÒNG"
-- Không dùng placeholder "…" mà phải ghi cụ thể`,
-      },
-      {
-        role: 'user',
-        content: prompt,
-      },
+      { role: 'system', content: SYSTEM_SOAN_VAN_BAN },
+      { role: 'user', content: prompt },
     ],
     temperature: 0.7,
     max_tokens: 2000,
@@ -80,23 +56,23 @@ Yêu cầu:
 
 /**
  * Đếm tokens (ước tính)
- * OpenAI: ~1 token ≈ 4 ký tự
+ * ~1 token ≈ 4 ký tự
  */
 export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4)
 }
 
 /**
- * Tính chi phí OpenAI
- * gpt-3.5-turbo: $0.50/M input, $1.50/M output
+ * Ước tính chi phí — đơn giá tham khảo (USD/1M token), đặt qua .env khi đổi model:
+ * AI_GIA_INPUT, AI_GIA_OUTPUT. Mặc định theo bảng giá cũ gpt-3.5-turbo ($0.50 / $1.50).
  */
 export function estimateCost(inputTokens: number, outputTokens: number): {
   input: number
   output: number
   total: number
 } {
-  const INPUT_PRICE = 0.5 / 1_000_000 // $0.50 per M tokens
-  const OUTPUT_PRICE = 1.5 / 1_000_000 // $1.50 per M tokens
+  const INPUT_PRICE = (Number(process.env.AI_GIA_INPUT) || 0.5) / 1_000_000
+  const OUTPUT_PRICE = (Number(process.env.AI_GIA_OUTPUT) || 1.5) / 1_000_000
 
   return {
     input: inputTokens * INPUT_PRICE,

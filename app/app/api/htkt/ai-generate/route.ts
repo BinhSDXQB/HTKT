@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateVanBanFull, estimateTokens, estimateCost } from '@/lib/openai'
+import { generateVanBanFull, estimateTokens, estimateCost, VANBAN_MODEL } from '@/lib/openai'
+import { aiDaCauHinh, laLoiHetHanMuc, laLoiDichVuAI, AI_TEN_NHA_CUNG_CAP } from '@/lib/ai/cau-hinh'
 import { requireHtktAccess } from '@/lib/auth'
 
 /**
@@ -18,7 +19,7 @@ import { requireHtktAccess } from '@/lib/auth'
  *   inputTokens: number,
  *   outputTokens: number,
  *   estimatedCost: number,
- *   model: "gpt-3.5-turbo"
+ *   model: string (theo AI_VANBAN_MODEL / AI_CHAT_MODEL)
  * }
  */
 export async function POST(req: NextRequest) {
@@ -52,12 +53,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Gọi OpenAI API
+    // Gọi dịch vụ AI (nhà cung cấp cấu hình ở lib/ai/cau-hinh.ts)
     const text = await generateVanBanFull(prompt)
 
     if (!text) {
       return NextResponse.json(
-        { error: 'OpenAI trả về response trống' },
+        { error: `Dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) trả về nội dung trống` },
         { status: 500 }
       )
     }
@@ -74,32 +75,32 @@ export async function POST(req: NextRequest) {
       inputTokens,
       outputTokens,
       estimatedCost: parseFloat(cost.total.toFixed(4)),
-      model: 'gpt-3.5-turbo',
+      model: VANBAN_MODEL,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
     console.error('[AI Generate Error]', error)
 
-    if (error instanceof Error) {
-      // OpenAI API errors
-      if (error.message.includes('401')) {
-        return NextResponse.json(
-          { error: 'OpenAI API key không hợp lệ' },
-          { status: 401 }
-        )
+    // Phân loại theo mã trạng thái thật của SDK — trước đây dò chuỗi message
+    // (includes('5') khớp gần như mọi lỗi) nên báo sai nguyên nhân.
+    if (laLoiHetHanMuc(error)) {
+      return NextResponse.json(
+        { error: `Tài khoản dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) của hệ thống đã hết hạn mức — liên hệ quản trị viên nạp thêm.` },
+        { status: 503 }
+      )
+    }
+    if (laLoiDichVuAI(error)) {
+      const status = (error as { status?: number }).status
+      if (status === 401 || status === 403) {
+        return NextResponse.json({ error: `Khoá dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) không hợp lệ` }, { status: 503 })
       }
-      if (error.message.includes('429')) {
-        return NextResponse.json(
-          { error: 'Quá nhiều requests, vui lòng thử lại sau' },
-          { status: 429 }
-        )
+      if (status === 429) {
+        return NextResponse.json({ error: 'Dịch vụ AI đang quá tải, vui lòng thử lại sau' }, { status: 429 })
       }
-      if (error.message.includes('5')) {
-        return NextResponse.json(
-          { error: 'OpenAI service tạm thời không khả dụng' },
-          { status: 503 }
-        )
-      }
+      return NextResponse.json(
+        { error: `Dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) tạm thời không khả dụng` },
+        { status: 503 }
+      )
     }
 
     return NextResponse.json(
@@ -117,14 +118,13 @@ export async function GET(req: NextRequest) {
   try {
     await requireHtktAccess()  // throws redirect('/forbidden') nếu không có quyền
 
-    // Đơn giản: nếu biến API key tồn tại = OK
-    const hasApiKey = !!process.env.OPENAI_API_KEY
-    const keyPreview = hasApiKey ? process.env.OPENAI_API_KEY!.slice(0, 7) + '***' : 'NOT SET'
+    // Đơn giản: có khoá dịch vụ AI = OK (không trả ra đầu khoá — không cần thiết cho client)
+    const hasApiKey = aiDaCauHinh()
 
     return NextResponse.json({
       status: hasApiKey ? 'ok' : 'error',
-      model: 'gpt-3.5-turbo',
-      apiKeyPreview: keyPreview,
+      provider: AI_TEN_NHA_CUNG_CAP,
+      model: VANBAN_MODEL,
       availableAt: new Date().toISOString(),
     })
   } catch (error) {

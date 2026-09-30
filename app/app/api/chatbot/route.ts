@@ -12,21 +12,23 @@ import { traCuuNghiepVuHtkt, phamViNoiDung, CHU_DE_LABEL, type ChuDe } from '@/l
 import { logAction } from '@/lib/audit'
 import { chuanHoaPhanTramVuotKhung, fmtSo } from '@/lib/luong'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+import { aiChat, laLoiHetHanMuc, laLoiDichVuAI, AI_CHAT_MODEL, AI_TEN_NHA_CUNG_CAP } from '@/lib/ai/cau-hinh'
+import { nhanDienYDinh, lamSachChoNguoiDoc, goiYCauHoi, TOOL_KHONG_AI } from '@/lib/chatbot/tra-loi-khong-ai'
 
 // Model chat — đổi được qua .env (OPENAI_CHAT_MODEL) mà không phải sửa code.
 // Mặc định gpt-4.1: bám sát dữ liệu tool và trích dẫn pháp lý chính xác hơn hẳn
 // gpt-4o-mini (model cũ hay tự "suy diễn" điều/khoản khi tool trả về không đủ).
 // gpt-4.1-mini: hạn mức 200.000 token/phút (gpt-4.1 chỉ 30.000 TPM — đã gây lỗi
 // 429 → HTTP 500 khi vài người hỏi cùng lúc), chất lượng vượt hẳn gpt-4o-mini cũ.
-const CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4.1-mini'
+const CHAT_MODEL = AI_CHAT_MODEL
 
 // Số lượt hội thoại tối đa nhận từ client (mỗi lượt = 1 tin). Cắt bớt để tránh
 // prompt phình to và hạn chế việc client nhồi lịch sử giả.
 const MAX_HISTORY = 16
 
 /**
- * Gọi OpenAI có thử lại khi bị giới hạn tốc độ (429) hoặc lỗi tạm thời 5xx.
+ * Gọi dịch vụ AI (nhà cung cấp cấu hình ở lib/ai/cau-hinh.ts) có thử lại khi bị giới hạn
+ * tốc độ (429) hoặc lỗi tạm thời 5xx.
  * Không có lớp này, chỉ cần vài người hỏi cùng lúc là chatbot trả "Lỗi máy chủ"
  * dù dữ liệu và câu hỏi đều hợp lệ.
  */
@@ -36,27 +38,19 @@ async function goiOpenAI(
   const CHO = [800, 2000, 4500]   // ms
   for (let lan = 0; ; lan++) {
     try {
-      return await openai.chat.completions.create(params)
+      return await aiChat().chat.completions.create(params)
     } catch (e) {
       const status = (e as { status?: number })?.status
       // HẾT TIỀN TRONG TÀI KHOẢN cũng trả 429 giống như vượt tốc độ, nhưng thử lại
       // là vô ích: chỉ làm người dùng chờ thêm ~7 giây rồi vẫn báo lỗi chung chung.
       // Phân biệt bằng mã lỗi để dừng ngay và trả về thông báo đúng nguyên nhân.
-      if (heTinDungOpenAI(e)) throw e
+      if (laLoiHetHanMuc(e)) throw e
       const thuLaiDuoc = status === 429 || (typeof status === 'number' && status >= 500)
       if (!thuLaiDuoc || lan >= CHO.length) throw e
-      console.warn(`OpenAI ${status} — thử lại lần ${lan + 1} sau ${CHO[lan]}ms`)
+      console.warn(`Dịch vụ AI ${status} — thử lại lần ${lan + 1} sau ${CHO[lan]}ms`)
       await new Promise((r) => setTimeout(r, CHO[lan]))
     }
   }
-}
-
-/** Lỗi do TÀI KHOẢN OpenAI hết hạn mức/hết tiền — khác hẳn lỗi quá tải tạm thời. */
-function heTinDungOpenAI(e: unknown): boolean {
-  const err = e as { code?: string; message?: string; error?: { code?: string } }
-  const code = err?.code || err?.error?.code || ''
-  if (code === 'credit_balance_exhausted' || code === 'insufficient_quota') return true
-  return /no credits remaining|insufficient_quota|exceeded your current quota/i.test(err?.message || '')
 }
 
 
@@ -2029,6 +2023,82 @@ async function dungLichSuTuMayChu(
 }
 
 
+// ── CHẾ ĐỘ KHÔNG DÙNG AI ──────────────────────────────────────────────────────
+// Khi dịch vụ AI hết hạn mức thì mọi lượt hỏi đều hỏng giống nhau → tạm ngưng gọi AI
+// một lúc cho đỡ trễ (mỗi lượt không phải chờ một vòng gọi thất bại). Chỉ áp cho lỗi HẾT
+// HẠN MỨC; lỗi tạm thời (mạng, quá tải) vẫn thử AI mỗi lượt. Biến theo TIẾN TRÌNH — pm2 chạy
+// cluster 2 tiến trình nên mỗi tiến trình tự tạm ngưng riêng (tối đa 2 lượt gọi hỏng/5 phút, chấp
+// nhận được). Nạp tiền xong chatbot dùng AI lại chậm nhất sau 5 phút (hoặc pm2 reload).
+const TAM_NGUNG_AI_MS = 5 * 60 * 1000
+let tamNgungAIDen = 0
+
+/**
+ * Trả lời bằng tra cứu CSDL trực tiếp (lib/chatbot/tra-loi-khong-ai.ts) khi dịch vụ AI ngừng.
+ * Giữ nguyên các lớp bảo vệ của luồng AI: lọc tool theo quyền (tài khoản phường/xã),
+ * ghi nhật ký câu hỏi, ghi audit VIEW_SENSITIVE khi đọc dữ liệu cá nhân.
+ */
+async function traLoiKhongAI(opts: {
+  user: CurrentUser
+  isWardUser: boolean
+  question: string
+  hetHanMuc: boolean
+  daChayTruoc: string[]
+}): Promise<NextResponse> {
+  const { user, isWardUser, question } = opts
+  const lyDo = opts.hetHanMuc
+    ? `tài khoản dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) của hệ thống đã hết hạn mức — cần quản trị viên nạp thêm`
+    : `dịch vụ AI (${AI_TEN_NHA_CUNG_CAP}) tạm thời không kết nối được`
+  const dauTrang =
+    `⚠️ *Trợ lý AI đang tạm ngừng (${lyDo}).* ` +
+    'Dưới đây là kết quả **tra cứu tự động trực tiếp từ cơ sở dữ liệu** theo từ khoá câu hỏi — ' +
+    'không có phần diễn giải của AI, hãy đối chiếu đúng ý bạn cần.\n\n'
+
+  const yDinh = nhanDienYDinh(question)
+    .filter((y) => TOOL_KHONG_AI.has(y.tool))
+    .filter((y) => !(isWardUser && SO_ONLY_TOOLS.has(y.tool)))
+
+  const ketQua: string[] = []
+  const toolDaDung: string[] = []
+  for (const y of yDinh) {
+    toolDaDung.push(y.tool)
+    const kq = lamSachChoNguoiDoc(await executeTool(y.tool, y.args, { userId: user.id, email: user.email, user }))
+    // Tra ngược SĐT chạy 2 nguồn: bỏ nguồn không thấy gì để khỏi rối
+    if (yDinh.length > 1 && /^Không tìm thấy/.test(kq)) continue
+    ketQua.push(kq)
+  }
+  if (yDinh.length > 1 && ketQua.length === 0) ketQua.push('Không tìm thấy ai dùng số điện thoại này trong danh bạ cán bộ Sở và lãnh đạo xã/phường.')
+
+  const ghiChuDaChay = opts.daChayTruoc.length
+    ? `\n\n_(Trước khi AI ngừng, hệ thống đã chạy: ${[...new Set(opts.daChayTruoc)].join(', ')} — nếu bạn vừa yêu cầu cập nhật dữ liệu, hãy kiểm tra lại trên trang tương ứng.)_`
+    : ''
+
+  const reply = ketQua.length
+    ? dauTrang + ketQua.join('\n\n──────────\n\n') + ghiChuDaChay
+    : dauTrang.replace(/Dưới đây là[^\n]*\n\n$/, '\n\n') +
+      'Ở chế độ này hệ thống chỉ trả lời được các câu hỏi tra cứu thường gặp, ví dụ:\n' +
+      goiYCauHoi(isWardUser) + ghiChuDaChay
+
+  const logId = await ghiNhanCauHoi({
+    userId: user.id,
+    isWardUser,
+    question,
+    answer: reply,
+    toolsUsed: [...opts.daChayTruoc, '__khong_ai__', ...toolDaDung],
+  })
+  // Tính cả tool luồng AI đã chạy TRƯỚC khi AI lỗi giữa chừng — dữ liệu đó đã được đọc.
+  const toolNhayCam = [...new Set([...opts.daChayTruoc, ...toolDaDung].filter((t) => TOOL_NHAY_CAM.has(t)))]
+  if (toolNhayCam.length > 0) {
+    await logAction({
+      userId: user.id,
+      action: 'VIEW_SENSITIVE',
+      module: 'chatbot',
+      targetType: 'CanBo',
+      detail: `Chatbot (chuyển chế độ không AI) truy cập dữ liệu cá nhân qua tool: ${toolNhayCam.join(', ')} · câu hỏi: ${question.slice(0, 160)}`,
+    }).catch(() => {})
+  }
+  return NextResponse.json({ reply, logId, cheDo: 'khong_ai' })
+}
+
 export async function POST(req: NextRequest) {
   let userIdForLog: string | undefined
   let isWardForLog = false
@@ -2117,17 +2187,33 @@ export async function POST(req: NextRequest) {
       ...userMessages,
     ]
 
+    // Dịch vụ AI vừa báo hết hạn mức → trả lời không dùng AI luôn, khỏi gọi thử
+    if (Date.now() < tamNgungAIDen) {
+      return traLoiKhongAI({ user, isWardUser, question, hetHanMuc: true, daChayTruoc: [] })
+    }
+
     // Vòng lặp tool-use (max 5 lần)
     for (let i = 0; i < 5; i++) {
-      const response = await goiOpenAI({
-        model: CHAT_MODEL,
-        messages,
-        tools: allowedTools.length > 0 ? allowedTools : undefined,
-        tool_choice: allowedTools.length > 0 ? 'auto' : undefined,
-        // Nhiệt độ thấp: bám sát dữ liệu tool, hạn chế "sáng tác" số liệu/điều khoản
-        temperature: 0.1,
-        max_tokens: 2048,
-      })
+      let response: OpenAI.Chat.Completions.ChatCompletion
+      try {
+        response = await goiOpenAI({
+          model: CHAT_MODEL,
+          messages,
+          tools: allowedTools.length > 0 ? allowedTools : undefined,
+          tool_choice: allowedTools.length > 0 ? 'auto' : undefined,
+          // Nhiệt độ thấp: bám sát dữ liệu tool, hạn chế "sáng tác" số liệu/điều khoản
+          temperature: 0.1,
+          max_tokens: 2048,
+        })
+      } catch (e) {
+        // Lỗi của hệ thống (CSDL, mã) → để catch ngoài xử lý như cũ.
+        // Lỗi của DỊCH VỤ AI (hết hạn mức, sai khoá, mất mạng…) → chuyển chế độ không AI.
+        if (!laLoiDichVuAI(e)) throw e
+        const hetHanMuc = laLoiHetHanMuc(e)
+        if (hetHanMuc) tamNgungAIDen = Date.now() + TAM_NGUNG_AI_MS
+        console.error('Chatbot: dịch vụ AI lỗi → chuyển chế độ trả lời không AI:', (e as Error)?.message)
+        return traLoiKhongAI({ user, isWardUser, question, hetHanMuc, daChayTruoc: toolsUsedInSession })
+      }
 
       const choice = response.choices[0]
       const msg = choice.message
@@ -2174,6 +2260,16 @@ export async function POST(req: NextRequest) {
         let args: Record<string, string> = {}
         try { args = JSON.parse(fn.arguments) } catch { /* empty args */ }
 
+        // Lọc allowedTools ở trên chỉ là lọc DANH SÁCH GỬI CHO MÔ HÌNH — không được tin mô hình
+        // (nhất là khi đổi sang nhà cung cấp khác qua .env) chỉ gọi tool trong danh sách đó.
+        // Kiểm lại phía máy chủ để tài khoản phường/xã không chạm được tool dành riêng cho Sở.
+        const duocPhep = allowedTools.some((t) => (t as { function?: { name?: string } }).function?.name === fn.name)
+        if (!duocPhep) {
+          toolsUsedInSession.push(`__tu_choi__${fn.name}`)
+          toolResults.push({ role: 'tool', tool_call_id: tc.id, content: 'Tài khoản này không có quyền dùng chức năng tra cứu này.' })
+          continue
+        }
+
         toolsUsedInSession.push(fn.name)
         const result = await executeTool(fn.name, args, { userId: user.id, email: user.email, user })
         toolResults.push({
@@ -2210,7 +2306,7 @@ export async function POST(req: NextRequest) {
         toolsUsed: [...toolsUsedInSession, '__loi_he_thong__'],
       })
     }
-    if (heTinDungOpenAI(err)) {
+    if (laLoiHetHanMuc(err)) {
       return NextResponse.json(
         {
           error:

@@ -15,7 +15,6 @@ import OpenAI from 'openai'
 const FOLDER = process.argv[2] || 'G:\\My Drive\\Tailieu_VBPL'
 const LOAI = 'VB_PHAP_LUAT'
 const PHAM_VI = 'CONG_KHAI'
-const EMBED_MODEL = 'text-embedding-3-small'
 
 // ── Nạp .env tối giản ────────────────────────────────────────────────
 const env = {}
@@ -23,7 +22,14 @@ for (const line of readFileSync(new URL('../.env', import.meta.url), 'utf-8').sp
   const m = line.match(/^([A-Z0-9_]+)="?(.*?)"?\s*$/)
   if (m) env[m[1]] = m[2]
 }
-const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
+// Cùng cấu hình NHÚNG với lib/ai/cau-hinh.ts (AI_EMBED_*): véc-tơ nạp kho và véc-tơ câu hỏi
+// của chatbot PHẢI cùng một model, nếu không phép so khoảng cách ra kết quả rác mà không báo lỗi.
+const EMBED_MODEL = env.AI_EMBED_MODEL || env.OPENAI_EMBED_MODEL || 'text-embedding-3-small'
+const EMBED_DIM = 1536
+const openai = new OpenAI({
+  apiKey: env.AI_EMBED_API_KEY || env.OPENAI_API_KEY,
+  baseURL: env.AI_EMBED_BASE_URL || 'https://api.openai.com/v1',
+})
 const client = new pg.Client({ connectionString: env.DATABASE_URL })
 
 // ── Trích xuất văn bản (khớp lib/rag/extract.ts) ─────────────────────
@@ -110,7 +116,7 @@ async function embedTexts(texts) {
   const BATCH = 96
   for (let i = 0; i < texts.length; i += BATCH) {
     const batch = texts.slice(i, i + BATCH).map((t) => t.replace(/\n/g, ' ').slice(0, 8000))
-    const res = await openai.embeddings.create({ model: EMBED_MODEL, input: batch })
+    const res = await openai.embeddings.create({ model: EMBED_MODEL, input: batch, ...(env.AI_EMBED_SEND_DIM === '1' ? { dimensions: EMBED_DIM } : {}) })
     for (const d of res.data) out.push(d.embedding)
   }
   return out

@@ -127,8 +127,10 @@ export function ChatWidget({ isWardUser = false, birthday = null }: { isWardUser
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: apiMessages }),
       })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
+      // Máy chủ trả thông báo cụ thể (vd hết hạn mức AI, 503) trong data.error —
+      // hiển thị nguyên văn thay vì câu lỗi chung chung khiến người dùng tưởng hỏng.
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
       setMessages(prev => [
         ...prev,
         {
@@ -138,10 +140,13 @@ export function ChatWidget({ isWardUser = false, birthday = null }: { isWardUser
           feedback: null,
         },
       ])
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error && !/^HTTP \d+$/.test(e.message) && e.message !== 'Failed to fetch'
+        ? e.message
+        : 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại.'
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại.' },
+        { role: 'assistant', content: msg },
       ])
     } finally {
       setLoading(false)
