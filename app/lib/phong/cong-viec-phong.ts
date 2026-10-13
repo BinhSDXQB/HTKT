@@ -43,12 +43,12 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       { nhom: 'Tham mưu, xây dựng văn bản', tanSuat: 'Theo phát sinh', viec: [
         'Soạn dự thảo văn bản QPPL, hướng dẫn nghiệp vụ về cấp GPXD, trật tự XD, chứng chỉ hành nghề.',
         'Xây dựng kế hoạch kiểm tra trật tự XD hằng năm; phương án xử lý công trình vi phạm.',
-        'Soạn văn bản hướng dẫn UBND cấp huyện, xã về cấp GPXD nhà ở riêng lẻ (phân cấp từ 01/7/2026).',
+        'Soạn văn bản hướng dẫn UBND cấp xã về cấp GPXD công trình cấp III, IV và nhà ở riêng lẻ (Đ53 k1 NĐ 217/2026).',
       ]},
       { nhom: 'Thẩm định, cấp phép', tanSuat: 'Theo hồ sơ', viec: [
         'Thẩm định hồ sơ cấp GPXD công trình cấp II trở lên, công trình đặc thù; gia hạn, điều chỉnh GPXD.',
         'Thẩm định BCNCKT, BCKTKT, thiết kế công trình dân dụng, công nghiệp nhẹ, khu ĐT, nhà ở.',
-        'Tổ chức sát hạch, cấp chứng chỉ hành nghề HĐXD, chứng chỉ năng lực tổ chức.',
+        'Xét cấp chứng chỉ hành nghề HĐXD cá nhân qua Hội đồng xét cấp (NĐ 212/2026); tổ chức tự công khai năng lực trên CSDL (Đ41).',
         'Thẩm định hồ sơ cấp phép nhà thầu nước ngoài hoạt động XD tại Quảng Trị.',
       ]},
       { nhom: 'Kiểm tra trật tự xây dựng', tanSuat: 'Thường xuyên', viec: [
@@ -62,8 +62,8 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
         'Tổng hợp số liệu phục vụ kiểm tra, đánh giá CCHC lĩnh vực XD.',
       ]},
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
-        'Phối hợp UBND cấp huyện, xã trong quản lý trật tự XD; hướng dẫn nghiệp vụ cấp GPXD.',
-        'Phối hợp cơ quan Công an thẩm định PCCC khi cấp GPXD cho công trình thuộc Phụ lục III/IV NĐ 105/2025.',
+        'Phối hợp UBND cấp xã trong quản lý trật tự XD (Đ67 NĐ 217/2026); hướng dẫn nghiệp vụ cấp GPXD.',
+        'Khi cấp GPXD công trình thuộc diện PCCC: đối chiếu bản vẽ đề nghị cấp phép với bản vẽ đã được thẩm duyệt/thẩm định PCCC — không thẩm định lại (Đ54 k6 điểm b NĐ 217/2026).',
         'Tiếp nhận, giải quyết khiếu nại, tố cáo liên quan hoạt động XD.',
       ]},
     ],
@@ -142,8 +142,8 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
         'Soạn văn bản hướng dẫn điều kiện đầu tư khu đô thị mới, chuyển nhượng đất có HTKT.',
       ]},
       { nhom: 'Thẩm định, kiểm tra', tanSuat: 'Theo hồ sơ', viec: [
-        'Thẩm định HTKT khu đô thị mới (đường, cấp thoát nước, điện, chiếu sáng, viễn thông, xử lý rác).',
-        'Kiểm tra nội dung PCCC khu ĐT mới (hạng mục thuộc Phụ lục III NĐ 105/2025).',
+        'Góp ý thẩm định chấp thuận chủ trương đầu tư dự án khu đô thị (Đ29 NĐ 11/2013).',
+        'Theo dõi chủ đầu tư thực hiện đầu tư đồng bộ hạ tầng, bàn giao quản lý khu đô thị (Đ17, Đ38 NĐ 11/2013).',
         'Rà soát, đánh giá tiêu chí phân loại đô thị; lập hồ sơ đề nghị công nhận loại đô thị.',
         'Kiểm tra điều kiện chuyển nhượng quyền sử dụng đất có HTKT trong khu ĐT.',
       ]},
@@ -159,7 +159,7 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       ]},
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
         'Phối hợp Phòng QH-KT về quy hoạch trong chương trình PTĐT.',
-        'Phối hợp UBND cấp huyện về nâng loại đô thị; hướng dẫn hoàn thiện tiêu chí.',
+        'Phối hợp cơ quan chuyên môn thuộc tỉnh (đô thị nhiều hơn 01 xã) hoặc UBND cấp xã (đô thị trong 01 xã) lập đề án công nhận đô thị loại II, III (Đ21 k1 NĐ 35/2026); hướng dẫn hoàn thiện tiêu chí.',
         'Phối hợp Sở TNMT, Sở TTTT về tăng trưởng xanh, chuyển đổi số đô thị.',
       ]},
     ],

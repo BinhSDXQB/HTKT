@@ -63,11 +63,9 @@ export const MAU_BIEU: MauBieu[] = [
     moTa: 'Thông báo kết quả thẩm định Báo cáo kinh tế - kỹ thuật công trình HTKT theo NĐ 217/2026.',
     coFormDien: true,
   },
-  {
-    key: 'thong-bao-tham-dinh-thiet-ke', ten: 'Thông báo kết quả thẩm định thiết kế triển khai', nhom: 'Kết quả thẩm định & nghiệm thu',
-    moTa: 'Thông báo kết quả thẩm định thiết kế triển khai sau thiết kế cơ sở công trình HTKT theo NĐ 217/2026.',
-    coFormDien: true,
-  },
+  // Đã gỡ 'thong-bao-tham-dinh-thiet-ke' (13/10/2026): từ 01/7/2026 CHỦ ĐẦU TƯ thẩm định thiết kế
+  // triển khai và ra thông báo theo Mẫu số 12 Phụ lục I NĐ 217/2026 (Đ41 k1, k5) — Sở không còn
+  // ban hành văn bản này. Builder vẫn giữ trong van-ban-docx.ts nhưng không còn được phục vụ.
   {
     key: 'chap-thuan-nghiem-thu', ten: 'Văn bản chấp thuận kết quả kiểm tra nghiệm thu', nhom: 'Kết quả thẩm định & nghiệm thu',
     moTa: 'Văn bản chấp thuận hoặc đề nghị khắc phục kết quả kiểm tra nghiệm thu công trình HTKT theo NĐ 207/2026.',

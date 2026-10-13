@@ -8,7 +8,7 @@ const subMenus = [
   { label: 'Chương trình phát triển đô thị', desc: 'Chương trình, kế hoạch phát triển đô thị toàn tỉnh', icon: Building2, href: '/dashboard/phong-ptdt/chuong-trinh-ptdt' },
   { label: 'Phân loại đô thị', desc: 'Đánh giá, phân loại và nâng loại đô thị', icon: Landmark, href: '/dashboard/phong-ptdt/phan-loai-do-thi' },
   { label: 'Đô thị thông minh & tăng trưởng xanh', desc: 'Phát triển đô thị thông minh, tăng trưởng xanh', icon: Zap, href: '/dashboard/phong-ptdt/do-thi-thong-minh' },
-  { label: 'Thẩm định HTKT khu đô thị', desc: 'Thẩm định hạ tầng kỹ thuật khu đô thị', icon: Network, href: '/dashboard/phong-ptdt/tham-dinh-htkt-khu-do-thi' },
+  { label: 'Góp ý dự án khu đô thị', desc: 'Ý kiến thẩm định chấp thuận chủ trương dự án khu đô thị (Đ29 NĐ 11/2013)', icon: Network, href: '/dashboard/phong-ptdt/tham-dinh-htkt-khu-do-thi' },
   { label: 'CSDL phát triển đô thị', desc: 'Xây dựng, quản lý cơ sở dữ liệu phát triển đô thị', icon: Boxes, href: '/dashboard/phong-ptdt/csdl-ptdt' },
 ]
 

@@ -206,7 +206,7 @@ BƯỚC 2 — KIỂM TRA THÀNH PHẦN THEO Đ35 k2 NĐ 217 (đánh dấu từng
 Nhóm A. Văn bản pháp lý
  a) Văn bản chủ trương đầu tư / văn bản phê duyệt thông tin dự án / quyết định phê duyệt Đề án du lịch sinh thái trong rừng (điểm a).
     Dự án đầu tư công: căn cứ là quyết định chủ trương đầu tư theo Luật Đầu tư công. Trừ các dự án không phải quyết định chủ trương theo Đ19 k6 (KHỐI CĂN CỨ mục 11), ví dụ dự án khẩn cấp, dự án thuộc chương trình mục tiêu quốc gia, dự án thành phần. Với các dự án này, không được ghi thiếu chủ trương; thay vào đó kiểm tra văn bản xác lập căn cứ tương ứng.
-    Dự án đầu tư kinh doanh: căn cứ là văn bản chấp thuận chủ trương đầu tư hoặc văn bản tương đương theo Luật Đầu tư 143/2025 và NĐ 96/2026 [CẦN ĐỐI CHIẾU điều khoản].
+    Dự án đầu tư kinh doanh: căn cứ là văn bản chấp thuận chủ trương đầu tư đối với dự án thuộc diện tại Đ24 Luật Đầu tư 143/2025; thẩm quyền chấp thuận theo Đ25 (Chủ tịch UBND cấp tỉnh: khoản 3) — điều khoản Luật dẫn theo NĐ 96/2026 Đ30 k1, Đ35 k1 (NĐ 96 có trong kho, đã đọc 14/10/2026). Hồ sơ, thẩm định đề nghị chấp thuận chủ trương: Đ32 NĐ 96 (Sở Tài chính tiếp nhận với dự án thuộc thẩm quyền Chủ tịch UBND tỉnh ngoài các khu — Đ32 k6 điểm b). Dự án không thuộc diện chấp thuận chủ trương: Giấy chứng nhận đăng ký đầu tư (Đ39 NĐ 96).
  b) Với dự án chuyển tiếp không phải chấp thuận chủ trương: Giấy chứng nhận đăng ký đầu tư hoặc tương đương; quyết định công nhận trúng đấu giá quyền sử dụng đất hoặc trúng thầu dự án có sử dụng đất (điểm b).
  c) Văn bản phê duyệt phương án kiến trúc qua thi tuyển và bản vẽ kèm theo, nếu thuộc diện phải thi tuyển (điểm c). Diện phải thi tuyển xác định theo Đ17 k2 Luật Kiến trúc (KHỐI CĂN CỨ mục 9). Với dự án hạ tầng, chú ý trường hợp CẦU TRONG ĐÔ THỊ TỪ CẤP II TRỞ LÊN; cấp của cầu lấy từ kết quả P2.
  d) Văn bản phê duyệt hoặc chấp thuận, kèm bản vẽ, của QUY HOẠCH LÀM CĂN CỨ LẬP DỰ ÁN (điểm d). Phải chỉ rõ quy hoạch đó thuộc trường hợp nào trong 9 trường hợp a–i tại Đ26 k1. Không mặc định là "quy hoạch chi tiết 1/500". Nếu dự án thuộc Đ26 k2 (sửa chữa, cải tạo giữ nguyên mục tiêu, địa điểm, quy mô) thì không yêu cầu quy hoạch. Nếu đồ án quy hoạch đã có mã số thông tin trên hệ thống thì chỉ cần mã số đó.
@@ -587,7 +587,7 @@ NGUYÊN TẮC: Không suy đoán khi thiếu số liệu. Phải nêu rõ nội 
     (b) Ngưỡng nhóm dự án: đối chiếu Luật 58/2024 trong kho và bản Công báo Luật 90/2025, xác nhận ngưỡng không đổi.
 
 ## Hạn chế còn lại (cần cán bộ kiểm tra khi dùng)
-- Nội dung điều khoản còn nhãn [CẦN ĐỐI CHIẾU]: NĐ 165/2024 Đ32–34 (cơ quan thẩm định an toàn giao thông); Luật Đầu tư 143/2025, NĐ 96/2026 (điều khoản chấp thuận chủ trương); các luật chuyên ngành ở mục 15. Nên tải bản Công báo các văn bản này vào kho `Tailieu_VBPL`. NĐ 347/2026 nên được lưu vào kho, vì đã tải được bản .docx Công báo.
+- Nội dung điều khoản còn nhãn [CẦN ĐỐI CHIẾU]: NĐ 165/2024 Đ32–34 (cơ quan thẩm định an toàn giao thông); các luật chuyên ngành ở mục 15. (Điều khoản chấp thuận chủ trương đầu tư đã đối chiếu NĐ 96/2026 ngày 14/10/2026; bản Luật Đầu tư 143/2025 vẫn chưa có trong kho.) Nên tải bản Công báo các văn bản này vào kho `Tailieu_VBPL`. NĐ 347/2026 nên được lưu vào kho, vì đã tải được bản .docx Công báo.
 - Chưa có trong KHỐI 0: Luật PPP; phụ lục NĐ 212 (phạm vi hoạt động theo hạng chứng chỉ).
 - Prompt không thay thế việc đọc bảng Phụ lục I, II TT 34/2026. Với kết luận cấp công trình, nên đối chiếu thêm bằng `app/lib/htkt/cap-cong-trinh-tt34.ts` (bảng chép nguyên văn) hoặc lệnh `node scripts/doc-van-ban-goc.mjs bang "34_2026_TT-BXD" "<từ khoá>"`.
 

@@ -312,6 +312,8 @@ function buildThongBaoThamDinhBcktkt(i: VanBanInput): Paragraph[] {
 }
 
 // ───────── Thông báo kết quả thẩm định thiết kế triển khai ─────────
+// KHÔNG CÒN PHỤC VỤ (đã gỡ khỏi MAU_BIEU 13/10/2026): từ 01/7/2026 chủ đầu tư thẩm định thiết kế
+// triển khai (Đ41 NĐ 217/2026) — giữ builder chỉ để thoả kiểu Record<LoaiMau, ...>.
 function buildThongBaoThamDinhThietKe(i: VanBanInput): Paragraph[] {
   const noiNhan = i.noiNhan?.length ? i.noiNhan : ['- Chủ đầu tư;', '- Nhà thầu;', '- Lưu: VT, HTKT.']
   return [

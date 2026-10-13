@@ -30,34 +30,37 @@ export type PhapLyPhong = {
 const LUAT_XD_2025: VanBan = {
   loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật Xây dựng',
   hieuLuc: 'Hiệu lực 01/7/2026 (một số điều: khoản 2,3 Điều 43, Điều 71, khoản 3,4,5 Điều 95 từ 01/01/2026)',
-  ghiChu: 'QH thông qua 10/12/2025. Thay Luật Xây dựng 2014 và Luật sửa đổi 62/2020/QH14. Tăng phân cấp thẩm định, kiểm tra nghiệm thu cho địa phương; bắt buộc áp dụng BIM với công trình cấp II trở lên.',
+  ghiChu: 'QH thông qua 10/12/2025. Thay Luật Xây dựng 2014 và Luật sửa đổi 62/2020/QH14. Đ26–27: thẩm định BCNCKT tại cơ quan chuyên môn; Đ29–30: chủ đầu tư thẩm định thiết kế triển khai; Đ43–47: giấy phép xây dựng, trật tự xây dựng; Đ48: điều kiện khởi công.',
   trongTam: true,
 }
 const ND_217_2026: VanBan = {
   loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Quy định chi tiết một số điều và biện pháp thi hành Luật Xây dựng về quản lý hoạt động xây dựng',
   hieuLuc: 'Ban hành 19/6/2026 · hiệu lực 01/7/2026',
-  ghiChu: 'Thay NĐ 175/2024 (và NĐ 15/2021). '
-    + 'Điều 4: trình tự ĐTXD 3 giai đoạn (chuẩn bị/thực hiện/kết thúc). '
-    + 'Chương IV: thẩm định dự án, thiết kế (thẩm quyền Sở XD theo phân cấp Điều 35 Luật XD 2025). '
-    + 'Chương V: cấp GPXD — Điều 66 công khai GPXD trên cổng ĐT ≥ 12 tháng; '
-    + 'nhà ở riêng lẻ ≤ 7 tầng do UBND cấp xã cấp (Điều 67 khoản 7 — gia hạn, cấp lại). '
-    + 'Chương VI: quản lý trật tự XD; xử lý vi phạm. '
-    + 'Điều 8: bắt buộc BIM với công trình cấp II trở lên từ giai đoạn khả thi. '
-    + 'Quản lý nhà thầu nước ngoài; công trình đặc thù, công trình cấp bách.',
+  // Cấu trúc đối chiếu bản Công báo (rà soát 13/10/2026): Chương II gồm Mục 1 khảo sát, Mục 2 thiết kế,
+  // Mục 3 lập/thẩm định dự án (Đ26–40), Mục 4 thiết kế triển khai (Đ41–43), Mục 5 tổ chức QLDA;
+  // Chương III giấy phép xây dựng và trật tự xây dựng (Đ49–67); Chương IV công trình đặc thù.
+  ghiChu: 'Thay NĐ 175/2024 (Đ75). '
+    + 'Đ8 k1 điểm a: BIM áp dụng với công trình xây dựng MỚI từ cấp II trở lên kể từ giai đoạn lập BCNCKT/BCKTKT. '
+    + 'Chương II Mục 3: thẩm định BCNCKT tại cơ quan chuyên môn (thẩm quyền Đ32–33, trình tự Đ36, thời hạn Đ37: '
+    + 'nhóm A 25/20, nhóm B 20/16, nhóm C 15/12 ngày làm việc tuỳ có công trình cấp I trở lên hay không). '
+    + 'Mục 4: thiết kế triển khai do CHỦ ĐẦU TƯ thẩm định (Đ41, Mẫu số 12). '
+    + 'Chương III: GPXD — thẩm quyền Đ53 (UBND cấp xã: cấp III, IV, nhà ở riêng lẻ; Ban quản lý khu: công trình trong khu; '
+    + 'Sở XD: còn lại); công khai GPXD tối thiểu 12 tháng (Đ66); quản lý trật tự xây dựng (Đ67). '
+    + 'Đ74 (sửa NĐ 105 về PCCC) đã bị NĐ 347/2026 bãi bỏ.',
   trongTam: true,
 }
 const ND_207_2026: VanBan = {
   loai: 'Nghị định', soHieu: '207/2026/NĐ-CP', ten: 'Quy định chi tiết một số điều của Luật Xây dựng về quản lý chất lượng, thi công xây dựng và bảo trì công trình xây dựng',
   hieuLuc: 'Ban hành 15/6/2026 · hiệu lực 01/7/2026',
+  // Cấu trúc đối chiếu bản gốc: Chương II thi công, nghiệm thu, bàn giao; Chương III bảo hành, bảo trì,
+  // phá dỡ; Chương IV sự cố.
   ghiChu: 'Thay NĐ 06/2021/NĐ-CP. '
-    + 'Chương II: quản lý chất lượng khảo sát–thiết kế–thi công (yêu cầu xác định chủng loại, '
-    + 'nguồn gốc, thông số kỹ thuật VL trước khi đưa vào thi công). '
-    + 'Chương III: nghiệm thu — CĐT tổ chức nghiệm thu từng phần, giai đoạn, hạng mục; '
-    + 'bộ phận bị che khuất phải nghiệm thu trước khi tiếp tục thi công. '
-    + 'Chương IV: kiểm tra công tác nghiệm thu của cơ quan chuyên môn XD (theo phân cấp). '
-    + 'Chương V: bảo trì — chủ sở hữu phải xây dựng kế hoạch + bảo đảm kinh phí bảo trì. '
-    + 'Chương VI: sự cố công trình — thông báo sơ bộ nhanh nhất, báo cáo VB trong 24 giờ. '
-    + 'Chương VII: an toàn thi công, phá dỡ công trình.',
+    + 'Chương II: quản lý thi công (Đ12 điều kiện khởi công, Đ14 quản lý vật liệu, sản phẩm, cấu kiện, thiết bị), '
+    + 'nghiệm thu (Đ24), KIỂM TRA CÔNG TÁC NGHIỆM THU của cơ quan nhà nước (Đ25 đối tượng, Đ26 thẩm quyền, Đ27 trình tự), '
+    + 'hồ sơ hoàn thành (Đ28). '
+    + 'Chương III: bảo hành, bảo trì, phá dỡ công trình. '
+    + 'Chương IV: sự cố — chủ đầu tư thông báo ngay bằng biện pháp nhanh nhất cho UBND cấp xã; '
+    + 'trong 24 giờ báo cáo bằng văn bản tới UBND cấp tỉnh.',
   trongTam: true,
 }
 const ND_206_2026: VanBan = {
@@ -85,13 +88,13 @@ const ND_210_2026: VanBan = {
 const ND_212_2026: VanBan = {
   loai: 'Nghị định', soHieu: '212/2026/NĐ-CP', ten: 'Quy định về điều kiện năng lực hoạt động xây dựng và hệ thống thông tin, cơ sở dữ liệu quốc gia về hoạt động xây dựng',
   hieuLuc: 'Ban hành 17/6/2026 · hiệu lực 01/7/2026',
-  ghiChu: 'Thay phần năng lực của NĐ 15/2021. '
-    + 'Điều kiện năng lực cá nhân (khảo sát, thiết kế, giám sát, quản lý dự án): '
-    + 'trình tự sát hạch, cấp mới/cấp lại/gia hạn/thu hồi chứng chỉ hành nghề. '
-    + 'Điều kiện năng lực tổ chức: chứng chỉ năng lực tổ chức khảo sát, thiết kế, thi công, '
-    + 'tư vấn giám sát, quản lý dự án. '
-    + 'Nhà thầu nước ngoài: điều kiện, thẩm quyền, trình tự cấp/thu hồi giấy phép. '
-    + 'Hệ thống thông tin & CSDL quốc gia về hoạt động xây dựng — số hoá, công khai năng lực.',
+  ghiChu: 'Chương II: CSDL quốc gia về hoạt động xây dựng (quy hoạch, dự án, định mức – giá, năng lực). '
+    + 'Chương IV Mục 1: chứng chỉ hành nghề CÁ NHÂN (Đ27–40; Hội đồng xét cấp Đ40; thẩm quyền Đ31). '
+    + 'Mục 2: tổ chức TỰ CÔNG KHAI thông tin năng lực trên CSDL (Đ41) — không còn thủ tục cấp chứng chỉ năng lực; '
+    + 'nội dung công khai gồm hạng, lĩnh vực theo chứng chỉ năng lực đã được cấp (nếu có) (Đ41 k3 điểm e). '
+    + 'Mục 3: giấy phép hoạt động xây dựng cho NHÀ THẦU NƯỚC NGOÀI (Đ42–49). '
+    + 'Đ27 k3 điểm d: không yêu cầu chứng chỉ hành nghề với công viên cây xanh, chiếu sáng công cộng, đường cáp truyền dẫn tín hiệu viễn thông. '
+    + 'Chứng chỉ cấp mới hiệu lực 10 năm (Đ27 k5).',
 }
 const ND_209_2026: VanBan = {
   loai: 'Nghị định', soHieu: '209/2026/NĐ-CP', ten: 'Quy định chi tiết một số điều và biện pháp thi hành Luật Xây dựng về quản lý vật liệu xây dựng',
@@ -105,41 +108,19 @@ const ND_209_2026: VanBan = {
 }
 
 // ── PHÒNG CHÁY CHỮA CHÁY (PCCC) ───────────────────────────────────────────
-// Tích hợp trong thẩm định thiết kế — phân công theo Điều 17 Luật 55/2024:
-//   • Cơ quan chuyên môn XD (Sở XD): thẩm định nội dung điểm a–đ khoản 1 Điều 16
-//     (khoảng cách PCCC, đường bộ/bãi đỗ xe chữa cháy, giải pháp thoát nạn,
-//      bậc chịu lửa/ngăn cháy/chống cháy lan/chống khói, giải pháp PCCC riêng)
-//   • Cơ quan Công an: thẩm định nội dung điểm e, g khoản 1 Điều 16
-//     (hệ thống điện phục vụ PCCC; phương tiện, hệ thống PCCC)
-//   • Chủ đầu tư tự thẩm định: công trình KHÔNG thuộc Phụ lục III, IV NĐ 105/2025
-//
-// ĐỐI TƯỢNG PHẢI THẨM ĐỊNH (Phụ lục III NĐ 105/2025/NĐ-CP — trích quy mô):
-//   ▸ Nhà chung cư, nhà ở tập thể: từ 7 tầng HOẶC tổng sàn ≥ 3.000 m²
-//   ▸ Khách sạn, nhà nghỉ, toà nhà VP, cơ sở lưu trú: từ 7 tầng HOẶC sàn ≥ 3.000 m²
-//   ▸ Trường học, cơ sở giáo dục: từ 5 tầng HOẶC sàn ≥ 3.000 m²
-//   ▸ Nhà trẻ, mẫu giáo: từ 150 trẻ HOẶC sàn ≥ 2.000 m²
-//   ▸ Bệnh viện, cơ sở y tế: từ 5 tầng HOẶC sàn ≥ 2.000 m²
-//   ▸ Rạp chiếu phim, nhà hát, trung tâm hội nghị, bảo tàng, thư viện: từ 300 chỗ
-//     HOẶC từ 5 tầng HOẶC sàn ≥ 3.000 m²
-//   ▸ Khu vui chơi, karaoke, vũ trường: từ 4 tầng HOẶC sàn ≥ 1.000 m²
-//   ▸ Trung tâm thương mại, chợ, siêu thị: sàn ≥ 2.000 m²
-//   ▸ Nhà hàng, cửa hàng hàng dễ cháy: sàn ≥ 3.000 m²
-//   ▸ Sân vận động, nhà thi đấu: từ 5.000 chỗ HOẶC sàn ≥ 5.000 m²
-//   ▸ Nhà xưởng, nhà công nghiệp: có nguy cơ cháy nổ cao (hạng A–E)
-//   ▸ Kho chứa hàng nguy hiểm cháy nổ: thể tích ≥ 15.000 m³
-//   ▸ Sân bay, cảng biển (≥ cấp III), ga đường sắt: sàn ≥ 3.000 m²
-//   ▸ Hầm đường bộ, đường sắt: chiều dài ≥ 1.000 m
-//   ▸ Công trình HTKT đô thị (cấp nước, thoát nước, chiếu sáng...): theo quy mô dự án
-//
-// NGHIỆM THU PCCC: Điều 18 Luật 55/2024 — cơ quan nào thẩm định thiết kế thì
-// kiểm tra nghiệm thu PCCC. Công trình chỉ được đưa vào sử dụng sau khi có văn bản
-// chấp thuận nghiệm thu. (Từ 01/7/2026: NQ 66/2025 bỏ nghiệm thu PCCC riêng —
-// tích hợp vào kiểm tra nghiệm thu chung của cơ quan chuyên môn XD.)
-//
-// ⚠️ KHI THẨM ĐỊNH DỰ ÁN/THIẾT KẾ: cần đối chiếu công trình có thuộc Phụ lục III
-// (cơ quan XD thẩm định) hay Phụ lục IV (cơ quan Công an thẩm định) của NĐ 105/2025
-// để yêu cầu hồ sơ PCCC đúng cơ quan. Không yêu cầu CĐT cung cấp văn bản thẩm định
-// PCCC khi công trình thuộc thẩm quyền cơ quan XD (Bộ CA đã làm rõ).
+// Căn cứ hiện hành (rà soát 13/10/2026, đối chiếu NĐ 105/2025 và NĐ 347/2026 bản gốc):
+//   • Đ6 k1 NĐ 105 (sửa bởi Đ12 NĐ 347/2026, hiệu lực 15/9/2026): công trình thuộc diện thẩm định
+//     BCNCKT tại cơ quan chuyên môn về xây dựng VÀ thuộc Phụ lục III → cơ quan chuyên môn thẩm định
+//     thiết kế PCCC; việc thẩm định và THỜI GIAN TRẢ KẾT QUẢ được TÍCH HỢP vào thẩm định BCNCKT.
+//   • Phần của cơ quan Công an (điểm e, g khoản 1 Điều 16 Luật PCCC) ở bước thiết kế triển khai/BCKTKT
+//     (Đ9 k4 điểm a NĐ 105, sửa bởi Đ14 NĐ 347/2026).
+//   • Phụ lục III NĐ 105 = danh mục công trình, phương tiện giao thông thuộc diện thẩm định thiết kế PCCC
+//     (NĐ 347/2026 thay Phụ lục III). Ngưỡng từng loại công trình PHẢI tra bản gốc — không chép số ở đây.
+//   • Nghiệm thu PCCC: chủ đầu tư tổ chức và khai báo trên CSDL PCCC trước khi đưa vào hoạt động
+//     (Đ12 k1 điểm đ NĐ 105, sửa bởi Đ16 NĐ 347/2026).
+//   • Cấp GPXD: hồ sơ gồm kết quả thực hiện TTHC về PCCC đối với hồ sơ thiết kế (nếu có yêu cầu) (Đ57 k1 điểm c
+//     NĐ 217/2026); cơ quan cấp phép đối chiếu bản vẽ với bản vẽ đã thẩm duyệt/thẩm định PCCC (Đ54 k6 điểm b).
+// (Bản trước chép danh sách ngưỡng Phụ lục III và thời hạn "≤ 10/≤ 6 ngày" chưa đối chiếu — đã gỡ.)
 
 const LUAT_PCCC_2024: VanBan = {
   loai: 'Luật', soHieu: '55/2024/QH15', ten: 'Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ',
@@ -151,30 +132,28 @@ const LUAT_PCCC_2024: VanBan = {
     + 'điểm d: bậc chịu lửa, ngăn cháy, chống cháy lan, chống khói; '
     + 'điểm đ: giải pháp PCCC riêng theo đặc thù công trình; '
     + 'điểm e: hệ thống điện phục vụ PCCC; điểm g: phương tiện, hệ thống PCCC. '
-    + 'Điều 17: cơ quan XD thẩm định điểm a–đ; Công an thẩm định điểm e, g; '
-    + 'khoản 4: Chính phủ quy định danh mục công trình thuộc diện thẩm định. '
-    + 'Điều 18: nghiệm thu PCCC — cơ quan nào thẩm định thì kiểm tra nghiệm thu.',
+    + 'Điều 17: phân công thẩm định thiết kế PCCC giữa cơ quan chuyên môn về xây dựng và cơ quan Công an; '
+    + 'khoản 4: Chính phủ quy định danh mục công trình thuộc diện thẩm định (Phụ lục III NĐ 105/2025).',
   trongTam: true,
 }
 const ND_105_2025: VanBan = {
-  loai: 'Nghị định', soHieu: '105/2025/NĐ-CP', ten: 'Quy định chi tiết một số điều và biện pháp thi hành Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ',
-  hieuLuc: 'Ban hành 15/5/2025 · hiệu lực 01/7/2025',
-  ghiChu: 'Thay NĐ 136/2020, NĐ 83/2017, NĐ 50/2024 về PCCC. '
-    + 'Phụ lục III: danh mục công trình do cơ quan chuyên môn XD thẩm định PCCC '
-    + '(nhà chung cư ≥ 7 tầng/3.000 m²; bệnh viện ≥ 5 tầng/2.000 m²; '
-    + 'trường học ≥ 5 tầng/3.000 m²; TTTM ≥ 2.000 m²; khách sạn/VP ≥ 7 tầng/3.000 m²; '
-    + 'nhà xưởng hạng A–E; kho ≥ 15.000 m³; hầm ≥ 1.000 m...). '
-    + 'Phụ lục IV: danh mục công trình do cơ quan Công an thẩm định. '
-    + 'Thời hạn thẩm định: dự án nhóm A, công trình quan trọng ≤ 10 ngày; còn lại ≤ 6 ngày làm việc. '
-    + 'Báo cáo PCCC định kỳ 2 lần/năm (trước 15/6 và 15/12).',
+  loai: 'Nghị định', soHieu: '105/2025/NĐ-CP (sửa bởi 347/2026)', ten: 'Quy định chi tiết một số điều và biện pháp thi hành Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ',
+  hieuLuc: 'Ban hành 15/5/2025 · hiệu lực 01/7/2025; NĐ 347/2026 sửa đổi, hiệu lực 15/9/2026',
+  ghiChu: 'Đ6 k1 (sửa bởi NĐ 347): cơ quan chuyên môn về xây dựng thẩm định thiết kế PCCC với công trình thuộc diện '
+    + 'thẩm định BCNCKT tại cơ quan chuyên môn và thuộc Phụ lục III — tích hợp vào thẩm định BCNCKT, không có thời hạn riêng. '
+    + 'Phụ lục III: danh mục công trình, phương tiện giao thông thuộc diện thẩm định thiết kế PCCC (NĐ 347 thay Phụ lục III; '
+    + 'công trình ngoài danh mục chỉ phải thẩm định khi thiết kế cùng lúc VÀ dùng chung hệ thống báo cháy/chữa cháy với công trình thuộc diện). '
+    + 'Phụ lục IV (NĐ 347 thay thế): phương tiện PCCC, CNCH, vật liệu, cấu kiện ngăn cháy — không phải danh mục công trình; '
+    + 'Phụ lục V đã bị bãi bỏ (Đ30 k3 NĐ 347/2026). '
+    + 'Đ13–14 (sửa bởi NĐ 347): UBND tỉnh phân công cơ quan chuyên môn về xây dựng kiểm tra định kỳ cơ sở nhóm 1, nhóm 2 Phụ lục II; '
+    + 'lập kế hoạch kiểm tra năm sau trước 15/12.',
   trongTam: true,
 }
 const QCVN_06: VanBan = {
   loai: 'QCVN', soHieu: 'QCVN 06:2022/BXD (+ Sửa đổi 1:2023)', ten: 'An toàn cháy cho nhà và công trình',
   ghiChu: 'Ban hành kèm TT 06/2022/TT-BXD; Sửa đổi 1:2023 kèm TT 09/2023/TT-BXD. '
     + 'Quy định bậc chịu lửa, khoảng cách PCCC, lối thoát nạn, ngăn cháy — '
-    + 'dùng khi thẩm định nội dung điểm a–d khoản 1 Điều 16 Luật 55/2024. '
-    + 'Theo dõi phiên bản cập nhật QCVN 06:2025 theo Luật PCCC&CNCH 2024.',
+    + 'dùng khi thẩm định thiết kế PCCC phần thuộc cơ quan chuyên môn về xây dựng.',
   trongTam: true,
 }
 const QCVN_10_BCA: VanBan = {
@@ -193,8 +172,8 @@ const LUAT_DAU_THAU: VanBan = {
 }
 const ND_214_2025: VanBan = {
   loai: 'Nghị định', soHieu: '214/2025/NĐ-CP', ten: 'Quy định chi tiết một số điều và biện pháp thi hành Luật Đấu thầu về lựa chọn nhà thầu',
-  hieuLuc: 'Ban hành 04/8/2025 · hiệu lực 01/7/2025 (theo Luật 90/2025)',
-  ghiChu: 'Thay Nghị định 24/2024/NĐ-CP.',
+  hieuLuc: 'Ban hành 04/8/2025 · hiệu lực từ ngày ký (Đ145); sửa đổi bởi NĐ 349/2026/NĐ-CP (có trong kho) và NĐ 165/2026/NĐ-CP (theo tra cứu, chưa có bản trong kho)',
+  ghiChu: 'Thay Nghị định 24/2024/NĐ-CP. Hạn mức chỉ định thầu quy định tại Luật Đấu thầu, không nằm trong Nghị định này.',
 }
 const LUAT_DTC: VanBan = {
   loai: 'Luật', soHieu: '58/2024/QH15 (sửa đổi 90/2025)', ten: 'Luật Đầu tư công',
@@ -348,36 +327,35 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
     chung: [LUAT_XD_2025, ND_217_2026, ND_207_2026, ND_206_2026, ND_30_2020],
     linhVuc: [
       { key: 'tham-dinh-thiet-ke', ten: 'Thẩm định BCNCKT, thiết kế công trình giao thông', vanBan: [
-        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật Xây dựng — Điều 35: thẩm quyền thẩm định dự án, thiết kế XD (phân cấp cho Sở XD)',
-          ghiChu: 'Sở XD thẩm định dự án/thiết kế công trình giao thông thuộc thẩm quyền theo phân cấp.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Quản lý HĐXD — Chương IV: thẩm định dự án, thiết kế',
-          ghiChu: 'Trình tự thẩm định BCNCKT, BCKTKT, thiết kế triển khai sau TKCS; thời hạn theo nhóm dự án (A: 40 ngày, B: 30 ngày, C: 20 ngày).', trongTam: true },
+        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật Xây dựng — Điều 26–27: thẩm định BCNCKT; Điều 29–30: thẩm định thiết kế',
+          ghiChu: 'Sở XD thẩm định BCNCKT công trình giao thông thuộc thẩm quyền (khoản 4 Điều 27). Thiết kế triển khai sau khi dự án được phê duyệt do CHỦ ĐẦU TƯ thẩm định (Đ29 k1).', trongTam: true },
+        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Quản lý HĐXD — Chương II Mục 3: lập, thẩm định dự án (Đ26–40)',
+          ghiChu: 'Thẩm quyền Đ32–33; trình tự Đ36; thời hạn Đ37: nhóm A 25/20, nhóm B 20/16, nhóm C 15/12 ngày làm việc (có/không có công trình cấp I trở lên). Đ41: thiết kế triển khai do chủ đầu tư thẩm định.', trongTam: true },
         { loai: 'Luật', soHieu: '35/2024/QH15', ten: 'Luật Đường bộ', hieuLuc: 'Hiệu lực 01/01/2025',
           ghiChu: 'Điều 11–15: yêu cầu kỹ thuật kết cấu hạ tầng đường bộ; Điều 16: phân loại đường; Điều 18: quản lý chất lượng công trình đường bộ.', trongTam: true },
         // ── PCCC khi thẩm định thiết kế công trình giao thông ──
-        // Công trình GT thuộc Phụ lục III NĐ 105/2025 (ga đường sắt ≥ 3.000 m², hầm ≥ 1.000 m,
-        // cầu cạn, bến xe...) → Sở XD thẩm định nội dung PCCC điểm a–đ khoản 1 Điều 16 Luật 55/2024
-        // (khoảng cách PCCC, lối thoát nạn, bậc chịu lửa, ngăn cháy, chống khói).
-        // Cơ quan Công an thẩm định riêng nội dung điểm e, g (hệ thống điện PCCC, phương tiện PCCC).
+        // Công trình GT thuộc Phụ lục III NĐ 105/2025 (sửa bởi NĐ 347/2026) và thuộc diện thẩm định BCNCKT tại
+        // cơ quan chuyên môn → Sở thẩm định thiết kế PCCC tích hợp vào thẩm định BCNCKT (Đ6 k1 NĐ 105).
+        // Phần cơ quan Công an (điểm e, g khoản 1 Điều 16 Luật PCCC) thuộc bước thiết kế triển khai.
+        // Ngưỡng từng loại công trình: tra Phụ lục III bản gốc (bản trước chép số chưa đối chiếu — đã gỡ).
         { loai: 'Luật', soHieu: '55/2024/QH15', ten: 'Luật PCCC&CNCH — Điều 16, 17: yêu cầu & thẩm định PCCC khi thiết kế công trình',
-          ghiChu: 'Khoản 1 Điều 16: 7 yêu cầu PCCC (a–g). Điều 17 khoản 1: cơ quan XD thẩm định điểm a–đ '
-            + '(khoảng cách, đường chữa cháy, thoát nạn, bậc chịu lửa, giải pháp PCCC riêng); '
-            + 'khoản 2: Công an thẩm định điểm e, g (điện PCCC, phương tiện PCCC). '
-            + 'Công trình GT thuộc diện: ga ≥ 3.000 m², hầm ≥ 1.000 m, nhà điều hành ≥ 7 tầng.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '105/2025/NĐ-CP', ten: 'Chi tiết Luật PCCC — Phụ lục III: danh mục công trình cơ quan XD thẩm định PCCC',
-          ghiChu: 'Thời hạn thẩm định PCCC: dự án nhóm A ≤ 10 ngày, còn lại ≤ 6 ngày làm việc. '
-            + 'Hồ sơ PCCC nộp đồng thời với hồ sơ thẩm định thiết kế XD.' },
+          ghiChu: 'Khoản 1 Điều 16: các yêu cầu PCCC khi thiết kế (điểm a–g). Điều 17: phân công thẩm định giữa cơ quan '
+            + 'chuyên môn về xây dựng và cơ quan Công an (điểm e, g thuộc Công an).', trongTam: true },
+        { loai: 'Nghị định', soHieu: '105/2025/NĐ-CP (sửa bởi 347/2026)', ten: 'Chi tiết Luật PCCC — Đ6 k1, Phụ lục III',
+          ghiChu: 'Thẩm định thiết kế PCCC và thời gian trả kết quả tích hợp vào thẩm định BCNCKT (Đ6 k1, sửa bởi Đ12 NĐ 347/2026) — '
+            + 'không có thời hạn PCCC riêng. Phụ lục III do NĐ 347/2026 thay thế.' },
         QCVN_06,
       ]},
       { key: 'kiem-tra-nghiem-thu', ten: 'Kiểm tra công tác nghiệm thu', vanBan: [
-        { loai: 'Nghị định', soHieu: '207/2026/NĐ-CP', ten: 'Quản lý chất lượng — Chương III–IV: nghiệm thu & kiểm tra nghiệm thu',
+        { loai: 'Nghị định', soHieu: '207/2026/NĐ-CP', ten: 'Đ24: nghiệm thu; Đ25–27: kiểm tra công tác nghiệm thu',
           ghiChu: 'CĐT tổ chức nghiệm thu từng phần, giai đoạn, hạng mục; bộ phận bị che khuất phải nghiệm thu '
             + 'trước khi tiếp tục thi công. Cơ quan chuyên môn XD kiểm tra nghiệm thu theo phân cấp.', trongTam: true },
-        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 82–84: nghiệm thu, kiểm tra nghiệm thu, đưa công trình vào sử dụng',
+        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 57: nghiệm thu; Điều 58: bàn giao công trình',
           ghiChu: 'Công trình chỉ được đưa vào sử dụng khi đã nghiệm thu đạt yêu cầu.' },
-        { loai: 'Luật', soHieu: '55/2024/QH15', ten: 'Luật PCCC — Điều 18: nghiệm thu PCCC tích hợp',
-          ghiChu: 'Cơ quan nào thẩm định thiết kế PCCC thì kiểm tra nghiệm thu PCCC. '
-            + 'Từ 01/7/2026 (NQ 66/2025): bỏ nghiệm thu PCCC riêng, tích hợp vào kiểm tra nghiệm thu chung.' },
+        { loai: 'Nghị định', soHieu: '105/2025/NĐ-CP (sửa bởi 347/2026)', ten: 'Nghiệm thu về PCCC',
+          ghiChu: 'Chủ đầu tư tổ chức nghiệm thu về PCCC, chịu trách nhiệm về kết quả và khai báo trên CSDL PCCC trước khi đưa '
+            + 'công trình vào hoạt động (Đ12 k1 điểm đ, sửa bởi Đ16 NĐ 347/2026). Thủ tục kiểm tra kết quả nghiệm thu PCCC '
+            + 'của cơ quan Công an (Đ10 NĐ 105) đã bị bãi bỏ (Đ30 k1 NĐ 347/2026) — không yêu cầu "văn bản chấp thuận nghiệm thu PCCC".' },
         { loai: 'Thông tư', soHieu: '32/2026/TT-BXD', ten: 'Quy định chi tiết một số điều của Nghị định 207/2026/NĐ-CP',
           hieuLuc: 'Ban hành 22/6/2026 · hiệu lực 01/7/2026',
           ghiChu: 'Hướng dẫn hồ sơ, trình tự kiểm tra công tác nghiệm thu; biểu mẫu biên bản nghiệm thu; '
@@ -494,93 +472,81 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
   // 5. PHÒNG QL HOẠT ĐỘNG XÂY DỰNG ─────────────────────────────────────────────
   'phong-qlhd-xd': {
     ma: 'PHONG_QLHD_XD', ten: 'Phòng Quản lý hoạt động xây dựng', baseHref: '/dashboard/phong-qlhd-xd', color: 'indigo',
-    moTaPhong: 'Cấp phép xây dựng; quản lý trật tự xây dựng; thẩm định dự án dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở; chứng chỉ hành nghề; thí nghiệm chuyên ngành.',
+    moTaPhong: 'Cấp phép xây dựng; quản lý trật tự xây dựng; thẩm định BCNCKT dự án dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở; chứng chỉ hành nghề cá nhân, giấy phép nhà thầu nước ngoài; thí nghiệm chuyên ngành.',
     chung: [LUAT_XD_2025, LUAT_QHDT_NT, ND_217_2026, ND_207_2026, ND_212_2026, ND_30_2020],
     linhVuc: [
       { key: 'cap-phep-xay-dung', ten: 'Cấp phép xây dựng', vanBan: [
-        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 43–50: giấy phép xây dựng',
-          ghiChu: 'Điều 43: đối tượng phải có GPXD; Điều 44 khoản 1: điều kiện cấp GPXD '
-            + '(phù hợp mục đích sử dụng đất, thiết kế đã thẩm định phê duyệt); '
-            + 'Điều 45: thẩm quyền (Sở XD: cấp II trở lên; UBND cấp xã: cấp III, IV, nhà ở riêng lẻ); '
-            + 'Điều 50: thu hồi GPXD.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Chương V: cấp giấy phép xây dựng',
-          ghiChu: 'Điều 66: công khai GPXD trên cổng điện tử ≥ 12 tháng. '
-            + 'Điều 67 khoản 7: UBND cấp xã cấp GPXD cho nhà ở riêng lẻ ≤ 7 tầng, công trình cấp III–IV. '
-            + 'Quy định mới về nhà ở riêng lẻ từ 01/7/2026: phân cấp mạnh cho xã/phường.', trongTam: true },
-        // ── PCCC khi cấp phép: công trình thuộc Phụ lục III/IV NĐ 105/2025 phải có
-        // văn bản thẩm định PCCC trước khi cấp GPXD (Điều 17 khoản 3 Luật 55/2024) ──
-        { loai: 'Luật', soHieu: '55/2024/QH15', ten: 'Luật PCCC — Điều 17 khoản 3: điều kiện thi công',
-          ghiChu: 'CĐT chỉ được thi công khi có văn bản thẩm định thiết kế PCCC. '
-            + 'Khi cấp GPXD cho công trình thuộc diện thẩm định PCCC (Phụ lục III/IV NĐ 105/2025): '
-            + 'chung cư ≥ 7 tầng/3.000 m², bệnh viện ≥ 5 tầng/2.000 m², trường học ≥ 5 tầng/3.000 m², '
-            + 'khách sạn/VP ≥ 7 tầng/3.000 m², TTTM ≥ 2.000 m², nhà xưởng hạng A–E, kho ≥ 15.000 m³ — '
-            + 'phải kiểm tra có văn bản thẩm định PCCC trong hồ sơ.' },
+        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 43–46: giấy phép xây dựng',
+          ghiChu: 'Đ43: quy định chung, khoản 2 các trường hợp được miễn GPXD; Đ44: cấp GPXD; '
+            + 'Đ45: quyền, trách nhiệm của cơ quan cấp GPXD; Đ46: quyền, trách nhiệm của người đề nghị cấp. '
+            + 'Khoản 2, 3 Điều 43 có hiệu lực từ 01/01/2026.', trongTam: true },
+        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Chương III: giấy phép xây dựng (Đ49–66)',
+          ghiChu: 'Đ50–52: điều kiện cấp GPXD mới, sửa chữa cải tạo, có thời hạn. '
+            + 'Đ53 thẩm quyền: UBND cấp xã — công trình cấp III, IV và nhà ở riêng lẻ trên địa bàn; '
+            + 'Ban quản lý KCN, KCX, KCNC, KKT — công trình trong khu; Sở Xây dựng — các công trình còn lại; '
+            + 'dự án nhiều công trình xác định theo công trình có cấp cao nhất (k4 điểm c). '
+            + 'Đ54: trình tự xem xét; Đ56–62: hồ sơ; Đ63–65: điều chỉnh, gia hạn, cấp lại, thu hồi; '
+            + 'Đ66: công khai GPXD trên trang thông tin điện tử tối thiểu 12 tháng.', trongTam: true },
+        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'PCCC khi cấp GPXD — Đ57 k1 điểm c, Đ54 k6 điểm b',
+          ghiChu: 'Hồ sơ cấp GPXD mới gồm kết quả thực hiện thủ tục hành chính về PCCC đối với hồ sơ thiết kế đề nghị cấp phép '
+            + '(nếu có yêu cầu) — công trình thuộc diện thẩm duyệt/thẩm định thiết kế PCCC (Phụ lục III NĐ 105/2025, sửa bởi NĐ 347/2026). '
+            + 'Khi xem xét, cơ quan cấp phép đối chiếu bản vẽ đề nghị cấp phép với bản vẽ đã được thẩm duyệt/thẩm định PCCC; '
+            + 'không thẩm định lại nội dung PCCC.' },
       ]},
       { key: 'trat-tu-xay-dung', ten: 'Quản lý trật tự xây dựng', vanBan: [
-        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Chương VI: quản lý trật tự xây dựng',
-          ghiChu: 'Kiểm tra điều kiện khởi công (Điều 67); xử lý vi phạm trật tự XD; đình chỉ, phá dỡ công trình vi phạm.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '16/2022/NĐ-CP', ten: 'Xử phạt vi phạm hành chính về xây dựng',
-          ghiChu: 'Mức phạt XD không phép, sai phép, sai thiết kế; thẩm quyền xử phạt (Thanh tra XD, UBND).', trongTam: true },
+        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Điều 67: quản lý trật tự xây dựng',
+          ghiChu: 'Theo Đ47 Luật XD 2025. Nội dung: kiểm tra điều kiện khởi công (Đ48 Luật XD); công trình có GPXD — theo nội dung GPXD; '
+            + 'công trình miễn GPXD — kiểm tra điều kiện miễn, sự phù hợp quy hoạch và thiết kế tại BCNCKT đã thẩm định. '
+            + 'Phát hiện vi phạm: yêu cầu dừng thi công, xử lý theo thẩm quyền hoặc kiến nghị xử lý.', trongTam: true },
+        { loai: 'Nghị định', soHieu: '339/2026/NĐ-CP', ten: 'Xử phạt vi phạm hành chính trong lĩnh vực xây dựng, quản lý công trình HTKT, phát triển nhà, kinh doanh BĐS',
+          hieuLuc: 'Ban hành 26/8/2026 · hiệu lực 26/8/2026',
+          ghiChu: 'Thay NĐ 16/2022/NĐ-CP (hết hiệu lực từ 26/8/2026 — Đ90). Mức phạt quy định là của tổ chức; cá nhân bằng 1/2.', trongTam: true },
       ]},
-      { key: 'tham-dinh-du-an', ten: 'Thẩm định dự án, thiết kế', vanBan: [
-        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 35: thẩm quyền thẩm định dự án ĐTXD',
-          ghiChu: 'Sở XD thẩm định dự án/thiết kế công trình dân dụng, công nghiệp nhẹ, khu ĐT, nhà ở '
-            + 'theo phân cấp. Thời hạn: nhóm A 40 ngày, B 30 ngày, C 20 ngày.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Chương IV: thẩm định BCNCKT, BCKTKT, thiết kế triển khai sau TKCS',
-          ghiChu: 'Trình tự tiếp nhận hồ sơ, lấy ý kiến phối hợp, thẩm định nội dung, phát hành kết quả. '
-            + 'Điều 8: bắt buộc BIM công trình cấp II trở lên từ giai đoạn khả thi.', trongTam: true },
+      { key: 'tham-dinh-du-an', ten: 'Thẩm định dự án (BCNCKT)', vanBan: [
+        { loai: 'Luật', soHieu: '135/2025/QH15', ten: 'Luật XD — Điều 26–27: thẩm định BCNCKT, BCKTKT; Điều 29–30: thẩm định thiết kế',
+          ghiChu: 'Cơ quan chuyên môn về xây dựng thẩm định BCNCKT theo khoản 4 Điều 27. '
+            + 'Thiết kế triển khai sau khi dự án được phê duyệt do CHỦ ĐẦU TƯ thẩm định (Đ29 k1, Đ30).', trongTam: true },
+        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Chương II Mục 3: lập, thẩm định dự án (Đ26–40)',
+          ghiChu: 'Thẩm quyền Đ32–33; trình tự Đ36 (yêu cầu bổ sung một lần, tạm dừng, thông báo kết quả); '
+            + 'thời hạn Đ37: nhóm A 25/20, nhóm B 20/16, nhóm C 15/12 ngày làm việc (có/không có công trình cấp I trở lên); '
+            + 'nội dung, kết quả Đ38. Đ41: chủ đầu tư thẩm định thiết kế triển khai (Mẫu số 12 là văn bản của chủ đầu tư). '
+            + 'Đ8 k1 điểm a: BIM với công trình xây mới từ cấp II trở lên kể từ giai đoạn lập BCNCKT.', trongTam: true },
         { loai: 'Thông tư', soHieu: '34/2026/TT-BXD', ten: 'Quy định chi tiết về cấp công trình xây dựng phục vụ quản lý hoạt động xây dựng',
           hieuLuc: 'Ban hành 25/6/2026 · hiệu lực 01/7/2026',
-          ghiChu: 'Thay TT 06/2021/TT-BXD. Phân cấp công trình (đặc biệt, I–IV) làm căn cứ xác định '
-            + 'thẩm quyền thẩm định, cấp GPXD, kiểm tra nghiệm thu, yêu cầu BIM.', trongTam: true },
+          ghiChu: 'Thay TT 06/2021/TT-BXD. Phân cấp công trình (đặc biệt, I–IV) — căn cứ thời hạn thẩm định (Đ37 NĐ 217), '
+            + 'thẩm quyền cấp GPXD (Đ53), đối tượng kiểm tra nghiệm thu, BIM. Tổng mức đầu tư KHÔNG phải tiêu chí xác định cấp công trình.', trongTam: true },
         ND_207_2026,
         // ── PCCC khi thẩm định dự án ĐTXD ──
-        // Đây là mảng CẦN CHÚ Ý NHẤT: phòng QLHD-XD thẩm định dự án dân dụng, nhà ở, khu ĐT
-        // → hầu hết thuộc Phụ lục III NĐ 105/2025 (chung cư ≥ 7 tầng, bệnh viện, trường, TTTM...).
-        // Sở XD thẩm định đồng thời nội dung PCCC (điểm a–đ khoản 1 Điều 16 Luật 55/2024):
-        //   a) Khoảng cách an toàn PCCC
-        //   b) Đường bộ, bãi đỗ cho xe chữa cháy
-        //   c) Giải pháp thoát nạn (lối thoát, cầu thang thoát hiểm, chiều rộng hành lang)
-        //   d) Bậc chịu lửa, giải pháp ngăn cháy, chống cháy lan, chống khói
-        //   đ) Giải pháp PCCC riêng theo đặc thù công trình
-        // Cơ quan Công an đồng thời thẩm định điểm e (hệ thống điện PCCC) và g (phương tiện PCCC).
-        { loai: 'Luật', soHieu: '55/2024/QH15', ten: 'Luật PCCC&CNCH — Điều 16, 17: PCCC trong thẩm định dự án ĐTXD',
-          ghiChu: '⚠️ Phòng QLHD-XD thẩm định dự án dân dụng/nhà ở → phần lớn thuộc Phụ lục III NĐ 105/2025. '
-            + 'Sở XD thẩm định nội dung PCCC điểm a–đ (khoảng cách, đường CC, thoát nạn, bậc chịu lửa, '
-            + 'ngăn cháy/chống cháy lan/chống khói, giải pháp PCCC riêng). '
-            + 'Hồ sơ PCCC nộp đồng thời hồ sơ thẩm định thiết kế — không yêu cầu CĐT cung cấp '
-            + 'VB thẩm định PCCC riêng khi thuộc thẩm quyền cơ quan XD.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '105/2025/NĐ-CP', ten: 'Chi tiết Luật PCCC — Phụ lục III & thời hạn thẩm định',
-          ghiChu: 'Thời hạn: nhóm A ≤ 10 ngày, còn lại ≤ 6 ngày làm việc. '
-            + 'Công trình dân dụng thường gặp thuộc diện: chung cư ≥ 7 tầng/3.000 m², '
-            + 'trường học ≥ 5 tầng/3.000 m², nhà trẻ ≥ 150 trẻ/2.000 m², '
-            + 'bệnh viện ≥ 5 tầng/2.000 m², khách sạn ≥ 7 tầng/3.000 m², '
-            + 'karaoke/vũ trường ≥ 4 tầng/1.000 m², nhà xưởng hạng A–E.' },
+        // Phòng QLHĐ-XD thẩm định dự án dân dụng, nhà ở, khu đô thị → nhiều công trình thuộc Phụ lục III NĐ 105/2025
+        // (sửa bởi NĐ 347/2026). Thẩm định thiết kế PCCC tích hợp vào thẩm định BCNCKT (Đ6 k1 NĐ 105).
+        { loai: 'Nghị định', soHieu: '105/2025/NĐ-CP (sửa bởi 347/2026)', ten: 'Thẩm định thiết kế PCCC trong thẩm định BCNCKT',
+          ghiChu: '⚠️ Công trình thuộc diện thẩm định BCNCKT tại cơ quan chuyên môn và thuộc Phụ lục III: Sở thẩm định thiết kế PCCC '
+            + 'cùng lúc, trả kết quả cùng kết quả thẩm định BCNCKT (Đ6 k1, sửa bởi Đ12 NĐ 347/2026). '
+            + 'Không yêu cầu chủ đầu tư nộp văn bản thẩm duyệt PCCC của Công an ở bước này — phần của Công an thuộc bước '
+            + 'thiết kế triển khai (Đ9 k4 điểm a, sửa bởi Đ14 NĐ 347/2026). Tra ngưỡng từng loại công trình ở Phụ lục III bản gốc.', trongTam: true },
         QCVN_06,
       ]},
       { key: 'chung-chi-nha-thau', ten: 'Chứng chỉ hành nghề & nhà thầu nước ngoài', vanBan: [
-        { loai: 'Nghị định', soHieu: '212/2026/NĐ-CP', ten: 'Điều kiện năng lực HĐXD — chứng chỉ hành nghề, năng lực tổ chức',
-          ghiChu: 'Trình tự sát hạch, cấp mới/cấp lại/gia hạn/thu hồi chứng chỉ hành nghề cá nhân '
-            + '(khảo sát, thiết kế, giám sát, quản lý dự án). '
-            + 'Chứng chỉ năng lực tổ chức: khảo sát, thiết kế, thi công, tư vấn giám sát, QLDA. '
-            + 'Số hoá: đăng ký, tra cứu trên CSDL quốc gia về HĐXD.', trongTam: true },
-        { loai: 'Nghị định', soHieu: '217/2026/NĐ-CP', ten: 'Nhà thầu nước ngoài hoạt động xây dựng tại Việt Nam',
-          ghiChu: 'Điều kiện, thẩm quyền, trình tự cấp/thu hồi giấy phép nhà thầu nước ngoài.' },
+        { loai: 'Nghị định', soHieu: '212/2026/NĐ-CP', ten: 'Chứng chỉ hành nghề cá nhân, công khai năng lực tổ chức, giấy phép nhà thầu nước ngoài',
+          ghiChu: 'Chứng chỉ hành nghề cá nhân: Đ27–40 (cấp, thu hồi Đ29–30; thẩm quyền Đ31; điều kiện Đ33–38; hồ sơ Đ39; '
+            + 'Hội đồng xét cấp Đ40); hiệu lực 10 năm. '
+            + 'Tổ chức: không còn thủ tục cấp chứng chỉ năng lực — tự công khai thông tin năng lực trên CSDL quốc gia về hoạt động xây dựng, '
+            + 'kể cả hạng/lĩnh vực theo chứng chỉ năng lực đã được cấp nếu có (Đ41). '
+            + 'Nhà thầu nước ngoài: giấy phép hoạt động xây dựng (Đ42–49; hồ sơ, thẩm quyền Đ44; thu hồi Đ47).', trongTam: true },
         { loai: 'Thông tư', soHieu: '39/2026/TT-BXD', ten: 'Hệ thống thông tin, cơ sở dữ liệu quốc gia về hoạt động xây dựng',
           hieuLuc: 'Ban hành 26/6/2026 · hiệu lực 01/7/2026',
-          ghiChu: 'Hướng dẫn NĐ 212/2026: đăng tải, tra cứu chứng chỉ hành nghề/năng lực trên CSDL quốc gia; '
+          ghiChu: 'Hướng dẫn NĐ 212/2026: đăng tải, tra cứu thông tin năng lực trên CSDL quốc gia; '
             + 'trách nhiệm cập nhật dữ liệu của Sở XD.' },
       ]},
       { key: 'thi-nghiem-chuyen-nganh', ten: 'Thí nghiệm chuyên ngành xây dựng', vanBan: [
-        { loai: 'Nghị định', soHieu: '207/2026/NĐ-CP', ten: 'Chương II: quản lý chất lượng — yêu cầu thí nghiệm VL',
-          ghiChu: 'Xác định chủng loại, nguồn gốc, thông số kỹ thuật vật liệu trước khi đưa vào thi công. '
-            + 'Thí nghiệm đối chứng, kiểm định theo yêu cầu.' },
+        { loai: 'Nghị định', soHieu: '207/2026/NĐ-CP', ten: 'Điều 14: quản lý vật liệu, sản phẩm, cấu kiện, thiết bị sử dụng cho công trình',
+          ghiChu: 'Kiểm soát chủng loại, nguồn gốc, thông số kỹ thuật vật liệu trước khi đưa vào thi công.' },
         { loai: 'QCVN', soHieu: 'QCVN 16:2023/BXD', ten: 'Sản phẩm, hàng hóa vật liệu xây dựng',
           ghiChu: 'Hợp quy, thí nghiệm chứng nhận chất lượng sản phẩm VLXD.', trongTam: true },
         { loai: 'Thông tư', soHieu: '41/2026/TT-BXD', ten: 'Quản lý chất lượng sản phẩm, hàng hóa vật liệu xây dựng',
           hieuLuc: 'Ban hành 26/6/2026 · hiệu lực 01/7/2026',
-          ghiChu: 'Hướng dẫn NĐ 209/2026: hợp quy, thử nghiệm, chứng nhận chất lượng VLXD; '
-            + 'quản lý phòng thí nghiệm chuyên ngành XD (LAS-XD).' },
+          ghiChu: 'Hướng dẫn NĐ 209/2026 và NĐ 207/2026: quản lý chất lượng sản phẩm, hàng hóa VLXD (hợp quy, chứng nhận). '
+            + 'Bản trong kho không có quy định về phòng thí nghiệm chuyên ngành (LAS-XD) — tra văn bản riêng.' },
         { loai: 'Thông tư', soHieu: '42/2026/TT-BXD', ten: 'Kiểm định kỹ thuật an toàn máy, thiết bị thi công (sửa đổi)',
           hieuLuc: 'Ban hành 29/6/2026',
           ghiChu: 'Quy trình kiểm định máy, thiết bị, vật tư có yêu cầu nghiêm ngặt về an toàn lao động trong thi công XD.' },
@@ -665,15 +631,18 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
   // 7. PHÒNG PHÁT TRIỂN ĐÔ THỊ ─────────────────────────────────────────────────
   'phong-ptdt': {
     ma: 'PHONG_PTDT', ten: 'Phòng Phát triển đô thị', baseHref: '/dashboard/phong-ptdt', color: 'indigo',
-    moTaPhong: 'Chương trình phát triển đô thị; phân loại đô thị; đô thị thông minh & tăng trưởng xanh; thẩm định HTKT khu đô thị; CSDL phát triển đô thị.',
+    moTaPhong: 'Chương trình phát triển đô thị; phân loại đô thị; đô thị thông minh & tăng trưởng xanh; góp ý thẩm định dự án khu đô thị, khu vực phát triển đô thị; CSDL phát triển đô thị.',
     chung: [
       LUAT_QHDT_NT,
       LUAT_XD_2025,
       { loai: 'Nghị định', soHieu: '11/2013/NĐ-CP (VBHN 04/VBHN-BXD 2026)', ten: 'Quản lý đầu tư phát triển đô thị',
-        ghiChu: 'Điều 3–5: nguyên tắc quản lý PTĐT, khu vực PTĐT. '
-          + 'Điều 9–14: khu đô thị mới — điều kiện đầu tư, thẩm định, phê duyệt. '
-          + 'Đã hợp nhất các lần sửa đổi tại VBHN 04/VBHN-BXD (11/02/2026). '
-          + 'Riêng CHƯƠNG TRÌNH phát triển đô thị: từ 2026 thực hiện theo NĐ 35/2026/NĐ-CP.', trongTam: true },
+        // Đối chiếu bản hợp nhất 04/VBHN-BXD (rà soát 13/10/2026): Điều 3, 4, 5 đã bị bãi bỏ.
+        ghiChu: 'Chương II — khu vực phát triển đô thị: hồ sơ đề xuất (Đ8, Đ10), thẩm định đề xuất (Đ9 k3–5, tối đa 30 ngày làm việc), '
+          + 'kế hoạch thực hiện (Đ11), công bố (Đ12), quản lý (Đ13). '
+          + 'Chương III — dự án ĐTPTĐT: quy hoạch chi tiết (Đ14), nghĩa vụ chủ đầu tư cấp 1, thứ cấp (Đ17–18), '
+          + 'lấy ý kiến thẩm định của Sở XD khi chấp thuận chủ trương đầu tư dự án khu đô thị (Đ29), tiến độ (Đ34), '
+          + 'hạ tầng xã hội (Đ35), bàn giao quản lý (Đ38). '
+          + 'Riêng CHƯƠNG TRÌNH phát triển đô thị: thực hiện theo NĐ 35/2026/NĐ-CP.', trongTam: true },
       { loai: 'Nghị định', soHieu: '35/2026/NĐ-CP', ten: 'Quy định chi tiết một số điều của Nghị quyết về phân loại đô thị',
         hieuLuc: 'Ban hành 22/01/2026',
         ghiChu: 'Chi tiết NQ 111/2025/UBTVQH15. Chương trình phát triển đô thị cấp tỉnh theo giai đoạn 10 năm; '
@@ -684,9 +653,9 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
       { key: 'chuong-trinh-ptdt', ten: 'Chương trình phát triển đô thị', vanBan: [
         { loai: 'Nghị định', soHieu: '35/2026/NĐ-CP', ten: 'Chương trình, kế hoạch phát triển đô thị (mới)',
           hieuLuc: 'Ban hành 22/01/2026',
-          ghiChu: 'Chương trình PTĐT cấp tỉnh lập theo giai đoạn 10 NĂM — Sở XD tham mưu UBND tỉnh lập, '
-            + 'phê duyệt; định hướng không gian đô thị, danh mục dự án ưu tiên, huy động nguồn lực. '
-            + 'Kèm tiêu chí phát triển đô thị tăng trưởng xanh đến 2030.', trongTam: true },
+          ghiChu: 'Chương II: chương trình phát triển đô thị cấp tỉnh lập theo giai đoạn 10 NĂM, rà soát sau 05 năm; '
+            + 'kế hoạch phát triển đô thị theo giai đoạn 05 năm. Chương III: đô thị tăng trưởng xanh (tiêu chí Đ11, đánh giá Đ12), '
+            + 'thích ứng biến đổi khí hậu (Đ13–16). Đ23: kinh phí lập chương trình, kế hoạch.', trongTam: true },
         { loai: 'Nghị định', soHieu: '11/2013/NĐ-CP (VBHN 04/VBHN-BXD 2026)', ten: 'Quản lý ĐTPTĐT — khu vực PTĐT, khu đô thị mới',
           ghiChu: 'Phần chương trình PTĐT chuyển sang NĐ 35/2026; NĐ 11/2013 tiếp tục áp dụng cho '
             + 'khu vực PTĐT, dự án khu đô thị mới, chuyển quyền sử dụng đất đã có hạ tầng.' },
@@ -701,8 +670,8 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
             + '3 nhóm tiêu chí mới: vai trò – vị trí, điều kiện phát triển KT-XH, quy mô – mật độ – hạ tầng; '
             + 'phù hợp mô hình chính quyền 2 cấp sau sáp nhập ĐVHC.', trongTam: true },
         { loai: 'Nghị định', soHieu: '35/2026/NĐ-CP', ten: 'Chi tiết NQ 111/2025 — hồ sơ, trình tự công nhận loại đô thị',
-          ghiChu: 'Trình tự rà soát, lập đề án phân loại đô thị; thẩm quyền công nhận; '
-            + 'đánh giá tiêu chí sau sắp xếp ĐVHC.', trongTam: true },
+          ghiChu: 'Chương IV: trường hợp lập đề án công nhận loại đô thị, báo cáo đánh giá trình độ phát triển đô thị (Đ18); '
+            + 'hồ sơ (Đ19); trình tự công nhận đô thị loại I (Đ20), loại II, III (Đ21), trình độ phát triển đô thị (Đ22).', trongTam: true },
       ]},
       { key: 'do-thi-thong-minh', ten: 'Đô thị thông minh & tăng trưởng xanh', vanBan: [
         { loai: 'Nghị định', soHieu: '269/2025/NĐ-CP', ten: 'Về phát triển đô thị thông minh',
@@ -714,36 +683,38 @@ export const PHAP_LY_PHONG: Record<string, PhapLyPhong> = {
           hieuLuc: 'Ban hành 28/01/2026',
           ghiChu: 'Hướng dẫn NĐ 269/2025: tiêu chí, đánh giá khu đô thị thông minh; lộ trình chuyển đổi.' },
         { loai: 'Quyết định', soHieu: '950/QĐ-TTg', ten: 'Đề án phát triển đô thị thông minh bền vững VN 2018–2025, tầm nhìn 2030',
-          ghiChu: 'Trụ cột: CSDL không gian đô thị, ICT/IoT, quản trị ĐT thông minh, dịch vụ ĐT thông minh. '
-            + 'Quảng Trị: áp dụng cho phường Đông Hà nâng chất lượng đô thị.', trongTam: true },
+          ghiChu: 'Đề án giai đoạn 2018–2025 (đã hết giai đoạn) — nay khung pháp lý chính là NĐ 269/2025 và TT 03/2026. '
+            + 'Trụ cột: CSDL không gian đô thị, ICT/IoT, quản trị và dịch vụ đô thị thông minh.' },
         { loai: 'Quyết định', soHieu: '84/QĐ-TTg', ten: 'Kế hoạch phát triển đô thị tăng trưởng xanh VN đến 2030',
           ghiChu: 'Giảm phát thải KNK, tiết kiệm năng lượng, sử dụng VLXD xanh, hạ tầng xanh trong PTĐT.' },
-        { loai: 'Luật', soHieu: '72/2020/QH14', ten: 'Luật Bảo vệ môi trường',
-          ghiChu: 'Điều 86: bảo vệ MT đô thị; Điều 87: phân loại rác tại nguồn trong ĐT. '
-            + 'Liên quan tăng trưởng xanh, đánh giá tác động MT dự án PTĐT.' },
+        { loai: 'Luật', soHieu: '72/2020/QH14 (sửa đổi 146/2025)', ten: 'Luật Bảo vệ môi trường',
+          hieuLuc: 'Luật 146/2025/QH15 sửa đổi, hiệu lực 01/01/2026',
+          ghiChu: 'Bảo vệ môi trường đô thị, phân loại chất thải rắn sinh hoạt; ĐTM dự án phát triển đô thị '
+            + '(trình đồng thời với BCNCKT — Đ34 k2 sau sửa đổi).' },
       ]},
-      { key: 'tham-dinh-htkt-khu-do-thi', ten: 'Thẩm định hạ tầng kỹ thuật khu đô thị', vanBan: [
-        { loai: 'Nghị định', soHieu: '11/2013/NĐ-CP (VBHN 04/VBHN-BXD 2026)', ten: 'Quản lý ĐTPTĐT — thẩm định HTKT khu ĐT',
-          ghiChu: 'Điều 9: khu đô thị mới — phải đầu tư đồng bộ HTKT (đường, cấp thoát nước, '
-            + 'điện, chiếu sáng, viễn thông, xử lý rác). '
-            + 'Điều 11: thẩm định dự án khu ĐT mới — Sở XD thẩm định HTKT. '
-            + 'Điều 12: điều kiện chuyển nhượng quyền sử dụng đất có HTKT trong khu ĐT.', trongTam: true },
+      { key: 'tham-dinh-htkt-khu-do-thi', ten: 'Góp ý thẩm định dự án khu đô thị', vanBan: [
+        // ⚠️ Rà soát 13/10/2026: bản trước ghi "Điều 11 NĐ 11/2013: Sở XD thẩm định HTKT khu ĐT mới" — SAI.
+        // Điều 11 là "Nội dung kế hoạch thực hiện khu vực phát triển đô thị"; NĐ 11/2013 không có thủ tục Sở thẩm định
+        // thiết kế HTKT. Vai trò thật của Sở: góp ý thẩm định chủ trương (Đ29) và thẩm định BCNCKT theo NĐ 217/2026.
+        { loai: 'Nghị định', soHieu: '11/2013/NĐ-CP (VBHN 04/VBHN-BXD 2026)', ten: 'Đ29: lấy ý kiến thẩm định của Sở XD khi chấp thuận chủ trương đầu tư dự án khu đô thị',
+          ghiChu: 'Dự án thuộc thẩm quyền chấp thuận chủ trương của UBND tỉnh: cơ quan đăng ký đầu tư lấy ý kiến thẩm định '
+            + 'của Sở Xây dựng về các nội dung tại khoản 3, 4 Điều 29 (dự án khu đô thị có nhà ở: như dự án nhà ở theo pháp luật về nhà ở). '
+            + 'Chấp thuận chủ trương thực hiện theo pháp luật về đầu tư (k1).', trongTam: true },
+        { loai: 'Nghị định', soHieu: '11/2013/NĐ-CP (VBHN 04/VBHN-BXD 2026)', ten: 'Đ14–18, Đ35, Đ38: yêu cầu đối với dự án khu đô thị',
+          ghiChu: 'Quy hoạch chi tiết của dự án (Đ14); quản lý thực hiện đầu tư xây dựng (Đ15); nghĩa vụ chủ đầu tư cấp 1 '
+            + 'đầu tư đồng bộ hạ tầng (Đ17), chủ đầu tư thứ cấp (Đ18); hạ tầng xã hội (Đ35); bàn giao quản lý (Đ38).' },
+        ND_217_2026,
         QCVN_01_2021,
-        { loai: 'QCVN', soHieu: 'QCVN 07:2016/BXD', ten: 'Các công trình hạ tầng kỹ thuật',
-          ghiChu: 'QCVN 07-1: cấp nước; QCVN 07-2: thoát nước, xử lý nước thải; '
-            + 'QCVN 07-3: cấp điện; QCVN 07-4: chiếu sáng; QCVN 07-5: viễn thông. '
-            + 'Bắt buộc tuân thủ khi thẩm định HTKT khu ĐT mới.', trongTam: true },
-        // ── PCCC khu đô thị ──
-        // Khu ĐT mới thường có chung cư, TTTM, trường học, bệnh viện → thuộc Phụ lục III NĐ 105/2025.
-        // Sở XD thẩm định HTKT khu ĐT → cần kiểm tra PCCC cho từng hạng mục:
-        // chung cư ≥ 7 tầng/3.000 m², TTTM ≥ 2.000 m², trường học ≥ 5 tầng/3.000 m²...
-        { loai: 'Luật', soHieu: '55/2024/QH15', ten: 'Luật PCCC&CNCH — PCCC khu đô thị mới',
-          ghiChu: '⚠️ Khu ĐT mới thường chứa nhiều hạng mục thuộc Phụ lục III NĐ 105/2025: '
-            + 'chung cư ≥ 7 tầng/3.000 m², TTTM ≥ 2.000 m², trường học ≥ 5 tầng/3.000 m², '
-            + 'nhà trẻ ≥ 150 trẻ/2.000 m², bệnh viện ≥ 5 tầng/2.000 m². '
-            + 'Khi thẩm định HTKT: kiểm tra bể nước chữa cháy, trụ nước chữa cháy, '
-            + 'đường cho xe chữa cháy, khoảng cách ATPCCC giữa các công trình (QCVN 06). '
-            + 'Điều 16 khoản 1 Luật 55/2024: yêu cầu PCCC a–g; Điều 17: thẩm quyền thẩm định.', trongTam: true },
+        { loai: 'QCVN', soHieu: 'QCVN 07:2023/BXD', ten: 'Hệ thống công trình hạ tầng kỹ thuật',
+          ghiChu: 'Thay bộ QCVN 07-1÷07-10:2016/BXD (07-1 cấp nước, 07-2 thoát nước, 07-3 hào và tuy nen kỹ thuật, 07-4 giao thông, '
+            + '07-5 cấp điện, 07-7 chiếu sáng, 07-8 viễn thông, 07-9 chất thải rắn, 07-10 nghĩa trang). '
+            + 'Bản trước gán sai số phần (07-3 cấp điện, 07-4 chiếu sáng...).', trongTam: true },
+        // ── PCCC khu đô thị ── hạng mục thuộc Phụ lục III NĐ 105/2025 (sửa bởi NĐ 347/2026) được thẩm định thiết kế
+        // PCCC tích hợp khi thẩm định BCNCKT của từng dự án/công trình (Đ6 k1 NĐ 105). Ngưỡng: tra bản gốc.
+        { loai: 'Nghị định', soHieu: '105/2025/NĐ-CP (sửa bởi 347/2026)', ten: 'PCCC trong dự án khu đô thị',
+          ghiChu: 'Kiểm tra hạ tầng phục vụ chữa cháy trong quy hoạch, thiết kế khu đô thị: nguồn nước, trụ nước chữa cháy, '
+            + 'đường và bãi đỗ cho xe chữa cháy, khoảng cách an toàn PCCC (QCVN 06). Hạng mục thuộc Phụ lục III được thẩm định '
+            + 'thiết kế PCCC tích hợp khi thẩm định BCNCKT (Đ6 k1, sửa bởi NĐ 347/2026).', trongTam: true },
         QCVN_06,
         ND_207_2026,
       ]},

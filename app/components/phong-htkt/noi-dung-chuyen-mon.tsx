@@ -61,7 +61,7 @@ export function NoiDungChuyenMon({ linhVuc }: { linhVuc: LinhVucKey }) {
                   <span className="text-[11px] rounded-full bg-slate-100 text-slate-600 px-2 py-0.5">{q.loai}</span>
                   {q.apDungMoiLinhVuc && (
                     <span className="text-[11px] rounded-full bg-amber-100 text-amber-800 px-2 py-0.5">
-                      Quy định KHUNG — áp dụng mọi lĩnh vực, không thay quy trình chuyên ngành
+                      Quy định KHUNG về tài sản KCHT (NĐ 178/2026) — không thay quy trình chuyên ngành
                     </span>
                   )}
                 </div>

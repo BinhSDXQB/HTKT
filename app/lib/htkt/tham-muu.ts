@@ -41,18 +41,21 @@ export const THAM_MUU: Record<LinhVucKey, ThamMuu> = {
     ],
   },
   'cay-xanh': {
+    // Căn cứ: NĐ 258/2025/NĐ-CP (bãi bỏ NĐ 64/2010). Khái niệm "danh mục cây trồng/hạn chế/cấm trồng"
+    // là của NĐ 64/2010 — NĐ 258 thay bằng "danh mục cây xanh sử dụng công cộng địa phương" (Đ26 k4)
+    // và "danh mục cây xanh cần bảo tồn" (Đ25 k5); danh mục cũ chỉ còn giá trị chuyển tiếp (Đ47).
     noiDung: [
-      'Tham mưu kế hoạch phát triển công viên, cây xanh đô thị; chỉ tiêu diện tích cây xanh/người theo loại đô thị.',
-      'Tham mưu quy định quản lý cây xanh đô thị: danh mục cây trồng/hạn chế/cấm trồng, cấp phép chặt hạ - dịch chuyển cây xanh.',
-      'Tham mưu phân cấp, giao quản lý cây xanh, công viên (chú ý xu hướng phân cấp đến cấp xã theo NĐ 258/2025).',
-      'Tham mưu thẩm định, góp ý phương án cây xanh trong dự án HTKT, khu đô thị.',
-      'Xây dựng cơ sở dữ liệu cây xanh, công viên; thống kê, báo cáo.',
+      'Tham mưu UBND tỉnh quyết định việc xây dựng đề án phát triển công viên, cây xanh, mặt nước cho đô thị trực thuộc (NĐ 258/2025 Điều 6 khoản 2 — tỉnh không bắt buộc; bắt buộc chỉ với thành phố trực thuộc trung ương, khoản 1); chỉ tiêu đất cây xanh sử dụng công cộng theo quy chuẩn quy hoạch.',
+      'Tham mưu UBND tỉnh công bố danh mục cây xanh sử dụng công cộng địa phương và ban hành danh mục cây xanh cần bảo tồn (NĐ 258/2025 Điều 25 khoản 5, Điều 26 khoản 4, Điều 45 khoản 2).',
+      'Tham mưu UBND tỉnh phân công, phân cấp quản lý công viên, cây xanh, mặt nước cho cơ quan chuyên môn và UBND cấp xã, gồm phân cấp cấp giấy phép chặt hạ, dịch chuyển cây xanh (NĐ 258/2025 Điều 27 khoản 4, Điều 45 khoản 1).',
+      'Tham mưu thẩm định, góp ý phương án cây xanh trong dự án HTKT, khu đô thị; thỏa thuận phương án chặt hạ, dịch chuyển cây xanh trong khu vực dự án theo phân cấp (NĐ 258/2025 Điều 27 khoản 2 điểm d).',
+      'Làm đầu mối xây dựng, cập nhật, tổng hợp cơ sở dữ liệu công viên, cây xanh, mặt nước; thực hiện chế độ báo cáo (NĐ 258/2025 Điều 43).',
     ],
     sanPham: [
-      'Dự thảo Quy định quản lý cây xanh đô thị (trình UBND tỉnh).',
-      'Dự thảo Quyết định ban hành danh mục cây trồng đô thị.',
-      'Văn bản hướng dẫn cấp phép chặt hạ, dịch chuyển cây xanh.',
-      'Báo cáo chỉ tiêu đất cây xanh đô thị.',
+      'Dự thảo Quyết định phê duyệt đề án phát triển công viên, cây xanh, mặt nước đô thị (khi UBND tỉnh quyết định xây dựng đề án — Điều 6 khoản 2).',
+      'Dự thảo Quyết định công bố danh mục cây xanh sử dụng công cộng địa phương; ban hành danh mục cây xanh cần bảo tồn.',
+      'Dự thảo Quyết định phân công, phân cấp quản lý công viên, cây xanh, mặt nước và cấp giấy phép chặt hạ, dịch chuyển cây xanh.',
+      'Báo cáo tình hình quản lý công viên, cây xanh, mặt nước (NĐ 258/2025 Điều 43).',
     ],
   },
   'chieu-sang': {
@@ -117,13 +120,13 @@ export const THAM_MUU: Record<LinhVucKey, ThamMuu> = {
   'su-dung-chung': {
     noiDung: [
       'Tham mưu quản lý sử dụng chung công trình HTKT (cột điện/cột đa năng, cống bể cáp, hào/tuy-nen kỹ thuật).',
-      'Tham mưu ban hành/điều chỉnh giá thuê công trình HTKT dùng chung; áp dụng mẫu hợp đồng sử dụng chung (TT 03/2013/TT-BXD).',
+      'Tham mưu về giá thuê công trình HTKT sử dụng chung theo pháp luật về giá (Luật Giá 16/2023/QH15); áp dụng mẫu hợp đồng sử dụng chung và mẫu hợp đồng quản lý vận hành (TT 03/2013/TT-BXD, hướng dẫn NĐ 72/2012/NĐ-CP).',
       'Tham mưu kế hoạch hạ ngầm, sắp xếp đường dây, cáp đi nổi; chỉnh trang đô thị.',
       'Tham mưu thẩm định, góp ý phương án sử dụng chung trong dự án HTKT, khu đô thị.',
       'Xây dựng cơ sở dữ liệu công trình HTKT dùng chung; thống kê, báo cáo.',
     ],
     sanPham: [
-      'Dự thảo Quyết định ban hành giá thuê công trình HTKT dùng chung (trình UBND tỉnh).',
+      'Văn bản tham mưu về giá thuê công trình HTKT sử dụng chung (theo thẩm quyền định giá của pháp luật về giá).',
       'Dự thảo quy định/kế hoạch hạ ngầm, sắp xếp cáp đi nổi.',
       'Văn bản hướng dẫn, thỏa thuận sử dụng chung công trình HTKT.',
       'Báo cáo hiện trạng sử dụng chung công trình HTKT.',

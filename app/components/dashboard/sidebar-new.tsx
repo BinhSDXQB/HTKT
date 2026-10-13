@@ -282,7 +282,7 @@ const navGroups: NavGroup[] = [
       { label: 'Chương trình phát triển đô thị', href: '/dashboard/phong-ptdt/chuong-trinh-ptdt', icon: Building2 },
       { label: 'Phân loại đô thị', href: '/dashboard/phong-ptdt/phan-loai-do-thi', icon: Landmark },
       { label: 'Đô thị thông minh & TT xanh', href: '/dashboard/phong-ptdt/do-thi-thong-minh', icon: Zap },
-      { label: 'Thẩm định HTKT khu đô thị', href: '/dashboard/phong-ptdt/tham-dinh-htkt-khu-do-thi', icon: Network },
+      { label: 'Góp ý dự án khu đô thị', href: '/dashboard/phong-ptdt/tham-dinh-htkt-khu-do-thi', icon: Network },
       { label: 'CSDL phát triển đô thị', href: '/dashboard/phong-ptdt/csdl-ptdt', icon: Boxes },
     ],
   },

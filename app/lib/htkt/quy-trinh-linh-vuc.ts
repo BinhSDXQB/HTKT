@@ -14,8 +14,11 @@
 //     (hiệu lực 15/02/2025; bãi bỏ Thông tư 14/2017/TT-BXD).
 //   • Nghị định 269/2025/NĐ-CP ngày 14/10/2025 về phát triển đô thị thông minh.
 //   • Nghị định 178/2026/NĐ-CP ngày 20/5/2026 quy định việc quản lý, sử dụng và khai thác
-//     tài sản kết cấu hạ tầng do Nhà nước đầu tư, quản lý (Điều 1 nêu rõ có TÀI SẢN KẾT CẤU
-//     HẠ TẦNG ĐÔ THỊ → áp dụng cho công trình HTKT do tỉnh giao quản lý ở MỌI lĩnh vực).
+//     tài sản kết cấu hạ tầng do Nhà nước đầu tư, quản lý (Điều 1 khoản 1 có TÀI SẢN KẾT CẤU
+//     HẠ TẦNG ĐÔ THỊ). ⚠️ Điều 1 khoản 2 điểm đ LOẠI TRỪ tài sản KCHT giao thông (đường bộ...),
+//     cấp nước sạch, công viên, cây xanh — các loại này theo NĐ riêng (44/2024, 43/2022, 258/2025).
+//     Vì vậy 2 quy trình khung NĐ 178 KHÔNG gắn vào lĩnh vực cấp nước, cây xanh, giao thông đô thị
+//     (rà soát 13/10/2026; bản trước gắn cho cả 8 lĩnh vực là sai).
 
 import type { LinhVucKey } from './phap-ly'
 import { xepHang } from './tim-kiem'
@@ -433,10 +436,18 @@ const CHIEU_SANG_THONG_MINH: QuyTrinhLinhVuc = {
 
 // ═══════════════ ÁP DỤNG CHO MỌI LĨNH VỰC — TÀI SẢN KẾT CẤU HẠ TẦNG ═══════════════
 
+// Chỉ các lĩnh vực mà NĐ 178/2026 điều chỉnh. Cấp nước sạch, công viên – cây xanh và giao thông
+// (đường bộ, gồm đường đô thị) bị loại trừ tại Điều 1 khoản 2 điểm đ → theo NĐ 43/2022, NĐ 258/2025,
+// NĐ 44/2024 (sửa bởi NĐ 99/2026).
 const MOI_LINH_VUC: LinhVucKey[] = [
-  'cap-nuoc', 'thoat-nuoc', 'cay-xanh', 'chieu-sang', 'nghia-trang',
-  'giao-thong-do-thi', 'khong-gian-ngam', 'su-dung-chung',
+  'thoat-nuoc', 'chieu-sang', 'nghia-trang', 'khong-gian-ngam', 'su-dung-chung',
 ]
+
+const LOAI_TRU_ND178 =
+  'KHÔNG áp dụng cho các tài sản loại trừ tại Điều 1 khoản 2 điểm đ NĐ 178/2026/NĐ-CP: giao thông (đường bộ — gồm đường đô thị, '
+  + 'đường thủy nội địa, đường sắt, hàng hải, hàng không), thủy lợi, cấp nước sạch, chợ, công viên, cây xanh. '
+  + 'Với lĩnh vực HTKT: đường bộ theo NĐ 44/2024/NĐ-CP (sửa bởi NĐ 99/2026/NĐ-CP), cấp nước sạch theo NĐ 43/2022/NĐ-CP, '
+  + 'công viên – cây xanh theo NĐ 258/2025/NĐ-CP.'
 
 const BAO_TRI_TAI_SAN_KCHT: QuyTrinhLinhVuc = {
   key: 'bao-tri-tai-san-kcht',
@@ -445,9 +456,9 @@ const BAO_TRI_TAI_SAN_KCHT: QuyTrinhLinhVuc = {
   loai: 'Quản lý, vận hành',
   apDungMoiLinhVuc: true,
   moTa:
-    'Nghĩa vụ bảo trì đối với công trình HTKT do Nhà nước đầu tư, quản lý. Áp dụng cho MỌI lĩnh vực hạ tầng kỹ thuật đô thị, không riêng lĩnh vực nào.',
+    'Nghĩa vụ bảo trì đối với công trình HTKT do Nhà nước đầu tư, quản lý, thuộc phạm vi NĐ 178/2026: thoát nước, chiếu sáng, nghĩa trang, công trình ngầm, công trình HTKT sử dụng chung. ' + LOAI_TRU_ND178,
   apDung:
-    'Tài sản kết cấu hạ tầng ĐÔ THỊ do Nhà nước đầu tư, quản lý (Điều 1 khoản 1 Nghị định 178/2026/NĐ-CP nêu đích danh “tài sản kết cấu hạ tầng đô thị”). Không áp dụng với tài sản đã giao doanh nghiệp theo hình thức đầu tư vốn nhà nước vào doanh nghiệp (Điều 1 khoản 2 điểm a).',
+    'Tài sản kết cấu hạ tầng ĐÔ THỊ do Nhà nước đầu tư, quản lý (Điều 1 khoản 1 Nghị định 178/2026/NĐ-CP nêu đích danh “tài sản kết cấu hạ tầng đô thị”). Không áp dụng với tài sản đã giao doanh nghiệp theo hình thức đầu tư vốn nhà nước vào doanh nghiệp (Điều 1 khoản 2 điểm a). ' + LOAI_TRU_ND178,
   buoc: [
     {
       buoc: 1,
@@ -502,7 +513,7 @@ const KE_KHAI_TAI_SAN_KCHT: QuyTrinhLinhVuc = {
   loai: 'Báo cáo, dữ liệu',
   apDungMoiLinhVuc: true,
   moTa: 'Nghĩa vụ kê khai tài sản HTKT vào Cơ sở dữ liệu về tài sản kết cấu hạ tầng — có thời hạn cứng 30 ngày, rất dễ trễ.',
-  apDung: 'Cơ quan, đơn vị quản lý tài sản kết cấu hạ tầng (kể cả tổ chức, đơn vị được phân cấp, uỷ quyền hoặc giao theo Điều 8 khoản 2).',
+  apDung: 'Cơ quan, đơn vị quản lý tài sản kết cấu hạ tầng (kể cả tổ chức, đơn vị được phân cấp, uỷ quyền hoặc giao theo Điều 8 khoản 2). ' + LOAI_TRU_ND178,
   buoc: [
     {
       buoc: 1,
@@ -535,7 +546,7 @@ const KE_KHAI_TAI_SAN_KCHT: QuyTrinhLinhVuc = {
   ketQua: 'Tài sản HTKT được kê khai và cập nhật đầy đủ trong Cơ sở dữ liệu về tài sản kết cấu hạ tầng; có báo cáo năm.',
   canCu: ['Nghị định 178/2026/NĐ-CP ngày 20/5/2026, Điều 33, Điều 34'],
   luuY: [
-    'Nghĩa vụ này ĐỘC LẬP với chế độ báo cáo cây xanh, công viên theo Điều 43 Nghị định 258/2025/NĐ-CP (mốc 01/12 và 15/12). Hai chế độ báo cáo khác nhau, không thay thế nhau.',
+    'Công viên, cây xanh KHÔNG kê khai theo Nghị định này (Điều 1 khoản 2 điểm đ) — báo cáo theo Điều 43 Nghị định 258/2025/NĐ-CP (mốc 01/12 và 15/12).',
   ],
 }
 
@@ -555,18 +566,18 @@ export const QUY_TRINH_LINH_VUC: QuyTrinhLinhVuc[] = [
 
 /**
  * Lĩnh vực CHƯA có quy trình CHUYÊN NGÀNH riêng vì văn bản gốc chưa có trong kho của Sở.
- * (Các lĩnh vực này vẫn dùng được 2 quy trình KHUNG về tài sản kết cấu hạ tầng theo
- * Nghị định 178/2026/NĐ-CP — nhưng đó là quy định chung về tài sản công, KHÔNG thay thế
- * quy trình quản lý chuyên ngành.)
+ * (Thoát nước, nghĩa trang, công trình ngầm, sử dụng chung vẫn dùng được 2 quy trình KHUNG về tài
+ * sản kết cấu hạ tầng theo Nghị định 178/2026/NĐ-CP — nhưng đó là quy định chung về tài sản công,
+ * KHÔNG thay thế quy trình quản lý chuyên ngành. Cấp nước sạch và giao thông bị NĐ 178 loại trừ.)
  * Cố tình liệt kê ra để không ai hiểu nhầm là hệ thống đã bao phủ đủ 8 lĩnh vực.
  */
 export const CHUA_DU_CAN_CU: { linhVuc: LinhVucKey; ten: string; canVanBan: string }[] = [
-  { linhVuc: 'cap-nuoc', ten: 'Cấp nước sạch đô thị', canVanBan: 'Nghị định về sản xuất, cung cấp và tiêu thụ nước sạch đang có hiệu lực — chưa có bản gốc trong kho.' },
+  { linhVuc: 'cap-nuoc', ten: 'Cấp nước sạch đô thị', canVanBan: 'Nghị định về sản xuất, cung cấp và tiêu thụ nước sạch và NĐ 43/2022/NĐ-CP về tài sản KCHT cấp nước sạch — chưa có bản gốc trong kho.' },
   { linhVuc: 'thoat-nuoc', ten: 'Thoát nước & xử lý nước thải', canVanBan: 'Nghị định về thoát nước và xử lý nước thải đang có hiệu lực — chưa có bản gốc trong kho.' },
   { linhVuc: 'nghia-trang', ten: 'Nghĩa trang & cơ sở hoả táng', canVanBan: 'Nghị định về xây dựng, quản lý và sử dụng nghĩa trang, cơ sở hoả táng đang có hiệu lực — chưa có bản gốc trong kho.' },
   { linhVuc: 'khong-gian-ngam', ten: 'Không gian xây dựng ngầm', canVanBan: 'Nghị định về quản lý không gian xây dựng ngầm đô thị đang có hiệu lực — chưa có bản gốc trong kho.' },
-  { linhVuc: 'su-dung-chung', ten: 'Sử dụng chung công trình HTKT', canVanBan: 'Nghị định/Thông tư về quản lý và sử dụng chung công trình hạ tầng kỹ thuật đang có hiệu lực — chưa có bản gốc trong kho.' },
-  { linhVuc: 'giao-thong-do-thi', ten: 'Hạ tầng giao thông đô thị', canVanBan: 'Đã có Luật Đường bộ 35/2024/QH15 trong kho; còn thiếu văn bản hướng dẫn phần hạ tầng giao thông ĐÔ THỊ để dựng quy trình cấp phép đào đường, hoàn trả mặt đường.' },
+  { linhVuc: 'su-dung-chung', ten: 'Sử dụng chung công trình HTKT', canVanBan: 'NĐ 72/2012/NĐ-CP và TT 03/2013/TT-BXD (mẫu hợp đồng) vẫn còn hiệu lực theo tra cứu 13/10/2026 — chưa có bản gốc trong kho.' },
+  { linhVuc: 'giao-thong-do-thi', ten: 'Hạ tầng giao thông đô thị', canVanBan: 'Đã có Luật Đường bộ 35/2024/QH15 trong kho; còn thiếu văn bản hướng dẫn phần hạ tầng giao thông ĐÔ THỊ để dựng quy trình cấp phép đào đường, hoàn trả mặt đường; tài sản KCHT đường bộ theo NĐ 44/2024/NĐ-CP (sửa bởi NĐ 99/2026/NĐ-CP), chưa có bản gốc trong kho.' },
 ]
 
 // ── Truy vấn ────────────────────────────────────────────────────────────────

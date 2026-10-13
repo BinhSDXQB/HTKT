@@ -12,7 +12,7 @@ export default function Page() {
       moTa="Cấp, điều chỉnh, gia hạn, cấp lại, thu hồi giấy phép xây dựng"
       nhiemVu={[
         'Cấp, điều chỉnh, gia hạn, cấp lại, thu hồi giấy phép xây dựng theo thẩm quyền.',
-        'Hướng dẫn, kiểm tra việc cấp phép xây dựng của cấp huyện.',
+        'Hướng dẫn, kiểm tra việc cấp phép xây dựng của UBND cấp xã (Đ53 k1 NĐ 217/2026).',
         'Tổng hợp tình hình cấp phép xây dựng trên địa bàn.',
       ]}
     />

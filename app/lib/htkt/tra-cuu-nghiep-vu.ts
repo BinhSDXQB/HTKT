@@ -35,7 +35,7 @@ export const CHU_DE_LABEL: Record<ChuDe, string> = {
 
 function formatQuyTrinh(q: QuyTrinhLinhVuc): string {
   const dong: string[] = []
-  dong.push(`■ ${q.ten} (${q.loai})${q.apDungMoiLinhVuc ? ' — QUY ĐỊNH KHUNG áp dụng mọi lĩnh vực, KHÔNG thay thế quy trình quản lý chuyên ngành' : ''}`)
+  dong.push(`■ ${q.ten} (${q.loai})${q.apDungMoiLinhVuc ? ' — QUY ĐỊNH KHUNG về tài sản KCHT (NĐ 178/2026; không áp dụng cấp nước, cây xanh, giao thông), KHÔNG thay thế quy trình quản lý chuyên ngành' : ''}`)
   dong.push(`   Phạm vi: ${q.apDung}`)
   if (q.hoSo?.length) {
     dong.push('   Hồ sơ:')

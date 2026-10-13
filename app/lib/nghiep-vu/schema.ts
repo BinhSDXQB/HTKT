@@ -177,13 +177,14 @@ export const NGHIEP_VU_SCHEMAS: Record<string, NvSchema> = {
     ],
   },
   'phong-ptdt/tham-dinh-htkt-khu-do-thi': {
-    label: 'Thẩm định HTKT khu đô thị', tieuDeLabel: 'Tên dự án khu đô thị',
+    // Giữ nguyên key để không mất dữ liệu đã nhập; chỉ đổi nhãn theo thủ tục thật (Đ29 NĐ 11/2013) — rà soát 13/10/2026.
+    label: 'Góp ý dự án khu đô thị', tieuDeLabel: 'Tên dự án khu đô thị',
     fields: [
-      { key: 'chuDauTu', label: 'Chủ đầu tư', type: 'text' },
+      { key: 'chuDauTu', label: 'Nhà đầu tư / Chủ đầu tư', type: 'text' },
       { key: 'dienTich', label: 'Diện tích (ha)', type: 'number' },
-      { key: 'hangMuc', label: 'Hạng mục HTKT', type: 'textarea' },
-      { key: 'soThongBaoKetQua', label: 'Số thông báo kết quả thẩm định', type: 'text' },
-      { key: 'ngayThamDinh', label: 'Ngày thẩm định', type: 'date' },
+      { key: 'hangMuc', label: 'Nội dung góp ý (quy hoạch, chương trình PTĐT, phân kỳ, hạ tầng)', type: 'textarea' },
+      { key: 'soThongBaoKetQua', label: 'Số văn bản ý kiến thẩm định của Sở', type: 'text' },
+      { key: 'ngayThamDinh', label: 'Ngày phát hành ý kiến', type: 'date' },
       { key: 'canCuPhapLy', label: 'Căn cứ pháp lý', type: 'textarea' },
     ],
   },

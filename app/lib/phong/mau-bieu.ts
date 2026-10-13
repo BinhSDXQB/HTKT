@@ -39,8 +39,8 @@ function mauThamDinh(chuyenNganh: string): MauBieu[] {
       moTa: `Thông báo kết quả thẩm định Báo cáo nghiên cứu khả thi ${chuyenNganh} (NĐ 217/2026).`, coFormDien: true },
     { key: 'thong-bao-tham-dinh-bcktkt', ten: 'Thông báo kết quả thẩm định BCKTKT', nhom: 'Kết quả thẩm định & nghiệm thu',
       moTa: `Thông báo kết quả thẩm định Báo cáo kinh tế - kỹ thuật ${chuyenNganh} (NĐ 217/2026).`, coFormDien: true },
-    { key: 'thong-bao-tham-dinh-thiet-ke', ten: 'Thông báo kết quả thẩm định thiết kế triển khai', nhom: 'Kết quả thẩm định & nghiệm thu',
-      moTa: `Thông báo kết quả thẩm định thiết kế triển khai sau TKCS ${chuyenNganh} (NĐ 217/2026).`, coFormDien: true },
+    // Không còn mẫu "Thông báo kết quả thẩm định thiết kế triển khai": từ 01/7/2026 chủ đầu tư thẩm định
+    // (Đ41 NĐ 217/2026, Mẫu số 12 là văn bản của chủ đầu tư).
     { key: 'chap-thuan-nghiem-thu', ten: 'Văn bản chấp thuận kết quả kiểm tra nghiệm thu', nhom: 'Kết quả thẩm định & nghiệm thu',
       moTa: `Văn bản chấp thuận/đề nghị khắc phục kết quả kiểm tra nghiệm thu ${chuyenNganh} (NĐ 207/2026).`, coFormDien: true },
     { key: 'bien-ban-kiem-tra', ten: 'Biên bản kiểm tra hiện trường', nhom: 'Kết quả thẩm định & nghiệm thu',
@@ -54,8 +54,8 @@ const MAU_RIENG_THEO_PHONG: Record<string, MauBieu[]> = {
   'phong-clct': mauThamDinh('công trình giao thông'),
   'phong-qlhd-xd': mauThamDinh('công trình dân dụng, công nghiệp'),
   'phong-ptdt': [
-    { key: 'thong-bao-tham-dinh-thiet-ke', ten: 'Thông báo kết quả thẩm định thiết kế HTKT khu đô thị', nhom: 'Kết quả thẩm định & nghiệm thu',
-      moTa: 'Thông báo kết quả thẩm định thiết kế hạ tầng kỹ thuật khu đô thị mới (NĐ 11/2013 hợp nhất, NĐ 35/2026).', coFormDien: true },
+    // Đã gỡ mẫu "Thông báo kết quả thẩm định thiết kế HTKT khu đô thị": NĐ 11/2013 và NĐ 35/2026 không
+    // quy định thủ tục Sở thẩm định thiết kế; thiết kế triển khai do chủ đầu tư thẩm định (Đ41 NĐ 217/2026).
     { key: 'bien-ban-kiem-tra', ten: 'Biên bản kiểm tra hiện trường', nhom: 'Kết quả thẩm định & nghiệm thu',
       moTa: 'Biên bản kiểm tra hiện trường hạ tầng kỹ thuật khu đô thị.', coFormDien: true },
   ],

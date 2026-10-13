@@ -83,10 +83,10 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
     linhVuc: [
       { key: 'cap-phep-xay-dung', ten: 'Cấp phép xây dựng', thamMuu: {
         noiDung: [
-          'Tham mưu tiếp nhận, thẩm định hồ sơ cấp giấy phép xây dựng công trình cấp II trở lên, công trình đặc thù thuộc thẩm quyền Sở theo phân cấp/ủy quyền của UBND tỉnh.',
+          'Tham mưu cấp giấy phép xây dựng cho công trình không thuộc thẩm quyền UBND cấp xã (cấp III, IV, nhà ở riêng lẻ) hoặc Ban quản lý khu (Đ53 NĐ 217/2026).',
           'Tham mưu giải quyết hồ sơ gia hạn, cấp lại, điều chỉnh GPXD; thu hồi GPXD khi vi phạm.',
-          'Tham mưu kiểm tra hồ sơ PCCC đối với công trình thuộc Phụ lục III/IV NĐ 105/2025 trước khi cấp GPXD.',
-          'Tham mưu công khai GPXD trên cổng điện tử theo NĐ 217/2026 (⚠️ đối chiếu điều khoản cụ thể trước khi viện dẫn).',
+          'Tham mưu đối chiếu bản vẽ đề nghị cấp phép với bản vẽ đã thẩm duyệt/thẩm định PCCC đối với công trình thuộc diện (Đ54 k6 điểm b, Đ57 k1 điểm c NĐ 217/2026; Phụ lục III NĐ 105/2025 sửa bởi NĐ 347/2026).',
+          'Tham mưu công khai GPXD trên trang thông tin điện tử tối thiểu 12 tháng (Đ66 NĐ 217/2026).',
         ],
         sanPham: [
           'Giấy phép xây dựng (cấp mới, gia hạn, điều chỉnh).',
@@ -107,11 +107,11 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
           'Báo cáo tình hình trật tự xây dựng định kỳ/đột xuất.',
         ],
       }},
-      { key: 'tham-dinh-du-an', ten: 'Thẩm định dự án, thiết kế dân dụng', thamMuu: {
+      { key: 'tham-dinh-du-an', ten: 'Thẩm định dự án (BCNCKT) dân dụng', thamMuu: {
         noiDung: [
-          'Tham mưu thẩm định BCNCKT, BCKTKT, thiết kế triển khai sau TKCS công trình dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở.',
-          'Tham mưu thẩm định nội dung PCCC (điểm a-đ khoản 1 Điều 16 Luật 55/2024) cho công trình thuộc Phụ lục III NĐ 105/2025.',
-          'Tham mưu kiểm tra yêu cầu áp dụng BIM đối với công trình cấp II trở lên theo Điều 8 NĐ 217/2026.',
+          'Tham mưu thẩm định BCNCKT dự án công trình dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở (Đ32–38 NĐ 217/2026); BCKTKT chỉ khi người quyết định đầu tư giao. Thiết kế triển khai do chủ đầu tư thẩm định (Đ41).',
+          'Tham mưu thẩm định thiết kế PCCC tích hợp trong thẩm định BCNCKT cho công trình thuộc Phụ lục III NĐ 105/2025 (Đ6 k1, sửa bởi NĐ 347/2026).',
+          'Tham mưu kiểm tra yêu cầu áp dụng BIM đối với công trình xây dựng mới từ cấp II trở lên (Đ8 k1 điểm a NĐ 217/2026).',
           'Tham mưu lấy ý kiến phối hợp sở ngành; phát hành kết quả thẩm định đúng thời hạn.',
         ],
         sanPham: [
@@ -122,15 +122,14 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'chung-chi-nha-thau', ten: 'Chứng chỉ hành nghề & nhà thầu nước ngoài', thamMuu: {
         noiDung: [
-          'Tham mưu tổ chức sát hạch, cấp mới, cấp lại, gia hạn chứng chỉ hành nghề hoạt động xây dựng theo NĐ 212/2026.',
-          'Tham mưu cấp chứng chỉ năng lực tổ chức (khảo sát, thiết kế, thi công, tư vấn giám sát, QLDA).',
-          'Tham mưu thẩm định hồ sơ cấp phép nhà thầu nước ngoài hoạt động xây dựng tại Quảng Trị.',
+          'Tham mưu xét cấp, cấp lại, thu hồi chứng chỉ hành nghề hoạt động xây dựng của cá nhân qua Hội đồng xét cấp (Đ29–31, Đ40 NĐ 212/2026).',
+          'Tham mưu kiểm tra việc tổ chức tự công khai thông tin năng lực trên CSDL quốc gia — không còn thủ tục cấp chứng chỉ năng lực tổ chức (Đ41 NĐ 212/2026).',
+          'Tham mưu cấp, điều chỉnh, thu hồi giấy phép hoạt động xây dựng cho nhà thầu nước ngoài theo thẩm quyền (Đ42–47 NĐ 212/2026).',
           'Tham mưu cập nhật, công khai thông tin năng lực trên CSDL quốc gia về hoạt động XD.',
         ],
         sanPham: [
-          'Chứng chỉ hành nghề hoạt động xây dựng.',
-          'Chứng chỉ năng lực tổ chức hoạt động xây dựng.',
-          'Giấy phép hoạt động nhà thầu nước ngoài.',
+          'Chứng chỉ hành nghề hoạt động xây dựng (cá nhân).',
+          'Giấy phép hoạt động xây dựng cho nhà thầu nước ngoài.',
         ],
       }},
       { key: 'thi-nghiem-chuyen-nganh', ten: 'Thí nghiệm chuyên ngành xây dựng', thamMuu: {
@@ -317,7 +316,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'do-thi-thong-minh', ten: 'Đô thị thông minh & tăng trưởng xanh', thamMuu: {
         noiDung: [
-          'Tham mưu triển khai phát triển đô thị thông minh (NĐ 269/2025/NĐ-CP, TT 03/2026/TT-BXD — ⚠️ đối chiếu số hiệu/hiệu lực trước khi viện dẫn) và Đề án 950/QĐ-TTg; xây dựng CSDL không gian đô thị.',
+          'Tham mưu triển khai phát triển đô thị thông minh theo NĐ 269/2025/NĐ-CP và TT 03/2026/TT-BXD (bản gốc có trong kho của Sở); xây dựng CSDL không gian đô thị.',
           'Tham mưu ứng dụng ICT/IoT trong quản lý đô thị; dịch vụ đô thị thông minh.',
           'Tham mưu thực hiện kế hoạch đô thị tăng trưởng xanh; giảm phát thải, tiết kiệm năng lượng, VLXD xanh.',
           'Tham mưu lồng ghép tiêu chí môi trường, bền vững trong các dự án phát triển đô thị.',
@@ -328,17 +327,15 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
           'Báo cáo triển khai đô thị thông minh, tăng trưởng xanh.',
         ],
       }},
-      { key: 'tham-dinh-htkt-khu-do-thi', ten: 'Thẩm định hạ tầng kỹ thuật khu đô thị', thamMuu: {
+      { key: 'tham-dinh-htkt-khu-do-thi', ten: 'Góp ý thẩm định dự án khu đô thị', thamMuu: {
         noiDung: [
-          'Tham mưu thẩm định thiết kế HTKT khu đô thị mới (đường, cấp thoát nước, điện, chiếu sáng, viễn thông, xử lý rác) theo pháp luật xây dựng — Luật Xây dựng 135/2025, NĐ 217/2026 về thẩm định; NĐ 35/2026 áp dụng cho công tác phát triển đô thị.',
-          'Tham mưu kiểm tra nội dung PCCC khu ĐT mới (chung cư, TTTM, trường, bệnh viện thuộc Phụ lục III NĐ 105/2025).',
-          'Tham mưu kiểm tra điều kiện chuyển nhượng quyền sử dụng đất có HTKT trong khu ĐT theo Điều 12 NĐ 11/2013 (VBHN 04/VBHN-BXD 2026).',
-          'Tham mưu tuân thủ QCVN 01:2021/BXD, QCVN 07:2016/BXD khi thẩm định HTKT khu ĐT.',
+          'Tham mưu ý kiến thẩm định của Sở khi cơ quan đăng ký đầu tư lấy ý kiến chấp thuận chủ trương đầu tư dự án khu đô thị (Đ29 NĐ 11/2013, VBHN 04/VBHN-BXD 2026): phù hợp quy hoạch, chương trình phát triển đô thị; đồng bộ phân kỳ đầu tư, hạ tầng trong và ngoài dự án.',
+          'Tham mưu đôn đốc chủ đầu tư cấp 1 đầu tư đồng bộ hạ tầng kỹ thuật, hạ tầng xã hội và bàn giao quản lý (Đ17, Đ35, Đ38 NĐ 11/2013).',
+          'Tham mưu tuân thủ QCVN 01:2021/BXD, QCVN 07:2023/BXD trong quy hoạch, dự án khu đô thị. (Thẩm định BCNCKT công trình trong dự án theo NĐ 217/2026; thiết kế triển khai do chủ đầu tư thẩm định.)',
         ],
         sanPham: [
-          'Văn bản kết quả thẩm định HTKT khu đô thị.',
-          'Văn bản chấp thuận điều kiện chuyển nhượng đất có HTKT.',
-          'Thông báo bổ sung hồ sơ thẩm định HTKT khu ĐT.',
+          'Văn bản ý kiến thẩm định gửi cơ quan đăng ký đầu tư (dự án khu đô thị).',
+          'Văn bản đôn đốc, kiểm tra tiến độ đầu tư hạ tầng, bàn giao quản lý khu đô thị.',
         ],
       }},
       { key: 'csdl-ptdt', ten: 'CSDL phát triển đô thị', thamMuu: {
