@@ -1,7 +1,7 @@
 import { CalendarCheck, Grid3X3, CheckCircle2 } from 'lucide-react'
 import { LINH_VUC_HTKT } from '@/lib/htkt/phap-ly'
 import {
-  NOI_DUNG_KIEM_TRA, QUY_MO_LINH_VUC, KE_HOACH_KIEM_TRA_NAM,
+  NOI_DUNG_KIEM_TRA, KE_HOACH_KIEM_TRA_NAM,
 } from '@/lib/htkt/ke-hoach-kiem-tra'
 import { LOAI_CONG_TRINH_TT34, THU_TU_CAP, TT34 } from '@/lib/htkt/cap-cong-trinh-tt34'
 import { PHU_LUC_IV_HTKT, PHU_LUC_IX_207, NHANH_THAM_QUYEN_KIEM_TRA, ND217, ND207 } from '@/lib/htkt/tham-quyen-tham-dinh'
@@ -295,7 +295,7 @@ export default function KeHoachKiemTraPage() {
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-slate-700 mb-1">Tiêu chí đánh giá:</p>
+                    <p className="text-xs font-semibold text-slate-700 mb-1">Tiêu chí đánh giá (các chỉ tiêu % là mục tiêu tham khảo nội bộ, không phải ngưỡng pháp luật):</p>
                     <ul className="text-xs text-slate-600 list-disc list-inside space-y-1">
                       {nd.tieuChi.map((tc, j) => <li key={j}>{tc}</li>)}
                     </ul>
@@ -307,35 +307,46 @@ export default function KeHoachKiemTraPage() {
         </div>
       </div>
 
-      {/* 3. Quy mô công trình theo 3 nhóm */}
+      {/* 3. Nhóm dự án, thẩm quyền, đối tượng thẩm tra & kiểm tra nghiệm thu — theo văn bản gốc (rà soát 13/10/2026) */}
       <div className="mb-8">
-        <h2 className="text-lg font-bold text-slate-900 mb-4">3. Quy mô công trình & thẩm quyền (Nhóm A / B / C)</h2>
-        <div className="space-y-3">
-          {QUY_MO_LINH_VUC.map((qm, i) => {
-            const lv = LINH_VUC_HTKT.find((l) => l.key === qm.linhVuc)
-            return (
-              <div key={i} className="rounded-lg border bg-white p-4">
-                <p className="font-semibold text-slate-900 mb-3">{lv?.ten}</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="rounded bg-red-50/50 p-3 border border-red-100">
-                    <p className="text-xs font-bold text-red-700 mb-1">🏆 Nhóm A (Trọng điểm)</p>
-                    <p className="text-xs text-slate-700 mb-2">{qm.nhomA.moTa}</p>
-                    <p className="text-xs text-slate-600 italic border-t border-red-100 pt-2">{qm.nhomA.thamQuyen}</p>
-                  </div>
-                  <div className="rounded bg-yellow-50/50 p-3 border border-yellow-100">
-                    <p className="text-xs font-bold text-yellow-700 mb-1">📋 Nhóm B (Cấp tỉnh/huyện)</p>
-                    <p className="text-xs text-slate-700 mb-2">{qm.nhomB.moTa}</p>
-                    <p className="text-xs text-slate-600 italic border-t border-yellow-100 pt-2">{qm.nhomB.thamQuyen}</p>
-                  </div>
-                  <div className="rounded bg-green-50/50 p-3 border border-green-100">
-                    <p className="text-xs font-bold text-green-700 mb-1">✓ Nhóm C (Phân cấp)</p>
-                    <p className="text-xs text-slate-700 mb-2">{qm.nhomC.moTa}</p>
-                    <p className="text-xs text-slate-600 italic border-t border-green-100 pt-2">{qm.nhomC.thamQuyen}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+        <h2 className="text-lg font-bold text-slate-900 mb-4">3. Nhóm dự án, thẩm quyền & đối tượng kiểm tra (theo quy định)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-700">
+          <div className="rounded-lg border bg-white p-4">
+            <p className="font-semibold text-slate-900 mb-2">Nhóm dự án (Đ9–11 Luật Đầu tư công 58/2024, sửa bởi Luật 90/2025)</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Cấp thoát nước, xử lý rác thải, HTKT khác: nhóm A từ 3.000 tỷ; nhóm B 160 – dưới 3.000 tỷ; nhóm C dưới 160 tỷ.</li>
+              <li>HTKT khu đô thị mới: nhóm A từ 2.000 tỷ; nhóm B 120 – dưới 2.000 tỷ; nhóm C dưới 120 tỷ.</li>
+              <li>Giao thông (cầu, quốc lộ…): nhóm A từ 4.600 tỷ; nhóm B 240 – dưới 4.600 tỷ; nhóm C dưới 240 tỷ.</li>
+              <li>Nhóm dự án xác định theo tổng mức đầu tư — KHÔNG đồng nhất với cấp công trình.</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-white p-4">
+            <p className="font-semibold text-slate-900 mb-2">Thẩm quyền thẩm định BCNCKT (Đ32, Đ33 NĐ 217/2026)</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Sở Xây dựng: dự án thuộc đối tượng Đ27 k1 Luật 135 trên địa bàn tỉnh (Đ32 k5), xét theo công trình chính cấp cao nhất.</li>
+              <li>Cơ quan chuyên môn thuộc bộ: công trình cấp đặc biệt, dự án trên 2 tỉnh trở lên… (Đ32 k2).</li>
+              <li>Cơ quan chuyên môn thuộc UBND cấp xã: dự án do UBND cấp xã quyết định đầu tư (Đ32 k4).</li>
+              <li>Dự án chỉ lập BCKTKT: không thẩm định tại cơ quan chuyên môn (Đ27 k2 Luật 135).</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-white p-4">
+            <p className="font-semibold text-slate-900 mb-2">Bắt buộc thẩm tra thiết kế (Đ26 k5 Luật 135)</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Công trình thuộc Phụ lục IV NĐ 217 — HTKT (cấp nước, thoát nước, chất thải rắn, nhà tang lễ, hỏa táng, nhà để xe, tuy nen…): cấp II trở lên.</li>
+              <li>Công trình quy mô lớn, kỹ thuật phức tạp — Phụ lục IX NĐ 207 (ví dụ cầu nhịp ≥ 350 m).</li>
+              <li>Công trình thuộc diện thẩm định thiết kế PCCC — Phụ lục III NĐ 105 (sửa bởi NĐ 347/2026); mục 11: HTKT khu đô thị, khu nhà ở, KCN, CCN, khu du lịch.</li>
+              <li>Đường bộ: thẩm tra, thẩm định an toàn giao thông ngay giai đoạn lập dự án (Đ29 Luật Đường bộ).</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border bg-white p-4">
+            <p className="font-semibold text-slate-900 mb-2">Kiểm tra công tác nghiệm thu (Đ25–27 NĐ 207/2026)</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Đối tượng: công trình thuộc Phụ lục IV NĐ 217 (HTKT cấp II trở lên), trừ công trình do Hội đồng kiểm tra nhà nước hoặc bộ kiểm tra.</li>
+              <li>Trong thi công: tối đa 03 lần (cấp đặc biệt, cấp I) / 02 lần (còn lại); thông báo trong 10 ngày làm việc.</li>
+              <li>Hoàn thành: thông báo trong 16 ngày làm việc (cấp I, đặc biệt) / 12 ngày làm việc (còn lại).</li>
+              <li>Cấp công trình xác định theo TT 34/2026 — xem bảng ở mục 1.</li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -376,7 +387,7 @@ export default function KeHoachKiemTraPage() {
       {/* Footnote */}
       <div className="mt-8 rounded-lg bg-blue-50 border border-blue-200 p-4">
         <p className="text-xs text-slate-700">
-          <strong>Căn cứ pháp lý:</strong> TT 34/2026/TT-BXD (phân cấp công trình) · TT 33/2026/TT-BXD (đánh giá an toàn) · NĐ 217/2026/NĐ-CP (thẩm định) · NĐ 207/2026/NĐ-CP (kiểm tra, bảo trì) · Luật Xây dựng 135/2025/QH15 (hiệu lực 01/7/2026)
+          <strong>Căn cứ pháp lý:</strong> TT 34/2026/TT-BXD (phân cấp công trình) · TT 33/2026/TT-BXD (đánh giá an toàn) · NĐ 217/2026/NĐ-CP (thẩm định, Phụ lục IV) · NĐ 207/2026/NĐ-CP (kiểm tra nghiệm thu, bảo trì, Phụ lục IX) · NĐ 105/2025 sửa bởi NĐ 347/2026 (PCCC) · Luật Đầu tư công 58/2024 · Luật Xây dựng 135/2025/QH15 (hiệu lực 01/7/2026)
         </p>
       </div>
     </div>

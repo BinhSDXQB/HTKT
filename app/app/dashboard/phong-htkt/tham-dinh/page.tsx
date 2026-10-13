@@ -44,9 +44,9 @@ export default function ThamDinhPage() {
       <ThamDinhTabs />
 
       <p className="text-xs text-slate-400 mt-6">
-        Mốc thời gian là quy định khung; xác định chính xác theo nhóm/cấp công trình và văn bản hiện hành tại thời điểm
-        tiếp nhận. Nghị định mới chi tiết Luật Xây dựng 2025 về quản lý hoạt động xây dựng đang được soạn thảo —
-        cập nhật khi ban hành.
+        Thời hạn theo Đ37 NĐ 217/2026 (BCNCKT) và Đ27 NĐ 207/2026 (kiểm tra nghiệm thu), tính theo ngày làm việc kể từ
+        khi nhận đủ hồ sơ hợp lệ. Từ 01/7/2026 thiết kế triển khai sau khi dự án được phê duyệt do chủ đầu tư thẩm định
+        (Đ41 NĐ 217). Căn cứ PCCC theo NĐ 105/2025 sửa bởi NĐ 347/2026 (hiệu lực 15/9/2026). Rà soát 13/10/2026.
       </p>
     </div>
   )

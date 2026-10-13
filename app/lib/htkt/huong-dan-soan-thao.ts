@@ -1,10 +1,14 @@
-// Hướng dẫn soạn thảo chi tiết các mẫu VBPL theo quy mô công trình cụ thể
-// Căn cứ pháp lý: NĐ 217/2026, NĐ 207/2026, TT 34/2026, NĐ 206/2026
-// Mục đích: Smart-fill dữ liệu, hiển thị căn cứ, từng bước soạn thảo chi tiết
+// Hướng dẫn soạn thảo các văn bản trong quy trình thẩm định BCNCKT công trình HTKT tại Sở Xây dựng.
+// Căn cứ (đối chiếu bản gốc 13/10/2026): Luật Xây dựng 135/2025/QH15 (Đ24, Đ26, Đ27); NĐ 217/2026/NĐ-CP
+// (Đ7, Đ33, Đ35–38, Mẫu 01, 03, 15, 16); NĐ 206/2026 (Đ7 k5); NĐ 105/2025 sửa bởi NĐ 347/2026 (PCCC);
+// TT 34/2026 (cấp công trình). Xem thêm C:\Troly\HTKT\Bo_Prompt_Tham_Dinh_BCNCKT_2026.md.
 
 import type { LinhVucKey } from './phap-ly'
 
+// Nhóm dự án theo Luật Đầu tư công (Đ8–11) — KHÔNG đồng nhất với cấp công trình.
 export type QuyMoCongTrinh = 'A' | 'B' | 'C'
+export type CapCongTrinh = 'Đặc biệt' | 'I' | 'II' | 'III' | 'IV'
+export type LoaiThamDinhSoanThao = 'bcnckt' | 'bcktkt' | 'thiet-ke' | 'nghiem-thu'
 
 export type HuongDanSoanThao = {
   tenMau: string
@@ -23,223 +27,201 @@ export type BuocSoanThao = {
   ghiChu?: string
 }
 
-// ───────── Tờ trình thẩm định BCNCKT ─────────
+// ───────── Tờ trình nội bộ trình Lãnh đạo Sở ký kết quả thẩm định BCNCKT ─────────
 export const HUONG_DAN_TO_TRINH_BCNCKT: HuongDanSoanThao = {
-  tenMau: 'Tờ trình thẩm định Báo cáo nghiên cứu khả thi',
-  moTa: 'Tờ trình gửi Lãnh đạo Sở để trình thẩm định BCNCKT công trình HTKT',
+  tenMau: 'Tờ trình (nội bộ) về kết quả thẩm định Báo cáo nghiên cứu khả thi',
+  moTa: 'Phòng HTKT trình Lãnh đạo Sở kết quả thẩm định và dự thảo Thông báo kết quả thẩm định (Mẫu 03). Khác với Tờ trình thẩm định theo Mẫu 01 NĐ 217 — văn bản do cơ quan chuẩn bị dự án gửi Sở.',
   canCuChiay: [
-    'Luật Xây dựng 135/2025/QH15 (Điều 43: BCNCKT)',
-    'NĐ 217/2026/NĐ-CP (Chương II: Thẩm định)',
-    'TT 34/2026/TT-BXD (Phân cấp công trình)',
-    'NĐ 206/2026/NĐ-CP (Thẩm định TMĐT)',
+    'Luật Xây dựng 135/2025/QH15 (Đ27 — thẩm định BCNCKT của cơ quan chuyên môn về xây dựng)',
+    'Nghị định 217/2026/NĐ-CP (Đ32, Đ33 thẩm quyền; Đ35 hồ sơ; Đ36 trình tự; Đ37 thời hạn; Đ38 nội dung, kết quả)',
+    'Nghị định 206/2026/NĐ-CP (Đ7 k5 — nội dung thẩm định tổng mức đầu tư của cơ quan chuyên môn)',
+    'Thông tư 34/2026/TT-BXD (cấp công trình)',
   ],
   cacBuoc: [
     {
       buoc: 1,
-      tieu: 'Xác định loại công trình & quy mô',
-      noiDung: 'Nếu công trình cấp I/II (Nhóm A): Sở Xây dựng thẩm định. Nếu cấp III/IV (Nhóm B/C): HĐNT/chủ đầu tư thẩm định.',
-      dulieu: 'Chọn từ ma trận phân loại: lĩnh vực + loại + cấp + quy mô',
+      tieu: 'Khẳng định thẩm quyền và đối tượng',
+      noiDung: 'Nêu loại dự án (Đ17 Luật 135), căn cứ thuộc đối tượng thẩm định (Đ27 k1 Luật 135, Đ32 k1 NĐ 217) và thẩm quyền của Sở (Đ32 k5, Đ33 NĐ 217) — xét theo công trình chính có cấp cao nhất. Cấp đặc biệt hoặc dự án trên 2 tỉnh trở lên thuộc bộ (Đ32 k2).',
+      dulieu: 'Tờ trình Mẫu 01 của cơ quan chuẩn bị dự án; kết quả xác định cấp theo TT 34/2026',
     },
     {
       buoc: 2,
-      tieu: 'Ghi tên dự án, chủ đầu tư, địa điểm',
-      noiDung: 'Tên dự án phải cụ thể (vd "Nhà máy nước Đồng Hới Giai đoạn I, công suất 50.000 m³/ngày"), không nêu chung chung.',
-      dulieu: 'Từ hồ sơ chủ đầu tư/phương án đầu tư',
-      ghiChu: 'Phải ghi rõ quy mô: "Công suất XXX m³/ngày" hoặc "Diện tích XXX ha" v.v.',
+      tieu: 'Tóm tắt dự án',
+      noiDung: 'Tên dự án cụ thể, cơ quan chuẩn bị dự án, địa điểm (cấp xã, tỉnh), quy mô (công suất, chiều dài, diện tích), nhóm dự án, loại và cấp công trình chính, tổng mức đầu tư, nguồn vốn.',
+      dulieu: 'Mục I Tờ trình Mẫu 01',
+      ghiChu: 'Ghi số liệu cụ thể, kèm vị trí trong hồ sơ; không dùng "…" hoặc "như trên".',
     },
     {
       buoc: 3,
-      tieu: 'Liệt kê nội dung thẩm định chi tiết',
-      noiDung: 'Thẩm định: (1) Quy hoạch & tiêu chí thiết kế cơ sở (theo QCVN 07); (2) Khối lượng, công nghệ phù hợp; (3) Tổng mức đầu tư (NĐ 206/2026); (4) Năng lực nhà thầu (NĐ 212/2026).',
-      dulieu: 'Danh sách nội dung từ lib/htkt/tham-dinh.ts (quy trình BCNCKT)',
+      tieu: 'Kết quả thẩm định theo 4 nhóm nội dung',
+      noiDung: '(1) Phù hợp với quy hoạch làm căn cứ lập dự án (Đ26, Đ38 k1 NĐ 217); (2) khả năng kết nối HTKT khu vực (Đ38 k2); (3) tuân thủ quy chuẩn, tiêu chuẩn, an toàn xây dựng, giải pháp PCCC (Đ38 k3, k4; thẩm định thiết kế PCCC tích hợp theo Đ6 k1 NĐ 105 sửa bởi NĐ 347/2026); (4) quản lý chi phí — chỉ với dự án đầu tư công, PPP — 3 nội dung tại Đ7 k5 NĐ 206.',
+      dulieu: 'Mục V Mẫu 03; quy trình BCNCKT tại lib/htkt/tham-dinh.ts',
     },
     {
       buoc: 4,
-      tieu: 'Ghi thời hạn & thẩm quyền',
-      noiDung: 'Thời hạn: Nhóm A ≤ 40 ngày; Nhóm B ≤ 30 ngày; Nhóm C ≤ 20 ngày (từ khi nhận đủ hồ sơ hợp lệ).',
-      dulieu: 'NĐ 217/2026, Chương II, Điều 5',
-      ghiChu: 'Tính từ ngày nhập lệnh thẩm định, không tính thời gian yêu cầu bổ sung.',
+      tieu: 'Thời hạn',
+      noiDung: 'Theo Đ37 NĐ 217 (ngày làm việc, tính từ khi nhận đủ hồ sơ hợp lệ): nhóm A 25/20; nhóm B 20/16; nhóm C 15/12 (số đầu khi dự án có công trình cấp I trở lên); dự án quan trọng quốc gia 60 ngày. Gia hạn tối đa 01 lần.',
+      dulieu: 'Ngày nhận đủ hồ sơ hợp lệ trên hệ thống Một cửa',
     },
     {
       buoc: 5,
-      tieu: 'Kết luận & đề nghị',
-      noiDung: 'Kết luận: "Đề nghị Lãnh đạo Sở ủy quyền thẩm định BCNCKT. Nếu chấp thuận, sẽ làm cơ sở cho lập BCKTKT" hoặc "Yêu cầu chủ đầu tư bổ sung/sửa đổi phương án như sau: ..." (ghi cụ thể).',
-      dulieu: 'Nội dung từ rà soát sơ bộ phòng HTKT',
+      tieu: 'Đề xuất kết luận',
+      noiDung: 'Đề xuất 1 trong 3 mức của Mẫu 03: "đủ điều kiện" / "chỉ đủ điều kiện sau khi hoàn thiện các nội dung yêu cầu" / "chưa đủ điều kiện" để tổng hợp, trình phê duyệt. Kèm dự thảo Thông báo kết quả thẩm định.',
+      dulieu: 'Kết quả rà soát của Phòng HTKT',
     },
   ],
   templateChiDan: `
 【TỜ TRÌNH】
 Kính gửi: Giám đốc Sở Xây dựng
 
-Về việc thẩm định Báo cáo nghiên cứu khả thi:
-"Dự án [TÊN CÔNG TRÌNH CHI TIẾT: vd Nhà máy nước Đồng Hới Giai đoạn I, công suất 50.000 m³/ngày]"
+V/v kết quả thẩm định Báo cáo nghiên cứu khả thi dự án [TÊN DỰ ÁN CỤ THỂ]
 
-Căn cứ:
-- Luật Xây dựng 135/2025/QH15 (Điều 43 về BCNCKT)
-- NĐ 217/2026/NĐ-CP (Quy định chi tiết thẩm định)
-- TT 34/2026/TT-BXD (Phân cấp công trình HTKT cấp [I/II/III/IV])
-- NĐ 206/2026/NĐ-CP (Thẩm định tổng mức đầu tư)
+Ngày …/…/…, Sở Xây dựng nhận Tờ trình số … của [cơ quan chuẩn bị dự án] trình thẩm định BCNCKT dự án nêu trên (hồ sơ hợp lệ ngày …/…/…).
 
-Nội dung:
-1. Dự án: [Tên + Chủ đầu tư + Địa điểm + Quy mô cụ thể]
-2. Loại công trình: [Cấp I/II/III/IV theo TT 34/2026]
-3. Nội dung thẩm định: Quy hoạch, thiết kế cơ sở, TMĐT, năng lực nhà thầu
-4. Thẩm quyền: [Sở Xây dựng / HĐNT / Chủ đầu tư]
-5. Thời hạn: [40/30/20] ngày (tính từ khi nhận đủ hồ sơ hợp lệ)
-
-Đề nghị: Ủy quyền thẩm định BCNCKT theo thẩm quyền, làm cơ sở tiếp tục lập BCKTKT.
+1. Thông tin dự án: [tên, địa điểm cấp xã/tỉnh, quy mô cụ thể, nhóm dự án, loại và cấp công trình chính theo TT 34/2026, tổng mức đầu tư, nguồn vốn]
+2. Thẩm quyền: thuộc đối tượng thẩm định tại [Đ27 k1 điểm … Luật 135]; thuộc thẩm quyền Sở theo [Đ32 k5 / Đ33 khoản … NĐ 217/2026]
+3. Kết quả thẩm định:
+   3.1. Phù hợp quy hoạch làm căn cứ lập dự án: …
+   3.2. Kết nối hạ tầng kỹ thuật khu vực: …
+   3.3. Quy chuẩn, tiêu chuẩn, an toàn xây dựng, PCCC: …
+   3.4. Quản lý chi phí (dự án đầu tư công/PPP): …
+4. Thời hạn: [số] ngày làm việc theo Đ37 NĐ 217/2026, hạn trả kết quả …/…/…
+5. Đề xuất: Báo cáo nghiên cứu khả thi [đủ điều kiện / chỉ đủ điều kiện sau khi hoàn thiện / chưa đủ điều kiện] để tổng hợp, trình phê duyệt. Kính trình Giám đốc Sở xem xét, ký Thông báo kết quả thẩm định (dự thảo kèm theo).
 
 【KÝ】
 Trưởng Phòng HTKT
   `,
-  ghiChu: 'Phải hiển thị cụ thể "Cấp I/II/III/IV" và "quy mô công trình" — không dùng "…" hoặc "như trên".',
+  ghiChu: 'Phải ghi cụ thể cấp công trình (Đặc biệt/I/II/III/IV theo TT 34/2026) và quy mô; nhóm dự án (A/B/C) xác định theo tổng mức đầu tư, không suy từ cấp công trình.',
 }
 
 // ───────── Công văn lấy ý kiến phối hợp ─────────
 export const HUONG_DAN_CONG_VAN_LAY_Y_KIEN: HuongDanSoanThao = {
-  tenMau: 'Công văn lấy ý kiến phối hợp thẩm định',
-  moTa: 'Công văn gửi các cơ quan liên quan (môi trường, quy hoạch, PCCC, điện lực...) để lấy ý kiến thẩm định BCNCKT.',
+  tenMau: 'Công văn lấy ý kiến cơ quan chuyên ngành',
+  moTa: 'Công văn của Sở lấy ý kiến cơ quan có chức năng quản lý liên quan trong quá trình thẩm định BCNCKT — chỉ hỏi nội dung thuộc chức năng của cơ quan được hỏi.',
   canCuChiay: [
-    'NĐ 217/2026/NĐ-CP (Điều 6: Lấy ý kiến các cơ quan liên quan)',
-    'TT 34/2026/TT-BXD (Phân cấp công trình)',
-    'NĐ 206/2026/NĐ-CP (Thẩm định chi phí)',
+    'Nghị định 217/2026/NĐ-CP (Đ33 k3 — lấy ý kiến cơ quan chuyên môn theo chuyên ngành đối với công trình chính còn lại; Đ38 k2 — văn bản thỏa thuận, hướng dẫn kết nối HTKT; Đ7 k5)',
+    'Nghị định 105/2025/NĐ-CP sửa bởi NĐ 347/2026 (Đ11 — cơ quan quản lý chuyên ngành phối hợp khi có yêu cầu)',
+    'Nghị định 30/2020/NĐ-CP (thể thức văn bản)',
   ],
   cacBuoc: [
     {
       buoc: 1,
-      tieu: 'Xác định cơ quan cần lấy ý kiến',
-      noiDung: 'Môi trường (nếu lĩnh vực nhạy cảm); Quy hoạch & kiến trúc; PCCC; Điện lực (nếu công trình chiếu sáng); Sở Công Thương (nếu công trình chiếu sáng công cộng).',
-      dulieu: 'NĐ 217/2026, Điều 6.2 (danh sách cơ quan phối hợp)',
-      ghiChu: 'Công trình CHIẾU SÁNG: bắt buộc lấy ý kiến Sở Công Thương (quy định mới NĐ 217/2026).',
+      tieu: 'Kiểm tra trước khi hỏi',
+      noiDung: '(K1) nội dung có thuộc chức năng cơ quan được hỏi không; (K2) đã có văn bản thỏa thuận của cơ quan đó trong hồ sơ chưa — nếu có thì không hỏi lại (Đ7 k5); (K3) có căn cứ lấy ý kiến không; (K4) nội dung có phải Sở bắt buộc tự kết luận không (quy hoạch, quy chuẩn, an toàn, PCCC, chi phí) — nếu phải thì không hỏi để cơ quan khác kết luận thay.',
+      dulieu: 'Danh mục văn bản pháp lý trong hồ sơ (Đ35 k2 NĐ 217)',
+      ghiChu: 'Chiếu sáng công cộng là dự án HTKT do Sở Xây dựng thẩm định (Phụ lục III, Đ73 k5 NĐ 217) — không có quy định bắt buộc lấy ý kiến Sở Công Thương. Chỉ hỏi Sở Công Thương khi có hạng mục công trình năng lượng (đường dây, trạm biến áp).',
     },
     {
       buoc: 2,
-      tieu: 'Ghi rõ loại công trình & yêu cầu thẩm định',
-      noiDung: 'Phải ghi: "Dự án [TÊN], công trình [LOẠI], cấp [I/II/III/IV] theo TT 34/2026, quy mô [CỤ THỂ]". Liệt kê yêu cầu chi tiết (vd "Xác nhận không có tác động môi trường tiêu cực", "Phê duyệt phương án đấu nối điện", v.v.).',
-      dulieu: 'Nội dung từ BCNCKT dự kiến / thông tin chủ đầu tư',
+      tieu: 'Mở đầu và nêu vấn đề cụ thể',
+      noiDung: 'Mở đầu: "Ngày … tháng … năm …, Sở Xây dựng nhận được Tờ trình số … của … về việc thẩm định …; sau khi rà soát, để có cơ sở thẩm định theo quy định, Sở Xây dựng đề nghị … có ý kiến đối với các nội dung sau:". Mỗi vấn đề nêu: vì sao cần ý kiến (kèm vị trí trong hồ sơ), thuộc chức năng quản lý nào, câu hỏi cụ thể có thể trả lời được, tài liệu đối chiếu.',
+      dulieu: 'Nội dung BCNCKT, bản vẽ liên quan',
     },
     {
       buoc: 3,
-      tieu: 'Ghi hạn chót phản hồi',
-      noiDung: 'Hạn chót: 10–15 ngày làm việc tùy tính chất (yêu cầu Sở Công Thương 15 ngày, môi trường 10 ngày).',
-      dulieu: 'Tính theo NĐ 217/2026: thời hạn phối hợp không quá 1/3 thời hạn thẩm định toàn bộ',
+      tieu: 'Trách nhiệm và thời hạn',
+      noiDung: 'Ghi: "Ý kiến của quý cơ quan là cơ sở để Sở Xây dựng xem xét trong quá trình thẩm định; Sở Xây dựng chịu trách nhiệm về kết quả thẩm định theo quy định." Thời hạn trả lời do Sở ấn định, phải nằm trong thời hạn thẩm định Đ37 NĐ 217.',
+      dulieu: 'Hạn trả kết quả thẩm định',
+      ghiChu: 'NĐ 217 không quy định thời hạn trả lời của cơ quan được hỏi và không quy định "quá hạn coi như đồng ý" — không tự ghi các nội dung này. Việc lấy ý kiến không làm dừng thời hạn thẩm định; cần thêm thời gian thì gia hạn 01 lần (Đ37 k2).',
     },
     {
       buoc: 4,
-      tieu: 'Liên hệ người tiếp nhận ý kiến',
-      noiDung: 'Ghi tên, điện thoại, email người phụ trách tại Phòng HTKT để cơ quan phối hợp liên hệ đặt câu hỏi.',
-      dulieu: 'Từ danh sách phân công HTKT',
+      tieu: 'Nơi nhận, liên hệ',
+      noiDung: 'Nơi nhận: cơ quan được hỏi; cơ quan chuẩn bị dự án (để phối hợp cung cấp tài liệu); Lưu VT, Phòng HTKT. Ghi người liên hệ tại Phòng HTKT.',
+      dulieu: 'Danh sách phân công HTKT',
     },
   ],
   templateChiDan: `
 【CÔNG VĂN】
-V/v: Lấy ý kiến thẩm định dự án [TÊN CÔNG TRÌNH]
+UBND TỈNH QUẢNG TRỊ / SỞ XÂY DỰNG
+Số: …/SXD-HTKT
+V/v lấy ý kiến về [nội dung cụ thể] của dự án [TÊN DỰ ÁN]
 
-Kính gửi: [Sở Công Thương / Sở Tài nguyên Môi trường / Sở Quy hoạch Kiến trúc / PCCC]
+Kính gửi: [cơ quan có chức năng quản lý nội dung cần hỏi — ví dụ đơn vị quản lý hạ tầng tiếp nhận đấu nối; Sở Nông nghiệp và Môi trường về hành lang bảo vệ nguồn nước/thủy lợi; Sở Công Thương nếu có hạng mục công trình năng lượng]
 
-Trên cơ sở Dự án "[TÊN ĐẦY ĐỦ: VD Nhà máy nước Đồng Hới Giai đoạn I, công suất 50.000 m³/ngày]":
-- Chủ đầu tư: [Tên cơ quan / công ty]
-- Địa điểm: [Xã/phường, huyện/thị xã]
-- Loại công trình: [HTKT cấp I/II/III/IV theo TT 34/2026/TT-BXD]
-- Quy mô: [Ghi cụ thể: "Công suất XXX", "Diện tích XXX ha", v.v.]
+Ngày …/…/…, Sở Xây dựng nhận được Tờ trình số … ngày … của [cơ quan chuẩn bị dự án] về việc thẩm định Báo cáo nghiên cứu khả thi dự án [tên]; sau khi rà soát, để có cơ sở thẩm định theo quy định, Sở Xây dựng đề nghị [cơ quan] có ý kiến đối với các nội dung sau:
 
-Sở Xây dựng đang thẩm định BCNCKT. Kính yêu cầu [Sở/Cơ quan] phối hợp lấy ý kiến về:
-1. [Chi tiết yêu cầu 1: VD "Xác nhận không tác động tiêu cực đến môi trường"]
-2. [Chi tiết yêu cầu 2: VD "Phê duyệt phương án đấu nối, cấp phép sử dụng năng lượng"]
-3. [Chi tiết yêu cầu 3, nếu có]
+1. [Vấn đề 1]: Hồ sơ thể hiện … (thuyết minh trang …, bản vẽ số …). Đề nghị cho ý kiến: [câu hỏi cụ thể thuộc chức năng quản lý của cơ quan].
+2. [Vấn đề 2, nếu có] …
 
-Hạn chót phản hồi: [Ngày], năm 2026 (15 ngày làm việc tính từ ngày nhận công văn).
+Tài liệu gửi kèm: …
+Ý kiến của quý cơ quan là cơ sở để Sở Xây dựng xem xét trong quá trình thẩm định; Sở Xây dựng chịu trách nhiệm về kết quả thẩm định theo quy định.
+Văn bản góp ý đề nghị gửi về Sở Xây dựng trước ngày …/…/… để kịp tổng hợp trong thời hạn thẩm định theo quy định.
+Liên hệ: [tên], Phòng HTKT, ĐT: …
 
-Liên hệ: [Tên người phụ trách], Phòng HTKT, ĐT: [Số], Email: [Email]
-
-Xin cảm ơn.
-
-【KÝ】
-Phòng HTKT
+Nơi nhận: Như trên; [cơ quan chuẩn bị dự án]; Lưu: VT, HTKT.
+【KÝ】 KT. GIÁM ĐỐC / PHÓ GIÁM ĐỐC
   `,
-  ghiChu: 'CHIẾU SÁNG: bắt buộc gửi Sở Công Thương (NĐ 217/2026 Điều 6.2). Hạn chót tối thiểu 15 ngày vì Sở Công Thương cần thẩm xét kỹ.',
+  ghiChu: 'Không hỏi chung chung; không đề nghị cơ quan khác "thẩm định" hay "kết luận" thay nội dung thuộc thẩm quyền Sở; nhiều cơ quan thì mặc định mỗi cơ quan một văn bản.',
 }
 
-// ───────── Thông báo kết quả thẩm định BCNCKT ─────────
+// ───────── Thông báo kết quả thẩm định BCNCKT (Mẫu 03) ─────────
 export const HUONG_DAN_THONG_BAO_KQ_BCNCKT: HuongDanSoanThao = {
-  tenMau: 'Thông báo kết quả thẩm định BCNCKT',
-  moTa: 'Thông báo chính thức kết quả thẩm định (chấp thuận / không chấp thuận / yêu cầu bổ sung) gửi chủ đầu tư.',
+  tenMau: 'Thông báo kết quả thẩm định BCNCKT (Mẫu số 03 NĐ 217)',
+  moTa: 'Thông báo kết quả thẩm định gửi cơ quan chuẩn bị dự án, đồng gửi cơ quan quản lý xây dựng địa phương (Đ38 k6 NĐ 217).',
   canCuChiay: [
-    'NĐ 217/2026/NĐ-CP (Điều 9: Kết quả thẩm định)',
-    'TT 34/2026/TT-BXD (Phân cấp quyết định)',
-    'Luật Xây dựng 135/2025/QH15 (Điều 44: Hiệu lực BCNCKT)',
+    'Luật Xây dựng 135/2025/QH15 (Đ27 k4)',
+    'Nghị định 217/2026/NĐ-CP (Đ36 k8 đóng dấu bản vẽ; Đ38; Mẫu số 03 Phụ lục I)',
+    'Nghị định 206/2026/NĐ-CP (Đ7 k5)',
+    'Nghị định 105/2025/NĐ-CP sửa bởi NĐ 347/2026 (thẩm định thiết kế PCCC tích hợp)',
   ],
   cacBuoc: [
     {
       buoc: 1,
-      tieu: 'Ghi kết quả rõ ràng (Chấp thuận / Không chấp thuận / Yêu cầu bổ sung)',
-      noiDung: 'Phải ghi cụ thể: "CHẤP THUẬN BCNCKT" hoặc "KHÔNG CHẤP THUẬN vì: [lý do cụ thể]" hoặc "YÊU CẦU BỔ SUNG: [danh sách chi tiết]".',
-      dulieu: 'Kết luận từ cuộc họp thẩm định nội bộ',
-      ghiChu: 'Không dùng "tạm thời chấp thuận" hay "có điều kiện" — phải rõ ràng.',
+      tieu: 'Chọn đúng loại văn bản',
+      noiDung: 'Thiếu THÀNH PHẦN hồ sơ (trong 05 ngày làm việc, 01 lần): Phiếu bổ sung, hoàn thiện hồ sơ Mẫu 15. Lỗi, sai sót số liệu không thể kết luận: Phiếu tạm dừng thẩm định Mẫu 16 (01 lần). Đã thẩm định xong: Thông báo kết quả Mẫu 03.',
+      dulieu: 'Đ36 k3, k4 NĐ 217',
     },
     {
       buoc: 2,
-      tieu: 'Ghi chi tiết lý do (nếu không chấp thuận)',
-      noiDung: 'Nếu từ chối: ghi cụ thể từng vấn đề (vd "Công suất thiết kế không phù hợp với nhu cầu Đồng Hới đến 2040", "Phương án thoát nước không đáp ứng QCVN 07-2:2016", v.v.).',
-      dulieu: 'Kết quả thẩm định chi tiết từ phòng HTKT',
+      tieu: 'Kết luận theo 3 mức của Mẫu 03',
+      noiDung: '"Đủ điều kiện" / "chỉ đủ điều kiện sau khi hoàn thiện các nội dung yêu cầu" / "chưa đủ điều kiện" để tổng hợp, trình phê duyệt và triển khai các bước tiếp theo.',
+      dulieu: 'Kết quả thẩm định của Phòng HTKT',
+      ghiChu: 'Không dùng "bác", "không chấp thuận" khi chưa đến mức từ chối.',
     },
     {
       buoc: 3,
-      tieu: 'Ghi hạn bổ sung (nếu yêu cầu)',
-      noiDung: 'Hạn bổ sung = 30–60 ngày tùy tính chất (NĐ 217/2026). Ghi rõ: "Yêu cầu bổ sung trong vòng 45 ngày, gửi lại lần 2 để thẩm định tiếp."',
-      dulieu: 'NĐ 217/2026, Điều 8 (thời gian bổ sung)',
+      tieu: 'Đánh giá từng nội dung (mục V Mẫu 03)',
+      noiDung: 'Mỗi tồn tại viết: "Nội dung hồ sơ đang thể hiện …; tuy nhiên …; đề nghị [cơ quan chuẩn bị dự án] chỉ đạo Tư vấn …; cập nhật tại …".',
+      dulieu: 'Kết quả thẩm định chi tiết',
     },
     {
       buoc: 4,
-      tieu: 'Ghi cơ sở pháp lý chi tiết',
-      noiDung: 'Liệt kê tất cả VBPL dùng thẩm định (NĐ 217/2026, NĐ 206/2026, TT 34/2026, QCVN 07, v.v.).',
-      dulieu: 'Từ hướng dẫn phap-ly.ts',
+      tieu: 'Thời hạn bổ sung, đóng dấu bản vẽ',
+      noiDung: 'Với Mẫu 15/16: sau 20 ngày làm việc không bổ sung thì dừng thẩm định, trả hồ sơ; nộp lại thì thời hạn tính lại từ đầu (Đ36 k5). Với kết luận "chỉ đủ điều kiện sau khi hoàn thiện": cơ quan chuẩn bị dự án hoàn thiện, nộp văn bản đề nghị đóng dấu kèm hồ sơ (Đ36 k8 điểm d).',
+      dulieu: 'Đ36 k5, k8 NĐ 217',
     },
   ],
   templateChiDan: `
-【THÔNG BÁO KẾT QUẢ THẨM ĐỊNH】
+【THÔNG BÁO KẾT QUẢ THẨM ĐỊNH — theo Mẫu số 03 Phụ lục I NĐ 217/2026】
+UBND TỈNH QUẢNG TRỊ / SỞ XÂY DỰNG
+Số: …/SXD-HTKT
+V/v thông báo kết quả thẩm định Báo cáo nghiên cứu khả thi dự án [TÊN]
 
-Dự án: [TÊN ĐẦY ĐỦ + QUY MỌ CỤTH thể]
-Chủ đầu tư: [Tên]
-Loại công trình: [Cấp I/II/III/IV theo TT 34/2026]
+Kính gửi: [cơ quan chuẩn bị dự án]
 
-Căn cứ NĐ 217/2026/NĐ-CP và các VBPL khác, Sở Xây dựng thẩm định BCNCKT kết luận như sau:
+Sở Xây dựng đã nhận Tờ trình số … ngày … của [cơ quan chuẩn bị dự án] trình thẩm định BCNCKT dự án [tên].
+Căn cứ Luật Xây dựng số 135/2025/QH15; Nghị định số 217/2026/NĐ-CP; Nghị định số 206/2026/NĐ-CP; các căn cứ khác có liên quan;
+Sau khi xem xét, Sở Xây dựng thông báo kết quả thẩm định như sau:
 
-【KẾT QUẢ】
-✓ CHẤP THUẬN BCNCKT.
-  Căn cứ thẩm định: Phương án phù hợp với quy hoạch, QCVN 07-1:2016/BXD, NĐ 206/2026. Công suất thiết kế 50.000 m³/ngày đáp ứng nhu cầu Đồng Hới đến 2040.
+I. THÔNG TIN CHUNG VỀ DỰ ÁN — [tên; nhóm dự án; loại, cấp công trình chính theo TT 34/2026; quy mô; địa điểm; tổng mức đầu tư; nguồn vốn; nhà thầu tư vấn, khảo sát, thẩm tra]
+II. HỒ SƠ TRÌNH THẨM ĐỊNH — [văn bản pháp lý; hồ sơ khảo sát, thiết kế; báo cáo kết quả thẩm tra]
+III. NỘI DUNG HỒ SƠ TRÌNH THẨM ĐỊNH — [tóm tắt]
+IV. PHẠM VI VÀ NGUYÊN TẮC THẨM ĐỊNH — [theo Đ27 k4 Luật 135; Đ7 k5 NĐ 217]
+V. KẾT QUẢ THẨM ĐỊNH
+  1. Tuân thủ quy định về lập dự án, thiết kế; năng lực hành nghề (nếu cần thiết): …
+  2. Phù hợp với quy hoạch làm căn cứ lập dự án (Đ26 NĐ 217): …
+  3. Khả năng kết nối hạ tầng kỹ thuật khu vực: …
+  4. Quy chuẩn (QCVN 07:2023/BXD và Sửa đổi 1:2025; QCVN 01:2021/BXD…), tiêu chuẩn, an toàn xây dựng, giải pháp PCCC: …
+  5. Quản lý chi phí đầu tư xây dựng (dự án đầu tư công, PPP): …
+VI. KẾT LUẬN VÀ KIẾN NGHỊ
+  Báo cáo nghiên cứu khả thi [đủ điều kiện / chỉ đủ điều kiện sau khi hoàn thiện các nội dung yêu cầu / chưa đủ điều kiện] để tổng hợp, trình phê duyệt và triển khai các bước tiếp theo.
+  Kiến nghị: …; yêu cầu sửa đổi, bổ sung, hoàn thiện: …
 
-Hoặc:
-
-✗ KHÔNG CHẤP THUẬN vì:
-1. Công suất thiết kế (30.000 m³/ngày) < nhu cầu dự kiến đến 2040 (45.000 m³/ngày) theo kế hoạch phát triển đô thị.
-2. Phương án thoát nước không đáp ứng QCVN 07-2:2016/BXD về độ an toàn.
-3. Năng lực nhà thầu chưa đủ tiêu chí NĐ 212/2026.
-
-Yêu cầu chủ đầu tư bổ sung/sửa đổi, gửi lại BCNCKT lần 2 trong vòng 45 ngày.
-
-Hoặc:
-
-⚠ YÊU CẦU BỔ SUNG:
-1. Thuyết minh chi tiết công nghệ xử lý nước (hiện chưa rõ công nghệ membran hay truyền thống).
-2. Lập thêm phương án thoát nước theo QCVN 07-2:2016/BXD (hiện chỉ lập phương án cấp nước).
-3. Cung cấp chứng chỉ năng lực nhà thầu theo NĐ 212/2026.
-
-Hạn bổ sung: 45 ngày tính từ ngày nhận thông báo này.
-
-【CĂN CỨ PH ÁP LÝ】
-- Luật Xây dựng 135/2025/QH15 (Điều 43–44 về BCNCKT)
-- NĐ 217/2026/NĐ-CP (Điều 5–9: Thẩm định BCNCKT)
-- NĐ 206/2026/NĐ-CP (Thẩm định TMĐT)
-- NĐ 212/2026/NĐ-CP (Năng lực nhà thầu)
-- TT 34/2026/TT-BXD (Phân cấp công trình cấp [I/II/III/IV])
-- QCVN 07-1:2016/BXD (Công trình cấp nước)
-- QCVN 07-2:2016/BXD (Công trình thoát nước)
-
-【KÝ】
-Giám đốc Sở / Trưởng Phòng HTKT
+Nơi nhận: Như trên; Cơ quan quản lý nhà nước về xây dựng tại địa phương xây dựng dự án; Lưu: VT, HTKT.
+【KÝ】 GIÁM ĐỐC (hoặc KT. GIÁM ĐỐC – PHÓ GIÁM ĐỐC)
   `,
-  ghiChu: 'Không dùng từ mập mờ như "tạm chấp thuận", "có điều kiện", "có ý kiến khác" — phải rõ ràng một trong 3: Chấp / Không chấp / Yêu cầu bổ sung.',
+  ghiChu: 'Kết quả thẩm định là cơ sở để người quyết định đầu tư phê duyệt dự án, không phải quyết định phê duyệt. Không yêu cầu chứng chỉ năng lực tổ chức hay văn bản thẩm duyệt PCCC của Công an.',
 }
 
 // Export danh sách hướng dẫn
@@ -253,17 +235,45 @@ export function getHuongDan(key: string): HuongDanSoanThao | undefined {
   return HUONG_DAN_SOAN_THAO_LIST[key]
 }
 
-// Hàm helper: Sinh dữ liệu smart-fill từ quy mô công trình
-export function smartFillTuQuyMo(linhVuc: LinhVucKey, quyMo: QuyMoCongTrinh): Record<string, string> {
-  const loaiVanBan = quyMo === 'A' ? 'CHẤP THUẬN' : quyMo === 'B' ? 'YÊU CẦU BỔ SUNG' : 'KHÔNG CHẤP THUẬN'
-  const thamQuyen = quyMo === 'A' ? 'Sở Xây dựng' : 'HĐNT / Chủ đầu tư'
-  const thoiHan = quyMo === 'A' ? '40' : quyMo === 'B' ? '30' : '20'
+// Thời hạn thẩm định BCNCKT theo Đ37 k1 NĐ 217/2026 (ngày làm việc), theo nhóm dự án và việc có công trình cấp I trở lên.
+export function thoiHanThamDinhBcnckt(nhom: QuyMoCongTrinh, cap: CapCongTrinh): string {
+  const capITroLen = cap === 'Đặc biệt' || cap === 'I'
+  const bang: Record<QuyMoCongTrinh, [number, number]> = { A: [25, 20], B: [20, 16], C: [15, 12] }
+  const [coCapI, conLai] = bang[nhom]
+  return `${capITroLen ? coCapI : conLai} ngày làm việc (Đ37 k1 NĐ 217/2026${capITroLen ? ', dự án có công trình cấp I trở lên' : ''})`
+}
 
-  return {
-    loaiVanBan,
-    thamQuyen,
-    thoiHan,
-    linhVuc,
-    quyMo,
+// Dữ liệu tự điền: KHÔNG suy kết luận thẩm định từ quy mô — kết luận chỉ có sau khi thẩm định.
+export function smartFillTuQuyMo(
+  linhVuc: LinhVucKey,
+  quyMo: QuyMoCongTrinh,
+  cap: CapCongTrinh = 'III',
+  loai: LoaiThamDinhSoanThao = 'bcnckt',
+): Record<string, string> {
+  const capDacBiet = cap === 'Đặc biệt'
+  const theoLoai: Record<LoaiThamDinhSoanThao, { loaiVanBan: string; thamQuyen: string; thoiHan: string }> = {
+    bcnckt: {
+      loaiVanBan: 'Thông báo kết quả thẩm định BCNCKT (Mẫu số 03 NĐ 217) — kết luận 1 trong 3 mức sau khi thẩm định',
+      thamQuyen: capDacBiet
+        ? 'Cơ quan chuyên môn về xây dựng thuộc bộ quản lý chuyên ngành (dự án có công trình cấp đặc biệt — Đ32 k2 NĐ 217)'
+        : 'Sở Xây dựng nếu dự án thuộc đối tượng Đ27 k1 Luật 135 và không thuộc Đ32 k2–k4, Đ33 NĐ 217 (kiểm tra theo công trình chính cấp cao nhất)',
+      thoiHan: thoiHanThamDinhBcnckt(quyMo, cap),
+    },
+    bcktkt: {
+      loaiVanBan: 'Thông báo kết quả thẩm định BCKTKT (Mẫu số 06 tham khảo)',
+      thamQuyen: 'Không thẩm định tại cơ quan chuyên môn (Đ27 k2 Luật 135); Sở chỉ thẩm định khi được người quyết định đầu tư giao (Đ31 k3 NĐ 217)',
+      thoiHan: 'Theo quy trình do UBND tỉnh ban hành (Đ73 k4 điểm b NĐ 217) — NĐ 217 không quy định thời hạn',
+    },
+    'thiet-ke': {
+      loaiVanBan: 'Thông báo kết quả thẩm định thiết kế của CHỦ ĐẦU TƯ (Mẫu số 12 NĐ 217)',
+      thamQuyen: 'Chủ đầu tư thẩm định (Đ29 k1 Luật 135, Đ41 NĐ 217); Sở chỉ thẩm định dự toán hạng mục vốn đầu tư công của dự án PPP (Đ41 k2 điểm b)',
+      thoiHan: 'Không có thời hạn thẩm định của cơ quan chuyên môn',
+    },
+    'nghiem-thu': {
+      loaiVanBan: 'Thông báo kết quả kiểm tra công tác nghiệm thu (Phụ lục VIII NĐ 207/2026)',
+      thamQuyen: 'Sở Xây dựng đối với công trình thuộc Phụ lục IV NĐ 217 trên địa bàn (Đ25, Đ26 k1 điểm c NĐ 207)',
+      thoiHan: capDacBiet || cap === 'I' ? '16 ngày làm việc (Đ27 k4 NĐ 207)' : '12 ngày làm việc (Đ27 k4 NĐ 207)',
+    },
   }
+  return { ...theoLoai[loai], linhVuc, quyMo }
 }

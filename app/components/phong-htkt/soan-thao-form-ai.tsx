@@ -139,7 +139,7 @@ ${kqAutoFill.hoanCanhDuAn}
 【KẾT QUẢ AUTO-FILL】
 Loại văn bản: ${kqAutoFill.loaiVanBan}
 Thẩm quyền: ${kqAutoFill.thamQuyen}
-Thời hạn: ${kqAutoFill.thoiHan} ngày
+Thời hạn: ${kqAutoFill.thoiHan}
 
 【NỘI DUNG THẨM ĐỊNH】
 ${kqAutoFill.noiDungThanhDinh}
@@ -238,15 +238,15 @@ ${kqAutoFill.ghiChuThemDo}`
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-2">Quy mô công trình</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-2">Nhóm dự án (Luật Đầu tư công)</label>
                 <select
                   value={quyMo}
                   onChange={(e) => setQuyMo(e.target.value as QuyMoCongTrinh)}
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
-                  <option value="A">Cấp I–II (Nhóm A — Sở XD)</option>
-                  <option value="B">Cấp III (Nhóm B — HĐNT)</option>
-                  <option value="C">Cấp IV (Nhóm C — CĐT)</option>
+                  <option value="A">Nhóm A</option>
+                  <option value="B">Nhóm B</option>
+                  <option value="C">Nhóm C</option>
                 </select>
               </div>
 
@@ -258,8 +258,8 @@ ${kqAutoFill.ghiChuThemDo}`
                   className="w-full rounded border bg-white px-3 py-2 text-sm"
                 >
                   <option value="bcnckt">Thẩm định BCNCKT</option>
-                  <option value="bcktkt">Thẩm định BCKTKT</option>
-                  <option value="thiet-ke">Thẩm định Thiết kế</option>
+                  <option value="bcktkt">BCKTKT (khi người QĐĐT giao Sở)</option>
+                  <option value="thiet-ke">Thiết kế triển khai (chủ đầu tư thẩm định)</option>
                   <option value="nghiem-thu">Kiểm tra Nghiệm thu</option>
                 </select>
               </div>

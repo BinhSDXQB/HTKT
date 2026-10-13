@@ -5,87 +5,8 @@
 import type { LinhVucKey } from './phap-ly'
 
 // ───────── Ma trận phân loại công trình HTKT ─────────
-export type NhomCongTrinh = {
-  linhVuc: LinhVucKey
-  loai: string                                  // vd "Nhà máy nước", "Trạm bơm", "Đường cấp thoát nước"
-  cap: 'I' | 'II' | 'III' | 'IV'
-  quyMo: string                                 // vd "Công suất > 100.000 m³/ngày", "Dung tích > 10.000 m³"
-  thamQuyenThamDinh: 'So_XD' | 'HDNT_ChuDauTu' // Thẩm quyền thẩm định (Sở hay HĐNT/chủ đầu tư)
-  doiTuongKiemTraNT: boolean                    // Cơ quan chuyên môn có trách nhiệm kiểm tra nghiệm thu?
-  ghiChu?: string
-}
-
-export const NHOM_CONG_TRINH: NhomCongTrinh[] = [
-  // Cấp nước
-  { linhVuc: 'cap-nuoc', loai: 'Nhà máy nước', cap: 'I', quyMo: 'Công suất ≥ 100.000 m³/ngày', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cap-nuoc', loai: 'Nhà máy nước', cap: 'II', quyMo: 'Công suất 10.000–100.000 m³/ngày', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cap-nuoc', loai: 'Nhà máy nước', cap: 'III', quyMo: 'Công suất 1.000–10.000 m³/ngày', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cap-nuoc', loai: 'Nhà máy nước', cap: 'IV', quyMo: 'Công suất < 1.000 m³/ngày', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-  { linhVuc: 'cap-nuoc', loai: 'Mạng phân phối cấp nước', cap: 'I', quyMo: 'Chiều dài > 50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cap-nuoc', loai: 'Mạng phân phối cấp nước', cap: 'II', quyMo: 'Chiều dài 20–50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cap-nuoc', loai: 'Mạng phân phối cấp nước', cap: 'III', quyMo: 'Chiều dài 5–20 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'cap-nuoc', loai: 'Mạng phân phối cấp nước', cap: 'IV', quyMo: 'Chiều dài < 5 km', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-
-  // Thoát nước
-  { linhVuc: 'thoat-nuoc', loai: 'Hệ thống thoát nước công cộng', cap: 'I', quyMo: 'Dung tích/lưu lượng ≥ 500 l/s', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'thoat-nuoc', loai: 'Hệ thống thoát nước công cộng', cap: 'II', quyMo: 'Dung tích/lưu lượng 100–500 l/s', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'thoat-nuoc', loai: 'Hệ thống thoát nước công cộng', cap: 'III', quyMo: 'Dung tích/lưu lượng 10–100 l/s', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'thoat-nuoc', loai: 'Hệ thống thoát nước công cộng', cap: 'IV', quyMo: 'Dung tích/lưu lượng < 10 l/s', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-  { linhVuc: 'thoat-nuoc', loai: 'Nhà máy xử lý nước thải', cap: 'I', quyMo: 'Công suất ≥ 50.000 m³/ngày', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'thoat-nuoc', loai: 'Nhà máy xử lý nước thải', cap: 'II', quyMo: 'Công suất 5.000–50.000 m³/ngày', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'thoat-nuoc', loai: 'Nhà máy xử lý nước thải', cap: 'III', quyMo: 'Công suất 500–5.000 m³/ngày', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'thoat-nuoc', loai: 'Nhà máy xử lý nước thải', cap: 'IV', quyMo: 'Công suất < 500 m³/ngày', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-
-  // Cây xanh
-  { linhVuc: 'cay-xanh', loai: 'Công viên đô thị', cap: 'I', quyMo: 'Diện tích ≥ 20 ha', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cay-xanh', loai: 'Công viên đô thị', cap: 'II', quyMo: 'Diện tích 5–20 ha', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cay-xanh', loai: 'Công viên đô thị', cap: 'III', quyMo: 'Diện tích 0,5–5 ha', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'cay-xanh', loai: 'Công viên đô thị', cap: 'IV', quyMo: 'Diện tích < 0,5 ha', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-  { linhVuc: 'cay-xanh', loai: 'Trồng cây xanh đường phố', cap: 'I', quyMo: 'Chiều dài ≥ 30 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'cay-xanh', loai: 'Trồng cây xanh đường phố', cap: 'II', quyMo: 'Chiều dài 10–30 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'cay-xanh', loai: 'Trồng cây xanh đường phố', cap: 'III', quyMo: 'Chiều dài 2–10 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'cay-xanh', loai: 'Trồng cây xanh đường phố', cap: 'IV', quyMo: 'Chiều dài < 2 km', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-
-  // Chiếu sáng
-  { linhVuc: 'chieu-sang', loai: 'Hệ thống chiếu sáng công cộng', cap: 'I', quyMo: 'Chiều dài ≥ 50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'chieu-sang', loai: 'Hệ thống chiếu sáng công cộng', cap: 'II', quyMo: 'Chiều dài 20–50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'chieu-sang', loai: 'Hệ thống chiếu sáng công cộng', cap: 'III', quyMo: 'Chiều dài 5–20 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'chieu-sang', loai: 'Hệ thống chiếu sáng công cộng', cap: 'IV', quyMo: 'Chiều dài < 5 km', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-
-  // Nghĩa trang
-  { linhVuc: 'nghia-trang', loai: 'Nghĩa trang công cộng', cap: 'I', quyMo: 'Diện tích ≥ 10 ha', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'nghia-trang', loai: 'Nghĩa trang công cộng', cap: 'II', quyMo: 'Diện tích 2–10 ha', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'nghia-trang', loai: 'Nghĩa trang công cộng', cap: 'III', quyMo: 'Diện tích 0,2–2 ha', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'nghia-trang', loai: 'Nghĩa trang công cộng', cap: 'IV', quyMo: 'Diện tích < 0,2 ha', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-
-  // Giao thông đô thị
-  { linhVuc: 'giao-thong-do-thi', loai: 'Đường đô thị', cap: 'I', quyMo: 'Chiều dài ≥ 50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Đường đô thị', cap: 'II', quyMo: 'Chiều dài 10–50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Đường đô thị', cap: 'III', quyMo: 'Chiều dài 2–10 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Đường đô thị', cap: 'IV', quyMo: 'Chiều dài < 2 km', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Cầu đô thị', cap: 'I', quyMo: 'Nhịp chính ≥ 100 m', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Cầu đô thị', cap: 'II', quyMo: 'Nhịp chính 30–100 m', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Cầu đô thị', cap: 'III', quyMo: 'Nhịp chính 10–30 m', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'giao-thong-do-thi', loai: 'Cầu đô thị', cap: 'IV', quyMo: 'Nhịp chính < 10 m', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-
-  // Không gian ngầm
-  { linhVuc: 'khong-gian-ngam', loai: 'Bãi đỗ xe ngầm', cap: 'I', quyMo: 'Sức chứa ≥ 1.000 chỗ', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'khong-gian-ngam', loai: 'Bãi đỗ xe ngầm', cap: 'II', quyMo: 'Sức chứa 300–1.000 chỗ', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'khong-gian-ngam', loai: 'Bãi đỗ xe ngầm', cap: 'III', quyMo: 'Sức chứa 50–300 chỗ', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'khong-gian-ngam', loai: 'Bãi đỗ xe ngầm', cap: 'IV', quyMo: 'Sức chứa < 50 chỗ', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-  { linhVuc: 'khong-gian-ngam', loai: 'Tuy-nen kỹ thuật', cap: 'I', quyMo: 'Diện tích tiết diện ≥ 5 m²', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'khong-gian-ngam', loai: 'Tuy-nen kỹ thuật', cap: 'II', quyMo: 'Diện tích tiết diện 2–5 m²', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-
-  // Sử dụng chung
-  { linhVuc: 'su-dung-chung', loai: 'Cột dùng chung HTKT', cap: 'I', quyMo: 'Chiều dài ≥ 50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'su-dung-chung', loai: 'Cột dùng chung HTKT', cap: 'II', quyMo: 'Chiều dài 10–50 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: true },
-  { linhVuc: 'su-dung-chung', loai: 'Cột dùng chung HTKT', cap: 'III', quyMo: 'Chiều dài 2–10 km', thamQuyenThamDinh: 'So_XD', doiTuongKiemTraNT: false },
-  { linhVuc: 'su-dung-chung', loai: 'Cột dùng chung HTKT', cap: 'IV', quyMo: 'Chiều dài < 2 km', thamQuyenThamDinh: 'HDNT_ChuDauTu', doiTuongKiemTraNT: false },
-]
-
-export function getNhomCongTrinh(linhVuc: LinhVucKey): NhomCongTrinh[] {
-  return NHOM_CONG_TRINH.filter((n) => n.linhVuc === linhVuc)
-}
+// Bảng phân cấp NHOM_CONG_TRINH (số liệu tự đặt, không khớp TT 34/2026) đã bị xoá 13/10/2026 —
+// phân cấp lấy từ lib/htkt/cap-cong-trinh-tt34.ts (chép nguyên văn bản gốc).
 
 // ───────── Nội dung kiểm tra định kỳ ─────────
 export type NoiDungKiemTra = {
@@ -115,7 +36,7 @@ export const NOI_DUNG_KIEM_TRA: NoiDungKiemTra[] = [
       'Đơn đề nghị bảo trì sửa chữa (nếu có)',
     ],
     tieuChi: [
-      'Tuân thủ quy hoạch, thiết kế, TCVN về cấp nước',
+      'Tuân thủ quy hoạch, thiết kế, QCVN 07:2023/BXD (phần cấp nước, Sửa đổi 1:2025)',
       'Nước đạt tiêu chuẩn chất lượng (QCVN 01-1:2024/BYT)',
       'Tỷ lệ nước không doanh thu ≤ 15%',
       'Không xảy ra sự cố mất áp, mất nước > 6 giờ liên tiếp',
@@ -138,7 +59,7 @@ export const NOI_DUNG_KIEM_TRA: NoiDungKiemTra[] = [
       'Sự cố xảy ra (nếu có) và cách xử lý',
     ],
     tieuChi: [
-      'Tuân thủ TCVN 07-2:2016/BXD, QCVN 14:2008/BTNMT',
+      'Tuân thủ QCVN 07:2023/BXD (phần thoát nước), QCVN 14:2025/BTNMT (thay QCVN 14:2008)',
       'Tỷ lệ thu gom thoát nước ≥ 80% khu vực phục vụ',
       'Xử lý nước thải đạt tiêu chuẩn xả ra',
       'Không xảy ra ngập ngoài dự tính > 2 lần/năm',
@@ -161,7 +82,7 @@ export const NOI_DUNG_KIEM_TRA: NoiDungKiemTra[] = [
       'Ảnh chụp hiện trường (so sánh định kỳ)',
     ],
     tieuChi: [
-      'Tuân thủ QCVN 07-4:2016/BXD về cây xanh',
+      'Tuân thủ NĐ 258/2025/NĐ-CP về quản lý công viên, cây xanh, mặt nước; chỉ tiêu theo QCVN 01:2021/BXD',
       'Tỷ lệ cây sống ≥ 90%',
       'Không có cây chết lâm sàng trên 3 tháng',
       'Diện tích cây xanh công viên ≥ 6 m²/cư dân đô thị',
@@ -184,7 +105,7 @@ export const NOI_DUNG_KIEM_TRA: NoiDungKiemTra[] = [
       'Phương án cải tạo (nếu cần nâng cấp)',
     ],
     tieuChi: [
-      'Tuân thủ TCVN 07-3:2016/BXD, NĐ 79/2009',
+      'Tuân thủ QCVN 07:2023/BXD (phần chiếu sáng), NĐ 79/2009/NĐ-CP',
       'Tỷ lệ chiếu sáng đường đô thị ≥ 80%',
       'Độ chiếu sáng đạt tiêu chuẩn (≥ 15 lux phố chính)',
       'Tiết kiệm điện: chuyển đổi LED ≥ 70%',
@@ -230,7 +151,7 @@ export const NOI_DUNG_KIEM_TRA: NoiDungKiemTra[] = [
       'Kế hoạch bảo trì hàng năm (định mức, dự toán)',
     ],
     tieuChi: [
-      'Tuân thủ Luật 35/2024, TCVN 07-4:2016/BXD',
+      'Tuân thủ Luật Đường bộ 35/2024/QH15, QCVN 07:2023/BXD (phần giao thông)',
       'Mặt đường không có ổ gà, sà lan > 2 cm chiều sâu',
       'Tỷ lệ đường sạch ≥ 90%',
       'Bảo trì hàng năm ≥ 10% chiều dài mạng lưới',
@@ -253,7 +174,7 @@ export const NOI_DUNG_KIEM_TRA: NoiDungKiemTra[] = [
       'Kế hoạch hạ ngầm (nếu có dự án mới)',
     ],
     tieuChi: [
-      'Tuân thủ NĐ 39/2010 (theo quy định chuyển tiếp NĐ 217/2026)',
+      'Tuân thủ NĐ 39/2010/NĐ-CP (đã được sửa đổi — đối chiếu văn bản hợp nhất)',
       'Cơ sở dữ liệu công trình ngầm cập nhật hàng năm',
       'Không xảy ra sự cố đấu nối, va chạm công trình',
       'Kế hoạch hạ ngầm ≥ 10% mạng lưới cáp nổi hàng năm',
@@ -288,68 +209,8 @@ export function getNoiDungKiemTra(linhVuc: LinhVucKey): NoiDungKiemTra[] {
   return NOI_DUNG_KIEM_TRA.filter((n) => n.linhVuc === linhVuc)
 }
 
-// ───────── Quy mô công trình theo 3 nhóm (A/B/C) ─────────
-export type QuyMo = {
-  linhVuc: LinhVucKey
-  nhomA: { moTa: string; thamQuyen: string }
-  nhomB: { moTa: string; thamQuyen: string }
-  nhomC: { moTa: string; thamQuyen: string }
-}
-
-export const QUY_MO_LINH_VUC: QuyMo[] = [
-  {
-    linhVuc: 'cap-nuoc',
-    nhomA: { moTa: 'Nhà máy nước cấp I-II, mạng phân phối > 20 km', thamQuyen: 'Sở Xây dựng thẩm định, theo dõi bảo trì' },
-    nhomB: { moTa: 'Nhà máy nước cấp III, mạng phân phối 5–20 km', thamQuyen: 'Sở Xây dựng thẩm định, huyện bảo trì' },
-    nhomC: { moTa: 'Mạng phân phối cấp IV < 5 km, hộ dân nước nông thôn', thamQuyen: 'Huyện/xã thẩm định, thôn xã bảo trì' },
-  },
-  {
-    linhVuc: 'thoat-nuoc',
-    nhomA: { moTa: 'Hệ thống > 500 l/s, NM XLNT cấp I-II', thamQuyen: 'Sở XD thẩm định, theo dõi bảo trì' },
-    nhomB: { moTa: 'Hệ thống 100–500 l/s, NM XLNT cấp III', thamQuyen: 'Sở XD thẩm định, huyện bảo trì' },
-    nhomC: { moTa: 'Hệ thống 10–100 l/s, tiểu quy mô nông thôn', thamQuyen: 'Huyện/xã thẩm định, bảo trì' },
-  },
-  {
-    linhVuc: 'cay-xanh',
-    nhomA: { moTa: 'Công viên ≥ 5 ha, trồng cây ≥ 30 km', thamQuyen: 'Sở XD thẩm định, quản lý; phòng HTKT theo dõi' },
-    nhomB: { moTa: 'Công viên 0,5–5 ha, trồng cây 10–30 km', thamQuyen: 'Sở XD thẩm định; huyện, phường quản lý' },
-    nhomC: { moTa: 'Công viên < 0,5 ha, trồng cây < 10 km', thamQuyen: 'Phường/xã thẩm định, quản lý' },
-  },
-  {
-    linhVuc: 'chieu-sang',
-    nhomA: { moTa: 'Chiếu sáng phố chính ≥ 50 km', thamQuyen: 'Sở XD thẩm định, đơn vị quản lý' },
-    nhomB: { moTa: 'Chiếu sáng phố nhỏ, công viên 20–50 km', thamQuyen: 'Sở XD thẩm định; phường/huyện quản lý' },
-    nhomC: { moTa: 'Chiếu sáng tiểu quy mô < 20 km', thamQuyen: 'Phường/xã thẩm định, quản lý' },
-  },
-  {
-    linhVuc: 'nghia-trang',
-    nhomA: { moTa: 'Nghĩa trang ≥ 10 ha hoặc NM hỏa táng cấp I', thamQuyen: 'Sở XD thẩm định, Sở LĐ-TBXH quản lý' },
-    nhomB: { moTa: 'Nghĩa trang 2–10 ha hoặc NM hỏa táng cấp II', thamQuyen: 'Sở XD thẩm định; huyện/phường quản lý' },
-    nhomC: { moTa: 'Nghĩa trang < 2 ha hoặc tiểu quy mô nông thôn', thamQuyen: 'Huyện/xã thẩm định, quản lý' },
-  },
-  {
-    linhVuc: 'giao-thong-do-thi',
-    nhomA: { moTa: 'Đường cấp I-II ≥ 50 km, cầu lớn ≥ 100 m', thamQuyen: 'Sở XD thẩm định, Sở GTVT quản lý bảo trì' },
-    nhomB: { moTa: 'Đường cấp III 10–50 km, cầu trung bình', thamQuyen: 'Sở XD thẩm định; huyện quản lý bảo trì' },
-    nhomC: { moTa: 'Đường cấp IV < 10 km, cầu nhỏ', thamQuyen: 'Huyện/xã thẩm định, bảo trì' },
-  },
-  {
-    linhVuc: 'khong-gian-ngam',
-    nhomA: { moTa: 'Bãi đỗ ngầm ≥ 1000 chỗ, tuy-nen ≥ 5 m²', thamQuyen: 'Sở XD thẩm định, quản lý' },
-    nhomB: { moTa: 'Bãi đỗ ngầm 300–1000 chỗ, tuy-nen 2–5 m²', thamQuyen: 'Sở XD thẩm định; huyện quản lý' },
-    nhomC: { moTa: 'Bãi đỗ < 300 chỗ, tuy-nen < 2 m²', thamQuyen: 'Huyện/xã thẩm định, quản lý' },
-  },
-  {
-    linhVuc: 'su-dung-chung',
-    nhomA: { moTa: 'Cột/cống dùng chung ≥ 50 km', thamQuyen: 'Sở XD quản lý, chủ cột thích ứng' },
-    nhomB: { moTa: 'Cột/cống dùng chung 10–50 km', thamQuyen: 'Huyện/phường quản lý' },
-    nhomC: { moTa: 'Cột/cống dùng chung < 10 km', thamQuyen: 'Phường/xã quản lý' },
-  },
-]
-
-export function getQuyMoLinhVuc(linhVuc: LinhVucKey): QuyMo | undefined {
-  return QUY_MO_LINH_VUC.find((q) => q.linhVuc === linhVuc)
-}
+// Bảng QUY_MO_LINH_VUC (nhóm A/B/C theo km, thẩm quyền "huyện/xã", "Sở LĐ-TBXH", "Sở GTVT") đã bị xoá 13/10/2026 —
+// không có căn cứ. Nhóm dự án theo Đ9–11 Luật Đầu tư công; thẩm quyền theo Đ32–33 NĐ 217/2026.
 
 // ───────── Khung kế hoạch kiểm tra hàng năm ─────────
 export type ThoiDiemKiemTra = {
@@ -362,7 +223,7 @@ export const KE_HOACH_KIEM_TRA_NAM: ThoiDiemKiemTra[] = [
   {
     thang: 1,
     cauHinhLinhVuc: ['cap-nuoc', 'thoat-nuoc', 'su-dung-chung'],
-    noiDungChiDao: 'Kiểm tra tổng kết năm trước, lên kế hoạch bảo trì hàng năm, thực hiện đánh giá an toàn công trình lần đầu.',
+    noiDungChiDao: 'Kiểm tra tổng kết năm trước, lên kế hoạch bảo trì hàng năm, rà soát danh mục công trình phải đánh giá an toàn định kỳ (TT 33/2026/TT-BXD).',
   },
   {
     thang: 2,
@@ -407,7 +268,7 @@ export const KE_HOACH_KIEM_TRA_NAM: ThoiDiemKiemTra[] = [
   {
     thang: 10,
     cauHinhLinhVuc: ['chieu-sang', 'su-dung-chung', 'giao-thong-do-thi'],
-    noiDungChiDao: 'Nâng cấp chiếu sáng mùa đông, đánh giá an toàn lần 2 (nửa năm sau), kiểm tra đường.',
+    noiDungChiDao: 'Nâng cấp chiếu sáng mùa đông, theo dõi tiến độ đánh giá an toàn định kỳ của chủ sở hữu (TT 33/2026), kiểm tra đường.',
   },
   {
     thang: 11,
@@ -417,7 +278,7 @@ export const KE_HOACH_KIEM_TRA_NAM: ThoiDiemKiemTra[] = [
   {
     thang: 12,
     cauHinhLinhVuc: ['cay-xanh', 'giao-thong-do-thi', 'su-dung-chung'],
-    noiDungChiDao: 'Tổng kết năm, lập kế hoạch năm sau, kiểm tra tổng quát toàn bộ hệ thống HTKT, đánh giá an toàn lần 3.',
+    noiDungChiDao: 'Tổng kết năm, lập kế hoạch năm sau, kiểm tra tổng quát toàn bộ hệ thống HTKT, tổng hợp kết quả đánh giá an toàn định kỳ.',
   },
 ]
 
