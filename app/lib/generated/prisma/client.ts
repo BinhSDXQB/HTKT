@@ -739,3 +739,8 @@ export type cchn_ho_so = Prisma.cchn_ho_soModel
  * 
  */
 export type cchn_kinh_nghiem = Prisma.cchn_kinh_nghiemModel
+/**
+ * Model cchn_lich_su
+ * 
+ */
+export type cchn_lich_su = Prisma.cchn_lich_suModel

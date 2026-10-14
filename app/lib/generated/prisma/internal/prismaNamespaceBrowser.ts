@@ -189,7 +189,8 @@ export const ModelName = {
   ConCanBo: 'ConCanBo',
   ThanhTichCon: 'ThanhTichCon',
   cchn_ho_so: 'cchn_ho_so',
-  cchn_kinh_nghiem: 'cchn_kinh_nghiem'
+  cchn_kinh_nghiem: 'cchn_kinh_nghiem',
+  cchn_lich_su: 'cchn_lich_su'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -3164,6 +3165,21 @@ export const Cchn_kinh_nghiemScalarFieldEnum = {
 } as const
 
 export type Cchn_kinh_nghiemScalarFieldEnum = (typeof Cchn_kinh_nghiemScalarFieldEnum)[keyof typeof Cchn_kinh_nghiemScalarFieldEnum]
+
+
+export const Cchn_lich_suScalarFieldEnum = {
+  id: 'id',
+  ho_so_id: 'ho_so_id',
+  hanh_dong: 'hanh_dong',
+  tu_trang_thai: 'tu_trang_thai',
+  den_trang_thai: 'den_trang_thai',
+  ghi_chu: 'ghi_chu',
+  nguoi_id: 'nguoi_id',
+  nguoi_ten: 'nguoi_ten',
+  thoi_diem: 'thoi_diem'
+} as const
+
+export type Cchn_lich_suScalarFieldEnum = (typeof Cchn_lich_suScalarFieldEnum)[keyof typeof Cchn_lich_suScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -21,25 +21,25 @@ const CO_QUAN_CAP_TREN = 'UBND TỈNH QUẢNG TRỊ'
 const TEN_CO_QUAN = 'SỞ XÂY DỰNG'
 const DIA_DANH = 'Quảng Trị'
 
-function run(text: string, o: { bold?: boolean; italics?: boolean; size?: number; underline?: boolean } = {}) {
+export function run(text: string, o: { bold?: boolean; italics?: boolean; size?: number; underline?: boolean } = {}) {
   return new TextRun({
     text, font: FONT, size: o.size ?? SIZE, bold: o.bold, italics: o.italics,
     underline: o.underline ? {} : undefined,
   })
 }
-function center(children: TextRun[], spacingAfter = 0) {
+export function center(children: TextRun[], spacingAfter = 0) {
   return new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: spacingAfter }, children })
 }
-function justify(children: TextRun[], spacingAfter = 120, firstLine = 567) {
+export function justify(children: TextRun[], spacingAfter = 120, firstLine = 567) {
   return new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: spacingAfter }, indent: { firstLine }, children })
 }
-function dateLine(d?: Date | null): string {
+export function dateLine(d?: Date | null): string {
   const dt = d ?? new Date()
   return `${DIA_DANH}, ngày ${dt.getDate()} tháng ${dt.getMonth() + 1} năm ${dt.getFullYear()}`
 }
 
 // Khối quốc hiệu + tiêu ngữ (NĐ 30/2020). soPrefix vd "SXD-HTKT" (công văn) hoặc "QĐ-SXD".
-function buildHeading(soVanBan: string | undefined, ngay: Date | null | undefined, trichYeuCongVan?: string): Paragraph[] {
+export function buildHeading(soVanBan: string | undefined, ngay: Date | null | undefined, trichYeuCongVan?: string): Paragraph[] {
   const heading: Paragraph[] = [
     new Paragraph({
       tabStops: [{ type: TabStopType.CENTER, position: RIGHT_TAB }], spacing: { after: 0 },
@@ -83,7 +83,7 @@ function buildHeading(soVanBan: string | undefined, ngay: Date | null | undefine
 }
 
 // Khối ký: chức danh (phải) + khoảng trống + họ tên; Nơi nhận (trái).
-function buildSigning(nguoiKyChucDanh: string, nguoiKyHoTen: string | undefined, noiNhan: string[]): Paragraph[] {
+export function buildSigning(nguoiKyChucDanh: string, nguoiKyHoTen: string | undefined, noiNhan: string[]): Paragraph[] {
   return [
     new Paragraph({
       tabStops: [{ type: TabStopType.CENTER, position: RIGHT_TAB }], spacing: { before: 200, after: 0 },
@@ -117,7 +117,7 @@ function bodyParas(noiDung: string | undefined): Paragraph[] {
 
 const MIME_MARGIN = { top: 1134, bottom: 1134, left: 1701, right: 850 }
 
-function wrap(children: Paragraph[]): Document {
+export function wrap(children: Paragraph[]): Document {
   return new Document({
     sections: [{ properties: { page: { margin: MIME_MARGIN } }, children }],
   })

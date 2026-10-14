@@ -573,6 +573,7 @@ export type cchn_ho_soWhereInput = {
   updated_at?: Prisma.DateTimeFilter<"cchn_ho_so"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"cchn_ho_so"> | Date | string | null
   cchn_kinh_nghiem?: Prisma.Cchn_kinh_nghiemListRelationFilter
+  cchn_lich_su?: Prisma.Cchn_lich_suListRelationFilter
 }
 
 export type cchn_ho_soOrderByWithRelationInput = {
@@ -627,6 +628,7 @@ export type cchn_ho_soOrderByWithRelationInput = {
   updated_at?: Prisma.SortOrder
   deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
   cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemOrderByRelationAggregateInput
+  cchn_lich_su?: Prisma.cchn_lich_suOrderByRelationAggregateInput
 }
 
 export type cchn_ho_soWhereUniqueInput = Prisma.AtLeast<{
@@ -684,6 +686,7 @@ export type cchn_ho_soWhereUniqueInput = Prisma.AtLeast<{
   updated_at?: Prisma.DateTimeFilter<"cchn_ho_so"> | Date | string
   deleted_at?: Prisma.DateTimeNullableFilter<"cchn_ho_so"> | Date | string | null
   cchn_kinh_nghiem?: Prisma.Cchn_kinh_nghiemListRelationFilter
+  cchn_lich_su?: Prisma.Cchn_lich_suListRelationFilter
 }, "id" | "ma_ho_so">
 
 export type cchn_ho_soOrderByWithAggregationInput = {
@@ -852,6 +855,7 @@ export type cchn_ho_soCreateInput = {
   updated_at?: Date | string
   deleted_at?: Date | string | null
   cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemCreateNestedManyWithoutCchn_ho_soInput
+  cchn_lich_su?: Prisma.cchn_lich_suCreateNestedManyWithoutCchn_ho_soInput
 }
 
 export type cchn_ho_soUncheckedCreateInput = {
@@ -906,6 +910,7 @@ export type cchn_ho_soUncheckedCreateInput = {
   updated_at?: Date | string
   deleted_at?: Date | string | null
   cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemUncheckedCreateNestedManyWithoutCchn_ho_soInput
+  cchn_lich_su?: Prisma.cchn_lich_suUncheckedCreateNestedManyWithoutCchn_ho_soInput
 }
 
 export type cchn_ho_soUpdateInput = {
@@ -960,6 +965,7 @@ export type cchn_ho_soUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemUpdateManyWithoutCchn_ho_soNestedInput
+  cchn_lich_su?: Prisma.cchn_lich_suUpdateManyWithoutCchn_ho_soNestedInput
 }
 
 export type cchn_ho_soUncheckedUpdateInput = {
@@ -1014,6 +1020,7 @@ export type cchn_ho_soUncheckedUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemUncheckedUpdateManyWithoutCchn_ho_soNestedInput
+  cchn_lich_su?: Prisma.cchn_lich_suUncheckedUpdateManyWithoutCchn_ho_soNestedInput
 }
 
 export type cchn_ho_soCreateManyInput = {
@@ -1359,6 +1366,20 @@ export type cchn_ho_soUpdateOneRequiredWithoutCchn_kinh_nghiemNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.cchn_ho_soUpdateToOneWithWhereWithoutCchn_kinh_nghiemInput, Prisma.cchn_ho_soUpdateWithoutCchn_kinh_nghiemInput>, Prisma.cchn_ho_soUncheckedUpdateWithoutCchn_kinh_nghiemInput>
 }
 
+export type cchn_ho_soCreateNestedOneWithoutCchn_lich_suInput = {
+  create?: Prisma.XOR<Prisma.cchn_ho_soCreateWithoutCchn_lich_suInput, Prisma.cchn_ho_soUncheckedCreateWithoutCchn_lich_suInput>
+  connectOrCreate?: Prisma.cchn_ho_soCreateOrConnectWithoutCchn_lich_suInput
+  connect?: Prisma.cchn_ho_soWhereUniqueInput
+}
+
+export type cchn_ho_soUpdateOneRequiredWithoutCchn_lich_suNestedInput = {
+  create?: Prisma.XOR<Prisma.cchn_ho_soCreateWithoutCchn_lich_suInput, Prisma.cchn_ho_soUncheckedCreateWithoutCchn_lich_suInput>
+  connectOrCreate?: Prisma.cchn_ho_soCreateOrConnectWithoutCchn_lich_suInput
+  upsert?: Prisma.cchn_ho_soUpsertWithoutCchn_lich_suInput
+  connect?: Prisma.cchn_ho_soWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.cchn_ho_soUpdateToOneWithWhereWithoutCchn_lich_suInput, Prisma.cchn_ho_soUpdateWithoutCchn_lich_suInput>, Prisma.cchn_ho_soUncheckedUpdateWithoutCchn_lich_suInput>
+}
+
 export type cchn_ho_soCreateWithoutCchn_kinh_nghiemInput = {
   id?: string
   ma_ho_so: string
@@ -1410,6 +1431,7 @@ export type cchn_ho_soCreateWithoutCchn_kinh_nghiemInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
+  cchn_lich_su?: Prisma.cchn_lich_suCreateNestedManyWithoutCchn_ho_soInput
 }
 
 export type cchn_ho_soUncheckedCreateWithoutCchn_kinh_nghiemInput = {
@@ -1463,6 +1485,7 @@ export type cchn_ho_soUncheckedCreateWithoutCchn_kinh_nghiemInput = {
   created_at?: Date | string
   updated_at?: Date | string
   deleted_at?: Date | string | null
+  cchn_lich_su?: Prisma.cchn_lich_suUncheckedCreateNestedManyWithoutCchn_ho_soInput
 }
 
 export type cchn_ho_soCreateOrConnectWithoutCchn_kinh_nghiemInput = {
@@ -1532,6 +1555,7 @@ export type cchn_ho_soUpdateWithoutCchn_kinh_nghiemInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cchn_lich_su?: Prisma.cchn_lich_suUpdateManyWithoutCchn_ho_soNestedInput
 }
 
 export type cchn_ho_soUncheckedUpdateWithoutCchn_kinh_nghiemInput = {
@@ -1585,6 +1609,239 @@ export type cchn_ho_soUncheckedUpdateWithoutCchn_kinh_nghiemInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cchn_lich_su?: Prisma.cchn_lich_suUncheckedUpdateManyWithoutCchn_ho_soNestedInput
+}
+
+export type cchn_ho_soCreateWithoutCchn_lich_suInput = {
+  id?: string
+  ma_ho_so: string
+  loai_thu_tuc: string
+  truong_hop?: string | null
+  hinh_thuc_nop?: string
+  ngay_nop: Date | string
+  ho_ten: string
+  ngay_sinh?: Date | string | null
+  gioi_tinh?: string | null
+  la_cong_dan_vn?: boolean
+  quoc_tich?: string | null
+  loai_ma?: string
+  ma_dinh_danh?: string | null
+  dien_thoai?: string | null
+  email?: string | null
+  dia_chi?: string | null
+  don_vi_cong_tac?: string | null
+  trinh_do?: string | null
+  chuyen_nganh?: string | null
+  co_so_dao_tao?: string | null
+  nam_tot_nghiep?: number | null
+  so_hieu_van_bang?: string | null
+  van_bang_nuoc_ngoai?: boolean
+  van_bang_tren_csdl?: boolean
+  linh_vuc?: string | null
+  noi_dung?: string | null
+  loai_cong_trinh?: string | null
+  hang_de_nghi?: string | null
+  hanh_nghe_doc_lap?: boolean
+  so_cchn_cu?: string | null
+  ngay_bat_dau_kn?: Date | string | null
+  nguon_bat_dau_kn?: string | null
+  thanh_phan?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  trang_thai?: string
+  ngay_yeu_cau_bo_sung?: Date | string | null
+  noi_dung_bo_sung?: string | null
+  ngay_nhan_du?: Date | string | null
+  ngay_hoi_dong?: Date | string | null
+  hang_hoi_dong?: string | null
+  ket_luan_hoi_dong?: string | null
+  ngay_thong_bao?: Date | string | null
+  ngay_cap?: Date | string | null
+  so_chung_chi?: string | null
+  nang_luc_ca_nhan_id?: string | null
+  ghi_chu?: string | null
+  to_chuc_id?: string | null
+  created_by_id?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+  cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemCreateNestedManyWithoutCchn_ho_soInput
+}
+
+export type cchn_ho_soUncheckedCreateWithoutCchn_lich_suInput = {
+  id?: string
+  ma_ho_so: string
+  loai_thu_tuc: string
+  truong_hop?: string | null
+  hinh_thuc_nop?: string
+  ngay_nop: Date | string
+  ho_ten: string
+  ngay_sinh?: Date | string | null
+  gioi_tinh?: string | null
+  la_cong_dan_vn?: boolean
+  quoc_tich?: string | null
+  loai_ma?: string
+  ma_dinh_danh?: string | null
+  dien_thoai?: string | null
+  email?: string | null
+  dia_chi?: string | null
+  don_vi_cong_tac?: string | null
+  trinh_do?: string | null
+  chuyen_nganh?: string | null
+  co_so_dao_tao?: string | null
+  nam_tot_nghiep?: number | null
+  so_hieu_van_bang?: string | null
+  van_bang_nuoc_ngoai?: boolean
+  van_bang_tren_csdl?: boolean
+  linh_vuc?: string | null
+  noi_dung?: string | null
+  loai_cong_trinh?: string | null
+  hang_de_nghi?: string | null
+  hanh_nghe_doc_lap?: boolean
+  so_cchn_cu?: string | null
+  ngay_bat_dau_kn?: Date | string | null
+  nguon_bat_dau_kn?: string | null
+  thanh_phan?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  trang_thai?: string
+  ngay_yeu_cau_bo_sung?: Date | string | null
+  noi_dung_bo_sung?: string | null
+  ngay_nhan_du?: Date | string | null
+  ngay_hoi_dong?: Date | string | null
+  hang_hoi_dong?: string | null
+  ket_luan_hoi_dong?: string | null
+  ngay_thong_bao?: Date | string | null
+  ngay_cap?: Date | string | null
+  so_chung_chi?: string | null
+  nang_luc_ca_nhan_id?: string | null
+  ghi_chu?: string | null
+  to_chuc_id?: string | null
+  created_by_id?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  deleted_at?: Date | string | null
+  cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemUncheckedCreateNestedManyWithoutCchn_ho_soInput
+}
+
+export type cchn_ho_soCreateOrConnectWithoutCchn_lich_suInput = {
+  where: Prisma.cchn_ho_soWhereUniqueInput
+  create: Prisma.XOR<Prisma.cchn_ho_soCreateWithoutCchn_lich_suInput, Prisma.cchn_ho_soUncheckedCreateWithoutCchn_lich_suInput>
+}
+
+export type cchn_ho_soUpsertWithoutCchn_lich_suInput = {
+  update: Prisma.XOR<Prisma.cchn_ho_soUpdateWithoutCchn_lich_suInput, Prisma.cchn_ho_soUncheckedUpdateWithoutCchn_lich_suInput>
+  create: Prisma.XOR<Prisma.cchn_ho_soCreateWithoutCchn_lich_suInput, Prisma.cchn_ho_soUncheckedCreateWithoutCchn_lich_suInput>
+  where?: Prisma.cchn_ho_soWhereInput
+}
+
+export type cchn_ho_soUpdateToOneWithWhereWithoutCchn_lich_suInput = {
+  where?: Prisma.cchn_ho_soWhereInput
+  data: Prisma.XOR<Prisma.cchn_ho_soUpdateWithoutCchn_lich_suInput, Prisma.cchn_ho_soUncheckedUpdateWithoutCchn_lich_suInput>
+}
+
+export type cchn_ho_soUpdateWithoutCchn_lich_suInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ma_ho_so?: Prisma.StringFieldUpdateOperationsInput | string
+  loai_thu_tuc?: Prisma.StringFieldUpdateOperationsInput | string
+  truong_hop?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hinh_thuc_nop?: Prisma.StringFieldUpdateOperationsInput | string
+  ngay_nop?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ho_ten?: Prisma.StringFieldUpdateOperationsInput | string
+  ngay_sinh?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gioi_tinh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  la_cong_dan_vn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quoc_tich?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loai_ma?: Prisma.StringFieldUpdateOperationsInput | string
+  ma_dinh_danh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dien_thoai?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dia_chi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  don_vi_cong_tac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinh_do?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chuyen_nganh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  co_so_dao_tao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nam_tot_nghiep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  so_hieu_van_bang?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  van_bang_nuoc_ngoai?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  van_bang_tren_csdl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  linh_vuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noi_dung?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loai_cong_trinh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hang_de_nghi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hanh_nghe_doc_lap?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  so_cchn_cu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngay_bat_dau_kn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nguon_bat_dau_kn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanh_phan?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  trang_thai?: Prisma.StringFieldUpdateOperationsInput | string
+  ngay_yeu_cau_bo_sung?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noi_dung_bo_sung?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngay_nhan_du?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngay_hoi_dong?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hang_hoi_dong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ket_luan_hoi_dong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngay_thong_bao?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngay_cap?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  so_chung_chi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nang_luc_ca_nhan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghi_chu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  to_chuc_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_by_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemUpdateManyWithoutCchn_ho_soNestedInput
+}
+
+export type cchn_ho_soUncheckedUpdateWithoutCchn_lich_suInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ma_ho_so?: Prisma.StringFieldUpdateOperationsInput | string
+  loai_thu_tuc?: Prisma.StringFieldUpdateOperationsInput | string
+  truong_hop?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hinh_thuc_nop?: Prisma.StringFieldUpdateOperationsInput | string
+  ngay_nop?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ho_ten?: Prisma.StringFieldUpdateOperationsInput | string
+  ngay_sinh?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gioi_tinh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  la_cong_dan_vn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  quoc_tich?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loai_ma?: Prisma.StringFieldUpdateOperationsInput | string
+  ma_dinh_danh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dien_thoai?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dia_chi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  don_vi_cong_tac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trinh_do?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chuyen_nganh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  co_so_dao_tao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nam_tot_nghiep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  so_hieu_van_bang?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  van_bang_nuoc_ngoai?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  van_bang_tren_csdl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  linh_vuc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noi_dung?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loai_cong_trinh?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hang_de_nghi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hanh_nghe_doc_lap?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  so_cchn_cu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngay_bat_dau_kn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nguon_bat_dau_kn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  thanh_phan?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  trang_thai?: Prisma.StringFieldUpdateOperationsInput | string
+  ngay_yeu_cau_bo_sung?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noi_dung_bo_sung?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngay_nhan_du?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngay_hoi_dong?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hang_hoi_dong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ket_luan_hoi_dong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ngay_thong_bao?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ngay_cap?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  so_chung_chi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nang_luc_ca_nhan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghi_chu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  to_chuc_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_by_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemUncheckedUpdateManyWithoutCchn_ho_soNestedInput
 }
 
 
@@ -1594,10 +1851,12 @@ export type cchn_ho_soUncheckedUpdateWithoutCchn_kinh_nghiemInput = {
 
 export type Cchn_ho_soCountOutputType = {
   cchn_kinh_nghiem: number
+  cchn_lich_su: number
 }
 
 export type Cchn_ho_soCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cchn_kinh_nghiem?: boolean | Cchn_ho_soCountOutputTypeCountCchn_kinh_nghiemArgs
+  cchn_lich_su?: boolean | Cchn_ho_soCountOutputTypeCountCchn_lich_suArgs
 }
 
 /**
@@ -1615,6 +1874,13 @@ export type Cchn_ho_soCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
  */
 export type Cchn_ho_soCountOutputTypeCountCchn_kinh_nghiemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.cchn_kinh_nghiemWhereInput
+}
+
+/**
+ * Cchn_ho_soCountOutputType without action
+ */
+export type Cchn_ho_soCountOutputTypeCountCchn_lich_suArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.cchn_lich_suWhereInput
 }
 
 
@@ -1670,6 +1936,7 @@ export type cchn_ho_soSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   updated_at?: boolean
   deleted_at?: boolean
   cchn_kinh_nghiem?: boolean | Prisma.cchn_ho_so$cchn_kinh_nghiemArgs<ExtArgs>
+  cchn_lich_su?: boolean | Prisma.cchn_ho_so$cchn_lich_suArgs<ExtArgs>
   _count?: boolean | Prisma.Cchn_ho_soCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cchn_ho_so"]>
 
@@ -1835,6 +2102,7 @@ export type cchn_ho_soSelectScalar = {
 export type cchn_ho_soOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ma_ho_so" | "loai_thu_tuc" | "truong_hop" | "hinh_thuc_nop" | "ngay_nop" | "ho_ten" | "ngay_sinh" | "gioi_tinh" | "la_cong_dan_vn" | "quoc_tich" | "loai_ma" | "ma_dinh_danh" | "dien_thoai" | "email" | "dia_chi" | "don_vi_cong_tac" | "trinh_do" | "chuyen_nganh" | "co_so_dao_tao" | "nam_tot_nghiep" | "so_hieu_van_bang" | "van_bang_nuoc_ngoai" | "van_bang_tren_csdl" | "linh_vuc" | "noi_dung" | "loai_cong_trinh" | "hang_de_nghi" | "hanh_nghe_doc_lap" | "so_cchn_cu" | "ngay_bat_dau_kn" | "nguon_bat_dau_kn" | "thanh_phan" | "trang_thai" | "ngay_yeu_cau_bo_sung" | "noi_dung_bo_sung" | "ngay_nhan_du" | "ngay_hoi_dong" | "hang_hoi_dong" | "ket_luan_hoi_dong" | "ngay_thong_bao" | "ngay_cap" | "so_chung_chi" | "nang_luc_ca_nhan_id" | "ghi_chu" | "to_chuc_id" | "created_by_id" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["cchn_ho_so"]>
 export type cchn_ho_soInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cchn_kinh_nghiem?: boolean | Prisma.cchn_ho_so$cchn_kinh_nghiemArgs<ExtArgs>
+  cchn_lich_su?: boolean | Prisma.cchn_ho_so$cchn_lich_suArgs<ExtArgs>
   _count?: boolean | Prisma.Cchn_ho_soCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type cchn_ho_soIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1844,6 +2112,7 @@ export type $cchn_ho_soPayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "cchn_ho_so"
   objects: {
     cchn_kinh_nghiem: Prisma.$cchn_kinh_nghiemPayload<ExtArgs>[]
+    cchn_lich_su: Prisma.$cchn_lich_suPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2291,6 +2560,7 @@ readonly fields: cchn_ho_soFieldRefs;
 export interface Prisma__cchn_ho_soClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   cchn_kinh_nghiem<T extends Prisma.cchn_ho_so$cchn_kinh_nghiemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.cchn_ho_so$cchn_kinh_nghiemArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$cchn_kinh_nghiemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cchn_lich_su<T extends Prisma.cchn_ho_so$cchn_lich_suArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.cchn_ho_so$cchn_lich_suArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$cchn_lich_suPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2784,6 +3054,30 @@ export type cchn_ho_so$cchn_kinh_nghiemArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.Cchn_kinh_nghiemScalarFieldEnum | Prisma.Cchn_kinh_nghiemScalarFieldEnum[]
+}
+
+/**
+ * cchn_ho_so.cchn_lich_su
+ */
+export type cchn_ho_so$cchn_lich_suArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the cchn_lich_su
+   */
+  select?: Prisma.cchn_lich_suSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the cchn_lich_su
+   */
+  omit?: Prisma.cchn_lich_suOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.cchn_lich_suInclude<ExtArgs> | null
+  where?: Prisma.cchn_lich_suWhereInput
+  orderBy?: Prisma.cchn_lich_suOrderByWithRelationInput | Prisma.cchn_lich_suOrderByWithRelationInput[]
+  cursor?: Prisma.cchn_lich_suWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Cchn_lich_suScalarFieldEnum | Prisma.Cchn_lich_suScalarFieldEnum[]
 }
 
 /**

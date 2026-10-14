@@ -37,9 +37,14 @@ cchn_ho_so (1) ──< cchn_kinh_nghiem (n)          migration 047
 
 **Nút "Cấp chứng chỉ":** chỉ hiện khi trạng thái "Đủ điều kiện" (hoặc cấp lại). Ghi sổ `httt_nang_luc_ca_nhan` và mã định danh, rồi khoá hồ sơ (chỉ xem).
 
-## 3. Giới hạn hiện tại
+## 3. Bổ sung (14/10/2026)
+
+- **Lịch sử xử lý** (`cchn_lich_su`, migration 048): mỗi lần tạo, đổi trạng thái, cấp chứng chỉ, xoá ghi một dòng (người, thời điểm, trạng thái trước → sau); hiển thị ở cột phải form.
+- **Dự thảo văn bản .docx** (thể thức NĐ 30/2020, `/api/cchn/[id]/van-ban?loai=...`): *thông báo yêu cầu bổ sung hồ sơ* (Đ30 k5 — lấy “Nội dung yêu cầu bổ sung”, để trống thì liệt kê thành phần còn thiếu theo Đ39) và *thông báo kết quả đánh giá* (Đ30 k4 — đủ điều kiện: cấp trong 06/11 ngày làm việc theo Đ30 k2; không đủ: nêu lý do theo kết luận Hội đồng). NĐ 212 không ban hành mẫu cho hai thông báo này nên dùng dạng công văn; không tự đặt thời hạn bổ sung cho người nộp.
+
+## 4. Giới hạn hiện tại
 
 - Phụ lục I (chuyên ngành phù hợp), II (phạm vi hoạt động theo hạng), III (nội dung Mẫu số 01, 02, 03) chưa có trong kho → chưa mã hoá; bộ đánh giá ghi "cần kiểm tra".
 - Bộ đánh giá chỉ kết luận "đạt" khi vai trò đúng nguyên văn và phần việc đã được cán bộ xác nhận "thuộc nội dung đề nghị". Vai trò cao hơn khi xét hạng III (văn bản không quy định bao hàm) hoặc công trình chưa đánh giá → "cần kiểm tra". Kinh nghiệm quá 10 năm đáp ứng hạng cao hơn → đạt hạng thấp hơn 01 hạng (Đ33 k3). Ngưỡng quy hoạch theo nguyên văn Đ35. Thao tác cấp chứng chỉ chạy trong một transaction, chặn ở server khi thiếu kết quả Hội đồng, thông báo hoặc thành phần hồ sơ. (Đã qua phản biện Codex 14/10/2026.)
-- Chưa có tải lên tệp đính kèm, chưa in phiếu tiếp nhận / thông báo bổ sung, chưa đồng bộ HTTT quốc gia.
+- Chưa có tải lên tệp đính kèm, chưa đồng bộ HTTT quốc gia; ngày làm việc chưa trừ lễ, Tết.
 - Mục nghiệp vụ động cũ `phong-qlhd-xd/chung-chi-nha-thau` (lib/nghiep-vu/schema.ts) vẫn giữ để không mất dữ liệu đã nhập.

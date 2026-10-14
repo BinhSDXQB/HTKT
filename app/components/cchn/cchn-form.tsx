@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   ChevronRight, Save, Trash2, Plus, ArrowUp, ArrowDown, X, Loader2, BadgeCheck,
-  CheckCircle2, XCircle, AlertCircle, MinusCircle, Clock, FileCheck2,
+  CheckCircle2, XCircle, AlertCircle, MinusCircle, Clock, FileCheck2, FileDown, History,
 } from 'lucide-react'
 import { saveHoSo, deleteHoSo, capChungChi, type HoSoForm, type KinhNghiemForm } from '@/app/actions/cchn'
 import {
@@ -47,6 +47,8 @@ const ICON_KQ = {
 }
 
 const fmt = (s: string | null) => (s ? s.split('-').reverse().join('/') : '—')
+const HANH_DONG: Record<string, string> = { TAO_MOI: 'Tạo hồ sơ', DOI_TRANG_THAI: 'Đổi trạng thái', CAP_CHUNG_CHI: 'Cấp chứng chỉ', XOA: 'Xoá hồ sơ' }
+const nhanTT = (v: string) => TRANG_THAI.find((x) => x.value === v)?.label ?? v
 
 export function CchnForm({ initial }: { initial: HoSoForm }) {
   const router = useRouter()
@@ -454,6 +456,30 @@ export function CchnForm({ initial }: { initial: HoSoForm }) {
             </ul>
           </div>
 
+          {f.id && (
+            <div className="rounded-xl border bg-white p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <FileDown className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-semibold text-slate-900">Dự thảo văn bản (.docx)</h3>
+              </div>
+              <div className="space-y-2">
+                {(initial.noiDungBoSung.trim() || dg.kq.thanhPhanThieu.length > 0) && !daCap && (
+                  <a href={`/api/cchn/${f.id}/van-ban?loai=bo-sung`} className="block rounded-lg border px-3 py-2 text-sm hover:bg-indigo-50 hover:border-indigo-300">
+                    Thông báo yêu cầu bổ sung hồ sơ
+                    <span className="block text-xs text-slate-500">Đ30 k5 — lấy từ “Nội dung yêu cầu bổ sung”; để trống thì liệt kê thành phần còn thiếu</span>
+                  </a>
+                )}
+                {!laCapLai && ['DU_DIEU_KIEN', 'KHONG_DU_DIEU_KIEN'].includes(initial.trangThai) && (
+                  <a href={`/api/cchn/${f.id}/van-ban?loai=ket-qua`} className="block rounded-lg border px-3 py-2 text-sm hover:bg-indigo-50 hover:border-indigo-300">
+                    Thông báo kết quả đánh giá hồ sơ
+                    <span className="block text-xs text-slate-500">Đ30 k4 — theo trạng thái, hạng và kết luận Hội đồng đã lưu</span>
+                  </a>
+                )}
+              </div>
+              <p className="text-xs text-slate-400 mt-2">Lưu hồ sơ trước khi tải để văn bản lấy dữ liệu mới nhất.</p>
+            </div>
+          )}
+
           <div className="rounded-xl border bg-white p-4">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-5 h-5 text-indigo-600" />
@@ -469,6 +495,27 @@ export function CchnForm({ initial }: { initial: HoSoForm }) {
             </ul>
             <p className="text-xs text-slate-400 mt-2">Ngày làm việc tính thứ Hai – thứ Sáu, chưa trừ ngày lễ, Tết.</p>
           </div>
+
+          {!!initial.lichSu?.length && (
+            <div className="rounded-xl border bg-white p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <History className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-semibold text-slate-900">Lịch sử xử lý</h3>
+              </div>
+              <ol className="space-y-2">
+                {initial.lichSu.map((l, i) => (
+                  <li key={i} className="text-sm border-l-2 border-indigo-200 pl-3">
+                    <p className="text-slate-800">
+                      {HANH_DONG[l.hanhDong] ?? l.hanhDong}
+                      {l.denTrangThai && <>: {l.tuTrangThai ? `${nhanTT(l.tuTrangThai)} → ` : ''}<b>{nhanTT(l.denTrangThai)}</b></>}
+                    </p>
+                    {l.ghiChu && <p className="text-xs text-slate-600">{l.ghiChu}</p>}
+                    <p className="text-xs text-slate-500">{l.nguoiTen ?? '—'} · {new Date(l.thoiDiem).toLocaleString('vi-VN')}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </aside>
       </div>
 

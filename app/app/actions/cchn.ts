@@ -38,7 +38,10 @@ export type HoSoForm = {
   ngayCap: string; soChungChi: string; ghiChu: string
   nangLucCaNhanId?: string | null
   kinhNghiem: KinhNghiemForm[]
+  lichSu?: LichSuRow[]
 }
+
+export type LichSuRow = { hanhDong: string; tuTrangThai: string | null; denTrangThai: string | null; ghiChu: string | null; nguoiTen: string | null; thoiDiem: string }
 
 export type HoSoRow = {
   id: string; maHoSo: string; hoTen: string; maDinhDanhAn: string | null; loaiThuTuc: string
@@ -76,7 +79,7 @@ export async function getHoSo(id: string): Promise<HoSoForm | null> {
   await requireDeptAccess(DEPT)
   const r = await db.cchn_ho_so.findFirst({
     where: { id, deleted_at: null },
-    include: { cchn_kinh_nghiem: { orderBy: { stt: 'asc' } } },
+    include: { cchn_kinh_nghiem: { orderBy: { stt: 'asc' } }, cchn_lich_su: { orderBy: { thoi_diem: 'desc' }, take: 50 } },
   })
   if (!r) return null
   return {
@@ -99,6 +102,10 @@ export async function getHoSo(id: string): Promise<HoSoForm | null> {
       vaiTro: k.vai_tro, phanViec: k.phan_viec ?? '', tuNgay: d2s(k.tu_ngay), denNgay: d2s(k.den_ngay),
       taiLieu: k.tai_lieu ?? '', soHieuTaiLieu: k.so_hieu_tai_lieu ?? '',
       phuHopNoiDung: k.phu_hop_noi_dung === null ? '' : k.phu_hop_noi_dung ? 'co' : 'khong', ghiChu: k.ghi_chu ?? '',
+    })),
+    lichSu: r.cchn_lich_su.map((l) => ({
+      hanhDong: l.hanh_dong, tuTrangThai: l.tu_trang_thai, denTrangThai: l.den_trang_thai, ghiChu: l.ghi_chu,
+      nguoiTen: l.nguoi_ten, thoiDiem: l.thoi_diem.toISOString(),
     })),
   }
 }
@@ -157,9 +164,16 @@ export async function saveHoSo(f: HoSoForm): Promise<KetQua> {
     if (f.id) {
       const id = f.id
       const ketQua = await db.$transaction(async (tx) => {
+        // Khoá dòng để trạng thái cũ ghi vào lịch sử đúng với lúc cập nhật (không bị thao tác đồng thời chen vào).
+        const khoa = await tx.$queryRaw<{ trang_thai: string }[]>`SELECT trang_thai FROM cchn_ho_so WHERE id = ${id} FOR UPDATE`
+        const truoc = khoa[0] ?? null
         // Điều kiện trong chính câu UPDATE: không ghi đè hồ sơ đã cấp/đã xoá dù có thao tác đồng thời.
         const n = await tx.cchn_ho_so.updateMany({ where: { id, deleted_at: null, trang_thai: { not: 'DA_CAP' } }, data })
         if (n.count !== 1) return null
+        if (truoc && truoc.trang_thai !== data.trang_thai) {
+          await tx.cchn_lich_su.create({ data: { ho_so_id: id, hanh_dong: 'DOI_TRANG_THAI', tu_trang_thai: truoc.trang_thai,
+            den_trang_thai: data.trang_thai, nguoi_id: user.id, nguoi_ten: user.name } })
+        }
         await tx.cchn_kinh_nghiem.deleteMany({ where: { ho_so_id: id } })
         if (dongKn.length) await tx.cchn_kinh_nghiem.createMany({ data: dongKn.map((k) => ({ ...k, ho_so_id: id })) })
         return tx.cchn_ho_so.findUnique({ where: { id }, select: { ma_ho_so: true } })
@@ -172,7 +186,8 @@ export async function saveHoSo(f: HoSoForm): Promise<KetQua> {
       const maHoSo = await sinhMaHoSo(data.ngay_nop.getUTCFullYear())
       try {
         const created = await db.cchn_ho_so.create({
-          data: { ...data, ma_ho_so: maHoSo, created_by_id: user.id, to_chuc_id: user.toChucId, cchn_kinh_nghiem: { create: dongKn } },
+          data: { ...data, ma_ho_so: maHoSo, created_by_id: user.id, to_chuc_id: user.toChucId, cchn_kinh_nghiem: { create: dongKn },
+            cchn_lich_su: { create: { hanh_dong: 'TAO_MOI', den_trang_thai: data.trang_thai, nguoi_id: user.id, nguoi_ten: user.name } } },
           select: { id: true },
         })
         revalidatePath(DUONG_DAN)
@@ -197,7 +212,7 @@ export async function saveHoSo(f: HoSoForm): Promise<KetQua> {
  * Ghi sổ httt_nang_luc_ca_nhan + mã định danh + chuyển hồ sơ sang DA_CAP trong CÙNG một transaction.
  */
 export async function capChungChi(id: string, p: { soChungChi: string; ngayCap: string; thoiHan?: string; coQuanCap?: string }): Promise<KetQua> {
-  await requireDeptAccess(DEPT)
+  const user = await requireDeptAccess(DEPT)
   const hs = await db.cchn_ho_so.findFirst({ where: { id, deleted_at: null } })
   if (!hs) return { ok: false, error: 'Không tìm thấy hồ sơ.' }
   if (hs.trang_thai === 'DA_CAP') return { ok: false, error: 'Hồ sơ đã cấp chứng chỉ.' }
@@ -230,7 +245,10 @@ export async function capChungChi(id: string, p: { soChungChi: string; ngayCap: 
   const soCC = p.soChungChi.trim()
   try {
     const xong = await db.$transaction(async (tx) => {
-      // Giữ chỗ hồ sơ trước: nếu thao tác khác đã cấp/đổi trạng thái thì dừng, không tạo bản ghi năng lực mồ côi.
+      // Khoá dòng, đọc trạng thái tại thời điểm cấp (ghi lịch sử đúng); thao tác khác đã cấp/đổi trạng thái thì dừng.
+      const khoa = await tx.$queryRaw<{ trang_thai: string }[]>`SELECT trang_thai FROM cchn_ho_so WHERE id = ${id} AND deleted_at IS NULL FOR UPDATE`
+      const ttHienTai = khoa[0]?.trang_thai
+      if (!ttHienTai || ttHienTai === 'DA_CAP' || (!capLai && ttHienTai !== 'DU_DIEU_KIEN')) return false
       const giu = await tx.cchn_ho_so.updateMany({
         where: { id, deleted_at: null, trang_thai: capLai ? { not: 'DA_CAP' } : 'DU_DIEU_KIEN' },
         data: { trang_thai: 'DA_CAP', so_chung_chi: soCC, ngay_cap: ngayCap, updated_at: new Date() },
@@ -266,6 +284,8 @@ export async function capChungChi(id: string, p: { soChungChi: string; ngayCap: 
         await tx.httt_nang_luc_ca_nhan.update({ where: { id: nl.id }, data: { dinh_danh_id: dinhDanhId } })
       }
       await tx.cchn_ho_so.update({ where: { id }, data: { nang_luc_ca_nhan_id: nl.id } })
+      await tx.cchn_lich_su.create({ data: { ho_so_id: id, hanh_dong: 'CAP_CHUNG_CHI', tu_trang_thai: ttHienTai, den_trang_thai: 'DA_CAP',
+        ghi_chu: `Số chứng chỉ ${soCC}, ngày cấp ${d2s(ngayCap)}, thời hạn ${d2s(thoiHan)}`, nguoi_id: user.id, nguoi_ten: user.name } })
       return true
     })
     if (!xong) return { ok: false, error: 'Hồ sơ vừa được thao tác ở nơi khác (đã cấp hoặc đổi trạng thái) — tải lại trang.' }
@@ -279,11 +299,18 @@ export async function capChungChi(id: string, p: { soChungChi: string; ngayCap: 
 }
 
 export async function deleteHoSo(id: string): Promise<KetQua> {
-  await requireDeptAccess(DEPT)
-  const hs = await db.cchn_ho_so.findFirst({ where: { id, deleted_at: null }, select: { trang_thai: true } })
-  if (!hs) return { ok: false, error: 'Không tìm thấy hồ sơ.' }
-  if (hs.trang_thai === 'DA_CAP') return { ok: false, error: 'Không xoá hồ sơ đã cấp chứng chỉ.' }
-  await db.cchn_ho_so.update({ where: { id }, data: { deleted_at: new Date() } })
+  const user = await requireDeptAccess(DEPT)
+  const ketQua = await db.$transaction(async (tx) => {
+    const khoa = await tx.$queryRaw<{ trang_thai: string }[]>`SELECT trang_thai FROM cchn_ho_so WHERE id = ${id} AND deleted_at IS NULL FOR UPDATE`
+    const tt = khoa[0]?.trang_thai
+    if (!tt) return 'KHONG_THAY' as const
+    if (tt === 'DA_CAP') return 'DA_CAP' as const
+    await tx.cchn_ho_so.update({ where: { id }, data: { deleted_at: new Date() } })
+    await tx.cchn_lich_su.create({ data: { ho_so_id: id, hanh_dong: 'XOA', tu_trang_thai: tt, nguoi_id: user.id, nguoi_ten: user.name } })
+    return 'OK' as const
+  })
+  if (ketQua === 'KHONG_THAY') return { ok: false, error: 'Không tìm thấy hồ sơ.' }
+  if (ketQua === 'DA_CAP') return { ok: false, error: 'Không xoá hồ sơ đã cấp chứng chỉ.' }
   revalidatePath(DUONG_DAN)
   return { ok: true }
 }
