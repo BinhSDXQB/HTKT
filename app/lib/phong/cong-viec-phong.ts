@@ -14,8 +14,8 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
         'Soạn văn bản hướng dẫn áp dụng định mức, đơn giá, quy trình bảo trì công trình GT.',
       ]},
       { nhom: 'Thẩm định, kiểm tra', tanSuat: 'Theo hồ sơ', viec: [
-        'Thẩm định hồ sơ BCNCKT, BCKTKT, thiết kế triển khai sau TKCS công trình GT theo phân cấp.',
-        'Kiểm tra công tác nghiệm thu công trình GT hoàn thành (bao gồm nghiệm thu PCCC tích hợp).',
+        'Thẩm định BCNCKT công trình GT thuộc thẩm quyền (Đ32–38 NĐ 217/2026); BCKTKT chỉ khi Sở trực thuộc người quyết định đầu tư và được giao (Đ31 k3).',
+        'Kiểm tra công tác nghiệm thu công trình GT hoàn thành (Đ25–27 NĐ 207/2026); PCCC do chủ đầu tư tự nghiệm thu và khai báo CSDL (NĐ 105 sửa bởi NĐ 347/2026).',
         'Kiểm tra chất lượng, an toàn thi công tại công trường; yêu cầu khắc phục khi vi phạm.',
         'Thẩm tra dự toán, áp dụng định mức, đơn giá cho công trình GT.',
       ]},
@@ -30,9 +30,9 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
         'Tổng hợp số liệu phục vụ lập kế hoạch bảo trì, đầu tư công trình GT.',
       ]},
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
-        'Phối hợp Phòng QLKCHT, UBND cấp huyện kiểm tra trật tự, chất lượng công trình GT.',
+        'Phối hợp Phòng QLKCHT, UBND cấp xã kiểm tra trật tự, chất lượng công trình GT.',
         'Phối hợp cơ quan Công an thẩm định PCCC đồng thời (điểm e, g khoản 1 Điều 16 Luật 55/2024).',
-        'Hướng dẫn, tập huấn nghiệp vụ quản lý chất lượng cho UBND cấp huyện, chủ đầu tư.',
+        'Hướng dẫn, tập huấn nghiệp vụ quản lý chất lượng cho UBND cấp xã, chủ đầu tư.',
       ]},
     ],
   },
@@ -117,7 +117,7 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       ]},
       { nhom: 'Quản lý quy hoạch, kiến trúc', tanSuat: 'Thường xuyên', viec: [
         'Kiểm tra việc thực hiện quy hoạch đã phê duyệt; xử lý vi phạm quy hoạch.',
-        'Rà soát Quy chế quản lý kiến trúc; hướng dẫn UBND cấp huyện thực hiện.',
+        'Rà soát Quy chế quản lý kiến trúc; hướng dẫn UBND cấp xã thực hiện.',
         'Quản lý phát triển nghề nghiệp liên tục (PDU) của kiến trúc sư trên địa bàn.',
       ]},
       { nhom: 'Cơ sở dữ liệu, báo cáo', tanSuat: 'Định kỳ', viec: [
@@ -128,7 +128,7 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
         'Lấy ý kiến cộng đồng dân cư khi lập đồ án QH; phối hợp sở ngành thẩm định QH.',
         'Phối hợp Phòng PTĐT về quy hoạch trong chương trình phát triển đô thị.',
-        'Hướng dẫn UBND cấp huyện về quy hoạch nông thôn, quy hoạch chi tiết.',
+        'Hướng dẫn UBND cấp xã về quy hoạch nông thôn, quy hoạch chi tiết.',
       ]},
     ],
   },
@@ -223,7 +223,7 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       ]},
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
         'Phối hợp Phòng CLCT về chất lượng, nghiệm thu công trình GT.',
-        'Phối hợp UBND cấp huyện, Công an tỉnh về trật tự ATGT; kiểm tra bến xe, bãi đỗ.',
+        'Phối hợp UBND cấp xã, Công an tỉnh về trật tự ATGT; kiểm tra bến xe, bãi đỗ.',
         'Phối hợp Ban ATGT tỉnh triển khai chương trình, chiến dịch ATGT.',
       ]},
     ],
@@ -255,7 +255,7 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       ]},
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
         'Phối hợp Sở TNMT về giá đất, giao đất xây dựng nhà ở; quyền sử dụng đất gắn nhà.',
-        'Phối hợp UBND cấp huyện xét duyệt đối tượng NƠXH; quản lý nhà ở trên địa bàn.',
+        'Phối hợp UBND cấp xã xét duyệt đối tượng NƠXH; quản lý nhà ở trên địa bàn.',
         'Phối hợp Sở Tài chính về giá thuê nhà ở thuộc SHNN; kinh phí bảo trì nhà ở.',
       ]},
     ],
@@ -289,7 +289,7 @@ export const CONG_VIEC_PHONG: Record<string, CongViecPhong> = {
       { nhom: 'Phối hợp, hành chính', tanSuat: 'Thường xuyên', viec: [
         'Phối hợp Công an tỉnh về đào tạo lái xe, sát hạch, GPLX (sau chuyển giao 01/01/2025).',
         'Phối hợp Phòng QLKCHT về quản lý bến xe, bãi đỗ, KCHT vận tải.',
-        'Phối hợp UBND cấp huyện quản lý vận tải, HTX GTVT; giải quyết khiếu nại.',
+        'Phối hợp UBND cấp xã quản lý vận tải, HTX GTVT; giải quyết khiếu nại.',
       ]},
     ],
   },

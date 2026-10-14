@@ -63,7 +63,7 @@ export function CanCuPhapLyChiTiet({
   const thongTin = {
     bcnckt: 'Thẩm định BCNCKT (Báo cáo Nghiên cứu Khả thi)',
     bcktkt: 'Thẩm định BCKTKT (Báo cáo Kinh tế - Kỹ thuật)',
-    'thiet-ke': 'Thẩm định Thiết kế Triển khai',
+    'thiet-ke': 'Thiết kế triển khai (chủ đầu tư thẩm định)',
     'nghiem-thu': 'Kiểm tra Nghiệm thu Hoàn thành',
   }
 

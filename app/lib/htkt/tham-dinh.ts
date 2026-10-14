@@ -273,7 +273,6 @@ export const QUY_TRINH_THAM_DINH: QuyTrinh[] = [
     moTa: 'Kiểm tra công tác nghiệm thu trong quá trình thi công và khi hoàn thành công trình HTKT (Đ57 k4 Luật 135; Đ25–27 NĐ 207/2026).',
     apDung: 'Công trình thuộc Phụ lục IV NĐ 217 (HTKT: cấp II trở lên; công trình xây mới hoặc cải tạo làm thay đổi quy mô, công năng, kết cấu chịu lực chính) trên địa bàn tỉnh, trừ công trình do Hội đồng kiểm tra nhà nước (Phụ lục IX NĐ 207, dự án quan trọng quốc gia) hoặc cơ quan chuyên môn thuộc bộ kiểm tra (Đ25 k1, Đ26 k1 điểm c NĐ 207).',
     hoSo: [
-      'Thông tin khởi công trên Cơ sở dữ liệu quốc gia về hoạt động xây dựng (căn cứ lập kế hoạch kiểm tra trong thi công).',
       'Báo cáo hoàn thành thi công xây dựng hạng mục công trình, công trình theo Phụ lục VI NĐ 207.',
       'Hồ sơ quản lý chất lượng; kết quả thí nghiệm, quan trắc, nghiệm thu lắp đặt, chạy thử thiết bị.',
     ],
@@ -287,7 +286,7 @@ export const QUY_TRINH_THAM_DINH: QuyTrinh[] = [
       'Kiểm tra trong thi công: ra thông báo kết quả không quá 10 ngày làm việc kể từ ngày kiểm tra.',
       'Nghiệm thu hoàn thành: không quá 16 ngày làm việc (công trình cấp I, cấp đặc biệt) và 12 ngày làm việc (công trình còn lại) kể từ khi nhận hồ sơ đề nghị kiểm tra (Đ27 k4 điểm b NĐ 207).',
     ],
-    ketQua: 'Văn bản thông báo kết quả kiểm tra công tác nghiệm thu (Phụ lục VIII NĐ 207), chấp thuận hoặc không chấp thuận kết quả nghiệm thu của chủ đầu tư.',
+    ketQua: 'Văn bản thông báo kết quả kiểm tra công tác nghiệm thu (Phụ lục VIII NĐ 207), chấp thuận hoặc không chấp thuận kết quả nghiệm thu của chủ đầu tư — phải có trước khi đưa công trình vào khai thác, sử dụng (Đ29 k2 NĐ 207).',
     canCu: ['Luật Xây dựng 135/2025/QH15 (Đ57)', 'Nghị định 207/2026/NĐ-CP (Đ24–27, Phụ lục VI, VIII, IX)', 'Nghị định 217/2026/NĐ-CP (Phụ lục IV)'],
     ghiChu: [
       'Chỉ kiểm tra công trình thuộc Phụ lục IV NĐ 217 (hoặc theo Đ25 k1 NĐ 207); dự án nhiều công trình chỉ kiểm tra các công trình thuộc diện (Đ25 k1 điểm c).',

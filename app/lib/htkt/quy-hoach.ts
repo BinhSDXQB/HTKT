@@ -19,8 +19,10 @@ export type MucQuyHoach = {
 export const LOAI_QUY_HOACH: MucQuyHoach[] = [
   {
     noiDung:
-      'Các LOẠI quy hoạch: (a) quy hoạch đô thị — cho thành phố trực thuộc trung ương, thành phố thuộc tỉnh, thành phố thuộc thành phố trực thuộc trung ương, thị xã, thị trấn, đô thị mới; (b) quy hoạch nông thôn — cho huyện, xã; (c) quy hoạch khu chức năng; (d) quy hoạch KHÔNG GIAN NGẦM — chỉ đối với thành phố trực thuộc trung ương; (đ) quy hoạch CHUYÊN NGÀNH HẠ TẦNG KỸ THUẬT — chỉ đối với thành phố trực thuộc trung ương.',
-    canCu: 'Luật 47/2024/QH15, Điều 3 khoản 2',
+      // Rà soát 14/10/2026: bản trước chép khoản 2 Điều 3 Luật 47/2024 nguyên gốc (còn "thị xã, thị trấn", "huyện") —
+      // khoản này đã được Luật 144/2025 (Điều 1 khoản 2 điểm a, hiệu lực 01/01/2026) sửa theo chính quyền 2 cấp.
+      'Các LOẠI quy hoạch: (a) quy hoạch đô thị — đối với thành phố; đô thị thuộc tỉnh; đô thị thuộc thành phố; đặc khu là đô thị; đô thị mới; (b) quy hoạch nông thôn — đối với xã; đặc khu không phải là đô thị; (c) quy hoạch khu chức năng; (d) quy hoạch KHÔNG GIAN NGẦM — đối với thành phố; (đ) quy hoạch CHUYÊN NGÀNH HẠ TẦNG KỸ THUẬT — đối với thành phố.',
+    canCu: 'Luật 47/2024/QH15, Điều 3 khoản 2 (sửa bởi Luật 144/2025/QH15, Điều 1 khoản 2 điểm a)',
   },
   {
     noiDung: 'Các CẤP ĐỘ quy hoạch: quy hoạch chung → quy hoạch phân khu → quy hoạch chi tiết.',
@@ -61,8 +63,8 @@ export const DINH_NGHIA: MucQuyHoach[] = [
 export const AP_DUNG_TAI_TINH: MucQuyHoach[] = [
   {
     noiDung:
-      'Quy hoạch CHUYÊN NGÀNH hạ tầng kỹ thuật và quy hoạch KHÔNG GIAN NGẦM chỉ lập đối với THÀNH PHỐ TRỰC THUỘC TRUNG ƯƠNG. Quảng Trị là tỉnh, nên trên địa bàn KHÔNG lập hai loại quy hoạch này; nội dung hạ tầng kỹ thuật được thể hiện trong quy hoạch chung, quy hoạch phân khu và quy hoạch chi tiết.',
-    canCu: 'Luật 47/2024/QH15, Điều 3 khoản 2 điểm d và điểm đ',
+      'Quy hoạch CHUYÊN NGÀNH hạ tầng kỹ thuật và quy hoạch KHÔNG GIAN NGẦM chỉ lập đối với THÀNH PHỐ — Luật 144/2025 (Điều 1 khoản 36) thay cụm từ "thành phố trực thuộc trung ương" bằng "thành phố" trong Luật 47/2024, tức đơn vị hành chính cấp tỉnh là thành phố. Quảng Trị là tỉnh, nên trên địa bàn KHÔNG lập hai loại quy hoạch này; nội dung hạ tầng kỹ thuật được thể hiện trong quy hoạch chung, quy hoạch phân khu và quy hoạch chi tiết.',
+    canCu: 'Luật 47/2024/QH15, Điều 3 khoản 2 điểm d và điểm đ (sửa bởi Luật 144/2025/QH15)',
   },
   {
     noiDung:

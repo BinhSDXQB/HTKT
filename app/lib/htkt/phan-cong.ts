@@ -21,7 +21,7 @@ export const PHAN_CONG: PhanCongCanBo[] = [
       'Phụ trách chung, chỉ đạo điều hành toàn bộ hoạt động của Phòng theo QĐ 331/QĐ-SXD',
       'Chỉ đạo xây dựng kế hoạch, chương trình, chỉ tiêu, cơ chế chính sách phát triển hạ tầng kỹ thuật; hướng dẫn, kiểm tra sau phê duyệt',
       'Tổ chức hoạt động xúc tiến đầu tư, vận động, khai thác nguồn lực phát triển HTKT',
-      'Chỉ đạo thẩm định BCNCKT/BCKTKT, thiết kế triển khai sau TKCS; kiểm tra nghiệm thu HTKT khu chức năng, khu dân cư nông thôn, đường bộ trong đô thị (trừ quốc lộ qua đô thị)',
+      'Chỉ đạo thẩm định BCNCKT (BCKTKT khi được giao); kiểm tra nghiệm thu HTKT khu chức năng, khu dân cư nông thôn, đường bộ trong đô thị (trừ quốc lộ qua đô thị)',
       'Chỉ đạo PCTN, thực hành tiết kiệm chống lãng phí, KNTC; quy hoạch - đào tạo bồi dưỡng CBCC; CCHC; thi đua - khen thưởng của Phòng',
       'Chỉ đạo CCHC, Khoa học công nghệ và đổi mới sáng tạo; thông tin báo cáo định kỳ, đột xuất',
       'Xây dựng và quản lý cơ sở dữ liệu về hạ tầng kỹ thuật',

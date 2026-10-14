@@ -15,7 +15,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
     linhVuc: [
       { key: 'tham-dinh-thiet-ke', ten: 'Thẩm định BCNCKT, thiết kế công trình giao thông', thamMuu: {
         noiDung: [
-          'Tham mưu tiếp nhận, thẩm định hồ sơ BCNCKT, BCKTKT, thiết kế triển khai sau TKCS các công trình giao thông theo phân cấp.',
+          'Tham mưu thẩm định BCNCKT công trình giao thông thuộc thẩm quyền (Đ32–38 NĐ 217/2026); BCKTKT chỉ khi Sở trực thuộc người quyết định đầu tư và được giao (Đ31 k3). Thiết kế triển khai do chủ đầu tư thẩm định (Đ41).',
           'Tham mưu lấy ý kiến phối hợp các sở ngành liên quan; kiểm tra sự phù hợp quy hoạch, QCVN, tiêu chuẩn kỹ thuật.',
           'Tham mưu thẩm định nội dung PCCC (điểm a-đ khoản 1 Điều 16 Luật 55/2024) đối với công trình GT thuộc Phụ lục III NĐ 105/2025.',
           'Tham mưu kiểm tra điều kiện năng lực tổ chức, cá nhân tham gia khảo sát, thiết kế công trình GT.',
@@ -29,7 +29,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       { key: 'kiem-tra-nghiem-thu', ten: 'Kiểm tra công tác nghiệm thu', thamMuu: {
         noiDung: [
           'Tham mưu kiểm tra công tác nghiệm thu công trình giao thông hoàn thành đưa vào sử dụng theo phân cấp.',
-          'Tham mưu kiểm tra nghiệm thu PCCC tích hợp (Điều 18 Luật 55/2024) đối với công trình GT thuộc diện.',
+          'Tham mưu hướng dẫn chủ đầu tư tự tổ chức nghiệm thu PCCC và khai báo trên CSDL PCCC trước khi đưa công trình vào hoạt động (Đ12 k1 điểm đ NĐ 105/2025 sửa bởi NĐ 347/2026); thủ tục kiểm tra nghiệm thu PCCC của Công an đã bị bãi bỏ.',
           'Tham mưu xử lý các trường hợp bộ phận bị che khuất chưa nghiệm thu trước khi tiếp tục thi công.',
         ],
         sanPham: [
@@ -109,7 +109,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
       }},
       { key: 'tham-dinh-du-an', ten: 'Thẩm định dự án (BCNCKT) dân dụng', thamMuu: {
         noiDung: [
-          'Tham mưu thẩm định BCNCKT dự án công trình dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở (Đ32–38 NĐ 217/2026); BCKTKT chỉ khi người quyết định đầu tư giao. Thiết kế triển khai do chủ đầu tư thẩm định (Đ41).',
+          'Tham mưu thẩm định BCNCKT dự án công trình dân dụng, công nghiệp nhẹ, khu đô thị, nhà ở (Đ32–38 NĐ 217/2026); BCKTKT chỉ khi Sở trực thuộc người quyết định đầu tư và được giao (Đ31 k3). Thiết kế triển khai do chủ đầu tư thẩm định (Đ41).',
           'Tham mưu thẩm định thiết kế PCCC tích hợp trong thẩm định BCNCKT cho công trình thuộc Phụ lục III NĐ 105/2025 (Đ6 k1, sửa bởi NĐ 347/2026).',
           'Tham mưu kiểm tra yêu cầu áp dụng BIM đối với công trình xây dựng mới từ cấp II trở lên (Đ8 k1 điểm a NĐ 217/2026).',
           'Tham mưu lấy ý kiến phối hợp sở ngành; phát hành kết quả thẩm định đúng thời hạn.',
@@ -262,7 +262,7 @@ export const THAM_MUU_PHONG: Record<string, ThamMuuPhong> = {
         noiDung: [
           'Tham mưu chủ trì lập, điều chỉnh Quy chế quản lý kiến trúc (QCQLKT) trình UBND tỉnh ban hành.',
           'Tham mưu lấy ý kiến cộng đồng, phối hợp sở ngành khi lập QCQLKT; rà soát định kỳ (tối đa 5 năm/lần).',
-          'Tham mưu hướng dẫn UBND cấp huyện thực hiện QCQLKT; kiểm tra, xử lý vi phạm.',
+          'Tham mưu hướng dẫn UBND cấp xã thực hiện QCQLKT; kiểm tra, xử lý vi phạm.',
           'Tham mưu quy định hình thức kiến trúc, chiều cao, mái, màu sắc, vật liệu, biển hiệu cho từng khu vực.',
         ],
         sanPham: [

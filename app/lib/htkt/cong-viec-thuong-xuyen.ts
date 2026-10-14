@@ -22,7 +22,7 @@ export const CONG_VIEC_THUONG_XUYEN: NhomCongViec[] = [
     nhom: 'Thẩm định, kiểm tra',
     tanSuat: 'Theo hồ sơ',
     viec: [
-      'Thẩm định Báo cáo NCKT/BCKTKT, thiết kế triển khai sau thiết kế cơ sở của dự án HTKT.',
+      'Thẩm định Báo cáo NCKT dự án HTKT thuộc thẩm quyền (BCKTKT chỉ khi Sở trực thuộc người quyết định đầu tư và được giao — Đ31 k3); thiết kế triển khai do chủ đầu tư thẩm định (Đ41 NĐ 217/2026).',
       'Kiểm tra công tác nghiệm thu hoàn thành công trình HTKT.',
       'Lấy ý kiến, tổng hợp ý kiến phối hợp; lập thông báo kết quả thẩm định.',
     ],
