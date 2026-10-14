@@ -729,3 +729,13 @@ export type ConCanBo = Prisma.ConCanBoModel
  * Thành tích học tập của con cán bộ theo năm học (mỗi năm thêm dòng mới, không sửa năm cũ).
  */
 export type ThanhTichCon = Prisma.ThanhTichConModel
+/**
+ * Model cchn_ho_so
+ * 
+ */
+export type cchn_ho_so = Prisma.cchn_ho_soModel
+/**
+ * Model cchn_kinh_nghiem
+ * 
+ */
+export type cchn_kinh_nghiem = Prisma.cchn_kinh_nghiemModel

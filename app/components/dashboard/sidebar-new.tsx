@@ -252,6 +252,7 @@ const navGroups: NavGroup[] = [
       { label: 'Quản lý trật tự xây dựng', href: '/dashboard/phong-qlhd-xd/trat-tu-xay-dung', icon: AlertTriangle },
       { label: 'Thẩm định dự án, thiết kế', href: '/dashboard/phong-qlhd-xd/tham-dinh-du-an', icon: ClipboardCheck },
       { label: 'Chứng chỉ & nhà thầu nước ngoài', href: '/dashboard/phong-qlhd-xd/chung-chi-nha-thau', icon: Award },
+      { label: 'Hồ sơ cấp chứng chỉ hành nghề', href: '/dashboard/phong-qlhd-xd/chung-chi-nha-thau/ho-so', icon: FileText },
       { label: 'Thí nghiệm chuyên ngành', href: '/dashboard/phong-qlhd-xd/thi-nghiem-chuyen-nganh', icon: FlaskConical },
     ],
   },

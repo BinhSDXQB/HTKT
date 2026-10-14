@@ -35,6 +35,7 @@ export function DeptSection({
   baseHref,
   baseLabel,
   color = 'indigo',
+  children,
 }: {
   title: string
   icon: React.ElementType
@@ -43,6 +44,7 @@ export function DeptSection({
   baseHref: string
   baseLabel: string
   color?: DeptColor
+  children?: React.ReactNode
 }) {
   const c = MAU_SECTION[color] ?? MAU_SECTION.indigo
 
@@ -77,6 +79,8 @@ export function DeptSection({
           </ul>
         </div>
       )}
+
+      {children}
 
       <NghiepVuSection />
     </div>

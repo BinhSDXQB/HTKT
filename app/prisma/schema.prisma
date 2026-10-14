@@ -4140,3 +4140,90 @@ model ThanhTichCon {
   @@index([conId, namHoc])
   @@map("thanh_tich_con")
 }
+// ─── HỒ SƠ ĐỀ NGHỊ CẤP CHỨNG CHỈ HÀNH NGHỀ (migration 047 — Phòng QLHĐ-XD, NĐ 212/2026) ──────────
+// Bảng độc lập: giữ FK vô hướng tới users/to_chuc/httt_nang_luc_ca_nhan (không khai quan hệ ngược).
+model cchn_ho_so {
+  id                    String                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ma_ho_so              String                 @unique
+  loai_thu_tuc          String
+  truong_hop            String?
+  hinh_thuc_nop         String                 @default("TRUC_TUYEN")
+  ngay_nop              DateTime               @db.Date
+  ho_ten                String
+  ngay_sinh             DateTime?              @db.Date
+  gioi_tinh             String?
+  la_cong_dan_vn        Boolean                @default(true)
+  quoc_tich             String?
+  loai_ma               String                 @default("SO_DINH_DANH_CN")
+  ma_dinh_danh          String?
+  dien_thoai            String?
+  email                 String?
+  dia_chi               String?
+  don_vi_cong_tac       String?
+  trinh_do              String?
+  chuyen_nganh          String?
+  co_so_dao_tao         String?
+  nam_tot_nghiep        Int?
+  so_hieu_van_bang      String?
+  van_bang_nuoc_ngoai   Boolean                @default(false)
+  van_bang_tren_csdl    Boolean                @default(false)
+  linh_vuc              String?
+  noi_dung              String?
+  loai_cong_trinh       String?
+  hang_de_nghi          String?
+  hanh_nghe_doc_lap     Boolean                @default(false)
+  so_cchn_cu            String?
+  ngay_bat_dau_kn       DateTime?              @db.Date
+  nguon_bat_dau_kn      String?
+  thanh_phan            Json                   @default("{}")
+  trang_thai            String                 @default("MOI_TIEP_NHAN")
+  ngay_yeu_cau_bo_sung  DateTime?              @db.Date
+  noi_dung_bo_sung      String?
+  ngay_nhan_du          DateTime?              @db.Date
+  ngay_hoi_dong         DateTime?              @db.Date
+  hang_hoi_dong         String?
+  ket_luan_hoi_dong     String?
+  ngay_thong_bao        DateTime?              @db.Date
+  ngay_cap              DateTime?              @db.Date
+  so_chung_chi          String?
+  nang_luc_ca_nhan_id   String?
+  ghi_chu               String?
+  to_chuc_id            String?
+  created_by_id         String?
+  created_at            DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime               @default(now()) @db.Timestamptz(6)
+  deleted_at            DateTime?              @db.Timestamptz(6)
+  cchn_kinh_nghiem      cchn_kinh_nghiem[]
+
+  @@index([ma_dinh_danh], map: "idx_cchn_ho_so_ma_dd")
+  @@index([ngay_nop(sort: Desc)], map: "idx_cchn_ho_so_ngay_nop")
+  @@index([nang_luc_ca_nhan_id], map: "idx_cchn_ho_so_nlcn")
+  @@index([trang_thai], map: "idx_cchn_ho_so_trang_thai")
+}
+
+model cchn_kinh_nghiem {
+  id               String     @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ho_so_id         String
+  stt              Int        @default(0)
+  ten_cong_trinh   String
+  dia_diem         String?
+  chu_dau_tu       String?
+  loai_cong_trinh  String?
+  cap_cong_trinh   String?
+  nhom_du_an       String?
+  cap_phe_duyet_qh String?
+  loai_quy_hoach   String?
+  vai_tro          String
+  phan_viec        String?
+  tu_ngay          DateTime?  @db.Date
+  den_ngay         DateTime?  @db.Date
+  tai_lieu         String?
+  so_hieu_tai_lieu String?
+  phu_hop_noi_dung Boolean?
+  ghi_chu          String?
+  created_at       DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime   @default(now()) @db.Timestamptz(6)
+  cchn_ho_so       cchn_ho_so @relation(fields: [ho_so_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([ho_so_id, stt], map: "idx_cchn_kn_ho_so")
+}

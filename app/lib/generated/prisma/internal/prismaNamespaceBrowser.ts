@@ -187,7 +187,9 @@ export const ModelName = {
   qd72_water_test_results: 'qd72_water_test_results',
   qd72_workflow_history: 'qd72_workflow_history',
   ConCanBo: 'ConCanBo',
-  ThanhTichCon: 'ThanhTichCon'
+  ThanhTichCon: 'ThanhTichCon',
+  cchn_ho_so: 'cchn_ho_so',
+  cchn_kinh_nghiem: 'cchn_kinh_nghiem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -3079,6 +3081,89 @@ export const ThanhTichConScalarFieldEnum = {
 } as const
 
 export type ThanhTichConScalarFieldEnum = (typeof ThanhTichConScalarFieldEnum)[keyof typeof ThanhTichConScalarFieldEnum]
+
+
+export const Cchn_ho_soScalarFieldEnum = {
+  id: 'id',
+  ma_ho_so: 'ma_ho_so',
+  loai_thu_tuc: 'loai_thu_tuc',
+  truong_hop: 'truong_hop',
+  hinh_thuc_nop: 'hinh_thuc_nop',
+  ngay_nop: 'ngay_nop',
+  ho_ten: 'ho_ten',
+  ngay_sinh: 'ngay_sinh',
+  gioi_tinh: 'gioi_tinh',
+  la_cong_dan_vn: 'la_cong_dan_vn',
+  quoc_tich: 'quoc_tich',
+  loai_ma: 'loai_ma',
+  ma_dinh_danh: 'ma_dinh_danh',
+  dien_thoai: 'dien_thoai',
+  email: 'email',
+  dia_chi: 'dia_chi',
+  don_vi_cong_tac: 'don_vi_cong_tac',
+  trinh_do: 'trinh_do',
+  chuyen_nganh: 'chuyen_nganh',
+  co_so_dao_tao: 'co_so_dao_tao',
+  nam_tot_nghiep: 'nam_tot_nghiep',
+  so_hieu_van_bang: 'so_hieu_van_bang',
+  van_bang_nuoc_ngoai: 'van_bang_nuoc_ngoai',
+  van_bang_tren_csdl: 'van_bang_tren_csdl',
+  linh_vuc: 'linh_vuc',
+  noi_dung: 'noi_dung',
+  loai_cong_trinh: 'loai_cong_trinh',
+  hang_de_nghi: 'hang_de_nghi',
+  hanh_nghe_doc_lap: 'hanh_nghe_doc_lap',
+  so_cchn_cu: 'so_cchn_cu',
+  ngay_bat_dau_kn: 'ngay_bat_dau_kn',
+  nguon_bat_dau_kn: 'nguon_bat_dau_kn',
+  thanh_phan: 'thanh_phan',
+  trang_thai: 'trang_thai',
+  ngay_yeu_cau_bo_sung: 'ngay_yeu_cau_bo_sung',
+  noi_dung_bo_sung: 'noi_dung_bo_sung',
+  ngay_nhan_du: 'ngay_nhan_du',
+  ngay_hoi_dong: 'ngay_hoi_dong',
+  hang_hoi_dong: 'hang_hoi_dong',
+  ket_luan_hoi_dong: 'ket_luan_hoi_dong',
+  ngay_thong_bao: 'ngay_thong_bao',
+  ngay_cap: 'ngay_cap',
+  so_chung_chi: 'so_chung_chi',
+  nang_luc_ca_nhan_id: 'nang_luc_ca_nhan_id',
+  ghi_chu: 'ghi_chu',
+  to_chuc_id: 'to_chuc_id',
+  created_by_id: 'created_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Cchn_ho_soScalarFieldEnum = (typeof Cchn_ho_soScalarFieldEnum)[keyof typeof Cchn_ho_soScalarFieldEnum]
+
+
+export const Cchn_kinh_nghiemScalarFieldEnum = {
+  id: 'id',
+  ho_so_id: 'ho_so_id',
+  stt: 'stt',
+  ten_cong_trinh: 'ten_cong_trinh',
+  dia_diem: 'dia_diem',
+  chu_dau_tu: 'chu_dau_tu',
+  loai_cong_trinh: 'loai_cong_trinh',
+  cap_cong_trinh: 'cap_cong_trinh',
+  nhom_du_an: 'nhom_du_an',
+  cap_phe_duyet_qh: 'cap_phe_duyet_qh',
+  loai_quy_hoach: 'loai_quy_hoach',
+  vai_tro: 'vai_tro',
+  phan_viec: 'phan_viec',
+  tu_ngay: 'tu_ngay',
+  den_ngay: 'den_ngay',
+  tai_lieu: 'tai_lieu',
+  so_hieu_tai_lieu: 'so_hieu_tai_lieu',
+  phu_hop_noi_dung: 'phu_hop_noi_dung',
+  ghi_chu: 'ghi_chu',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Cchn_kinh_nghiemScalarFieldEnum = (typeof Cchn_kinh_nghiemScalarFieldEnum)[keyof typeof Cchn_kinh_nghiemScalarFieldEnum]
 
 
 export const SortOrder = {
