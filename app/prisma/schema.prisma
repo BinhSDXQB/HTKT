@@ -154,6 +154,14 @@ model AdministrativeUnit {
   huyenThiCu   String?                     // Huyện/TP/thị xã chủ quản trước sáp nhập
   vungLoi      String?                     // Lõi đô thị | Thuộc đô thị (phần xã) | Bán đô thị (thị trấn) | Nông thôn | Đặc khu
 
+  // Dải số hiệu đường xã ("ĐX.") / đường thôn ("Đth.") — Điều 5 QĐ 56/2025/QĐ-UBND (mig 049); phường: null
+  soHieuDxTu   Int?
+  soHieuDxDen  Int?
+  soHieuDthTu  Int?
+  soHieuDthDen Int?
+  soHieuCanCu  String?
+
+  htktDoiTuong    htkt_doi_tuong[] // bảng trung tâm đối tượng HTKT, liên kết theo MÃ XÃ (code) — mig 049
   assets          Asset[]
   incidents       Incident[]
   projects        Project[]
@@ -225,6 +233,8 @@ model Street {
   ward     AdministrativeUnit? @relation(fields: [wardId], references: [id])
   length   Float?   // Chiều dài tổng tuyến (m)
   isActive Boolean @default(true)
+
+  htktDoiTuong htkt_doi_tuong[] // hồ sơ đường trong bảng trung tâm HTKT (mig 049)
 
   // Tài sản legacy
   assets          Asset[]
@@ -1658,6 +1668,8 @@ model ReportDuong {
   id            String             @id @default(cuid())
   wardId        String
   ward          AdministrativeUnit @relation("WardReportDuong", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year          Int
   stt           String?            // STT trong file gốc
   tenDuong      String             // Tên đường (bắt buộc)
@@ -1692,6 +1704,8 @@ model ReportDienCS {
   id             String             @id @default(cuid())
   wardId         String
   ward           AdministrativeUnit @relation("WardReportDienCS", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year           Int
   stt            String?
   tuyenDuong     String             // Tuyến đường (bắt buộc)
@@ -1723,6 +1737,8 @@ model ReportThoatNuoc {
   id             String             @id @default(cuid())
   wardId         String
   ward           AdministrativeUnit @relation("WardReportThoatNuoc", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year           Int
   stt            String?
   tuyen          String             // Tuyến (bắt buộc)
@@ -1755,6 +1771,8 @@ model ReportCayXanh {
   id            String             @id @default(cuid())
   wardId        String
   ward          AdministrativeUnit @relation("WardReportCayXanh", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year          Int
   stt           String?
   tuyen         String             // Tuyến (bắt buộc)
@@ -1785,6 +1803,8 @@ model ReportCongVien {
   id               String             @id @default(cuid())
   wardId           String
   ward             AdministrativeUnit @relation("WardReportCongVien", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year             Int
   stt              String?
   tenCongVien      String             // Tên công viên / quảng trường (bắt buộc)
@@ -1813,6 +1833,8 @@ model ReportCapNuoc {
   id             String             @id @default(cuid())
   wardId         String
   ward           AdministrativeUnit @relation("WardReportCapNuoc", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year           Int
   stt            String?
   tuyenDuong     String             // Tuyến đường / Thôn (bắt buộc)
@@ -1838,6 +1860,8 @@ model ReportBaiDoXe {
   id              String             @id @default(cuid())
   wardId          String
   ward            AdministrativeUnit @relation("WardReportBaiDoXe", fields: [wardId], references: [id])
+  doiTuongId    String?            // liên kết hồ sơ gốc trong bảng trung tâm htkt_doi_tuong (mig 049)
+  doiTuong      htkt_doi_tuong?    @relation(fields: [doiTuongId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   year            Int
   stt             String?
   tenBai          String             // Tên bãi đỗ xe (bắt buộc)
@@ -4242,4 +4266,74 @@ model cchn_lich_su {
   cchn_ho_so     cchn_ho_so @relation(fields: [ho_so_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([ho_so_id, thoi_diem(sort: Desc)], map: "idx_cchn_ls_ho_so")
+}
+
+// ─── BẢNG TRUNG TÂM ĐỐI TƯỢNG HẠ TẦNG KỸ THUẬT (hub) — migration 049 ─────────────────────────────────
+// Mọi đối tượng HTKT của xã/phường (đường, chiếu sáng, cây xanh, công viên, thoát nước mưa/thải/chung,
+// cấp nước, bãi đỗ xe) là MỘT dòng; liên kết theo MÃ XÃ (administrative_units.code). 7 Biểu mẫu report_*
+// trỏ về qua doiTuongId. so_hieu là cột GENERATED (CSDL tự tính) — KHÔNG ghi. Trigger fn_htkt_truoc_ghi tự cấp
+// ma_doi_tuong, kiểm dải số Đ5 QĐ 56/2025, tính chiều dài/diện tích/tâm GIS, ghi lịch sử số hiệu.
+model htkt_doi_tuong {
+  id                 String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  ma_doi_tuong       String    @unique @default(dbgenerated("NULL")) // trigger cấp <mã xã>-<LV>-<NNNN>
+  ma_xa              String
+  linh_vuc           String
+  ten                String?
+  tuyen_duong_id     String?
+  street_id          String?
+  cap_duong          String?
+  phan_loai_do_thi   String?
+  thon               String?
+  sh_so              Int?
+  sh_chu_cai         String?
+  so_hieu            String?
+  sh_trang_thai      String?
+  sh_so_qd           String?
+  sh_ngay_qd         DateTime? @db.Date
+  so_hieu_khac       String?
+  so_hieu_cu         String?
+  ten_cu             String?
+  diem_dau           String?
+  diem_cuoi          String?
+  vi_tri             String?
+  chieu_dai_m        Decimal?  @db.Decimal(12, 1)
+  be_rong_nen_m      Decimal?  @db.Decimal(6, 2)
+  be_rong_mat_m      Decimal?  @db.Decimal(6, 2)
+  ket_cau_mat        String?
+  dien_tich_m2       Decimal?  @db.Decimal(14, 1)
+  so_luong           Int?
+  nam_su_dung        Int?
+  tinh_trang         String?
+  don_vi_quan_ly     String?
+  de_xuat_dieu_chinh String?
+  thong_so           Json      @default("{}")
+  geometry           Json?
+  chieu_dai_gis_m    Decimal?  @db.Decimal(12, 1)
+  dien_tich_gis_m2   Decimal?  @db.Decimal(14, 1)
+  tam_lat            Decimal?  @db.Decimal(9, 6)
+  tam_lng            Decimal?  @db.Decimal(9, 6)
+  ngoai_ranh_pct     Decimal?  @db.Decimal(5, 1)
+  lich_su            Json      @default("[]")
+  ghi_chu            String?
+  created_by_id      String?
+  updated_by_id      String?
+  created_at         DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime  @default(now()) @db.Timestamptz(6)
+  deleted_at         DateTime? @db.Timestamptz(6)
+
+  xa                 AdministrativeUnit @relation(fields: [ma_xa], references: [code], onDelete: NoAction)
+  tuyen_duong        htkt_doi_tuong?    @relation("HtktTrenTuyen", fields: [tuyen_duong_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  doi_tuong_tren_tuyen htkt_doi_tuong[] @relation("HtktTrenTuyen")
+  street             Street?            @relation(fields: [street_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  report_duong       ReportDuong[]
+  report_dien_cs     ReportDienCS[]
+  report_thoat_nuoc  ReportThoatNuoc[]
+  report_cay_xanh    ReportCayXanh[]
+  report_cong_vien   ReportCongVien[]
+  report_cap_nuoc    ReportCapNuoc[]
+  report_bai_do_xe   ReportBaiDoXe[]
+
+  @@index([tuyen_duong_id], map: "idx_htkt_tuyen")
+  @@index([created_by_id], map: "idx_htkt_created")
+  @@index([updated_by_id], map: "idx_htkt_updated")
 }

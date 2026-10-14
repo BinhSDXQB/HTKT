@@ -49,6 +49,7 @@ export type ReportThoatNuocSumAggregateOutputType = {
 export type ReportThoatNuocMinAggregateOutputType = {
   id: string | null
   wardId: string | null
+  doiTuongId: string | null
   year: number | null
   stt: string | null
   tuyen: string | null
@@ -74,6 +75,7 @@ export type ReportThoatNuocMinAggregateOutputType = {
 export type ReportThoatNuocMaxAggregateOutputType = {
   id: string | null
   wardId: string | null
+  doiTuongId: string | null
   year: number | null
   stt: string | null
   tuyen: string | null
@@ -99,6 +101,7 @@ export type ReportThoatNuocMaxAggregateOutputType = {
 export type ReportThoatNuocCountAggregateOutputType = {
   id: number
   wardId: number
+  doiTuongId: number
   year: number
   stt: number
   tuyen: number
@@ -146,6 +149,7 @@ export type ReportThoatNuocSumAggregateInputType = {
 export type ReportThoatNuocMinAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tuyen?: true
@@ -171,6 +175,7 @@ export type ReportThoatNuocMinAggregateInputType = {
 export type ReportThoatNuocMaxAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tuyen?: true
@@ -196,6 +201,7 @@ export type ReportThoatNuocMaxAggregateInputType = {
 export type ReportThoatNuocCountAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tuyen?: true
@@ -308,6 +314,7 @@ export type ReportThoatNuocGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type ReportThoatNuocGroupByOutputType = {
   id: string
   wardId: string
+  doiTuongId: string | null
   year: number
   stt: string | null
   tuyen: string
@@ -356,6 +363,7 @@ export type ReportThoatNuocWhereInput = {
   NOT?: Prisma.ReportThoatNuocWhereInput | Prisma.ReportThoatNuocWhereInput[]
   id?: Prisma.StringFilter<"ReportThoatNuoc"> | string
   wardId?: Prisma.StringFilter<"ReportThoatNuoc"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportThoatNuoc"> | string | null
   year?: Prisma.IntFilter<"ReportThoatNuoc"> | number
   stt?: Prisma.StringNullableFilter<"ReportThoatNuoc"> | string | null
   tuyen?: Prisma.StringFilter<"ReportThoatNuoc"> | string
@@ -377,12 +385,14 @@ export type ReportThoatNuocWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ReportThoatNuoc"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReportThoatNuoc"> | Date | string
   ward?: Prisma.XOR<Prisma.AdministrativeUnitScalarRelationFilter, Prisma.AdministrativeUnitWhereInput>
+  doiTuong?: Prisma.XOR<Prisma.Htkt_doi_tuongNullableScalarRelationFilter, Prisma.htkt_doi_tuongWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type ReportThoatNuocOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrderInput | Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrderInput | Prisma.SortOrder
   tuyen?: Prisma.SortOrder
@@ -404,6 +414,7 @@ export type ReportThoatNuocOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   ward?: Prisma.AdministrativeUnitOrderByWithRelationInput
+  doiTuong?: Prisma.htkt_doi_tuongOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -413,6 +424,7 @@ export type ReportThoatNuocWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ReportThoatNuocWhereInput[]
   NOT?: Prisma.ReportThoatNuocWhereInput | Prisma.ReportThoatNuocWhereInput[]
   wardId?: Prisma.StringFilter<"ReportThoatNuoc"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportThoatNuoc"> | string | null
   year?: Prisma.IntFilter<"ReportThoatNuoc"> | number
   stt?: Prisma.StringNullableFilter<"ReportThoatNuoc"> | string | null
   tuyen?: Prisma.StringFilter<"ReportThoatNuoc"> | string
@@ -434,12 +446,14 @@ export type ReportThoatNuocWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ReportThoatNuoc"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReportThoatNuoc"> | Date | string
   ward?: Prisma.XOR<Prisma.AdministrativeUnitScalarRelationFilter, Prisma.AdministrativeUnitWhereInput>
+  doiTuong?: Prisma.XOR<Prisma.Htkt_doi_tuongNullableScalarRelationFilter, Prisma.htkt_doi_tuongWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type ReportThoatNuocOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrderInput | Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrderInput | Prisma.SortOrder
   tuyen?: Prisma.SortOrder
@@ -473,6 +487,7 @@ export type ReportThoatNuocScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ReportThoatNuocScalarWhereWithAggregatesInput | Prisma.ReportThoatNuocScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ReportThoatNuoc"> | string
   wardId?: Prisma.StringWithAggregatesFilter<"ReportThoatNuoc"> | string
+  doiTuongId?: Prisma.StringNullableWithAggregatesFilter<"ReportThoatNuoc"> | string | null
   year?: Prisma.IntWithAggregatesFilter<"ReportThoatNuoc"> | number
   stt?: Prisma.StringNullableWithAggregatesFilter<"ReportThoatNuoc"> | string | null
   tuyen?: Prisma.StringWithAggregatesFilter<"ReportThoatNuoc"> | string
@@ -517,12 +532,14 @@ export type ReportThoatNuocCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportThoatNuocInput
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_thoat_nuocInput
   createdBy: Prisma.UserCreateNestedOneWithoutReportThoatNuocInput
 }
 
 export type ReportThoatNuocUncheckedCreateInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyen: string
@@ -567,12 +584,14 @@ export type ReportThoatNuocUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportThoatNuocNestedInput
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_thoat_nuocNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReportThoatNuocNestedInput
 }
 
 export type ReportThoatNuocUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyen?: Prisma.StringFieldUpdateOperationsInput | string
@@ -598,6 +617,7 @@ export type ReportThoatNuocUncheckedUpdateInput = {
 export type ReportThoatNuocCreateManyInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyen: string
@@ -646,6 +666,7 @@ export type ReportThoatNuocUpdateManyMutationInput = {
 export type ReportThoatNuocUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyen?: Prisma.StringFieldUpdateOperationsInput | string
@@ -681,6 +702,7 @@ export type ReportThoatNuocOrderByRelationAggregateInput = {
 export type ReportThoatNuocCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tuyen?: Prisma.SortOrder
@@ -716,6 +738,7 @@ export type ReportThoatNuocAvgOrderByAggregateInput = {
 export type ReportThoatNuocMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tuyen?: Prisma.SortOrder
@@ -741,6 +764,7 @@ export type ReportThoatNuocMaxOrderByAggregateInput = {
 export type ReportThoatNuocMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tuyen?: Prisma.SortOrder
@@ -857,6 +881,48 @@ export type ReportThoatNuocUncheckedUpdateManyWithoutWardNestedInput = {
   deleteMany?: Prisma.ReportThoatNuocScalarWhereInput | Prisma.ReportThoatNuocScalarWhereInput[]
 }
 
+export type ReportThoatNuocCreateNestedManyWithoutDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.ReportThoatNuocCreateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportThoatNuocCreateWithoutDoiTuongInput[] | Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput | Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportThoatNuocCreateManyDoiTuongInputEnvelope
+  connect?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+}
+
+export type ReportThoatNuocUncheckedCreateNestedManyWithoutDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.ReportThoatNuocCreateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportThoatNuocCreateWithoutDoiTuongInput[] | Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput | Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportThoatNuocCreateManyDoiTuongInputEnvelope
+  connect?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+}
+
+export type ReportThoatNuocUpdateManyWithoutDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportThoatNuocCreateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportThoatNuocCreateWithoutDoiTuongInput[] | Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput | Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput[]
+  upsert?: Prisma.ReportThoatNuocUpsertWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportThoatNuocUpsertWithWhereUniqueWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportThoatNuocCreateManyDoiTuongInputEnvelope
+  set?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  disconnect?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  delete?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  connect?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  update?: Prisma.ReportThoatNuocUpdateWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportThoatNuocUpdateWithWhereUniqueWithoutDoiTuongInput[]
+  updateMany?: Prisma.ReportThoatNuocUpdateManyWithWhereWithoutDoiTuongInput | Prisma.ReportThoatNuocUpdateManyWithWhereWithoutDoiTuongInput[]
+  deleteMany?: Prisma.ReportThoatNuocScalarWhereInput | Prisma.ReportThoatNuocScalarWhereInput[]
+}
+
+export type ReportThoatNuocUncheckedUpdateManyWithoutDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportThoatNuocCreateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportThoatNuocCreateWithoutDoiTuongInput[] | Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput | Prisma.ReportThoatNuocCreateOrConnectWithoutDoiTuongInput[]
+  upsert?: Prisma.ReportThoatNuocUpsertWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportThoatNuocUpsertWithWhereUniqueWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportThoatNuocCreateManyDoiTuongInputEnvelope
+  set?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  disconnect?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  delete?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  connect?: Prisma.ReportThoatNuocWhereUniqueInput | Prisma.ReportThoatNuocWhereUniqueInput[]
+  update?: Prisma.ReportThoatNuocUpdateWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportThoatNuocUpdateWithWhereUniqueWithoutDoiTuongInput[]
+  updateMany?: Prisma.ReportThoatNuocUpdateManyWithWhereWithoutDoiTuongInput | Prisma.ReportThoatNuocUpdateManyWithWhereWithoutDoiTuongInput[]
+  deleteMany?: Prisma.ReportThoatNuocScalarWhereInput | Prisma.ReportThoatNuocScalarWhereInput[]
+}
+
 export type ReportThoatNuocCreateWithoutCreatedByInput = {
   id?: string
   year: number
@@ -879,11 +945,13 @@ export type ReportThoatNuocCreateWithoutCreatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportThoatNuocInput
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_thoat_nuocInput
 }
 
 export type ReportThoatNuocUncheckedCreateWithoutCreatedByInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyen: string
@@ -937,6 +1005,7 @@ export type ReportThoatNuocScalarWhereInput = {
   NOT?: Prisma.ReportThoatNuocScalarWhereInput | Prisma.ReportThoatNuocScalarWhereInput[]
   id?: Prisma.StringFilter<"ReportThoatNuoc"> | string
   wardId?: Prisma.StringFilter<"ReportThoatNuoc"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportThoatNuoc"> | string | null
   year?: Prisma.IntFilter<"ReportThoatNuoc"> | number
   stt?: Prisma.StringNullableFilter<"ReportThoatNuoc"> | string | null
   tuyen?: Prisma.StringFilter<"ReportThoatNuoc"> | string
@@ -980,11 +1049,13 @@ export type ReportThoatNuocCreateWithoutWardInput = {
   sourceFile?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_thoat_nuocInput
   createdBy: Prisma.UserCreateNestedOneWithoutReportThoatNuocInput
 }
 
 export type ReportThoatNuocUncheckedCreateWithoutWardInput = {
   id?: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyen: string
@@ -1033,9 +1104,86 @@ export type ReportThoatNuocUpdateManyWithWhereWithoutWardInput = {
   data: Prisma.XOR<Prisma.ReportThoatNuocUpdateManyMutationInput, Prisma.ReportThoatNuocUncheckedUpdateManyWithoutWardInput>
 }
 
+export type ReportThoatNuocCreateWithoutDoiTuongInput = {
+  id?: string
+  year: number
+  stt?: string | null
+  tuyen: string
+  diemDau?: string | null
+  diemCuoi?: string | null
+  loaiNuoc?: string | null
+  chieuDaiM?: number | null
+  chieuSangPhia?: string | null
+  kichThuocCong?: string | null
+  namSuDung?: number | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportThoatNuocInput
+  createdBy: Prisma.UserCreateNestedOneWithoutReportThoatNuocInput
+}
+
+export type ReportThoatNuocUncheckedCreateWithoutDoiTuongInput = {
+  id?: string
+  wardId: string
+  year: number
+  stt?: string | null
+  tuyen: string
+  diemDau?: string | null
+  diemCuoi?: string | null
+  loaiNuoc?: string | null
+  chieuDaiM?: number | null
+  chieuSangPhia?: string | null
+  kichThuocCong?: string | null
+  namSuDung?: number | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportThoatNuocCreateOrConnectWithoutDoiTuongInput = {
+  where: Prisma.ReportThoatNuocWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportThoatNuocCreateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput>
+}
+
+export type ReportThoatNuocCreateManyDoiTuongInputEnvelope = {
+  data: Prisma.ReportThoatNuocCreateManyDoiTuongInput | Prisma.ReportThoatNuocCreateManyDoiTuongInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReportThoatNuocUpsertWithWhereUniqueWithoutDoiTuongInput = {
+  where: Prisma.ReportThoatNuocWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReportThoatNuocUpdateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedUpdateWithoutDoiTuongInput>
+  create: Prisma.XOR<Prisma.ReportThoatNuocCreateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedCreateWithoutDoiTuongInput>
+}
+
+export type ReportThoatNuocUpdateWithWhereUniqueWithoutDoiTuongInput = {
+  where: Prisma.ReportThoatNuocWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReportThoatNuocUpdateWithoutDoiTuongInput, Prisma.ReportThoatNuocUncheckedUpdateWithoutDoiTuongInput>
+}
+
+export type ReportThoatNuocUpdateManyWithWhereWithoutDoiTuongInput = {
+  where: Prisma.ReportThoatNuocScalarWhereInput
+  data: Prisma.XOR<Prisma.ReportThoatNuocUpdateManyMutationInput, Prisma.ReportThoatNuocUncheckedUpdateManyWithoutDoiTuongInput>
+}
+
 export type ReportThoatNuocCreateManyCreatedByInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyen: string
@@ -1079,11 +1227,13 @@ export type ReportThoatNuocUpdateWithoutCreatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportThoatNuocNestedInput
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_thoat_nuocNestedInput
 }
 
 export type ReportThoatNuocUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyen?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1108,6 +1258,7 @@ export type ReportThoatNuocUncheckedUpdateWithoutCreatedByInput = {
 export type ReportThoatNuocUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyen?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1131,6 +1282,7 @@ export type ReportThoatNuocUncheckedUpdateManyWithoutCreatedByInput = {
 
 export type ReportThoatNuocCreateManyWardInput = {
   id?: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyen: string
@@ -1174,11 +1326,13 @@ export type ReportThoatNuocUpdateWithoutWardInput = {
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_thoat_nuocNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReportThoatNuocNestedInput
 }
 
 export type ReportThoatNuocUncheckedUpdateWithoutWardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyen?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1203,6 +1357,107 @@ export type ReportThoatNuocUncheckedUpdateWithoutWardInput = {
 
 export type ReportThoatNuocUncheckedUpdateManyWithoutWardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tuyen?: Prisma.StringFieldUpdateOperationsInput | string
+  diemDau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diemCuoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiNuoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chieuDaiM?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kichThuocCong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namSuDung?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReportThoatNuocCreateManyDoiTuongInput = {
+  id?: string
+  wardId: string
+  year: number
+  stt?: string | null
+  tuyen: string
+  diemDau?: string | null
+  diemCuoi?: string | null
+  loaiNuoc?: string | null
+  chieuDaiM?: number | null
+  chieuSangPhia?: string | null
+  kichThuocCong?: string | null
+  namSuDung?: number | null
+  toaDoDauLat?: number | null
+  toaDoDauLng?: number | null
+  toaDoCuoiLat?: number | null
+  toaDoCuoiLng?: number | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportThoatNuocUpdateWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tuyen?: Prisma.StringFieldUpdateOperationsInput | string
+  diemDau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diemCuoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiNuoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chieuDaiM?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kichThuocCong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namSuDung?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportThoatNuocNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutReportThoatNuocNestedInput
+}
+
+export type ReportThoatNuocUncheckedUpdateWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tuyen?: Prisma.StringFieldUpdateOperationsInput | string
+  diemDau?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diemCuoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiNuoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chieuDaiM?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kichThuocCong?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namSuDung?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  toaDoDauLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoDauLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoCuoiLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReportThoatNuocUncheckedUpdateManyWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyen?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1230,6 +1485,7 @@ export type ReportThoatNuocUncheckedUpdateManyWithoutWardInput = {
 export type ReportThoatNuocSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyen?: boolean
@@ -1251,12 +1507,14 @@ export type ReportThoatNuocSelect<ExtArgs extends runtime.Types.Extensions.Inter
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportThoatNuoc"]>
 
 export type ReportThoatNuocSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyen?: boolean
@@ -1278,12 +1536,14 @@ export type ReportThoatNuocSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportThoatNuoc"]>
 
 export type ReportThoatNuocSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyen?: boolean
@@ -1305,12 +1565,14 @@ export type ReportThoatNuocSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportThoatNuoc"]>
 
 export type ReportThoatNuocSelectScalar = {
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyen?: boolean
@@ -1333,17 +1595,20 @@ export type ReportThoatNuocSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReportThoatNuocOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "year" | "stt" | "tuyen" | "diemDau" | "diemCuoi" | "loaiNuoc" | "chieuDaiM" | "chieuSangPhia" | "kichThuocCong" | "namSuDung" | "toaDoDauLat" | "toaDoDauLng" | "toaDoCuoiLat" | "toaDoCuoiLng" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportThoatNuoc"]>
+export type ReportThoatNuocOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "doiTuongId" | "year" | "stt" | "tuyen" | "diemDau" | "diemCuoi" | "loaiNuoc" | "chieuDaiM" | "chieuSangPhia" | "kichThuocCong" | "namSuDung" | "toaDoDauLat" | "toaDoDauLng" | "toaDoCuoiLat" | "toaDoCuoiLng" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportThoatNuoc"]>
 export type ReportThoatNuocInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ReportThoatNuocIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ReportThoatNuocIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1351,11 +1616,13 @@ export type $ReportThoatNuocPayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "ReportThoatNuoc"
   objects: {
     ward: Prisma.$AdministrativeUnitPayload<ExtArgs>
+    doiTuong: Prisma.$htkt_doi_tuongPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     wardId: string
+    doiTuongId: string | null
     year: number
     stt: string | null
     tuyen: string
@@ -1771,6 +2038,7 @@ readonly fields: ReportThoatNuocFieldRefs;
 export interface Prisma__ReportThoatNuocClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   ward<T extends Prisma.AdministrativeUnitDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnitDefaultArgs<ExtArgs>>): Prisma.Prisma__AdministrativeUnitClient<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  doiTuong<T extends Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReportThoatNuoc$doiTuongArgs<ExtArgs>>): Prisma.Prisma__htkt_doi_tuongClient<runtime.Types.Result.GetResult<Prisma.$htkt_doi_tuongPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1803,6 +2071,7 @@ export interface Prisma__ReportThoatNuocClient<T, Null = never, ExtArgs extends 
 export interface ReportThoatNuocFieldRefs {
   readonly id: Prisma.FieldRef<"ReportThoatNuoc", 'String'>
   readonly wardId: Prisma.FieldRef<"ReportThoatNuoc", 'String'>
+  readonly doiTuongId: Prisma.FieldRef<"ReportThoatNuoc", 'String'>
   readonly year: Prisma.FieldRef<"ReportThoatNuoc", 'Int'>
   readonly stt: Prisma.FieldRef<"ReportThoatNuoc", 'String'>
   readonly tuyen: Prisma.FieldRef<"ReportThoatNuoc", 'String'>
@@ -2221,6 +2490,25 @@ export type ReportThoatNuocDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many ReportThoatNuocs to delete.
    */
   limit?: number
+}
+
+/**
+ * ReportThoatNuoc.doiTuong
+ */
+export type ReportThoatNuoc$doiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the htkt_doi_tuong
+   */
+  select?: Prisma.htkt_doi_tuongSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the htkt_doi_tuong
+   */
+  omit?: Prisma.htkt_doi_tuongOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.htkt_doi_tuongInclude<ExtArgs> | null
+  where?: Prisma.htkt_doi_tuongWhereInput
 }
 
 /**

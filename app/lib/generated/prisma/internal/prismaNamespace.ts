@@ -523,7 +523,8 @@ export const ModelName = {
   ThanhTichCon: 'ThanhTichCon',
   cchn_ho_so: 'cchn_ho_so',
   cchn_kinh_nghiem: 'cchn_kinh_nghiem',
-  cchn_lich_su: 'cchn_lich_su'
+  cchn_lich_su: 'cchn_lich_su',
+  htkt_doi_tuong: 'htkt_doi_tuong'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -539,7 +540,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "permission" | "rolePermission" | "auditLog" | "administrativeUnit" | "lanhDaoXa" | "street" | "assetType" | "executingUnit" | "denChieuSang" | "cayXanhDuong" | "hoGa" | "congThoatNuoc" | "ongCapNuoc" | "vanCapNuoc" | "capVienThong" | "viaHe" | "tuyenMangLuoi" | "doanTuyenCong" | "doanTuyenOng" | "nhaMayXuLyNuocThai" | "tramBom" | "asset" | "maintenanceSchedule" | "inspectionTemplate" | "inspectionTemplateItem" | "inspection" | "inspectionResult" | "incident" | "workOrder" | "workOrderMaterial" | "project" | "projectMilestone" | "materialCategory" | "material" | "stockTransaction" | "systemAlert" | "assetImportBatch" | "integrationConfig" | "integrationLog" | "chatbotLog" | "toChuc" | "chucDanh" | "phanCong" | "canBo" | "reportDuong" | "reportDienCS" | "reportThoatNuoc" | "reportCayXanh" | "reportCongVien" | "reportCapNuoc" | "reportBaiDoXe" | "wardReport" | "wardGisLength" | "wardKhaiBao" | "facilityConfig" | "officeSalaryHistory" | "officeWorkHistory" | "officeSalaryRule" | "officeRewardTitle" | "officeEmulationMovement" | "officeRewardRecord" | "officeCollectiveRewardRecord" | "officeAnnualEvaluation" | "officeDisciplineRecord" | "officeSalaryReviewCase" | "officeGeneratedDocument" | "officeLeaveRequest" | "officeLeaveSignature" | "permitVehicle" | "oversizedVehiclePermit" | "permitRoute" | "roadConnectionApplication" | "roadConnectionLocation" | "roadConnectionInspection" | "roadConnectionPermit" | "roadLegalReference" | "roadPermitStatusLog" | "overtimeTimesheet" | "overtimeSignature" | "overtimeEntry" | "bimModel" | "bimModelVersion" | "bimFile" | "bimValidationCheck" | "bimConsistencyReview" | "bimViewPermission" | "taiLieu" | "taiLieuChunk" | "congViecLoai" | "congViec" | "congViecThanhVien" | "congViecNhatKy" | "congViecCheckList" | "lichCaNhan" | "nghiepVuBanGhi" | "phanCongLinhVuc" | "phanCongDinhKy" | "dsDuAnGpmb" | "dsDuAnThanhPhan" | "dsKeHoachVon" | "dsLienHe" | "httt_dinh_danh" | "httt_dong_bo_log" | "httt_nang_luc_ca_nhan" | "httt_nang_luc_to_chuc" | "qd72_administrative_unit_assignments" | "qd72_attachments" | "qd72_clearance_measurements" | "qd72_comments" | "qd72_fire_hydrants" | "qd72_fire_parking_areas" | "qd72_legal_documents" | "qd72_overhead_utility_lines" | "qd72_passing_bays" | "qd72_public_lighting_assets" | "qd72_renovation_plans" | "qd72_renovation_tasks" | "qd72_road_obstacles" | "qd72_road_segments" | "qd72_shared_technical_infrastructure" | "qd72_survey_cases" | "qd72_technical_rules" | "qd72_undergrounding_proposals" | "qd72_urban_areas" | "qd72_utility_crossings" | "qd72_utility_owners" | "qd72_utility_poles" | "qd72_verification_items" | "qd72_verification_records" | "qd72_water_intake_points" | "qd72_water_sources" | "qd72_water_test_results" | "qd72_workflow_history" | "conCanBo" | "thanhTichCon" | "cchn_ho_so" | "cchn_kinh_nghiem" | "cchn_lich_su"
+    modelProps: "user" | "role" | "permission" | "rolePermission" | "auditLog" | "administrativeUnit" | "lanhDaoXa" | "street" | "assetType" | "executingUnit" | "denChieuSang" | "cayXanhDuong" | "hoGa" | "congThoatNuoc" | "ongCapNuoc" | "vanCapNuoc" | "capVienThong" | "viaHe" | "tuyenMangLuoi" | "doanTuyenCong" | "doanTuyenOng" | "nhaMayXuLyNuocThai" | "tramBom" | "asset" | "maintenanceSchedule" | "inspectionTemplate" | "inspectionTemplateItem" | "inspection" | "inspectionResult" | "incident" | "workOrder" | "workOrderMaterial" | "project" | "projectMilestone" | "materialCategory" | "material" | "stockTransaction" | "systemAlert" | "assetImportBatch" | "integrationConfig" | "integrationLog" | "chatbotLog" | "toChuc" | "chucDanh" | "phanCong" | "canBo" | "reportDuong" | "reportDienCS" | "reportThoatNuoc" | "reportCayXanh" | "reportCongVien" | "reportCapNuoc" | "reportBaiDoXe" | "wardReport" | "wardGisLength" | "wardKhaiBao" | "facilityConfig" | "officeSalaryHistory" | "officeWorkHistory" | "officeSalaryRule" | "officeRewardTitle" | "officeEmulationMovement" | "officeRewardRecord" | "officeCollectiveRewardRecord" | "officeAnnualEvaluation" | "officeDisciplineRecord" | "officeSalaryReviewCase" | "officeGeneratedDocument" | "officeLeaveRequest" | "officeLeaveSignature" | "permitVehicle" | "oversizedVehiclePermit" | "permitRoute" | "roadConnectionApplication" | "roadConnectionLocation" | "roadConnectionInspection" | "roadConnectionPermit" | "roadLegalReference" | "roadPermitStatusLog" | "overtimeTimesheet" | "overtimeSignature" | "overtimeEntry" | "bimModel" | "bimModelVersion" | "bimFile" | "bimValidationCheck" | "bimConsistencyReview" | "bimViewPermission" | "taiLieu" | "taiLieuChunk" | "congViecLoai" | "congViec" | "congViecThanhVien" | "congViecNhatKy" | "congViecCheckList" | "lichCaNhan" | "nghiepVuBanGhi" | "phanCongLinhVuc" | "phanCongDinhKy" | "dsDuAnGpmb" | "dsDuAnThanhPhan" | "dsKeHoachVon" | "dsLienHe" | "httt_dinh_danh" | "httt_dong_bo_log" | "httt_nang_luc_ca_nhan" | "httt_nang_luc_to_chuc" | "qd72_administrative_unit_assignments" | "qd72_attachments" | "qd72_clearance_measurements" | "qd72_comments" | "qd72_fire_hydrants" | "qd72_fire_parking_areas" | "qd72_legal_documents" | "qd72_overhead_utility_lines" | "qd72_passing_bays" | "qd72_public_lighting_assets" | "qd72_renovation_plans" | "qd72_renovation_tasks" | "qd72_road_obstacles" | "qd72_road_segments" | "qd72_shared_technical_infrastructure" | "qd72_survey_cases" | "qd72_technical_rules" | "qd72_undergrounding_proposals" | "qd72_urban_areas" | "qd72_utility_crossings" | "qd72_utility_owners" | "qd72_utility_poles" | "qd72_verification_items" | "qd72_verification_records" | "qd72_water_intake_points" | "qd72_water_sources" | "qd72_water_test_results" | "qd72_workflow_history" | "conCanBo" | "thanhTichCon" | "cchn_ho_so" | "cchn_kinh_nghiem" | "cchn_lich_su" | "htkt_doi_tuong"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -10903,6 +10904,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    htkt_doi_tuong: {
+      payload: Prisma.$htkt_doi_tuongPayload<ExtArgs>
+      fields: Prisma.htkt_doi_tuongFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.htkt_doi_tuongFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.htkt_doi_tuongFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>
+        }
+        findFirst: {
+          args: Prisma.htkt_doi_tuongFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.htkt_doi_tuongFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>
+        }
+        findMany: {
+          args: Prisma.htkt_doi_tuongFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>[]
+        }
+        create: {
+          args: Prisma.htkt_doi_tuongCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>
+        }
+        createMany: {
+          args: Prisma.htkt_doi_tuongCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.htkt_doi_tuongCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>[]
+        }
+        delete: {
+          args: Prisma.htkt_doi_tuongDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>
+        }
+        update: {
+          args: Prisma.htkt_doi_tuongUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>
+        }
+        deleteMany: {
+          args: Prisma.htkt_doi_tuongDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.htkt_doi_tuongUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.htkt_doi_tuongUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>[]
+        }
+        upsert: {
+          args: Prisma.htkt_doi_tuongUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$htkt_doi_tuongPayload>
+        }
+        aggregate: {
+          args: Prisma.Htkt_doi_tuongAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHtkt_doi_tuong>
+        }
+        groupBy: {
+          args: Prisma.htkt_doi_tuongGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Htkt_doi_tuongGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.htkt_doi_tuongCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Htkt_doi_tuongCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -11026,7 +11101,12 @@ export const AdministrativeUnitScalarFieldEnum = {
   trungTamHc: 'trungTamHc',
   truocSapNhap: 'truocSapNhap',
   huyenThiCu: 'huyenThiCu',
-  vungLoi: 'vungLoi'
+  vungLoi: 'vungLoi',
+  soHieuDxTu: 'soHieuDxTu',
+  soHieuDxDen: 'soHieuDxDen',
+  soHieuDthTu: 'soHieuDthTu',
+  soHieuDthDen: 'soHieuDthDen',
+  soHieuCanCu: 'soHieuCanCu'
 } as const
 
 export type AdministrativeUnitScalarFieldEnum = (typeof AdministrativeUnitScalarFieldEnum)[keyof typeof AdministrativeUnitScalarFieldEnum]
@@ -11936,6 +12016,7 @@ export type CanBoScalarFieldEnum = (typeof CanBoScalarFieldEnum)[keyof typeof Ca
 export const ReportDuongScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tenDuong: 'tenDuong',
@@ -11966,6 +12047,7 @@ export type ReportDuongScalarFieldEnum = (typeof ReportDuongScalarFieldEnum)[key
 export const ReportDienCSScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyenDuong: 'tuyenDuong',
@@ -11992,6 +12074,7 @@ export type ReportDienCSScalarFieldEnum = (typeof ReportDienCSScalarFieldEnum)[k
 export const ReportThoatNuocScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyen: 'tuyen',
@@ -12020,6 +12103,7 @@ export type ReportThoatNuocScalarFieldEnum = (typeof ReportThoatNuocScalarFieldE
 export const ReportCayXanhScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyen: 'tuyen',
@@ -12046,6 +12130,7 @@ export type ReportCayXanhScalarFieldEnum = (typeof ReportCayXanhScalarFieldEnum)
 export const ReportCongVienScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tenCongVien: 'tenCongVien',
@@ -12070,6 +12155,7 @@ export type ReportCongVienScalarFieldEnum = (typeof ReportCongVienScalarFieldEnu
 export const ReportCapNuocScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyenDuong: 'tuyenDuong',
@@ -12091,6 +12177,7 @@ export type ReportCapNuocScalarFieldEnum = (typeof ReportCapNuocScalarFieldEnum)
 export const ReportBaiDoXeScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tenBai: 'tenBai',
@@ -13915,6 +14002,58 @@ export const Cchn_lich_suScalarFieldEnum = {
 export type Cchn_lich_suScalarFieldEnum = (typeof Cchn_lich_suScalarFieldEnum)[keyof typeof Cchn_lich_suScalarFieldEnum]
 
 
+export const Htkt_doi_tuongScalarFieldEnum = {
+  id: 'id',
+  ma_doi_tuong: 'ma_doi_tuong',
+  ma_xa: 'ma_xa',
+  linh_vuc: 'linh_vuc',
+  ten: 'ten',
+  tuyen_duong_id: 'tuyen_duong_id',
+  street_id: 'street_id',
+  cap_duong: 'cap_duong',
+  phan_loai_do_thi: 'phan_loai_do_thi',
+  thon: 'thon',
+  sh_so: 'sh_so',
+  sh_chu_cai: 'sh_chu_cai',
+  so_hieu: 'so_hieu',
+  sh_trang_thai: 'sh_trang_thai',
+  sh_so_qd: 'sh_so_qd',
+  sh_ngay_qd: 'sh_ngay_qd',
+  so_hieu_khac: 'so_hieu_khac',
+  so_hieu_cu: 'so_hieu_cu',
+  ten_cu: 'ten_cu',
+  diem_dau: 'diem_dau',
+  diem_cuoi: 'diem_cuoi',
+  vi_tri: 'vi_tri',
+  chieu_dai_m: 'chieu_dai_m',
+  be_rong_nen_m: 'be_rong_nen_m',
+  be_rong_mat_m: 'be_rong_mat_m',
+  ket_cau_mat: 'ket_cau_mat',
+  dien_tich_m2: 'dien_tich_m2',
+  so_luong: 'so_luong',
+  nam_su_dung: 'nam_su_dung',
+  tinh_trang: 'tinh_trang',
+  don_vi_quan_ly: 'don_vi_quan_ly',
+  de_xuat_dieu_chinh: 'de_xuat_dieu_chinh',
+  thong_so: 'thong_so',
+  geometry: 'geometry',
+  chieu_dai_gis_m: 'chieu_dai_gis_m',
+  dien_tich_gis_m2: 'dien_tich_gis_m2',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  ngoai_ranh_pct: 'ngoai_ranh_pct',
+  lich_su: 'lich_su',
+  ghi_chu: 'ghi_chu',
+  created_by_id: 'created_by_id',
+  updated_by_id: 'updated_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Htkt_doi_tuongScalarFieldEnum = (typeof Htkt_doi_tuongScalarFieldEnum)[keyof typeof Htkt_doi_tuongScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -15051,6 +15190,7 @@ export type GlobalOmitConfig = {
   cchn_ho_so?: Prisma.cchn_ho_soOmit
   cchn_kinh_nghiem?: Prisma.cchn_kinh_nghiemOmit
   cchn_lich_su?: Prisma.cchn_lich_suOmit
+  htkt_doi_tuong?: Prisma.htkt_doi_tuongOmit
 }
 
 /* Types for Logging */

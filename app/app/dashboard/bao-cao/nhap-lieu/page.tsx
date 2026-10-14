@@ -42,6 +42,20 @@ export default async function NhapLieuPage() {
         <p className="text-slate-600 mt-2">Chọn biểu mẫu để nhập dữ liệu</p>
       </div>
 
+      <Link
+        href="/dashboard/bao-cao/ha-tang-xa"
+        className="mb-6 flex items-center justify-between gap-4 p-5 rounded-xl border border-blue-200 bg-blue-50 hover:shadow-md transition-shadow"
+      >
+        <div>
+          <h3 className="text-lg font-bold text-slate-900">🔗 Hồ sơ HTKT liên kết & số hiệu đường xã, đường thôn</h3>
+          <p className="text-sm text-slate-600 mt-1">
+            Mỗi tuyến đường, tuyến chiếu sáng, cây xanh, công viên, cống thoát nước… có một mã định danh; số hiệu “ĐX.”/“Đth.” theo
+            Điều 5 QĐ 56/2025/QĐ-UBND; vẽ trên bản đồ; nạp từ các biểu mẫu dưới đây; tải Excel lưu trữ.
+          </p>
+        </div>
+        <span className="text-blue-700 text-sm whitespace-nowrap">Mở →</span>
+      </Link>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map(({ category, label, color }) => (
           <Link
