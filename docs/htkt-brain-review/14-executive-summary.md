@@ -101,7 +101,7 @@ Chi phí AI vận hành **chưa đo được** vì chatbot chưa ghi số token 
 | Q4 | Nhạy cảm qua chatbot: **CCCD + ngày sinh + lương** (hệ số, phụ cấp, vượt khung, ngày nâng lương); SĐT/email công vụ vẫn tra được | B0 mục 2 |
 | Q5 | **Cho phép engine thuê bao cá nhân cả production** | ⚠ Rủi ro điều khoản dịch vụ nhà cung cấp và tính liên tục (tài khoản cá nhân có thể bị khoá/hết hạn). Quy chế Q3 **áp dụng cả cho engine này** — dữ liệu nhân sự định danh không đi qua |
 | Q6 | **Dùng thử Javis trên máy riêng** | Không kết nối dữ liệu QL-HTKT cho tới khi có MCP chỉ-đọc (B5); áp biện pháp ở 10 §3 (tắt plugin người dùng, ghim phiên bản, không đặt bí mật QL-HTKT trên máy đó) |
-| Q7 | **Thuê VPS ngay** | Chờ chủ hệ thống cung cấp nhà cung cấp + ngân sách |
+| Q7 | **Thuê VPS ngay** — nhà cung cấp: **Công ty TNHH Giải Pháp Hạ Tầng Mạng Bầu Trời Xanh** (BNIX, MST 0317757991) | Chọn DC tại Việt Nam; chỉ dữ liệu ẩn danh trên VPS; câu hỏi cho nhà cung cấp + cấu hình đề xuất: `B0-staging-vps.md`. Chờ báo giá |
 | Q8 | **Chưa xác định** người ký đáp án pháp lý | B2 chỉ làm phần kỹ thuật; Legal Agent giữ nhãn "chưa kiểm chứng"; dữ liệu hiệu lực vẫn là "nháp" |
 | Q9 | Trưởng phòng theo lĩnh vực duyệt tri thức | B4 |
 | Q10 | **Ngưỡng chặt hơn** — tạm áp ≥ 98 % cho trích dẫn, phiên bản, hiệu lực, thẩm quyền (chủ hệ thống có thể chỉnh) | 12 §3 |

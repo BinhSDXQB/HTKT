@@ -152,6 +152,10 @@ flowchart TB
 ```powershell
 # Phần cứng, hệ điều hành
 Get-ComputerInfo -Property OsName,OsVersion,CsTotalPhysicalMemory,CsNumberOfLogicalProcessors
+# Phiên bản phần mềm (để dựng staging giống production — B0-staging-vps.md §3)
+node -v ; pm2 -v ; psql --version
+psql -U postgres -d ql_htkt -Atc "select extversion from pg_extension where extname='vector'"
+Get-Content C:\Troly\HTKT\app\node_modules\@prisma\client\package.json | Select-String '"version"'
 Get-PSDrive -PSProvider FileSystem | Select Name,Used,Free
 Get-Counter '\Memory\Available MBytes'
 # Dịch vụ, tiến trình
