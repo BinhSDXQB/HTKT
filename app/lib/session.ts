@@ -2,6 +2,7 @@ import 'server-only'
 
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
+import { cookieSecure } from './cookie-an-toan'
 
 export type SessionPayload = {
   userId: string
@@ -49,7 +50,7 @@ export async function createSession(payload: SessionPayload): Promise<void> {
   const cookieStore = await cookies()
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.COOKIE_SECURE === 'true',
+    secure: cookieSecure(process.env),
     sameSite: 'lax',
     path: '/',
     maxAge: SESSION_DURATION_HOURS * 60 * 60,

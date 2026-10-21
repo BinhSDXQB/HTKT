@@ -20,15 +20,14 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-
-const WEBHOOK_TOKEN = process.env.WEBHOOK_SECRET ?? 'htkt-webhook-2025'
+import { layTokenTuHeader, xacThucWebhook } from '@/lib/webhook-auth'
 
 export async function POST(req: NextRequest) {
-  // Xác thực token
-  const auth = req.headers.get('Authorization') ?? req.headers.get('X-API-Key') ?? ''
-  const token = auth.replace('Bearer ', '').trim()
-  if (token !== WEBHOOK_TOKEN) {
-    return NextResponse.json({ error: 'Unauthorized — sai API token' }, { status: 401 })
+  // Xác thực token — KHÔNG có token dự phòng: thiếu WEBHOOK_SECRET thì từ chối (lib/webhook-auth.ts)
+  const token = layTokenTuHeader(req.headers.get('Authorization'), req.headers.get('X-API-Key'))
+  const xt = xacThucWebhook(token, process.env.WEBHOOK_SECRET)
+  if (!xt.ok) {
+    return NextResponse.json({ error: xt.loi }, { status: xt.status })
   }
 
   let body: Record<string, unknown>
@@ -126,18 +125,19 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/** GET /api/webhook/infrastructure — Thông tin cấu hình webhook */
+/**
+ * GET /api/webhook/infrastructure — mô tả giao thức cho bên tích hợp.
+ * Công khai nên TUYỆT ĐỐI không trả giá trị token hay cho biết máy chủ đã cấu hình secret hay chưa.
+ */
 export async function GET() {
   return NextResponse.json({
-    status: 'active',
     endpoint: '/api/webhook/infrastructure',
     method: 'POST',
-    auth: 'Bearer <WEBHOOK_SECRET> header',
-    env_var: 'WEBHOOK_SECRET (mặc định: htkt-webhook-2025)',
+    auth: 'Header "Authorization: Bearer <token do quản trị cấp>"',
     supportedTypes: ['TRAM_BOM', 'NHA_MAY_XU_LY'],
     example: {
       url: 'https://qlhtkt.htkt.com.vn/api/webhook/infrastructure',
-      headers: { 'Authorization': 'Bearer htkt-webhook-2025', 'Content-Type': 'application/json' },
+      headers: { 'Authorization': 'Bearer <token do quản trị cấp>', 'Content-Type': 'application/json' },
       body: {
         source: 'SCADA_STATION_01',
         type: 'TRAM_BOM',

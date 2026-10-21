@@ -1385,6 +1385,11 @@ model ChatbotLog {
   question    String           @db.Text
   answer      String           @db.Text
   toolsUsed   String[]                           // tên các tool đã gọi
+  // Đo chi phí AI thật (mig 049) — null = lượt không gọi AI / ghi trước mig 049
+  model            String?
+  promptTokens     Int?
+  completionTokens Int?
+  soLanGoi         Int?                          // số lần gọi API trong lượt (vòng tool)
   feedback    ChatbotFeedback?                   // null = chưa đánh giá
   feedbackAt  DateTime?
   createdAt   DateTime         @default(now())

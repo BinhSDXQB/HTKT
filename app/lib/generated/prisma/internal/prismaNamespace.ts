@@ -11802,6 +11802,10 @@ export const ChatbotLogScalarFieldEnum = {
   question: 'question',
   answer: 'answer',
   toolsUsed: 'toolsUsed',
+  model: 'model',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  soLanGoi: 'soLanGoi',
   feedback: 'feedback',
   feedbackAt: 'feedbackAt',
   createdAt: 'createdAt'

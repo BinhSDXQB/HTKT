@@ -20,8 +20,22 @@ export type ChatbotLogModel = runtime.Types.Result.DefaultSelection<Prisma.$Chat
 
 export type AggregateChatbotLog = {
   _count: ChatbotLogCountAggregateOutputType | null
+  _avg: ChatbotLogAvgAggregateOutputType | null
+  _sum: ChatbotLogSumAggregateOutputType | null
   _min: ChatbotLogMinAggregateOutputType | null
   _max: ChatbotLogMaxAggregateOutputType | null
+}
+
+export type ChatbotLogAvgAggregateOutputType = {
+  promptTokens: number | null
+  completionTokens: number | null
+  soLanGoi: number | null
+}
+
+export type ChatbotLogSumAggregateOutputType = {
+  promptTokens: number | null
+  completionTokens: number | null
+  soLanGoi: number | null
 }
 
 export type ChatbotLogMinAggregateOutputType = {
@@ -30,6 +44,10 @@ export type ChatbotLogMinAggregateOutputType = {
   isWardUser: boolean | null
   question: string | null
   answer: string | null
+  model: string | null
+  promptTokens: number | null
+  completionTokens: number | null
+  soLanGoi: number | null
   feedback: $Enums.ChatbotFeedback | null
   feedbackAt: Date | null
   createdAt: Date | null
@@ -41,6 +59,10 @@ export type ChatbotLogMaxAggregateOutputType = {
   isWardUser: boolean | null
   question: string | null
   answer: string | null
+  model: string | null
+  promptTokens: number | null
+  completionTokens: number | null
+  soLanGoi: number | null
   feedback: $Enums.ChatbotFeedback | null
   feedbackAt: Date | null
   createdAt: Date | null
@@ -53,6 +75,10 @@ export type ChatbotLogCountAggregateOutputType = {
   question: number
   answer: number
   toolsUsed: number
+  model: number
+  promptTokens: number
+  completionTokens: number
+  soLanGoi: number
   feedback: number
   feedbackAt: number
   createdAt: number
@@ -60,12 +86,28 @@ export type ChatbotLogCountAggregateOutputType = {
 }
 
 
+export type ChatbotLogAvgAggregateInputType = {
+  promptTokens?: true
+  completionTokens?: true
+  soLanGoi?: true
+}
+
+export type ChatbotLogSumAggregateInputType = {
+  promptTokens?: true
+  completionTokens?: true
+  soLanGoi?: true
+}
+
 export type ChatbotLogMinAggregateInputType = {
   id?: true
   userId?: true
   isWardUser?: true
   question?: true
   answer?: true
+  model?: true
+  promptTokens?: true
+  completionTokens?: true
+  soLanGoi?: true
   feedback?: true
   feedbackAt?: true
   createdAt?: true
@@ -77,6 +119,10 @@ export type ChatbotLogMaxAggregateInputType = {
   isWardUser?: true
   question?: true
   answer?: true
+  model?: true
+  promptTokens?: true
+  completionTokens?: true
+  soLanGoi?: true
   feedback?: true
   feedbackAt?: true
   createdAt?: true
@@ -89,6 +135,10 @@ export type ChatbotLogCountAggregateInputType = {
   question?: true
   answer?: true
   toolsUsed?: true
+  model?: true
+  promptTokens?: true
+  completionTokens?: true
+  soLanGoi?: true
   feedback?: true
   feedbackAt?: true
   createdAt?: true
@@ -133,6 +183,18 @@ export type ChatbotLogAggregateArgs<ExtArgs extends runtime.Types.Extensions.Int
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ChatbotLogAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ChatbotLogSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ChatbotLogMinAggregateInputType
@@ -163,6 +225,8 @@ export type ChatbotLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   _count?: ChatbotLogCountAggregateInputType | true
+  _avg?: ChatbotLogAvgAggregateInputType
+  _sum?: ChatbotLogSumAggregateInputType
   _min?: ChatbotLogMinAggregateInputType
   _max?: ChatbotLogMaxAggregateInputType
 }
@@ -174,10 +238,16 @@ export type ChatbotLogGroupByOutputType = {
   question: string
   answer: string
   toolsUsed: string[]
+  model: string | null
+  promptTokens: number | null
+  completionTokens: number | null
+  soLanGoi: number | null
   feedback: $Enums.ChatbotFeedback | null
   feedbackAt: Date | null
   createdAt: Date
   _count: ChatbotLogCountAggregateOutputType | null
+  _avg: ChatbotLogAvgAggregateOutputType | null
+  _sum: ChatbotLogSumAggregateOutputType | null
   _min: ChatbotLogMinAggregateOutputType | null
   _max: ChatbotLogMaxAggregateOutputType | null
 }
@@ -207,6 +277,10 @@ export type ChatbotLogWhereInput = {
   question?: Prisma.StringFilter<"ChatbotLog"> | string
   answer?: Prisma.StringFilter<"ChatbotLog"> | string
   toolsUsed?: Prisma.StringNullableListFilter<"ChatbotLog">
+  model?: Prisma.StringNullableFilter<"ChatbotLog"> | string | null
+  promptTokens?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
+  completionTokens?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
+  soLanGoi?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
   feedback?: Prisma.EnumChatbotFeedbackNullableFilter<"ChatbotLog"> | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.DateTimeNullableFilter<"ChatbotLog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ChatbotLog"> | Date | string
@@ -220,6 +294,10 @@ export type ChatbotLogOrderByWithRelationInput = {
   question?: Prisma.SortOrder
   answer?: Prisma.SortOrder
   toolsUsed?: Prisma.SortOrder
+  model?: Prisma.SortOrderInput | Prisma.SortOrder
+  promptTokens?: Prisma.SortOrderInput | Prisma.SortOrder
+  completionTokens?: Prisma.SortOrderInput | Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrderInput | Prisma.SortOrder
   feedback?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -236,6 +314,10 @@ export type ChatbotLogWhereUniqueInput = Prisma.AtLeast<{
   question?: Prisma.StringFilter<"ChatbotLog"> | string
   answer?: Prisma.StringFilter<"ChatbotLog"> | string
   toolsUsed?: Prisma.StringNullableListFilter<"ChatbotLog">
+  model?: Prisma.StringNullableFilter<"ChatbotLog"> | string | null
+  promptTokens?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
+  completionTokens?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
+  soLanGoi?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
   feedback?: Prisma.EnumChatbotFeedbackNullableFilter<"ChatbotLog"> | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.DateTimeNullableFilter<"ChatbotLog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ChatbotLog"> | Date | string
@@ -249,12 +331,18 @@ export type ChatbotLogOrderByWithAggregationInput = {
   question?: Prisma.SortOrder
   answer?: Prisma.SortOrder
   toolsUsed?: Prisma.SortOrder
+  model?: Prisma.SortOrderInput | Prisma.SortOrder
+  promptTokens?: Prisma.SortOrderInput | Prisma.SortOrder
+  completionTokens?: Prisma.SortOrderInput | Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrderInput | Prisma.SortOrder
   feedback?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ChatbotLogCountOrderByAggregateInput
+  _avg?: Prisma.ChatbotLogAvgOrderByAggregateInput
   _max?: Prisma.ChatbotLogMaxOrderByAggregateInput
   _min?: Prisma.ChatbotLogMinOrderByAggregateInput
+  _sum?: Prisma.ChatbotLogSumOrderByAggregateInput
 }
 
 export type ChatbotLogScalarWhereWithAggregatesInput = {
@@ -267,6 +355,10 @@ export type ChatbotLogScalarWhereWithAggregatesInput = {
   question?: Prisma.StringWithAggregatesFilter<"ChatbotLog"> | string
   answer?: Prisma.StringWithAggregatesFilter<"ChatbotLog"> | string
   toolsUsed?: Prisma.StringNullableListFilter<"ChatbotLog">
+  model?: Prisma.StringNullableWithAggregatesFilter<"ChatbotLog"> | string | null
+  promptTokens?: Prisma.IntNullableWithAggregatesFilter<"ChatbotLog"> | number | null
+  completionTokens?: Prisma.IntNullableWithAggregatesFilter<"ChatbotLog"> | number | null
+  soLanGoi?: Prisma.IntNullableWithAggregatesFilter<"ChatbotLog"> | number | null
   feedback?: Prisma.EnumChatbotFeedbackNullableWithAggregatesFilter<"ChatbotLog"> | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ChatbotLog"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ChatbotLog"> | Date | string
@@ -278,6 +370,10 @@ export type ChatbotLogCreateInput = {
   question: string
   answer: string
   toolsUsed?: Prisma.ChatbotLogCreatetoolsUsedInput | string[]
+  model?: string | null
+  promptTokens?: number | null
+  completionTokens?: number | null
+  soLanGoi?: number | null
   feedback?: $Enums.ChatbotFeedback | null
   feedbackAt?: Date | string | null
   createdAt?: Date | string
@@ -291,6 +387,10 @@ export type ChatbotLogUncheckedCreateInput = {
   question: string
   answer: string
   toolsUsed?: Prisma.ChatbotLogCreatetoolsUsedInput | string[]
+  model?: string | null
+  promptTokens?: number | null
+  completionTokens?: number | null
+  soLanGoi?: number | null
   feedback?: $Enums.ChatbotFeedback | null
   feedbackAt?: Date | string | null
   createdAt?: Date | string
@@ -302,6 +402,10 @@ export type ChatbotLogUpdateInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,6 +419,10 @@ export type ChatbotLogUncheckedUpdateInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -327,6 +435,10 @@ export type ChatbotLogCreateManyInput = {
   question: string
   answer: string
   toolsUsed?: Prisma.ChatbotLogCreatetoolsUsedInput | string[]
+  model?: string | null
+  promptTokens?: number | null
+  completionTokens?: number | null
+  soLanGoi?: number | null
   feedback?: $Enums.ChatbotFeedback | null
   feedbackAt?: Date | string | null
   createdAt?: Date | string
@@ -338,6 +450,10 @@ export type ChatbotLogUpdateManyMutationInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,6 +466,10 @@ export type ChatbotLogUncheckedUpdateManyInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -372,9 +492,19 @@ export type ChatbotLogCountOrderByAggregateInput = {
   question?: Prisma.SortOrder
   answer?: Prisma.SortOrder
   toolsUsed?: Prisma.SortOrder
+  model?: Prisma.SortOrder
+  promptTokens?: Prisma.SortOrder
+  completionTokens?: Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrder
   feedback?: Prisma.SortOrder
   feedbackAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type ChatbotLogAvgOrderByAggregateInput = {
+  promptTokens?: Prisma.SortOrder
+  completionTokens?: Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrder
 }
 
 export type ChatbotLogMaxOrderByAggregateInput = {
@@ -383,6 +513,10 @@ export type ChatbotLogMaxOrderByAggregateInput = {
   isWardUser?: Prisma.SortOrder
   question?: Prisma.SortOrder
   answer?: Prisma.SortOrder
+  model?: Prisma.SortOrder
+  promptTokens?: Prisma.SortOrder
+  completionTokens?: Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrder
   feedback?: Prisma.SortOrder
   feedbackAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -394,9 +528,19 @@ export type ChatbotLogMinOrderByAggregateInput = {
   isWardUser?: Prisma.SortOrder
   question?: Prisma.SortOrder
   answer?: Prisma.SortOrder
+  model?: Prisma.SortOrder
+  promptTokens?: Prisma.SortOrder
+  completionTokens?: Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrder
   feedback?: Prisma.SortOrder
   feedbackAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type ChatbotLogSumOrderByAggregateInput = {
+  promptTokens?: Prisma.SortOrder
+  completionTokens?: Prisma.SortOrder
+  soLanGoi?: Prisma.SortOrder
 }
 
 export type ChatbotLogCreateNestedManyWithoutUserInput = {
@@ -460,6 +604,10 @@ export type ChatbotLogCreateWithoutUserInput = {
   question: string
   answer: string
   toolsUsed?: Prisma.ChatbotLogCreatetoolsUsedInput | string[]
+  model?: string | null
+  promptTokens?: number | null
+  completionTokens?: number | null
+  soLanGoi?: number | null
   feedback?: $Enums.ChatbotFeedback | null
   feedbackAt?: Date | string | null
   createdAt?: Date | string
@@ -471,6 +619,10 @@ export type ChatbotLogUncheckedCreateWithoutUserInput = {
   question: string
   answer: string
   toolsUsed?: Prisma.ChatbotLogCreatetoolsUsedInput | string[]
+  model?: string | null
+  promptTokens?: number | null
+  completionTokens?: number | null
+  soLanGoi?: number | null
   feedback?: $Enums.ChatbotFeedback | null
   feedbackAt?: Date | string | null
   createdAt?: Date | string
@@ -512,6 +664,10 @@ export type ChatbotLogScalarWhereInput = {
   question?: Prisma.StringFilter<"ChatbotLog"> | string
   answer?: Prisma.StringFilter<"ChatbotLog"> | string
   toolsUsed?: Prisma.StringNullableListFilter<"ChatbotLog">
+  model?: Prisma.StringNullableFilter<"ChatbotLog"> | string | null
+  promptTokens?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
+  completionTokens?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
+  soLanGoi?: Prisma.IntNullableFilter<"ChatbotLog"> | number | null
   feedback?: Prisma.EnumChatbotFeedbackNullableFilter<"ChatbotLog"> | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.DateTimeNullableFilter<"ChatbotLog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ChatbotLog"> | Date | string
@@ -523,6 +679,10 @@ export type ChatbotLogCreateManyUserInput = {
   question: string
   answer: string
   toolsUsed?: Prisma.ChatbotLogCreatetoolsUsedInput | string[]
+  model?: string | null
+  promptTokens?: number | null
+  completionTokens?: number | null
+  soLanGoi?: number | null
   feedback?: $Enums.ChatbotFeedback | null
   feedbackAt?: Date | string | null
   createdAt?: Date | string
@@ -534,6 +694,10 @@ export type ChatbotLogUpdateWithoutUserInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -545,6 +709,10 @@ export type ChatbotLogUncheckedUpdateWithoutUserInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -556,6 +724,10 @@ export type ChatbotLogUncheckedUpdateManyWithoutUserInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   answer?: Prisma.StringFieldUpdateOperationsInput | string
   toolsUsed?: Prisma.ChatbotLogUpdatetoolsUsedInput | string[]
+  model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soLanGoi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   feedback?: Prisma.NullableEnumChatbotFeedbackFieldUpdateOperationsInput | $Enums.ChatbotFeedback | null
   feedbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -570,6 +742,10 @@ export type ChatbotLogSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   question?: boolean
   answer?: boolean
   toolsUsed?: boolean
+  model?: boolean
+  promptTokens?: boolean
+  completionTokens?: boolean
+  soLanGoi?: boolean
   feedback?: boolean
   feedbackAt?: boolean
   createdAt?: boolean
@@ -583,6 +759,10 @@ export type ChatbotLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   question?: boolean
   answer?: boolean
   toolsUsed?: boolean
+  model?: boolean
+  promptTokens?: boolean
+  completionTokens?: boolean
+  soLanGoi?: boolean
   feedback?: boolean
   feedbackAt?: boolean
   createdAt?: boolean
@@ -596,6 +776,10 @@ export type ChatbotLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   question?: boolean
   answer?: boolean
   toolsUsed?: boolean
+  model?: boolean
+  promptTokens?: boolean
+  completionTokens?: boolean
+  soLanGoi?: boolean
   feedback?: boolean
   feedbackAt?: boolean
   createdAt?: boolean
@@ -609,12 +793,16 @@ export type ChatbotLogSelectScalar = {
   question?: boolean
   answer?: boolean
   toolsUsed?: boolean
+  model?: boolean
+  promptTokens?: boolean
+  completionTokens?: boolean
+  soLanGoi?: boolean
   feedback?: boolean
   feedbackAt?: boolean
   createdAt?: boolean
 }
 
-export type ChatbotLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "isWardUser" | "question" | "answer" | "toolsUsed" | "feedback" | "feedbackAt" | "createdAt", ExtArgs["result"]["chatbotLog"]>
+export type ChatbotLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "isWardUser" | "question" | "answer" | "toolsUsed" | "model" | "promptTokens" | "completionTokens" | "soLanGoi" | "feedback" | "feedbackAt" | "createdAt", ExtArgs["result"]["chatbotLog"]>
 export type ChatbotLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -637,6 +825,10 @@ export type $ChatbotLogPayload<ExtArgs extends runtime.Types.Extensions.Internal
     question: string
     answer: string
     toolsUsed: string[]
+    model: string | null
+    promptTokens: number | null
+    completionTokens: number | null
+    soLanGoi: number | null
     feedback: $Enums.ChatbotFeedback | null
     feedbackAt: Date | null
     createdAt: Date
@@ -1070,6 +1262,10 @@ export interface ChatbotLogFieldRefs {
   readonly question: Prisma.FieldRef<"ChatbotLog", 'String'>
   readonly answer: Prisma.FieldRef<"ChatbotLog", 'String'>
   readonly toolsUsed: Prisma.FieldRef<"ChatbotLog", 'String[]'>
+  readonly model: Prisma.FieldRef<"ChatbotLog", 'String'>
+  readonly promptTokens: Prisma.FieldRef<"ChatbotLog", 'Int'>
+  readonly completionTokens: Prisma.FieldRef<"ChatbotLog", 'Int'>
+  readonly soLanGoi: Prisma.FieldRef<"ChatbotLog", 'Int'>
   readonly feedback: Prisma.FieldRef<"ChatbotLog", 'ChatbotFeedback'>
   readonly feedbackAt: Prisma.FieldRef<"ChatbotLog", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"ChatbotLog", 'DateTime'>

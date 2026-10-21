@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
-import { requireAuth, isOfficeLeader, canManageSalary, canManageCanBo, canAccessOffice, type CurrentUser } from '@/lib/auth'
+import { requireAuth, isOfficeLeader, canManageSalary, canManageCanBo, canAccessOffice, canViewOfficeSensitive, type CurrentUser } from '@/lib/auth'
+import {
+  SO_ONLY_TOOLS, TOOL_NHAY_CAM, DAU_KE_THUA_NHAY_CAM, quyetDinhTool, locToolChoMoHinh, chonLichSu, type QuyenNguoiHoi,
+} from '@/lib/chatbot/quyen-tool'
+import { hoSoCongVu } from '@/lib/chatbot/ho-so-cong-vu'
+import { nhanDienBanThan } from '@/lib/chatbot/nhan-dien-ban-than'
 import { searchTaiLieu } from '@/lib/rag/search'
 import { hasPermission, MODULES } from '@/lib/permissions'
 import { timPhapLy, formatPhapLyMuc, timVanBanNhanSu } from '@/lib/data/co-so-phap-ly-nhan-su'
@@ -236,14 +241,12 @@ QUY TẮC:
 - Không tiết lộ mật khẩu
 - Khi hỏi thông tin chi tiết/CCCD/căn cước/ngày sinh/ngày nâng lương của MỘT cán bộ cụ thể, dùng ho_so_can_bo (chỉ tài khoản Sở). Khi chỉ cần SĐT/email/liên hệ cán bộ SỞ, dùng tim_can_bo
 - Khi hỏi LÃNH ĐẠO/TRƯỞNG PHÒNG KINH TẾ của XÃ/PHƯỜNG (Bí thư, Chủ tịch/Phó Chủ tịch HĐND-UBND, Trưởng/Phó phòng Kinh tế), hoặc SĐT của họ, hoặc "số điện thoại 09xx này là của lãnh đạo xã nào", dùng tra_cuu_lanh_dao_xa (truyền xa_phuong và/hoặc tu_khoa). Tool này dùng được cho cả tài khoản Sở lẫn phường/xã
-- NHẬP/CẬP NHẬT DANH BẠ lãnh đạo xã/phường (CHỈ ADMIN): khi admin muốn "nhập danh bạ", "thêm/cập nhật số điện thoại lãnh đạo xã …", hãy thu thập theo thứ tự và GỢI Ý rõ từng trường: (1) Tên xã/phường, (2) Họ tên, (3) Chức vụ — gợi ý các mẫu phổ biến: "Chủ tịch HĐND xã", "Phó Chủ tịch HĐND xã", "Chủ tịch UBND xã", "Phó Chủ tịch UBND xã", "Bí thư Đảng ủy", "Trưởng phòng Kinh tế", (4) Số điện thoại. Phòng ban KHÔNG cần hỏi — tự suy từ chức vụ (4 nhóm: Thường trực HĐND / Lãnh đạo UBND / Thường trực Đảng ủy / Phòng Kinh tế - Hạ tầng - Đô thị). Khi đã đủ tên xã + họ tên (và chức vụ nếu thêm mới), gọi luu_lanh_dao_xa. Có thể nhập NHIỀU người liên tiếp; mỗi người gọi tool một lần. Nếu admin dán cả danh sách, lần lượt gọi tool cho từng dòng
-- QUAN TRỌNG — TRÙNG TÊN: khi tra cứu/thao tác trên MỘT cán bộ theo tên (ho_so_can_bo, xem_luong_can_bo, cap_nhat_luong_can_bo, dự thảo QĐ cho 1 người...) mà có NHIỀU người trùng tên, tool sẽ trả về danh sách đánh số kèm chức danh + đơn vị + NĂM SINH (ghi "chưa rõ năm sinh" nếu hồ sơ chưa cập nhật). TUYỆT ĐỐI KHÔNG tự chọn 1 người, và TUYỆT ĐỐI KHÔNG nói "không phân biệt được bằng năm sinh" khi CHƯA thử gọi tool kèm nam_sinh — năm sinh có sẵn trong danh sách tool trả về (trừ khi ghi rõ "chưa rõ"), hãy dùng nó trước. Nếu người dùng NGAY TỪ CÂU HỎI ĐẦU đã nêu năm sinh (VD "Lê Anh Tuấn sinh năm 1973"), GỌI LUÔN tool kèm tham số nam_sinh — không cần hỏi lại. Nếu chưa biết, HỎI LẠI người dùng "ở phòng/đơn vị nào, chức danh gì, hay năm sinh bao nhiêu?" — đặc biệt khi chức danh/đơn vị của các người trùng tên GIỐNG HỆT NHAU thì PHẢI hỏi năm sinh (chức danh/đơn vị lúc đó vô nghĩa để phân biệt). Khi người dùng trả lời bằng SỐ THỨ TỰ, nêu phòng/chức danh, hoặc nêu năm sinh, GỌI LẠI đúng tool đó kèm tham số don_vi/chuc_danh/nam_sinh tương ứng — KHÔNG hỏi lại tên. Nếu đã lọc theo nam_sinh mà tool VẪN báo còn nhiều người trùng (trùng cả năm sinh, hoặc có người chưa rõ năm sinh), tool sẽ tự báo hết cách phân biệt và hướng dẫn dùng CCCD/liên hệ quản trị viên — đọc đúng nguyên văn, KHÔNG tự hỏi lại năm sinh lần nữa
+- CẬP NHẬT DỮ LIỆU QUA CHATBOT ĐANG TẠM TẮT (nhập/sửa danh bạ lãnh đạo xã, cập nhật lương, thêm cán bộ): nếu người dùng yêu cầu thêm/sửa/xoá dữ liệu, trả lời rằng chức năng này tạm tắt để bảo đảm an toàn dữ liệu và hướng dẫn họ thao tác trên giao diện nghiệp vụ của hệ thống. KHÔNG hứa sẽ cập nhật, KHÔNG nói "đã lưu".
+- QUAN TRỌNG — TRÙNG TÊN: khi tra cứu/thao tác trên MỘT cán bộ theo tên (ho_so_can_bo, xem_luong_can_bo, cap_nhat_luong_can_bo, dự thảo QĐ cho 1 người...) mà có NHIỀU người trùng tên, tool sẽ trả về danh sách đánh số kèm chức danh + đơn vị + NĂM SINH (ghi "chưa rõ năm sinh" nếu hồ sơ chưa cập nhật). TUYỆT ĐỐI KHÔNG tự chọn 1 người, và TUYỆT ĐỐI KHÔNG nói "không phân biệt được bằng năm sinh" khi CHƯA thử gọi tool kèm nam_sinh — năm sinh có sẵn trong danh sách tool trả về (trừ khi ghi rõ "chưa rõ"), hãy dùng nó trước. Nếu người dùng NGAY TỪ CÂU HỎI ĐẦU đã nêu năm sinh (VD "Lê Anh Tuấn sinh năm 1973"), GỌI LUÔN tool kèm tham số nam_sinh — không cần hỏi lại. Nếu chưa biết, HỎI LẠI người dùng "ở phòng/đơn vị nào, chức danh gì, hay năm sinh bao nhiêu?" — đặc biệt khi chức danh/đơn vị của các người trùng tên GIỐNG HỆT NHAU thì PHẢI hỏi năm sinh (chức danh/đơn vị lúc đó vô nghĩa để phân biệt). Khi người dùng trả lời bằng SỐ THỨ TỰ, nêu phòng/chức danh, hoặc nêu năm sinh, GỌI LẠI đúng tool đó kèm tham số don_vi/chuc_danh/nam_sinh tương ứng — KHÔNG hỏi lại tên. Nếu đã lọc theo nam_sinh mà tool VẪN báo còn nhiều người trùng (trùng cả năm sinh, hoặc có người chưa rõ năm sinh), tool sẽ tự báo hết cách phân biệt và hướng dẫn dùng CCCD/liên hệ quản trị viên — đọc đúng nguyên văn, KHÔNG tự hỏi lại năm sinh lần nữa — NGOẠI LỆ: nếu kết quả tool KHÔNG kèm năm sinh (người hỏi không có quyền xem dữ liệu nhân sự nhạy cảm), chỉ hỏi lại đơn vị/chức danh, TUYỆT ĐỐI KHÔNG hỏi năm sinh.
 - Nếu trường nào hiển thị "chưa cập nhật" thì báo đúng là chưa có dữ liệu, KHÔNG tự bịa
 - LINK TẢI FILE: khi kết quả tool chứa link markdown (VD [Tải dự thảo QĐ (.docx)](/api/office/nang-luong/du-thao?canBoId=...)), phải giữ NGUYÊN VẸN đường dẫn khi trả lời — TUYỆT ĐỐI KHÔNG thêm tiền tố "sandbox:" hay domain, không rút gọn hay thay đổi tham số của link
 - Khi tra cứu thông tin cán bộ hoặc tổ chức, luôn dùng function được cung cấp
 - Về nâng lương: dùng xem_luong_can_bo (ngày lên lương của 1 người), len_luong_thang_nay (số người + danh sách lên lương theo MỘT THÁNG hoặc MỘT QUÝ — "tháng này/quý này bao nhiêu người lên lương"), thong_ke_nang_luong (thống kê CẢ NĂM theo từng tháng + vượt khung), du_thao_qd_nang_luong (sinh DỰ THẢO Quyết định nâng lương .docx cho các trường hợp lên lương trong MỘT THÁNG — "dự thảo QĐ nâng lương cho trường hợp trên"; QĐ làm theo tháng, không theo quý). SAU KHI dự thảo xong, LUÔN nhắc người dùng nơi theo dõi & in: vào menu "Văn phòng Sở → Nâng lương" để theo dõi quy trình rà soát/trình ký/ban hành, và "Văn phòng Sở → Kho văn bản đã sinh" để tải lại/in văn bản đã ban hành; file .docx vừa tải mở bằng Word để in bản dự thảo
-- CẬP NHẬT/THÊM MỚI NÂNG LƯƠNG (admin HOẶC cán bộ VP Sở được phân quyền — hệ thống tự kiểm tra, không cần hỏi): khi người dùng muốn "cập nhật lương", "thêm ngày nâng lương cho …", "đặt hệ số lương …" dùng cap_nhat_luong_can_bo. Nếu không đủ quyền, tool sẽ tự báo từ chối. Thu thập và GỢI Ý các trường: họ tên, hệ số lương, phụ cấp chức vụ, vượt khung (nhập theo %, VD 5%), ngày nâng lương tiếp theo (dd/mm/yyyy). Nếu tool trả về danh sách TRÙNG TÊN đánh số (kèm chức danh, đơn vị), hãy hỏi admin chọn rồi GỌI LẠI tool kèm chuc_danh hoặc don_vi của dòng được chọn — KHÔNG hỏi lại tên. Chỉ truyền trường nào admin thực sự cung cấp; trường để trống = giữ nguyên
-- TẠO MỚI CÁN BỘ (admin HOẶC cán bộ VP Sở được phân quyền — hệ thống tự kiểm tra, không cần hỏi): khi người dùng muốn "thêm cán bộ mới"/"tạo hồ sơ", hoặc khi cập nhật lương mà không tìm thấy người, dùng them_can_bo. BẮT BUỘC hỏi đủ HỌ TÊN và SỐ CCCD (12 số); GỢI Ý thêm: đơn vị/phòng, chức danh, SĐT, email, ngày sinh, hệ số lương, phụ cấp, vượt khung (%), ngày nâng lương (dd/mm/yyyy). Nếu đơn vị/chức danh khớp nhiều mục, tool trả danh sách để admin chọn — hỏi lại rồi gọi tool với tên cụ thể hơn
 - Câu hỏi XẾP HẠNG/SO SÁNH toàn cơ quan ("ai hệ số lương cao nhất/thấp nhất", "ai sắp về hưu/về hưu sớm nhất", "ai lớn tuổi nhất/trẻ nhất", "ai tuổi Đảng cao nhất", "phòng nào đông nhất", "những ai vượt khung") → dùng xep_hang_nhan_su với tieu_chi tương ứng. Lưu ý xếp hạng hệ số lương chỉ tính biên chế (nhân viên hợp đồng hưởng lương khoán bằng tiền, không có hệ số)
 - Khi người dùng hỏi VỀ CHÍNH HỌ ("tôi khi nào nâng lương", "lương của tôi"), dùng tool luong_cua_toi — hệ thống tự nhận diện người đó qua tài khoản đăng nhập (CCCD), KHÔNG hỏi lại tên
 - CƠ SỞ PHÁP LÝ: khi hỏi "căn cứ pháp lý", "quy định ở đâu/điều khoản nào", "nghị định/thông tư nào", "vị trí việc làm quy định tại đâu", "trước bao nhiêu tháng ra thông báo nghỉ hưu", HOẶC các câu về CHẾ ĐỘ NGHỈ ("nghỉ phép năm mấy ngày", "phép năm có tính thứ bảy chủ nhật/ngày lễ không", "cưới/kết hôn được nghỉ mấy ngày", "có người thân mất nghỉ mấy ngày", "vợ đẻ/vợ sinh con chồng được nghỉ mấy ngày", "nghỉ chăm con ốm", "nghỉ không lương")... dùng tool tra_cuu_phap_ly_nhan_su. PHẢI trích dẫn ĐÚNG số hiệu văn bản, điều/khoản/điểm và NGÀY HIỆU LỰC như tool trả về — KHÔNG bịa thêm điều khoản, KHÔNG đổi ngày hiệu lực; nếu chủ đề chưa có trong kết quả tool thì nói rõ chưa có trong cơ sở dữ liệu, KHÔNG tự suy diễn. Riêng VỊ TRÍ VIỆC LÀM: luôn nhắc người quản lý PHẢI cập nhật vị trí việc làm cho TỪNG công chức/viên chức (căn cứ NĐ 62/2020 — công chức, NĐ 106/2020 — viên chức, Luật CBCC 2025 hiệu lực 01/7/2025) và có thể vào Văn phòng Sở → Cảnh báo & việc cần làm để xem ai chưa cập nhật
@@ -651,7 +654,16 @@ async function canhBaoSoHieuLa(cauHoi: string, doanTrich: string): Promise<strin
   )
 }
 
+/** Quyền của người đang hỏi — dùng chung cho lọc danh sách tool và chặn trong executeTool. */
+function quyenNguoiHoi(user: CurrentUser): QuyenNguoiHoi {
+  return { laTaiKhoanXa: user.wardId !== null, xemNhanSuNhayCam: canViewOfficeSensitive(user) }
+}
+
 async function executeTool(name: string, args: Record<string, string>, ctx: ToolCtx): Promise<string> {
+  // Lớp chặn thứ 2 — áp cho CẢ đường AI lẫn đường trả lời không-AI (lib/chatbot/quyen-tool.ts).
+  const quyetDinh = quyetDinhTool(name, args, quyenNguoiHoi(ctx.user))
+  if (!quyetDinh.choPhep) return quyetDinh.lyDo
+  const anTruongNhayCam = quyetDinh.anTruongNhayCam
   try {
     if (name === 'tim_can_bo') {
       const tuKhoa = args.tu_khoa || ''
@@ -699,7 +711,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       if (!hoTen) return 'Vui lòng cho biết tên cán bộ cần tra hồ sơ.'
       const chucDanhLoc = (args.chuc_danh || '').trim()
       const donViLoc = (args.don_vi || '').trim()
-      const namSinhLoc = namSinhWhere(args.nam_sinh || '')
+      // Không có quyền nhạy cảm → KHÔNG lọc theo năm sinh (lọc thử từng năm là cách dò ngược ngày sinh)
+      const namSinhLoc = anTruongNhayCam ? undefined : namSinhWhere(args.nam_sinh || '')
 
       const ds = await db.canBo.findMany({
         where: {
@@ -721,6 +734,10 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       })
 
       if (ds.length === 0) return `Không tìm thấy cán bộ tên "${hoTen}" trong hệ thống.`
+
+      // Không có quyền xem dữ liệu nhân sự nhạy cảm (Q4): chỉ thông tin liên hệ công vụ —
+      // không CCCD, ngày/năm sinh, lương, ngày nâng lương, thời điểm nghỉ hưu (suy ra từ ngày sinh).
+      if (anTruongNhayCam) return hoSoCongVu(ds, hoTen)
 
       // Nhiều người trùng tên → liệt kê có đánh số, KÈM NĂM SINH để chọn (chức danh/đơn vị
       // có thể giống hệt nhau giữa 2 người trùng tên, năm sinh thường là điểm khác biệt)
@@ -1576,15 +1593,23 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
     }
 
     if (name === 'luong_cua_toi') {
-      // Nhận diện người đang đăng nhập: ưu tiên liên kết userId, sau đó CCCD = email đăng nhập
-      const cb = await db.canBo.findFirst({
-        where: { OR: [{ userId: ctx.userId }, { cccd: ctx.email }] },
-        select: {
-          hoTen: true, heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true, ngayNangLuongKeTiep: true,
-          chucDanh: { select: { ten: true } },
-          toChuc: { select: { ten: true } },
-        },
-      })
+      // Nhận diện người đang đăng nhập: ưu tiên liên kết userId, CCCD = email đăng nhập chỉ là dự phòng;
+      // hai đường trỏ hai hồ sơ khác nhau → từ chối (lib/chatbot/nhan-dien-ban-than.ts)
+      const chonTruong = {
+        id: true, userId: true,
+        hoTen: true, heSoLuong: true, phuCap: true, vuotKhung: true, ngayNangLuong: true, ngayNangLuongKeTiep: true,
+        chucDanh: { select: { ten: true } },
+        toChuc: { select: { ten: true } },
+      } as const
+      const [theoUserId, theoCccd] = await Promise.all([
+        db.canBo.findUnique({ where: { userId: ctx.userId }, select: chonTruong }),
+        db.canBo.findUnique({ where: { cccd: ctx.email }, select: chonTruong }),
+      ])
+      const nd = nhanDienBanThan(theoUserId, theoCccd, ctx.userId)
+      if (nd.loai === 'XUNG_DOT') {
+        return 'Tài khoản của bạn đang liên kết KHÔNG nhất quán với hồ sơ cán bộ (liên kết tài khoản và số CCCD trỏ tới hai hồ sơ khác nhau) — hệ thống không hiển thị lương để tránh nhầm người. Vui lòng liên hệ quản trị viên.'
+      }
+      const cb = nd.loai === 'TIM_THAY' ? nd.hoSo : null
 
       if (!cb) {
         return 'Không tìm thấy hồ sơ cán bộ gắn với tài khoản của bạn. Có thể tài khoản đăng nhập chưa được liên kết CCCD trong hệ thống — vui lòng liên hệ quản trị viên.'
@@ -1814,9 +1839,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
   }
 }
 
-// Tools chỉ dành cho cán bộ Sở (không phải phường/xã)
-// tra_cuu_dvhc và sinh_nhat_thang_nay cho phép tất cả dùng
-const SO_ONLY_TOOLS = new Set(['tim_can_bo', 'ho_so_can_bo', 'xem_luong_can_bo', 'so_do_to_chuc', 'sinh_nhat_hom_nay', 'sinh_nhat_thang_nay', 'len_luong_thang_nay', 'thong_ke_nang_luong', 'du_thao_qd_nang_luong', 'xep_hang_nhan_su', 'luong_cua_toi', 'luu_lanh_dao_xa', 'cap_nhat_luong_can_bo', 'them_can_bo'])
+// SO_ONLY_TOOLS (tool chỉ dành cho cán bộ Sở) và mọi quy tắc quyền tool: lib/chatbot/quyen-tool.ts
 
 // ── HỌC HỎI TỪ NGƯỜI DÙNG ─────────────────────────────────────────────────────
 // Tách từ khoá tiếng Việt: bỏ dấu, tách theo ký tự không phải chữ/số
@@ -1863,7 +1886,9 @@ async function getLearnedKnowledge(question: string, isWardUser: boolean): Promi
   if (qTokens.size < 2) return ''
 
   const candidates = await db.chatbotLog.findMany({
-    where: { feedback: 'LIKE', isWardUser, toolsUsed: { isEmpty: true } },
+    // soLanGoi != null ⇔ lượt AI ghi SAU bản vá B0 (mig 049) — chỉ những lượt này mới được đánh dấu
+    // "kế thừa nhạy cảm" đúng; lượt LIKE cũ có thể đã nhắc lại dữ liệu nhạy cảm từ lịch sử mà không gọi tool.
+    where: { feedback: 'LIKE', isWardUser, toolsUsed: { isEmpty: true }, soLanGoi: { not: null } },
     select: { question: true, answer: true },
     orderBy: { feedbackAt: 'desc' },
     take: 200,
@@ -1916,12 +1941,23 @@ async function getLearnedKnowledge(question: string, isWardUser: boolean): Promi
 // Việc AI ĐÃ TRUY CẬP dữ liệu nhạy cảm được ghi riêng vào audit_logs (VIEW_SENSITIVE),
 // đúng chỗ dành cho dấu vết truy cập.
 
-/** Danh sách tool trả về dữ liệu cá nhân nhạy cảm (CCCD, lương, ngày sinh). */
-const TOOL_NHAY_CAM = new Set([
-  'ho_so_can_bo', 'xem_luong_can_bo', 'cap_nhat_luong_can_bo', 'them_can_bo',
-  'luong_cua_toi', 'xep_hang_nhan_su', 'len_luong_thang_nay', 'thong_ke_nang_luong',
-  'du_thao_qd_nang_luong', 'tim_can_bo', 'tra_cuu_lanh_dao_xa', 'luu_lanh_dao_xa',
-])
+// TOOL_NHAY_CAM, dấu kế thừa nhạy cảm: lib/chatbot/quyen-tool.ts
+
+/**
+ * Ghi dấu vết truy cập dữ liệu cá nhân (VIEW_SENSITIVE) cho MỌI nhánh kết thúc của lượt chat —
+ * kể cả nhánh hết vòng gọi tool và nhánh lỗi: tool đã chạy là dữ liệu đã được đọc (S19).
+ */
+async function ghiTruyCapNhayCam(userId: string, toolsDaChay: string[], question: string, nhanh: string): Promise<void> {
+  const toolNhayCam = [...new Set(toolsDaChay.filter((t) => TOOL_NHAY_CAM.has(t) || t === DAU_KE_THUA_NHAY_CAM))]
+  if (toolNhayCam.length === 0) return
+  await logAction({
+    userId,
+    action: 'VIEW_SENSITIVE',
+    module: 'chatbot',
+    targetType: 'CanBo',
+    detail: `Chatbot (${nhanh}) truy cập dữ liệu cá nhân qua tool: ${toolNhayCam.join(', ')} · câu hỏi: ${question.slice(0, 160)}`,
+  }).catch(() => {})
+}
 
 /**
  * Che CCCD và số điện thoại trong văn bản trước khi ghi nhật ký.
@@ -1953,12 +1989,17 @@ function cheDuLieuNhayCam(text: string): string {
  * chạy hết vòng lặp tool đều biến mất, không phân tích để cải tiến được.
  * Tình huống bất thường được đánh dấu bằng phần tử "__..." trong toolsUsed.
  */
+/** Đo chi phí AI thật (docs/htkt-brain-review/13 §1): trước đây không ghi nên không ước tính được. */
+type SuDungAI = { model: string; promptTokens: number; completionTokens: number; soLanGoi: number }
+
 async function ghiNhanCauHoi(opts: {
   userId: string
   isWardUser: boolean
   question: string
   answer: string
   toolsUsed: string[]
+  /** Số token THẬT do nhà cung cấp trả về, cộng dồn mọi lần gọi API trong lượt (mig 049). */
+  suDung?: SuDungAI
 }): Promise<string | undefined> {
   try {
     const log = await db.chatbotLog.create({
@@ -1968,6 +2009,7 @@ async function ghiNhanCauHoi(opts: {
         question: cheDuLieuNhayCam(opts.question).slice(0, 4000),
         answer: cheDuLieuNhayCam(opts.answer).slice(0, 8000),
         toolsUsed: opts.toolsUsed,
+        ...(opts.suDung && opts.suDung.soLanGoi > 0 ? opts.suDung : {}),
       },
     })
     return log.id
@@ -2003,23 +2045,29 @@ function layCauHoi(raw: unknown): string | null {
  */
 async function dungLichSuTuMayChu(
   userId: string,
+  /** Người hỏi KHÔNG có quyền xem nhân sự nhạy cảm (hoặc vừa bị thu hồi) → bỏ các lượt cũ đã dùng tool nhạy cảm. */
+  boLuotNhayCam: boolean,
   soLuot = MAX_HISTORY / 2,
-): Promise<Array<{ role: 'user' | 'assistant'; content: string }>> {
+): Promise<{ tinNhan: Array<{ role: 'user' | 'assistant'; content: string }>; keThuaNhayCam: boolean }> {
   // Cửa sổ 90 phút: đủ cho một phiên làm việc liên tục, đủ ngắn để không tái sử
   // dụng câu trả lời cũ khi dữ liệu đã thay đổi.
   const tuLuc = new Date(Date.now() - 90 * 60 * 1000)
   const logs = await db.chatbotLog.findMany({
-    where: { userId, createdAt: { gte: tuLuc } },
-    select: { question: true, answer: true },
+    // soLanGoi != null ⇔ lượt AI ghi từ bản vá B0 trở đi (cùng bản phát hành với dấu kế thừa nhạy cảm).
+    // Lượt cũ không có dấu → có thể đã nhắc lại dữ liệu nhạy cảm mà toolsUsed rỗng → KHÔNG nạp lại,
+    // để chuỗi kế thừa từ dữ liệu trước bản vá bị cắt hẳn (Codex phản biện B0 vòng 3).
+    where: { userId, createdAt: { gte: tuLuc }, soLanGoi: { not: null } },
+    select: { question: true, answer: true, toolsUsed: true },
     orderBy: { createdAt: 'desc' },
     take: soLuot,
   })
-  const out: Array<{ role: 'user' | 'assistant'; content: string }> = []
-  for (const l of logs.reverse()) {
-    out.push({ role: 'user', content: l.question.slice(0, 2000) })
-    out.push({ role: 'assistant', content: l.answer.slice(0, 2000) })
+  const { giu, keThuaNhayCam } = chonLichSu(logs.reverse(), boLuotNhayCam)
+  const tinNhan: Array<{ role: 'user' | 'assistant'; content: string }> = []
+  for (const l of giu) {
+    tinNhan.push({ role: 'user', content: l.question.slice(0, 2000) })
+    tinNhan.push({ role: 'assistant', content: l.answer.slice(0, 2000) })
   }
-  return out
+  return { tinNhan, keThuaNhayCam }
 }
 
 
@@ -2043,6 +2091,8 @@ async function traLoiKhongAI(opts: {
   question: string
   hetHanMuc: boolean
   daChayTruoc: string[]
+  /** Token của các lần gọi AI ĐÃ thành công trước khi chuyển sang không-AI (vẫn bị tính phí). */
+  suDung?: SuDungAI
 }): Promise<NextResponse> {
   const { user, isWardUser, question } = opts
   const lyDo = opts.hetHanMuc
@@ -2084,9 +2134,10 @@ async function traLoiKhongAI(opts: {
     question,
     answer: reply,
     toolsUsed: [...opts.daChayTruoc, '__khong_ai__', ...toolDaDung],
+    suDung: opts.suDung,
   })
   // Tính cả tool luồng AI đã chạy TRƯỚC khi AI lỗi giữa chừng — dữ liệu đó đã được đọc.
-  const toolNhayCam = [...new Set([...opts.daChayTruoc, ...toolDaDung].filter((t) => TOOL_NHAY_CAM.has(t)))]
+  const toolNhayCam = [...new Set([...opts.daChayTruoc, ...toolDaDung].filter((t) => TOOL_NHAY_CAM.has(t) || t === DAU_KE_THUA_NHAY_CAM))]
   if (toolNhayCam.length > 0) {
     await logAction({
       userId: user.id,
@@ -2104,6 +2155,9 @@ export async function POST(req: NextRequest) {
   let isWardForLog = false
   let questionForLog = ''
   const toolsUsedInSession: string[] = []
+  // Cộng dồn token thật mọi lần gọi API trong lượt (mỗi vòng tool gửi lại toàn bộ hội thoại) — khai báo
+  // ngoài try để MỌI nhánh kết thúc (thành công, hết vòng, chuyển không-AI, lỗi) đều ghi được.
+  const suDung: SuDungAI = { model: CHAT_MODEL, promptTokens: 0, completionTokens: 0, soLanGoi: 0 }
 
   try {
     const user = await requireAuth()
@@ -2150,15 +2204,21 @@ export async function POST(req: NextRequest) {
     const question = cauHoi
 
     // Lịch sử lấy TỪ LOG MÁY CHỦ (không tin mảng messages của client)
+    const lichSu = await dungLichSuTuMayChu(user.id, !quyenNguoiHoi(user).xemNhanSuNhayCam)
+    // Ngữ cảnh có lượt nhạy cảm → đánh dấu lượt này là nhạy cảm kế thừa (mọi nhánh ghi log đều dùng
+    // toolsUsedInSession) — để nó không lọt vào lịch sử sau thu hồi quyền và "học từ LIKE".
+    if (lichSu.keThuaNhayCam) toolsUsedInSession.push(DAU_KE_THUA_NHAY_CAM)
     const userMessages = [
-      ...(await dungLichSuTuMayChu(user.id)),
+      ...lichSu.tinNhan,
       { role: 'user' as const, content: question },
     ]
 
-    // Lọc tools theo quyền
-    const allowedTools = isWardUser
-      ? tools.filter(t => !SO_ONLY_TOOLS.has((t as { function?: { name?: string } }).function?.name ?? ''))
-      : tools
+    // Lọc tools theo quyền (lớp 1) — tool ghi tạm tắt, tool lương chỉ cho người có quyền nhạy cảm
+    const allowedTools = locToolChoMoHinh(
+      tools,
+      (t) => (t as { function?: { name?: string } }).function?.name ?? '',
+      quyenNguoiHoi(user),
+    )
 
     // Ngữ cảnh thời gian thực — để model hiểu "tháng này", "tháng sau", "quý này", "năm nay"
     const now = new Date()
@@ -2212,8 +2272,12 @@ export async function POST(req: NextRequest) {
         const hetHanMuc = laLoiHetHanMuc(e)
         if (hetHanMuc) tamNgungAIDen = Date.now() + TAM_NGUNG_AI_MS
         console.error('Chatbot: dịch vụ AI lỗi → chuyển chế độ trả lời không AI:', (e as Error)?.message)
-        return traLoiKhongAI({ user, isWardUser, question, hetHanMuc, daChayTruoc: toolsUsedInSession })
+        return traLoiKhongAI({ user, isWardUser, question, hetHanMuc, daChayTruoc: toolsUsedInSession, suDung })
       }
+
+      suDung.soLanGoi++
+      suDung.promptTokens += response.usage?.prompt_tokens ?? 0
+      suDung.completionTokens += response.usage?.completion_tokens ?? 0
 
       const choice = response.choices[0]
       const msg = choice.message
@@ -2229,13 +2293,14 @@ export async function POST(req: NextRequest) {
           question,
           answer: reply,
           toolsUsed: toolsUsedInSession,
+          suDung,
         })
 
         // DẤU VẾT TRUY CẬP DỮ LIỆU CÁ NHÂN: chatbot có thể trả về CCCD, hệ số lương,
         // ngày sinh. Nhật ký chatbot chỉ để phân tích chất lượng (và đã che định danh),
         // nên việc AI đã đọc dữ liệu nhạy cảm phải ghi vào audit_logs — đúng chỗ dành
         // cho dấu vết truy cập, phục vụ tra "ai đã xem dữ liệu của ai".
-        const toolNhayCam = [...new Set(toolsUsedInSession.filter((t) => TOOL_NHAY_CAM.has(t)))]
+        const toolNhayCam = [...new Set(toolsUsedInSession.filter((t) => TOOL_NHAY_CAM.has(t) || t === DAU_KE_THUA_NHAY_CAM))]
         if (toolNhayCam.length > 0) {
           await logAction({
             userId: user.id,
@@ -2292,7 +2357,9 @@ export async function POST(req: NextRequest) {
       question,
       answer: replyQuaPhucTap,
       toolsUsed: [...toolsUsedInSession, '__het_vong_lap__'],
+      suDung,
     })
+    await ghiTruyCapNhayCam(user.id, toolsUsedInSession, question, 'hết vòng gọi tool')
     return NextResponse.json({ reply: replyQuaPhucTap })
   } catch (err) {
     console.error('Chatbot error:', err)
@@ -2304,7 +2371,9 @@ export async function POST(req: NextRequest) {
         question: questionForLog,
         answer: `[LỖI HỆ THỐNG] ${err instanceof Error ? err.message : String(err)}`,
         toolsUsed: [...toolsUsedInSession, '__loi_he_thong__'],
+        suDung,
       })
+      await ghiTruyCapNhayCam(userIdForLog, toolsUsedInSession, questionForLog, 'lỗi hệ thống')
     }
     if (laLoiHetHanMuc(err)) {
       return NextResponse.json(
