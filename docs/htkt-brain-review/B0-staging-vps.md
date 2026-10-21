@@ -76,7 +76,15 @@ Máy diễn tập: **máy phát triển này** (HP, 16 GB; trống C: ~124 GB, D
 
 **Rào chặn chỉ giảm nhầm lẫn, không phải kiểm soát truy cập** — chỉ chạy trên máy nội bộ không có đường tới production.
 
-**Câu hỏi cho chủ hệ thống (Codex và Claude thống nhất là quyết định quản trị, không phải lỗi công cụ):**
+**Quyết định của chủ hệ thống (21/10/2026)** cho các câu hỏi quản trị (Codex và Claude thống nhất không phải lỗi công cụ):
+
+| Câu hỏi | Quyết định |
+|---|---|
+| Dữ liệu vận hành không phải dữ liệu cá nhân lên VPS | **Được**, giữ như thiết kế |
+| `Project.investor` có thể là cá nhân | **Có thể → xoá trắng** (đã áp dụng, có test) |
+| Kho tài liệu `CONG_KHAI` + embedding | **Được** mang lên staging |
+
+Nội dung câu hỏi gốc:
 1. Dữ liệu vận hành **không phải dữ liệu cá nhân** được giữ (danh mục tài sản, toạ độ, công suất, dự án: tên, chủ đầu tư, ngân sách, tiến độ; vật tư, giá, tồn kho; cây tổ chức) có được lên VPS không?
 2. `Project.investor` (chủ đầu tư) có trường hợp là **cá nhân** không? Nếu có → xoá trắng cột này.
 3. Tài liệu `CONG_KHAI` (văn bản pháp luật trong kho RAG) có được coi là kho công khai đã duyệt không? (kèm embedding tính từ chính nội dung đó)

@@ -80,6 +80,9 @@ test('vòng 2: mô tả tự do bị xoá, Json mở bị xoá, geojson chỉ h�
     assert.match(sql, new RegExp(`UPDATE "${bang}" SET[^;]*"${cot}" = `), `${bang}.${cot} phải bị xoá trắng`)
   }
   assert.ok(!BANG_GIU.Asset.cot.includes('techSpecs'))
+  // Chủ hệ thống 21/10/2026: chủ đầu tư có thể là cá nhân → xoá trắng
+  assert.ok(!BANG_GIU.Project.cot.includes('investor'))
+  assert.match(sql, /UPDATE "projects" SET[^;]*"investor" = /)
   assert.match(sql, /"geojson" = CASE[\s\S]*'properties', '\{\}'::jsonb/)
   // vòng 3: coordinates phải thuần số; features phải là mảng (sai kiểu → NULL, không làm hỏng giao dịch)
   assert.ok(sql.includes(`jsonb_path_exists(("geojson"::jsonb)->'coordinates', '$.** ? (@.type() != "number" && @.type() != "array")')`))

@@ -140,7 +140,7 @@ export const BANG_GIU: Record<string, BangGiu> = {
   // Vật tư, dự án (công khai)
   MaterialCategory: { cot: ['code', 'name', 'parentId'] },
   Material: { cot: ['code', 'name', 'categoryId', 'unit'] },
-  Project: { cot: ['projectCode', 'nationalCode', 'name', 'location', 'wardId', 'investor', 'pmUnit', 'designUnit', 'executingUnitId', 'supervisionUnit', 'fundingSource', 'decisionNumber', 'approvalDecisionNo', 'approvalAuthority', 'constructionPermitNo'] },
+  Project: { cot: ['projectCode', 'nationalCode', 'name', 'location', 'wardId', 'pmUnit', 'designUnit', 'executingUnitId', 'supervisionUnit', 'fundingSource', 'decisionNumber', 'approvalDecisionNo', 'approvalAuthority', 'constructionPermitNo'] },
   ProjectMilestone: { cot: ['projectId', 'name'] },
   ExecutingUnit: { cot: ['name', 'code'] },
   // Báo cáo hạ tầng phường/xã (số liệu tài sản công)
