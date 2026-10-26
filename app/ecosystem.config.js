@@ -1,3 +1,9 @@
+// Thư mục build đang chạy do scripts/trien-khai-vps.ps1 ghi vào .dist-hien-tai (.next-a | .next-b); không có file → .next
+const fs = require('fs')
+const path = require('path')
+let distDir = '.next'
+try { distDir = fs.readFileSync(path.join(__dirname, '.dist-hien-tai'), 'utf8').trim() || '.next' } catch {}
+
 module.exports = {
   apps: [
     {
@@ -26,6 +32,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3001,
+        NEXT_DIST_DIR: distDir,
       },
     },
   ],

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Triển khai VPS (scripts/trien-khai-vps.ps1)
+/.next-a
+/.next-b
+/.dist-hien-tai
+/.tag-da-trien-khai
