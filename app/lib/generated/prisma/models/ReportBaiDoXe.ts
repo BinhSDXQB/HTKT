@@ -41,6 +41,7 @@ export type ReportBaiDoXeSumAggregateOutputType = {
 export type ReportBaiDoXeMinAggregateOutputType = {
   id: string | null
   wardId: string | null
+  doiTuongId: string | null
   year: number | null
   stt: string | null
   tenBai: string | null
@@ -59,6 +60,7 @@ export type ReportBaiDoXeMinAggregateOutputType = {
 export type ReportBaiDoXeMaxAggregateOutputType = {
   id: string | null
   wardId: string | null
+  doiTuongId: string | null
   year: number | null
   stt: string | null
   tenBai: string | null
@@ -77,6 +79,7 @@ export type ReportBaiDoXeMaxAggregateOutputType = {
 export type ReportBaiDoXeCountAggregateOutputType = {
   id: number
   wardId: number
+  doiTuongId: number
   year: number
   stt: number
   tenBai: number
@@ -109,6 +112,7 @@ export type ReportBaiDoXeSumAggregateInputType = {
 export type ReportBaiDoXeMinAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tenBai?: true
@@ -127,6 +131,7 @@ export type ReportBaiDoXeMinAggregateInputType = {
 export type ReportBaiDoXeMaxAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tenBai?: true
@@ -145,6 +150,7 @@ export type ReportBaiDoXeMaxAggregateInputType = {
 export type ReportBaiDoXeCountAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tenBai?: true
@@ -250,6 +256,7 @@ export type ReportBaiDoXeGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type ReportBaiDoXeGroupByOutputType = {
   id: string
   wardId: string
+  doiTuongId: string | null
   year: number
   stt: string | null
   tenBai: string
@@ -291,6 +298,7 @@ export type ReportBaiDoXeWhereInput = {
   NOT?: Prisma.ReportBaiDoXeWhereInput | Prisma.ReportBaiDoXeWhereInput[]
   id?: Prisma.StringFilter<"ReportBaiDoXe"> | string
   wardId?: Prisma.StringFilter<"ReportBaiDoXe"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportBaiDoXe"> | string | null
   year?: Prisma.IntFilter<"ReportBaiDoXe"> | number
   stt?: Prisma.StringNullableFilter<"ReportBaiDoXe"> | string | null
   tenBai?: Prisma.StringFilter<"ReportBaiDoXe"> | string
@@ -305,12 +313,14 @@ export type ReportBaiDoXeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ReportBaiDoXe"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReportBaiDoXe"> | Date | string
   ward?: Prisma.XOR<Prisma.AdministrativeUnitScalarRelationFilter, Prisma.AdministrativeUnitWhereInput>
+  doiTuong?: Prisma.XOR<Prisma.Htkt_doi_tuongNullableScalarRelationFilter, Prisma.htkt_doi_tuongWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type ReportBaiDoXeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrderInput | Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenBai?: Prisma.SortOrder
@@ -325,6 +335,7 @@ export type ReportBaiDoXeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   ward?: Prisma.AdministrativeUnitOrderByWithRelationInput
+  doiTuong?: Prisma.htkt_doi_tuongOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -334,6 +345,7 @@ export type ReportBaiDoXeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ReportBaiDoXeWhereInput[]
   NOT?: Prisma.ReportBaiDoXeWhereInput | Prisma.ReportBaiDoXeWhereInput[]
   wardId?: Prisma.StringFilter<"ReportBaiDoXe"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportBaiDoXe"> | string | null
   year?: Prisma.IntFilter<"ReportBaiDoXe"> | number
   stt?: Prisma.StringNullableFilter<"ReportBaiDoXe"> | string | null
   tenBai?: Prisma.StringFilter<"ReportBaiDoXe"> | string
@@ -348,12 +360,14 @@ export type ReportBaiDoXeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ReportBaiDoXe"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReportBaiDoXe"> | Date | string
   ward?: Prisma.XOR<Prisma.AdministrativeUnitScalarRelationFilter, Prisma.AdministrativeUnitWhereInput>
+  doiTuong?: Prisma.XOR<Prisma.Htkt_doi_tuongNullableScalarRelationFilter, Prisma.htkt_doi_tuongWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type ReportBaiDoXeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrderInput | Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenBai?: Prisma.SortOrder
@@ -380,6 +394,7 @@ export type ReportBaiDoXeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ReportBaiDoXeScalarWhereWithAggregatesInput | Prisma.ReportBaiDoXeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ReportBaiDoXe"> | string
   wardId?: Prisma.StringWithAggregatesFilter<"ReportBaiDoXe"> | string
+  doiTuongId?: Prisma.StringNullableWithAggregatesFilter<"ReportBaiDoXe"> | string | null
   year?: Prisma.IntWithAggregatesFilter<"ReportBaiDoXe"> | number
   stt?: Prisma.StringNullableWithAggregatesFilter<"ReportBaiDoXe"> | string | null
   tenBai?: Prisma.StringWithAggregatesFilter<"ReportBaiDoXe"> | string
@@ -410,12 +425,14 @@ export type ReportBaiDoXeCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportBaiDoXeInput
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_bai_do_xeInput
   createdBy: Prisma.UserCreateNestedOneWithoutReportBaiDoXeInput
 }
 
 export type ReportBaiDoXeUncheckedCreateInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tenBai: string
@@ -446,12 +463,14 @@ export type ReportBaiDoXeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportBaiDoXeNestedInput
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_bai_do_xeNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReportBaiDoXeNestedInput
 }
 
 export type ReportBaiDoXeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenBai?: Prisma.StringFieldUpdateOperationsInput | string
@@ -470,6 +489,7 @@ export type ReportBaiDoXeUncheckedUpdateInput = {
 export type ReportBaiDoXeCreateManyInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tenBai: string
@@ -504,6 +524,7 @@ export type ReportBaiDoXeUpdateManyMutationInput = {
 export type ReportBaiDoXeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenBai?: Prisma.StringFieldUpdateOperationsInput | string
@@ -532,6 +553,7 @@ export type ReportBaiDoXeOrderByRelationAggregateInput = {
 export type ReportBaiDoXeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tenBai?: Prisma.SortOrder
@@ -556,6 +578,7 @@ export type ReportBaiDoXeAvgOrderByAggregateInput = {
 export type ReportBaiDoXeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tenBai?: Prisma.SortOrder
@@ -574,6 +597,7 @@ export type ReportBaiDoXeMaxOrderByAggregateInput = {
 export type ReportBaiDoXeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tenBai?: Prisma.SortOrder
@@ -679,6 +703,48 @@ export type ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput = {
   deleteMany?: Prisma.ReportBaiDoXeScalarWhereInput | Prisma.ReportBaiDoXeScalarWhereInput[]
 }
 
+export type ReportBaiDoXeCreateNestedManyWithoutDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput[] | Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput | Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportBaiDoXeCreateManyDoiTuongInputEnvelope
+  connect?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+}
+
+export type ReportBaiDoXeUncheckedCreateNestedManyWithoutDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput[] | Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput | Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportBaiDoXeCreateManyDoiTuongInputEnvelope
+  connect?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+}
+
+export type ReportBaiDoXeUpdateManyWithoutDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput[] | Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput | Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput[]
+  upsert?: Prisma.ReportBaiDoXeUpsertWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportBaiDoXeUpsertWithWhereUniqueWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportBaiDoXeCreateManyDoiTuongInputEnvelope
+  set?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  disconnect?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  delete?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  connect?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  update?: Prisma.ReportBaiDoXeUpdateWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportBaiDoXeUpdateWithWhereUniqueWithoutDoiTuongInput[]
+  updateMany?: Prisma.ReportBaiDoXeUpdateManyWithWhereWithoutDoiTuongInput | Prisma.ReportBaiDoXeUpdateManyWithWhereWithoutDoiTuongInput[]
+  deleteMany?: Prisma.ReportBaiDoXeScalarWhereInput | Prisma.ReportBaiDoXeScalarWhereInput[]
+}
+
+export type ReportBaiDoXeUncheckedUpdateManyWithoutDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput[] | Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput | Prisma.ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput[]
+  upsert?: Prisma.ReportBaiDoXeUpsertWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportBaiDoXeUpsertWithWhereUniqueWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportBaiDoXeCreateManyDoiTuongInputEnvelope
+  set?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  disconnect?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  delete?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  connect?: Prisma.ReportBaiDoXeWhereUniqueInput | Prisma.ReportBaiDoXeWhereUniqueInput[]
+  update?: Prisma.ReportBaiDoXeUpdateWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportBaiDoXeUpdateWithWhereUniqueWithoutDoiTuongInput[]
+  updateMany?: Prisma.ReportBaiDoXeUpdateManyWithWhereWithoutDoiTuongInput | Prisma.ReportBaiDoXeUpdateManyWithWhereWithoutDoiTuongInput[]
+  deleteMany?: Prisma.ReportBaiDoXeScalarWhereInput | Prisma.ReportBaiDoXeScalarWhereInput[]
+}
+
 export type ReportBaiDoXeCreateWithoutCreatedByInput = {
   id?: string
   year: number
@@ -694,11 +760,13 @@ export type ReportBaiDoXeCreateWithoutCreatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportBaiDoXeInput
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_bai_do_xeInput
 }
 
 export type ReportBaiDoXeUncheckedCreateWithoutCreatedByInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tenBai: string
@@ -745,6 +813,7 @@ export type ReportBaiDoXeScalarWhereInput = {
   NOT?: Prisma.ReportBaiDoXeScalarWhereInput | Prisma.ReportBaiDoXeScalarWhereInput[]
   id?: Prisma.StringFilter<"ReportBaiDoXe"> | string
   wardId?: Prisma.StringFilter<"ReportBaiDoXe"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportBaiDoXe"> | string | null
   year?: Prisma.IntFilter<"ReportBaiDoXe"> | number
   stt?: Prisma.StringNullableFilter<"ReportBaiDoXe"> | string | null
   tenBai?: Prisma.StringFilter<"ReportBaiDoXe"> | string
@@ -774,11 +843,13 @@ export type ReportBaiDoXeCreateWithoutWardInput = {
   sourceFile?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_bai_do_xeInput
   createdBy: Prisma.UserCreateNestedOneWithoutReportBaiDoXeInput
 }
 
 export type ReportBaiDoXeUncheckedCreateWithoutWardInput = {
   id?: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tenBai: string
@@ -820,9 +891,72 @@ export type ReportBaiDoXeUpdateManyWithWhereWithoutWardInput = {
   data: Prisma.XOR<Prisma.ReportBaiDoXeUpdateManyMutationInput, Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardInput>
 }
 
+export type ReportBaiDoXeCreateWithoutDoiTuongInput = {
+  id?: string
+  year: number
+  stt?: string | null
+  tenBai: string
+  diaDiem?: string | null
+  dienTichM2?: number | null
+  soViTriDo?: number | null
+  coTramSacDien?: boolean | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportBaiDoXeInput
+  createdBy: Prisma.UserCreateNestedOneWithoutReportBaiDoXeInput
+}
+
+export type ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput = {
+  id?: string
+  wardId: string
+  year: number
+  stt?: string | null
+  tenBai: string
+  diaDiem?: string | null
+  dienTichM2?: number | null
+  soViTriDo?: number | null
+  coTramSacDien?: boolean | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportBaiDoXeCreateOrConnectWithoutDoiTuongInput = {
+  where: Prisma.ReportBaiDoXeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput>
+}
+
+export type ReportBaiDoXeCreateManyDoiTuongInputEnvelope = {
+  data: Prisma.ReportBaiDoXeCreateManyDoiTuongInput | Prisma.ReportBaiDoXeCreateManyDoiTuongInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReportBaiDoXeUpsertWithWhereUniqueWithoutDoiTuongInput = {
+  where: Prisma.ReportBaiDoXeWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReportBaiDoXeUpdateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedUpdateWithoutDoiTuongInput>
+  create: Prisma.XOR<Prisma.ReportBaiDoXeCreateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedCreateWithoutDoiTuongInput>
+}
+
+export type ReportBaiDoXeUpdateWithWhereUniqueWithoutDoiTuongInput = {
+  where: Prisma.ReportBaiDoXeWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReportBaiDoXeUpdateWithoutDoiTuongInput, Prisma.ReportBaiDoXeUncheckedUpdateWithoutDoiTuongInput>
+}
+
+export type ReportBaiDoXeUpdateManyWithWhereWithoutDoiTuongInput = {
+  where: Prisma.ReportBaiDoXeScalarWhereInput
+  data: Prisma.XOR<Prisma.ReportBaiDoXeUpdateManyMutationInput, Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutDoiTuongInput>
+}
+
 export type ReportBaiDoXeCreateManyCreatedByInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tenBai: string
@@ -852,11 +986,13 @@ export type ReportBaiDoXeUpdateWithoutCreatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportBaiDoXeNestedInput
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_bai_do_xeNestedInput
 }
 
 export type ReportBaiDoXeUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenBai?: Prisma.StringFieldUpdateOperationsInput | string
@@ -874,6 +1010,7 @@ export type ReportBaiDoXeUncheckedUpdateWithoutCreatedByInput = {
 export type ReportBaiDoXeUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenBai?: Prisma.StringFieldUpdateOperationsInput | string
@@ -890,6 +1027,7 @@ export type ReportBaiDoXeUncheckedUpdateManyWithoutCreatedByInput = {
 
 export type ReportBaiDoXeCreateManyWardInput = {
   id?: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tenBai: string
@@ -919,11 +1057,13 @@ export type ReportBaiDoXeUpdateWithoutWardInput = {
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_bai_do_xeNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReportBaiDoXeNestedInput
 }
 
 export type ReportBaiDoXeUncheckedUpdateWithoutWardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenBai?: Prisma.StringFieldUpdateOperationsInput | string
@@ -941,6 +1081,79 @@ export type ReportBaiDoXeUncheckedUpdateWithoutWardInput = {
 
 export type ReportBaiDoXeUncheckedUpdateManyWithoutWardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenBai?: Prisma.StringFieldUpdateOperationsInput | string
+  diaDiem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dienTichM2?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  soViTriDo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  coTramSacDien?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReportBaiDoXeCreateManyDoiTuongInput = {
+  id?: string
+  wardId: string
+  year: number
+  stt?: string | null
+  tenBai: string
+  diaDiem?: string | null
+  dienTichM2?: number | null
+  soViTriDo?: number | null
+  coTramSacDien?: boolean | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportBaiDoXeUpdateWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenBai?: Prisma.StringFieldUpdateOperationsInput | string
+  diaDiem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dienTichM2?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  soViTriDo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  coTramSacDien?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportBaiDoXeNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutReportBaiDoXeNestedInput
+}
+
+export type ReportBaiDoXeUncheckedUpdateWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tenBai?: Prisma.StringFieldUpdateOperationsInput | string
+  diaDiem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dienTichM2?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  soViTriDo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  coTramSacDien?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReportBaiDoXeUncheckedUpdateManyWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenBai?: Prisma.StringFieldUpdateOperationsInput | string
@@ -961,6 +1174,7 @@ export type ReportBaiDoXeUncheckedUpdateManyWithoutWardInput = {
 export type ReportBaiDoXeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tenBai?: boolean
@@ -975,12 +1189,14 @@ export type ReportBaiDoXeSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportBaiDoXe"]>
 
 export type ReportBaiDoXeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tenBai?: boolean
@@ -995,12 +1211,14 @@ export type ReportBaiDoXeSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportBaiDoXe"]>
 
 export type ReportBaiDoXeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tenBai?: boolean
@@ -1015,12 +1233,14 @@ export type ReportBaiDoXeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportBaiDoXe"]>
 
 export type ReportBaiDoXeSelectScalar = {
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tenBai?: boolean
@@ -1036,17 +1256,20 @@ export type ReportBaiDoXeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReportBaiDoXeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "year" | "stt" | "tenBai" | "diaDiem" | "dienTichM2" | "soViTriDo" | "coTramSacDien" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportBaiDoXe"]>
+export type ReportBaiDoXeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "doiTuongId" | "year" | "stt" | "tenBai" | "diaDiem" | "dienTichM2" | "soViTriDo" | "coTramSacDien" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportBaiDoXe"]>
 export type ReportBaiDoXeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ReportBaiDoXeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ReportBaiDoXeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1054,11 +1277,13 @@ export type $ReportBaiDoXePayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "ReportBaiDoXe"
   objects: {
     ward: Prisma.$AdministrativeUnitPayload<ExtArgs>
+    doiTuong: Prisma.$htkt_doi_tuongPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     wardId: string
+    doiTuongId: string | null
     year: number
     stt: string | null
     tenBai: string
@@ -1467,6 +1692,7 @@ readonly fields: ReportBaiDoXeFieldRefs;
 export interface Prisma__ReportBaiDoXeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   ward<T extends Prisma.AdministrativeUnitDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnitDefaultArgs<ExtArgs>>): Prisma.Prisma__AdministrativeUnitClient<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  doiTuong<T extends Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReportBaiDoXe$doiTuongArgs<ExtArgs>>): Prisma.Prisma__htkt_doi_tuongClient<runtime.Types.Result.GetResult<Prisma.$htkt_doi_tuongPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1499,6 +1725,7 @@ export interface Prisma__ReportBaiDoXeClient<T, Null = never, ExtArgs extends ru
 export interface ReportBaiDoXeFieldRefs {
   readonly id: Prisma.FieldRef<"ReportBaiDoXe", 'String'>
   readonly wardId: Prisma.FieldRef<"ReportBaiDoXe", 'String'>
+  readonly doiTuongId: Prisma.FieldRef<"ReportBaiDoXe", 'String'>
   readonly year: Prisma.FieldRef<"ReportBaiDoXe", 'Int'>
   readonly stt: Prisma.FieldRef<"ReportBaiDoXe", 'String'>
   readonly tenBai: Prisma.FieldRef<"ReportBaiDoXe", 'String'>
@@ -1910,6 +2137,25 @@ export type ReportBaiDoXeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many ReportBaiDoXes to delete.
    */
   limit?: number
+}
+
+/**
+ * ReportBaiDoXe.doiTuong
+ */
+export type ReportBaiDoXe$doiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the htkt_doi_tuong
+   */
+  select?: Prisma.htkt_doi_tuongSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the htkt_doi_tuong
+   */
+  omit?: Prisma.htkt_doi_tuongOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.htkt_doi_tuongInclude<ExtArgs> | null
+  where?: Prisma.htkt_doi_tuongWhereInput
 }
 
 /**

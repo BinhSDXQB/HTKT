@@ -744,3 +744,8 @@ export type cchn_kinh_nghiem = Prisma.cchn_kinh_nghiemModel
  * 
  */
 export type cchn_lich_su = Prisma.cchn_lich_suModel
+/**
+ * Model htkt_doi_tuong
+ * 
+ */
+export type htkt_doi_tuong = Prisma.htkt_doi_tuongModel

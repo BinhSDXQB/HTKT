@@ -1,0 +1,81 @@
+# Build ứng dụng QL-HTKT trên GitHub (thay cho build trên VPS 6GB RAM).
+# Mỗi lần đẩy code lên nhánh main: build Next.js trên máy Windows của GitHub, đóng gói thư mục .next
+# thành artifact "next-build". Tác vụ trên VPS (app/scripts/deploy/vps-auto-deploy.ps1) tải artifact về,
+# hoán đổi và nạp lại pm2 — VPS không phải build.
+#
+# Build ĐÚNG đường dẫn C:\Troly\HTKT và đúng phiên bản Node như VPS để bản build chạy được nguyên trạng.
+# Biến môi trường lúc build: chỉ NEXT_PUBLIC_* là thật (được nhúng vào mã trình duyệt); DATABASE_URL,
+# SESSION_SECRET là giá trị giả — lúc build không truy vấn CSDL, giá trị thật nằm trong app/.env trên VPS.
+
+name: Build cho VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: build-vps-main
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Lấy mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Chép sang đường dẫn giống VPS (C:\Troly\HTKT)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force C:\Troly | Out-Null
+          robocopy $env:GITHUB_WORKSPACE C:\Troly\HTKT /E /XD .git /NFL /NDL /NJH /NJS /NP
+          if ($LASTEXITCODE -ge 8) { exit 1 } else { exit 0 }
+
+      - name: Cài Node 24.16.0 (giống VPS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.16.0'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Cài thư viện (theo package-lock.json)
+        working-directory: C:\Troly\HTKT\app
+        run: npm ci --no-audit --no-fund
+
+      - name: Sinh Prisma client
+        working-directory: C:\Troly\HTKT\app
+        env:
+          DATABASE_URL: postgresql://build:build@localhost:5432/build
+        run: npx prisma generate
+
+      - name: Build Next.js
+        working-directory: C:\Troly\HTKT\app
+        env:
+          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: '1'
+          NODE_OPTIONS: --max-old-space-size=6144
+          DATABASE_URL: postgresql://build:build@localhost:5432/build
+          SESSION_SECRET: build-only-placeholder-not-used-at-runtime
+          NEXT_PUBLIC_APP_NAME: QL Hạ Tầng Kỹ Thuật
+          NEXT_PUBLIC_APP_URL: http://localhost:3001
+          # Đặt tại GitHub → Settings → Secrets and variables → Actions → Variables khi có dịch vụ ký số VGCA
+          NEXT_PUBLIC_VGCA_SIGN_URL: ${{ vars.NEXT_PUBLIC_VGCA_SIGN_URL }}
+        run: npx next build --webpack
+
+      - name: Đóng gói (bỏ cache, ghi mã commit)
+        shell: pwsh
+        run: |
+          Remove-Item C:\Troly\HTKT\app\.next\cache -Recurse -Force -ErrorAction SilentlyContinue
+          Set-Content -Path C:\Troly\HTKT\app\.next\DEPLOY_SHA -Value $env:GITHUB_SHA -NoNewline
+          if (-not (Test-Path C:\Troly\HTKT\app\.next\BUILD_ID)) { Write-Error 'Thiếu BUILD_ID'; exit 1 }
+
+      - name: Tải lên artifact next-build
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: C:\Troly\HTKT\app\.next
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error

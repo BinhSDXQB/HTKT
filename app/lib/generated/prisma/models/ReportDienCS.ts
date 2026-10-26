@@ -49,6 +49,7 @@ export type ReportDienCSSumAggregateOutputType = {
 export type ReportDienCSMinAggregateOutputType = {
   id: string | null
   wardId: string | null
+  doiTuongId: string | null
   year: number | null
   stt: string | null
   tuyenDuong: string | null
@@ -72,6 +73,7 @@ export type ReportDienCSMinAggregateOutputType = {
 export type ReportDienCSMaxAggregateOutputType = {
   id: string | null
   wardId: string | null
+  doiTuongId: string | null
   year: number | null
   stt: string | null
   tuyenDuong: string | null
@@ -95,6 +97,7 @@ export type ReportDienCSMaxAggregateOutputType = {
 export type ReportDienCSCountAggregateOutputType = {
   id: number
   wardId: number
+  doiTuongId: number
   year: number
   stt: number
   tuyenDuong: number
@@ -140,6 +143,7 @@ export type ReportDienCSSumAggregateInputType = {
 export type ReportDienCSMinAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tuyenDuong?: true
@@ -163,6 +167,7 @@ export type ReportDienCSMinAggregateInputType = {
 export type ReportDienCSMaxAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tuyenDuong?: true
@@ -186,6 +191,7 @@ export type ReportDienCSMaxAggregateInputType = {
 export type ReportDienCSCountAggregateInputType = {
   id?: true
   wardId?: true
+  doiTuongId?: true
   year?: true
   stt?: true
   tuyenDuong?: true
@@ -296,6 +302,7 @@ export type ReportDienCSGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type ReportDienCSGroupByOutputType = {
   id: string
   wardId: string
+  doiTuongId: string | null
   year: number
   stt: string | null
   tuyenDuong: string
@@ -342,6 +349,7 @@ export type ReportDienCSWhereInput = {
   NOT?: Prisma.ReportDienCSWhereInput | Prisma.ReportDienCSWhereInput[]
   id?: Prisma.StringFilter<"ReportDienCS"> | string
   wardId?: Prisma.StringFilter<"ReportDienCS"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportDienCS"> | string | null
   year?: Prisma.IntFilter<"ReportDienCS"> | number
   stt?: Prisma.StringNullableFilter<"ReportDienCS"> | string | null
   tuyenDuong?: Prisma.StringFilter<"ReportDienCS"> | string
@@ -361,12 +369,14 @@ export type ReportDienCSWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ReportDienCS"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReportDienCS"> | Date | string
   ward?: Prisma.XOR<Prisma.AdministrativeUnitScalarRelationFilter, Prisma.AdministrativeUnitWhereInput>
+  doiTuong?: Prisma.XOR<Prisma.Htkt_doi_tuongNullableScalarRelationFilter, Prisma.htkt_doi_tuongWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type ReportDienCSOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrderInput | Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrderInput | Prisma.SortOrder
   tuyenDuong?: Prisma.SortOrder
@@ -386,6 +396,7 @@ export type ReportDienCSOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   ward?: Prisma.AdministrativeUnitOrderByWithRelationInput
+  doiTuong?: Prisma.htkt_doi_tuongOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -395,6 +406,7 @@ export type ReportDienCSWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ReportDienCSWhereInput[]
   NOT?: Prisma.ReportDienCSWhereInput | Prisma.ReportDienCSWhereInput[]
   wardId?: Prisma.StringFilter<"ReportDienCS"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportDienCS"> | string | null
   year?: Prisma.IntFilter<"ReportDienCS"> | number
   stt?: Prisma.StringNullableFilter<"ReportDienCS"> | string | null
   tuyenDuong?: Prisma.StringFilter<"ReportDienCS"> | string
@@ -414,12 +426,14 @@ export type ReportDienCSWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ReportDienCS"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReportDienCS"> | Date | string
   ward?: Prisma.XOR<Prisma.AdministrativeUnitScalarRelationFilter, Prisma.AdministrativeUnitWhereInput>
+  doiTuong?: Prisma.XOR<Prisma.Htkt_doi_tuongNullableScalarRelationFilter, Prisma.htkt_doi_tuongWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type ReportDienCSOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrderInput | Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrderInput | Prisma.SortOrder
   tuyenDuong?: Prisma.SortOrder
@@ -451,6 +465,7 @@ export type ReportDienCSScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ReportDienCSScalarWhereWithAggregatesInput | Prisma.ReportDienCSScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ReportDienCS"> | string
   wardId?: Prisma.StringWithAggregatesFilter<"ReportDienCS"> | string
+  doiTuongId?: Prisma.StringNullableWithAggregatesFilter<"ReportDienCS"> | string | null
   year?: Prisma.IntWithAggregatesFilter<"ReportDienCS"> | number
   stt?: Prisma.StringNullableWithAggregatesFilter<"ReportDienCS"> | string | null
   tuyenDuong?: Prisma.StringWithAggregatesFilter<"ReportDienCS"> | string
@@ -491,12 +506,14 @@ export type ReportDienCSCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportDienCSInput
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_dien_csInput
   createdBy: Prisma.UserCreateNestedOneWithoutReportDienCSInput
 }
 
 export type ReportDienCSUncheckedCreateInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyenDuong: string
@@ -537,12 +554,14 @@ export type ReportDienCSUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportDienCSNestedInput
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_dien_csNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReportDienCSNestedInput
 }
 
 export type ReportDienCSUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
@@ -566,6 +585,7 @@ export type ReportDienCSUncheckedUpdateInput = {
 export type ReportDienCSCreateManyInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyenDuong: string
@@ -610,6 +630,7 @@ export type ReportDienCSUpdateManyMutationInput = {
 export type ReportDienCSUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
@@ -643,6 +664,7 @@ export type ReportDienCSOrderByRelationAggregateInput = {
 export type ReportDienCSCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tuyenDuong?: Prisma.SortOrder
@@ -676,6 +698,7 @@ export type ReportDienCSAvgOrderByAggregateInput = {
 export type ReportDienCSMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tuyenDuong?: Prisma.SortOrder
@@ -699,6 +722,7 @@ export type ReportDienCSMaxOrderByAggregateInput = {
 export type ReportDienCSMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   wardId?: Prisma.SortOrder
+  doiTuongId?: Prisma.SortOrder
   year?: Prisma.SortOrder
   stt?: Prisma.SortOrder
   tuyenDuong?: Prisma.SortOrder
@@ -813,6 +837,48 @@ export type ReportDienCSUncheckedUpdateManyWithoutWardNestedInput = {
   deleteMany?: Prisma.ReportDienCSScalarWhereInput | Prisma.ReportDienCSScalarWhereInput[]
 }
 
+export type ReportDienCSCreateNestedManyWithoutDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.ReportDienCSCreateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportDienCSCreateWithoutDoiTuongInput[] | Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput | Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportDienCSCreateManyDoiTuongInputEnvelope
+  connect?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+}
+
+export type ReportDienCSUncheckedCreateNestedManyWithoutDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.ReportDienCSCreateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportDienCSCreateWithoutDoiTuongInput[] | Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput | Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportDienCSCreateManyDoiTuongInputEnvelope
+  connect?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+}
+
+export type ReportDienCSUpdateManyWithoutDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportDienCSCreateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportDienCSCreateWithoutDoiTuongInput[] | Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput | Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput[]
+  upsert?: Prisma.ReportDienCSUpsertWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportDienCSUpsertWithWhereUniqueWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportDienCSCreateManyDoiTuongInputEnvelope
+  set?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  disconnect?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  delete?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  connect?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  update?: Prisma.ReportDienCSUpdateWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportDienCSUpdateWithWhereUniqueWithoutDoiTuongInput[]
+  updateMany?: Prisma.ReportDienCSUpdateManyWithWhereWithoutDoiTuongInput | Prisma.ReportDienCSUpdateManyWithWhereWithoutDoiTuongInput[]
+  deleteMany?: Prisma.ReportDienCSScalarWhereInput | Prisma.ReportDienCSScalarWhereInput[]
+}
+
+export type ReportDienCSUncheckedUpdateManyWithoutDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportDienCSCreateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput> | Prisma.ReportDienCSCreateWithoutDoiTuongInput[] | Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput[]
+  connectOrCreate?: Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput | Prisma.ReportDienCSCreateOrConnectWithoutDoiTuongInput[]
+  upsert?: Prisma.ReportDienCSUpsertWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportDienCSUpsertWithWhereUniqueWithoutDoiTuongInput[]
+  createMany?: Prisma.ReportDienCSCreateManyDoiTuongInputEnvelope
+  set?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  disconnect?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  delete?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  connect?: Prisma.ReportDienCSWhereUniqueInput | Prisma.ReportDienCSWhereUniqueInput[]
+  update?: Prisma.ReportDienCSUpdateWithWhereUniqueWithoutDoiTuongInput | Prisma.ReportDienCSUpdateWithWhereUniqueWithoutDoiTuongInput[]
+  updateMany?: Prisma.ReportDienCSUpdateManyWithWhereWithoutDoiTuongInput | Prisma.ReportDienCSUpdateManyWithWhereWithoutDoiTuongInput[]
+  deleteMany?: Prisma.ReportDienCSScalarWhereInput | Prisma.ReportDienCSScalarWhereInput[]
+}
+
 export type ReportDienCSCreateWithoutCreatedByInput = {
   id?: string
   year: number
@@ -833,11 +899,13 @@ export type ReportDienCSCreateWithoutCreatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportDienCSInput
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_dien_csInput
 }
 
 export type ReportDienCSUncheckedCreateWithoutCreatedByInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyenDuong: string
@@ -889,6 +957,7 @@ export type ReportDienCSScalarWhereInput = {
   NOT?: Prisma.ReportDienCSScalarWhereInput | Prisma.ReportDienCSScalarWhereInput[]
   id?: Prisma.StringFilter<"ReportDienCS"> | string
   wardId?: Prisma.StringFilter<"ReportDienCS"> | string
+  doiTuongId?: Prisma.StringNullableFilter<"ReportDienCS"> | string | null
   year?: Prisma.IntFilter<"ReportDienCS"> | number
   stt?: Prisma.StringNullableFilter<"ReportDienCS"> | string | null
   tuyenDuong?: Prisma.StringFilter<"ReportDienCS"> | string
@@ -928,11 +997,13 @@ export type ReportDienCSCreateWithoutWardInput = {
   sourceFile?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  doiTuong?: Prisma.htkt_doi_tuongCreateNestedOneWithoutReport_dien_csInput
   createdBy: Prisma.UserCreateNestedOneWithoutReportDienCSInput
 }
 
 export type ReportDienCSUncheckedCreateWithoutWardInput = {
   id?: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyenDuong: string
@@ -979,9 +1050,82 @@ export type ReportDienCSUpdateManyWithWhereWithoutWardInput = {
   data: Prisma.XOR<Prisma.ReportDienCSUpdateManyMutationInput, Prisma.ReportDienCSUncheckedUpdateManyWithoutWardInput>
 }
 
+export type ReportDienCSCreateWithoutDoiTuongInput = {
+  id?: string
+  year: number
+  stt?: string | null
+  tuyenDuong: string
+  chieuDaiCSKm?: number | null
+  soColDen?: number | null
+  loaiDen?: string | null
+  loaiDenChuan?: string | null
+  congSuatW?: number | null
+  chieuSangPhia?: string | null
+  namDauTu?: number | null
+  toaDoLat?: number | null
+  toaDoLng?: number | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ward: Prisma.AdministrativeUnitCreateNestedOneWithoutReportDienCSInput
+  createdBy: Prisma.UserCreateNestedOneWithoutReportDienCSInput
+}
+
+export type ReportDienCSUncheckedCreateWithoutDoiTuongInput = {
+  id?: string
+  wardId: string
+  year: number
+  stt?: string | null
+  tuyenDuong: string
+  chieuDaiCSKm?: number | null
+  soColDen?: number | null
+  loaiDen?: string | null
+  loaiDenChuan?: string | null
+  congSuatW?: number | null
+  chieuSangPhia?: string | null
+  namDauTu?: number | null
+  toaDoLat?: number | null
+  toaDoLng?: number | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportDienCSCreateOrConnectWithoutDoiTuongInput = {
+  where: Prisma.ReportDienCSWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportDienCSCreateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput>
+}
+
+export type ReportDienCSCreateManyDoiTuongInputEnvelope = {
+  data: Prisma.ReportDienCSCreateManyDoiTuongInput | Prisma.ReportDienCSCreateManyDoiTuongInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReportDienCSUpsertWithWhereUniqueWithoutDoiTuongInput = {
+  where: Prisma.ReportDienCSWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReportDienCSUpdateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedUpdateWithoutDoiTuongInput>
+  create: Prisma.XOR<Prisma.ReportDienCSCreateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedCreateWithoutDoiTuongInput>
+}
+
+export type ReportDienCSUpdateWithWhereUniqueWithoutDoiTuongInput = {
+  where: Prisma.ReportDienCSWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReportDienCSUpdateWithoutDoiTuongInput, Prisma.ReportDienCSUncheckedUpdateWithoutDoiTuongInput>
+}
+
+export type ReportDienCSUpdateManyWithWhereWithoutDoiTuongInput = {
+  where: Prisma.ReportDienCSScalarWhereInput
+  data: Prisma.XOR<Prisma.ReportDienCSUpdateManyMutationInput, Prisma.ReportDienCSUncheckedUpdateManyWithoutDoiTuongInput>
+}
+
 export type ReportDienCSCreateManyCreatedByInput = {
   id?: string
   wardId: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyenDuong: string
@@ -1021,11 +1165,13 @@ export type ReportDienCSUpdateWithoutCreatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportDienCSNestedInput
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_dien_csNestedInput
 }
 
 export type ReportDienCSUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1048,6 +1194,7 @@ export type ReportDienCSUncheckedUpdateWithoutCreatedByInput = {
 export type ReportDienCSUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1069,6 +1216,7 @@ export type ReportDienCSUncheckedUpdateManyWithoutCreatedByInput = {
 
 export type ReportDienCSCreateManyWardInput = {
   id?: string
+  doiTuongId?: string | null
   year: number
   stt?: string | null
   tuyenDuong: string
@@ -1108,11 +1256,13 @@ export type ReportDienCSUpdateWithoutWardInput = {
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  doiTuong?: Prisma.htkt_doi_tuongUpdateOneWithoutReport_dien_csNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutReportDienCSNestedInput
 }
 
 export type ReportDienCSUncheckedUpdateWithoutWardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1135,6 +1285,99 @@ export type ReportDienCSUncheckedUpdateWithoutWardInput = {
 
 export type ReportDienCSUncheckedUpdateManyWithoutWardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  doiTuongId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
+  chieuDaiCSKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  soColDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loaiDen?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiDenChuan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  congSuatW?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDauTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  toaDoLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReportDienCSCreateManyDoiTuongInput = {
+  id?: string
+  wardId: string
+  year: number
+  stt?: string | null
+  tuyenDuong: string
+  chieuDaiCSKm?: number | null
+  soColDen?: number | null
+  loaiDen?: string | null
+  loaiDenChuan?: string | null
+  congSuatW?: number | null
+  chieuSangPhia?: string | null
+  namDauTu?: number | null
+  toaDoLat?: number | null
+  toaDoLng?: number | null
+  ghiChu?: string | null
+  status?: $Enums.ReportStatus
+  sourceFile?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportDienCSUpdateWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
+  chieuDaiCSKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  soColDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loaiDen?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiDenChuan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  congSuatW?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDauTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  toaDoLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ward?: Prisma.AdministrativeUnitUpdateOneRequiredWithoutReportDienCSNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutReportDienCSNestedInput
+}
+
+export type ReportDienCSUncheckedUpdateWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
+  chieuDaiCSKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  soColDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  loaiDen?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loaiDenChuan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  congSuatW?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  chieuSangPhia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namDauTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  toaDoLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  toaDoLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ghiChu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReportDienCSUncheckedUpdateManyWithoutDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.IntFieldUpdateOperationsInput | number
   stt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tuyenDuong?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1160,6 +1403,7 @@ export type ReportDienCSUncheckedUpdateManyWithoutWardInput = {
 export type ReportDienCSSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyenDuong?: boolean
@@ -1179,12 +1423,14 @@ export type ReportDienCSSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportDienCS$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportDienCS"]>
 
 export type ReportDienCSSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyenDuong?: boolean
@@ -1204,12 +1450,14 @@ export type ReportDienCSSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportDienCS$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportDienCS"]>
 
 export type ReportDienCSSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyenDuong?: boolean
@@ -1229,12 +1477,14 @@ export type ReportDienCSSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   createdAt?: boolean
   updatedAt?: boolean
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportDienCS$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reportDienCS"]>
 
 export type ReportDienCSSelectScalar = {
   id?: boolean
   wardId?: boolean
+  doiTuongId?: boolean
   year?: boolean
   stt?: boolean
   tuyenDuong?: boolean
@@ -1255,17 +1505,20 @@ export type ReportDienCSSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReportDienCSOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "year" | "stt" | "tuyenDuong" | "chieuDaiCSKm" | "soColDen" | "loaiDen" | "loaiDenChuan" | "congSuatW" | "chieuSangPhia" | "namDauTu" | "toaDoLat" | "toaDoLng" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportDienCS"]>
+export type ReportDienCSOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "wardId" | "doiTuongId" | "year" | "stt" | "tuyenDuong" | "chieuDaiCSKm" | "soColDen" | "loaiDen" | "loaiDenChuan" | "congSuatW" | "chieuSangPhia" | "namDauTu" | "toaDoLat" | "toaDoLng" | "ghiChu" | "status" | "sourceFile" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["reportDienCS"]>
 export type ReportDienCSInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportDienCS$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ReportDienCSIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportDienCS$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ReportDienCSIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.AdministrativeUnitDefaultArgs<ExtArgs>
+  doiTuong?: boolean | Prisma.ReportDienCS$doiTuongArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1273,11 +1526,13 @@ export type $ReportDienCSPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "ReportDienCS"
   objects: {
     ward: Prisma.$AdministrativeUnitPayload<ExtArgs>
+    doiTuong: Prisma.$htkt_doi_tuongPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     wardId: string
+    doiTuongId: string | null
     year: number
     stt: string | null
     tuyenDuong: string
@@ -1691,6 +1946,7 @@ readonly fields: ReportDienCSFieldRefs;
 export interface Prisma__ReportDienCSClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   ward<T extends Prisma.AdministrativeUnitDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnitDefaultArgs<ExtArgs>>): Prisma.Prisma__AdministrativeUnitClient<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  doiTuong<T extends Prisma.ReportDienCS$doiTuongArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReportDienCS$doiTuongArgs<ExtArgs>>): Prisma.Prisma__htkt_doi_tuongClient<runtime.Types.Result.GetResult<Prisma.$htkt_doi_tuongPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1723,6 +1979,7 @@ export interface Prisma__ReportDienCSClient<T, Null = never, ExtArgs extends run
 export interface ReportDienCSFieldRefs {
   readonly id: Prisma.FieldRef<"ReportDienCS", 'String'>
   readonly wardId: Prisma.FieldRef<"ReportDienCS", 'String'>
+  readonly doiTuongId: Prisma.FieldRef<"ReportDienCS", 'String'>
   readonly year: Prisma.FieldRef<"ReportDienCS", 'Int'>
   readonly stt: Prisma.FieldRef<"ReportDienCS", 'String'>
   readonly tuyenDuong: Prisma.FieldRef<"ReportDienCS", 'String'>
@@ -2139,6 +2396,25 @@ export type ReportDienCSDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many ReportDienCS to delete.
    */
   limit?: number
+}
+
+/**
+ * ReportDienCS.doiTuong
+ */
+export type ReportDienCS$doiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the htkt_doi_tuong
+   */
+  select?: Prisma.htkt_doi_tuongSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the htkt_doi_tuong
+   */
+  omit?: Prisma.htkt_doi_tuongOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.htkt_doi_tuongInclude<ExtArgs> | null
+  where?: Prisma.htkt_doi_tuongWhereInput
 }
 
 /**
