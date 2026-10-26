@@ -14,6 +14,10 @@
 
 BEGIN;
 
+-- ALTER TABLE cần khoá mạnh trong chốc lát; nếu có truy vấn dài đang giữ bảng thì thất bại sau 5 giây
+-- (migration idempotent — chạy lại được) thay vì xếp hàng chặn mọi truy cập chatbot_logs.
+SET LOCAL lock_timeout = '5s';
+
 ALTER TABLE chatbot_logs ADD COLUMN IF NOT EXISTS "model"            TEXT;
 ALTER TABLE chatbot_logs ADD COLUMN IF NOT EXISTS "promptTokens"     INTEGER;
 ALTER TABLE chatbot_logs ADD COLUMN IF NOT EXISTS "completionTokens" INTEGER;

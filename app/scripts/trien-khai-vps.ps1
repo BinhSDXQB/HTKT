@@ -11,6 +11,10 @@ $ErrorActionPreference = 'Stop'
 function Loi($m) { Write-Host "LOI: $m" -ForegroundColor Red; exit 1 }
 function Chay($lenh) { Write-Host "> $lenh" -ForegroundColor DarkGray; & cmd /c $lenh; if ($LASTEXITCODE -ne 0) { Loi "Lệnh thất bại ($LASTEXITCODE): $lenh" } }
 
+# Chặn chạy song song với tự deploy của main (cùng đổi mã/dependency/pm2): nếu tác vụ QLHTKT_AutoDeploy đang bật thì dừng.
+$tacVu = Get-ScheduledTask -TaskName 'QLHTKT_AutoDeploy' -ErrorAction SilentlyContinue
+if ($tacVu -and $tacVu.State -ne 'Disabled') { Loi 'Tác vụ QLHTKT_AutoDeploy đang bật — tắt trước (schtasks /change /tn QLHTKT_AutoDeploy /disable) rồi mới dùng script này.' }
+
 Set-Location $Kho
 $app = Join-Path $Kho 'app'
 $conTro = Join-Path $app '.dist-hien-tai'
@@ -53,12 +57,15 @@ if ($mig.Count -gt 0) {
 }
 
 # 4. Lấy mã, cài gói chỉ khi package-lock đổi
-# ls-tree không ném lỗi khi commit chưa có lockfile (git rev-parse sẽ dừng script ở ErrorActionPreference=Stop) → rỗng → buộc npm ci
-$lockCu = (& git ls-tree $cu -- app/package-lock.json | ForEach-Object { ($_ -split '\s+')[2] })
+# (git ls-tree thay git rev-parse: không ném lỗi khi commit chưa có lockfile — rev-parse sẽ dừng script ở ErrorActionPreference=Stop)
 Chay "git checkout --detach $Tag"
 $lockMoi = (& git ls-tree HEAD -- app/package-lock.json | ForEach-Object { ($_ -split '\s+')[2] })
+if (-not $lockMoi) { Loi "Thẻ $Tag không có app/package-lock.json — gộp main vào nhánh trước khi triển khai bằng script này." }
 Set-Location $app
-if ($lockCu -ne $lockMoi -or -not (Test-Path 'node_modules')) { Chay 'npm ci' }
+# So với mã băm lockfile của lần cài THÀNH CÔNG gần nhất (không so với HEAD cũ): lần cài lỗi giữa chừng thì chạy lại vẫn cài lại.
+$lockDaCai = Join-Path $app '.lock-da-cai'
+$daCai = if (Test-Path $lockDaCai) { (Get-Content $lockDaCai -Raw).Trim() } else { '' }
+if ($daCai -ne $lockMoi -or -not (Test-Path 'node_modules')) { Chay 'npm ci'; Set-Content $lockDaCai $lockMoi -NoNewline }
 Chay 'npx prisma generate'
 
 # 5. Build vào thư mục luân phiên (bản đang chạy giữ nguyên)
