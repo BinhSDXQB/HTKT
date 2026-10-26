@@ -3,6 +3,9 @@
 #   Tự động  :  ... -TuDong   (Task Scheduler mỗi 10 phút; chỉ triển khai khi có thẻ deploy-* MỚI và KHÔNG có migration)
 #   Quay lại :  ... -QuayLai  (đổi về thư mục build trước, không build lại)
 # Cách làm: build vào thư mục .next-a / .next-b luân phiên → bản đang chạy không bị đụng; xong mới đổi con trỏ và pm2 reload.
+# LƯU Ý (quyết định 26/10/2026: GIỮ script này): build NGAY TRÊN VPS. Nhánh main đã có quy trình khác — GitHub Actions build,
+#   tác vụ QLHTKT_AutoDeploy (app/scripts/deploy/vps-auto-deploy.ps1) tải bản build về. KHÔNG bật cả hai cơ chế cùng lúc trên một VPS
+#   (cùng đổi mã, cùng pm2 reload → tranh nhau). Chỉ dùng script này khi không dùng Actions; gộp main vào nhánh trước khi dùng.
 param([string]$Tag, [switch]$TuDong, [switch]$QuayLai, [string]$Kho = 'c:\Troly\HTKT', [int]$GbTrongToiThieu = 4)
 $ErrorActionPreference = 'Stop'
 function Loi($m) { Write-Host "LOI: $m" -ForegroundColor Red; exit 1 }
@@ -50,9 +53,10 @@ if ($mig.Count -gt 0) {
 }
 
 # 4. Lấy mã, cài gói chỉ khi package-lock đổi
-$lockCu = (& git rev-parse "$($cu):app/package-lock.json" 2>$null)
+# ls-tree không ném lỗi khi commit chưa có lockfile (git rev-parse sẽ dừng script ở ErrorActionPreference=Stop) → rỗng → buộc npm ci
+$lockCu = (& git ls-tree $cu -- app/package-lock.json | ForEach-Object { ($_ -split '\s+')[2] })
 Chay "git checkout --detach $Tag"
-$lockMoi = (& git rev-parse "HEAD:app/package-lock.json")
+$lockMoi = (& git ls-tree HEAD -- app/package-lock.json | ForEach-Object { ($_ -split '\s+')[2] })
 Set-Location $app
 if ($lockCu -ne $lockMoi -or -not (Test-Path 'node_modules')) { Chay 'npm ci' }
 Chay 'npx prisma generate'
