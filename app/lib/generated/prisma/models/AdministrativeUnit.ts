@@ -31,6 +31,10 @@ export type AdministrativeUnitAvgAggregateOutputType = {
   centerLon: number | null
   dienTichKm2: runtime.Decimal | null
   danSo: number | null
+  soHieuDxTu: number | null
+  soHieuDxDen: number | null
+  soHieuDthTu: number | null
+  soHieuDthDen: number | null
 }
 
 export type AdministrativeUnitSumAggregateOutputType = {
@@ -38,6 +42,10 @@ export type AdministrativeUnitSumAggregateOutputType = {
   centerLon: number | null
   dienTichKm2: runtime.Decimal | null
   danSo: number | null
+  soHieuDxTu: number | null
+  soHieuDxDen: number | null
+  soHieuDthTu: number | null
+  soHieuDthDen: number | null
 }
 
 export type AdministrativeUnitMinAggregateOutputType = {
@@ -56,6 +64,11 @@ export type AdministrativeUnitMinAggregateOutputType = {
   truocSapNhap: string | null
   huyenThiCu: string | null
   vungLoi: string | null
+  soHieuDxTu: number | null
+  soHieuDxDen: number | null
+  soHieuDthTu: number | null
+  soHieuDthDen: number | null
+  soHieuCanCu: string | null
 }
 
 export type AdministrativeUnitMaxAggregateOutputType = {
@@ -74,6 +87,11 @@ export type AdministrativeUnitMaxAggregateOutputType = {
   truocSapNhap: string | null
   huyenThiCu: string | null
   vungLoi: string | null
+  soHieuDxTu: number | null
+  soHieuDxDen: number | null
+  soHieuDthTu: number | null
+  soHieuDthDen: number | null
+  soHieuCanCu: string | null
 }
 
 export type AdministrativeUnitCountAggregateOutputType = {
@@ -92,6 +110,11 @@ export type AdministrativeUnitCountAggregateOutputType = {
   truocSapNhap: number
   huyenThiCu: number
   vungLoi: number
+  soHieuDxTu: number
+  soHieuDxDen: number
+  soHieuDthTu: number
+  soHieuDthDen: number
+  soHieuCanCu: number
   _all: number
 }
 
@@ -101,6 +124,10 @@ export type AdministrativeUnitAvgAggregateInputType = {
   centerLon?: true
   dienTichKm2?: true
   danSo?: true
+  soHieuDxTu?: true
+  soHieuDxDen?: true
+  soHieuDthTu?: true
+  soHieuDthDen?: true
 }
 
 export type AdministrativeUnitSumAggregateInputType = {
@@ -108,6 +135,10 @@ export type AdministrativeUnitSumAggregateInputType = {
   centerLon?: true
   dienTichKm2?: true
   danSo?: true
+  soHieuDxTu?: true
+  soHieuDxDen?: true
+  soHieuDthTu?: true
+  soHieuDthDen?: true
 }
 
 export type AdministrativeUnitMinAggregateInputType = {
@@ -126,6 +157,11 @@ export type AdministrativeUnitMinAggregateInputType = {
   truocSapNhap?: true
   huyenThiCu?: true
   vungLoi?: true
+  soHieuDxTu?: true
+  soHieuDxDen?: true
+  soHieuDthTu?: true
+  soHieuDthDen?: true
+  soHieuCanCu?: true
 }
 
 export type AdministrativeUnitMaxAggregateInputType = {
@@ -144,6 +180,11 @@ export type AdministrativeUnitMaxAggregateInputType = {
   truocSapNhap?: true
   huyenThiCu?: true
   vungLoi?: true
+  soHieuDxTu?: true
+  soHieuDxDen?: true
+  soHieuDthTu?: true
+  soHieuDthDen?: true
+  soHieuCanCu?: true
 }
 
 export type AdministrativeUnitCountAggregateInputType = {
@@ -162,6 +203,11 @@ export type AdministrativeUnitCountAggregateInputType = {
   truocSapNhap?: true
   huyenThiCu?: true
   vungLoi?: true
+  soHieuDxTu?: true
+  soHieuDxDen?: true
+  soHieuDthTu?: true
+  soHieuDthDen?: true
+  soHieuCanCu?: true
   _all?: true
 }
 
@@ -267,6 +313,11 @@ export type AdministrativeUnitGroupByOutputType = {
   truocSapNhap: string | null
   huyenThiCu: string | null
   vungLoi: string | null
+  soHieuDxTu: number | null
+  soHieuDxDen: number | null
+  soHieuDthTu: number | null
+  soHieuDthDen: number | null
+  soHieuCanCu: string | null
   _count: AdministrativeUnitCountAggregateOutputType | null
   _avg: AdministrativeUnitAvgAggregateOutputType | null
   _sum: AdministrativeUnitSumAggregateOutputType | null
@@ -308,8 +359,14 @@ export type AdministrativeUnitWhereInput = {
   truocSapNhap?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   huyenThiCu?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   vungLoi?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
+  soHieuDxTu?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDxDen?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDthTu?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDthDen?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuCanCu?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   parent?: Prisma.XOR<Prisma.AdministrativeUnitNullableScalarRelationFilter, Prisma.AdministrativeUnitWhereInput> | null
   children?: Prisma.AdministrativeUnitListRelationFilter
+  htktDoiTuong?: Prisma.Htkt_doi_tuongListRelationFilter
   assets?: Prisma.AssetListRelationFilter
   incidents?: Prisma.IncidentListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
@@ -358,8 +415,14 @@ export type AdministrativeUnitOrderByWithRelationInput = {
   truocSapNhap?: Prisma.SortOrderInput | Prisma.SortOrder
   huyenThiCu?: Prisma.SortOrderInput | Prisma.SortOrder
   vungLoi?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuCanCu?: Prisma.SortOrderInput | Prisma.SortOrder
   parent?: Prisma.AdministrativeUnitOrderByWithRelationInput
   children?: Prisma.AdministrativeUnitOrderByRelationAggregateInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongOrderByRelationAggregateInput
   assets?: Prisma.AssetOrderByRelationAggregateInput
   incidents?: Prisma.IncidentOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
@@ -411,8 +474,14 @@ export type AdministrativeUnitWhereUniqueInput = Prisma.AtLeast<{
   truocSapNhap?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   huyenThiCu?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   vungLoi?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
+  soHieuDxTu?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDxDen?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDthTu?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDthDen?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuCanCu?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   parent?: Prisma.XOR<Prisma.AdministrativeUnitNullableScalarRelationFilter, Prisma.AdministrativeUnitWhereInput> | null
   children?: Prisma.AdministrativeUnitListRelationFilter
+  htktDoiTuong?: Prisma.Htkt_doi_tuongListRelationFilter
   assets?: Prisma.AssetListRelationFilter
   incidents?: Prisma.IncidentListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
@@ -461,6 +530,11 @@ export type AdministrativeUnitOrderByWithAggregationInput = {
   truocSapNhap?: Prisma.SortOrderInput | Prisma.SortOrder
   huyenThiCu?: Prisma.SortOrderInput | Prisma.SortOrder
   vungLoi?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrderInput | Prisma.SortOrder
+  soHieuCanCu?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AdministrativeUnitCountOrderByAggregateInput
   _avg?: Prisma.AdministrativeUnitAvgOrderByAggregateInput
   _max?: Prisma.AdministrativeUnitMaxOrderByAggregateInput
@@ -487,6 +561,11 @@ export type AdministrativeUnitScalarWhereWithAggregatesInput = {
   truocSapNhap?: Prisma.StringNullableWithAggregatesFilter<"AdministrativeUnit"> | string | null
   huyenThiCu?: Prisma.StringNullableWithAggregatesFilter<"AdministrativeUnit"> | string | null
   vungLoi?: Prisma.StringNullableWithAggregatesFilter<"AdministrativeUnit"> | string | null
+  soHieuDxTu?: Prisma.IntNullableWithAggregatesFilter<"AdministrativeUnit"> | number | null
+  soHieuDxDen?: Prisma.IntNullableWithAggregatesFilter<"AdministrativeUnit"> | number | null
+  soHieuDthTu?: Prisma.IntNullableWithAggregatesFilter<"AdministrativeUnit"> | number | null
+  soHieuDthDen?: Prisma.IntNullableWithAggregatesFilter<"AdministrativeUnit"> | number | null
+  soHieuCanCu?: Prisma.StringNullableWithAggregatesFilter<"AdministrativeUnit"> | string | null
 }
 
 export type AdministrativeUnitCreateInput = {
@@ -504,8 +583,14 @@ export type AdministrativeUnitCreateInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -554,7 +639,13 @@ export type AdministrativeUnitUncheckedCreateInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -602,8 +693,14 @@ export type AdministrativeUnitUpdateInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -652,7 +749,13 @@ export type AdministrativeUnitUncheckedUpdateInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -701,6 +804,11 @@ export type AdministrativeUnitCreateManyInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
 }
 
 export type AdministrativeUnitUpdateManyMutationInput = {
@@ -718,6 +826,11 @@ export type AdministrativeUnitUpdateManyMutationInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdministrativeUnitUncheckedUpdateManyInput = {
@@ -736,6 +849,11 @@ export type AdministrativeUnitUncheckedUpdateManyInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdministrativeUnitNullableScalarRelationFilter = {
@@ -769,6 +887,11 @@ export type AdministrativeUnitCountOrderByAggregateInput = {
   truocSapNhap?: Prisma.SortOrder
   huyenThiCu?: Prisma.SortOrder
   vungLoi?: Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrder
+  soHieuCanCu?: Prisma.SortOrder
 }
 
 export type AdministrativeUnitAvgOrderByAggregateInput = {
@@ -776,6 +899,10 @@ export type AdministrativeUnitAvgOrderByAggregateInput = {
   centerLon?: Prisma.SortOrder
   dienTichKm2?: Prisma.SortOrder
   danSo?: Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrder
 }
 
 export type AdministrativeUnitMaxOrderByAggregateInput = {
@@ -794,6 +921,11 @@ export type AdministrativeUnitMaxOrderByAggregateInput = {
   truocSapNhap?: Prisma.SortOrder
   huyenThiCu?: Prisma.SortOrder
   vungLoi?: Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrder
+  soHieuCanCu?: Prisma.SortOrder
 }
 
 export type AdministrativeUnitMinOrderByAggregateInput = {
@@ -812,6 +944,11 @@ export type AdministrativeUnitMinOrderByAggregateInput = {
   truocSapNhap?: Prisma.SortOrder
   huyenThiCu?: Prisma.SortOrder
   vungLoi?: Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrder
+  soHieuCanCu?: Prisma.SortOrder
 }
 
 export type AdministrativeUnitSumOrderByAggregateInput = {
@@ -819,6 +956,10 @@ export type AdministrativeUnitSumOrderByAggregateInput = {
   centerLon?: Prisma.SortOrder
   dienTichKm2?: Prisma.SortOrder
   danSo?: Prisma.SortOrder
+  soHieuDxTu?: Prisma.SortOrder
+  soHieuDxDen?: Prisma.SortOrder
+  soHieuDthTu?: Prisma.SortOrder
+  soHieuDthDen?: Prisma.SortOrder
 }
 
 export type AdministrativeUnitScalarRelationFilter = {
@@ -1372,6 +1513,20 @@ export type AdministrativeUnitUpdateOneWithoutDuAnGpmbsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdministrativeUnitUpdateToOneWithWhereWithoutDuAnGpmbsInput, Prisma.AdministrativeUnitUpdateWithoutDuAnGpmbsInput>, Prisma.AdministrativeUnitUncheckedUpdateWithoutDuAnGpmbsInput>
 }
 
+export type AdministrativeUnitCreateNestedOneWithoutHtktDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUncheckedCreateWithoutHtktDoiTuongInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutHtktDoiTuongInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+}
+
+export type AdministrativeUnitUpdateOneRequiredWithoutHtktDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUncheckedCreateWithoutHtktDoiTuongInput>
+  connectOrCreate?: Prisma.AdministrativeUnitCreateOrConnectWithoutHtktDoiTuongInput
+  upsert?: Prisma.AdministrativeUnitUpsertWithoutHtktDoiTuongInput
+  connect?: Prisma.AdministrativeUnitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdministrativeUnitUpdateToOneWithWhereWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUpdateWithoutHtktDoiTuongInput>, Prisma.AdministrativeUnitUncheckedUpdateWithoutHtktDoiTuongInput>
+}
+
 export type AdministrativeUnitCreateWithoutUsersInput = {
   id?: string
   code: string
@@ -1387,8 +1542,14 @@ export type AdministrativeUnitCreateWithoutUsersInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -1436,7 +1597,13 @@ export type AdministrativeUnitUncheckedCreateWithoutUsersInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -1499,8 +1666,14 @@ export type AdministrativeUnitUpdateWithoutUsersInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -1548,7 +1721,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutUsersInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -1595,7 +1774,13 @@ export type AdministrativeUnitCreateWithoutChildrenInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -1644,6 +1829,12 @@ export type AdministrativeUnitUncheckedCreateWithoutChildrenInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -1696,7 +1887,13 @@ export type AdministrativeUnitCreateWithoutParentInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -1744,7 +1941,13 @@ export type AdministrativeUnitUncheckedCreateWithoutParentInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -1813,7 +2016,13 @@ export type AdministrativeUnitUpdateWithoutChildrenInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -1862,6 +2071,12 @@ export type AdministrativeUnitUncheckedUpdateWithoutChildrenInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -1929,6 +2144,11 @@ export type AdministrativeUnitScalarWhereInput = {
   truocSapNhap?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   huyenThiCu?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
   vungLoi?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
+  soHieuDxTu?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDxDen?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDthTu?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuDthDen?: Prisma.IntNullableFilter<"AdministrativeUnit"> | number | null
+  soHieuCanCu?: Prisma.StringNullableFilter<"AdministrativeUnit"> | string | null
 }
 
 export type AdministrativeUnitCreateWithoutLanhDaoXaInput = {
@@ -1946,8 +2166,14 @@ export type AdministrativeUnitCreateWithoutLanhDaoXaInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -1995,7 +2221,13 @@ export type AdministrativeUnitUncheckedCreateWithoutLanhDaoXaInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -2058,8 +2290,14 @@ export type AdministrativeUnitUpdateWithoutLanhDaoXaInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -2107,7 +2345,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutLanhDaoXaInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -2154,8 +2398,14 @@ export type AdministrativeUnitCreateWithoutStreetsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -2203,7 +2453,13 @@ export type AdministrativeUnitUncheckedCreateWithoutStreetsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -2266,8 +2522,14 @@ export type AdministrativeUnitUpdateWithoutStreetsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -2315,7 +2577,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutStreetsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -2362,8 +2630,14 @@ export type AdministrativeUnitCreateWithoutDenChieuSangInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -2411,7 +2685,13 @@ export type AdministrativeUnitUncheckedCreateWithoutDenChieuSangInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -2474,8 +2754,14 @@ export type AdministrativeUnitUpdateWithoutDenChieuSangInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -2523,7 +2809,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutDenChieuSangInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -2570,8 +2862,14 @@ export type AdministrativeUnitCreateWithoutCayXanhInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -2619,7 +2917,13 @@ export type AdministrativeUnitUncheckedCreateWithoutCayXanhInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -2682,8 +2986,14 @@ export type AdministrativeUnitUpdateWithoutCayXanhInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -2731,7 +3041,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutCayXanhInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -2778,8 +3094,14 @@ export type AdministrativeUnitCreateWithoutHoGaInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -2827,7 +3149,13 @@ export type AdministrativeUnitUncheckedCreateWithoutHoGaInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -2890,8 +3218,14 @@ export type AdministrativeUnitUpdateWithoutHoGaInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -2939,7 +3273,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutHoGaInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -2986,8 +3326,14 @@ export type AdministrativeUnitCreateWithoutCongThoatNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -3035,7 +3381,13 @@ export type AdministrativeUnitUncheckedCreateWithoutCongThoatNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -3098,8 +3450,14 @@ export type AdministrativeUnitUpdateWithoutCongThoatNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -3147,7 +3505,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutCongThoatNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -3194,8 +3558,14 @@ export type AdministrativeUnitCreateWithoutOngCapNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -3243,7 +3613,13 @@ export type AdministrativeUnitUncheckedCreateWithoutOngCapNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -3306,8 +3682,14 @@ export type AdministrativeUnitUpdateWithoutOngCapNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -3355,7 +3737,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutOngCapNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -3402,8 +3790,14 @@ export type AdministrativeUnitCreateWithoutVanCapNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -3451,7 +3845,13 @@ export type AdministrativeUnitUncheckedCreateWithoutVanCapNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -3514,8 +3914,14 @@ export type AdministrativeUnitUpdateWithoutVanCapNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -3563,7 +3969,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutVanCapNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -3610,8 +4022,14 @@ export type AdministrativeUnitCreateWithoutCapVienThongInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -3659,7 +4077,13 @@ export type AdministrativeUnitUncheckedCreateWithoutCapVienThongInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -3722,8 +4146,14 @@ export type AdministrativeUnitUpdateWithoutCapVienThongInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -3771,7 +4201,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutCapVienThongInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -3818,8 +4254,14 @@ export type AdministrativeUnitCreateWithoutViaHeInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -3867,7 +4309,13 @@ export type AdministrativeUnitUncheckedCreateWithoutViaHeInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -3930,8 +4378,14 @@ export type AdministrativeUnitUpdateWithoutViaHeInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -3979,7 +4433,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutViaHeInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -4026,8 +4486,14 @@ export type AdministrativeUnitCreateWithoutTuyenMangLuoiInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -4075,7 +4541,13 @@ export type AdministrativeUnitUncheckedCreateWithoutTuyenMangLuoiInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -4138,8 +4610,14 @@ export type AdministrativeUnitUpdateWithoutTuyenMangLuoiInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -4187,7 +4665,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutTuyenMangLuoiInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -4234,8 +4718,14 @@ export type AdministrativeUnitCreateWithoutNhaMayXuLyInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -4283,7 +4773,13 @@ export type AdministrativeUnitUncheckedCreateWithoutNhaMayXuLyInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -4346,8 +4842,14 @@ export type AdministrativeUnitUpdateWithoutNhaMayXuLyInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -4395,7 +4897,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutNhaMayXuLyInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -4442,8 +4950,14 @@ export type AdministrativeUnitCreateWithoutTramBomInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -4491,7 +5005,13 @@ export type AdministrativeUnitUncheckedCreateWithoutTramBomInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -4554,8 +5074,14 @@ export type AdministrativeUnitUpdateWithoutTramBomInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -4603,7 +5129,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutTramBomInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -4650,8 +5182,14 @@ export type AdministrativeUnitCreateWithoutAssetsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
   streets?: Prisma.StreetCreateNestedManyWithoutWardInput
@@ -4699,7 +5237,13 @@ export type AdministrativeUnitUncheckedCreateWithoutAssetsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
   streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
@@ -4762,8 +5306,14 @@ export type AdministrativeUnitUpdateWithoutAssetsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
   streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
@@ -4811,7 +5361,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutAssetsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
   streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
@@ -4858,8 +5414,14 @@ export type AdministrativeUnitCreateWithoutIncidentsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
   streets?: Prisma.StreetCreateNestedManyWithoutWardInput
@@ -4907,7 +5469,13 @@ export type AdministrativeUnitUncheckedCreateWithoutIncidentsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
   streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
@@ -4970,8 +5538,14 @@ export type AdministrativeUnitUpdateWithoutIncidentsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
   streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
@@ -5019,7 +5593,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutIncidentsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
   streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
@@ -5066,8 +5646,14 @@ export type AdministrativeUnitCreateWithoutProjectsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   streets?: Prisma.StreetCreateNestedManyWithoutWardInput
@@ -5115,7 +5701,13 @@ export type AdministrativeUnitUncheckedCreateWithoutProjectsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
@@ -5178,8 +5770,14 @@ export type AdministrativeUnitUpdateWithoutProjectsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
@@ -5227,7 +5825,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutProjectsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
@@ -5274,8 +5878,14 @@ export type AdministrativeUnitCreateWithoutToChucInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -5323,7 +5933,13 @@ export type AdministrativeUnitUncheckedCreateWithoutToChucInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -5386,8 +6002,14 @@ export type AdministrativeUnitUpdateWithoutToChucInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -5435,7 +6057,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutToChucInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -5482,8 +6110,14 @@ export type AdministrativeUnitCreateWithoutReportDuongInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -5531,7 +6165,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportDuongInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -5594,8 +6234,14 @@ export type AdministrativeUnitUpdateWithoutReportDuongInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -5643,7 +6289,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportDuongInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -5690,8 +6342,14 @@ export type AdministrativeUnitCreateWithoutReportDienCSInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -5739,7 +6397,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportDienCSInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -5802,8 +6466,14 @@ export type AdministrativeUnitUpdateWithoutReportDienCSInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -5851,7 +6521,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportDienCSInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -5898,8 +6574,14 @@ export type AdministrativeUnitCreateWithoutReportThoatNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -5947,7 +6629,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportThoatNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -6010,8 +6698,14 @@ export type AdministrativeUnitUpdateWithoutReportThoatNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -6059,7 +6753,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportThoatNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -6106,8 +6806,14 @@ export type AdministrativeUnitCreateWithoutReportCayXanhInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -6155,7 +6861,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportCayXanhInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -6218,8 +6930,14 @@ export type AdministrativeUnitUpdateWithoutReportCayXanhInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -6267,7 +6985,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportCayXanhInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -6314,8 +7038,14 @@ export type AdministrativeUnitCreateWithoutReportCongVienInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -6363,7 +7093,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportCongVienInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -6426,8 +7162,14 @@ export type AdministrativeUnitUpdateWithoutReportCongVienInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -6475,7 +7217,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportCongVienInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -6522,8 +7270,14 @@ export type AdministrativeUnitCreateWithoutReportCapNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -6571,7 +7325,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportCapNuocInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -6634,8 +7394,14 @@ export type AdministrativeUnitUpdateWithoutReportCapNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -6683,7 +7449,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportCapNuocInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -6730,8 +7502,14 @@ export type AdministrativeUnitCreateWithoutReportBaiDoXeInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -6779,7 +7557,13 @@ export type AdministrativeUnitUncheckedCreateWithoutReportBaiDoXeInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -6842,8 +7626,14 @@ export type AdministrativeUnitUpdateWithoutReportBaiDoXeInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -6891,7 +7681,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutReportBaiDoXeInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -6938,8 +7734,14 @@ export type AdministrativeUnitCreateWithoutWardReportsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -6987,7 +7789,13 @@ export type AdministrativeUnitUncheckedCreateWithoutWardReportsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -7050,8 +7858,14 @@ export type AdministrativeUnitUpdateWithoutWardReportsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -7099,7 +7913,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutWardReportsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -7146,8 +7966,14 @@ export type AdministrativeUnitCreateWithoutWardGisLengthInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -7195,7 +8021,13 @@ export type AdministrativeUnitUncheckedCreateWithoutWardGisLengthInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -7258,8 +8090,14 @@ export type AdministrativeUnitUpdateWithoutWardGisLengthInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -7307,7 +8145,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutWardGisLengthInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -7354,8 +8198,14 @@ export type AdministrativeUnitCreateWithoutWardKhaiBaoInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -7403,7 +8253,13 @@ export type AdministrativeUnitUncheckedCreateWithoutWardKhaiBaoInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -7466,8 +8322,14 @@ export type AdministrativeUnitUpdateWithoutWardKhaiBaoInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -7515,7 +8377,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutWardKhaiBaoInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -7562,8 +8430,14 @@ export type AdministrativeUnitCreateWithoutNghiepVuBanGhisInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -7611,7 +8485,13 @@ export type AdministrativeUnitUncheckedCreateWithoutNghiepVuBanGhisInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -7674,8 +8554,14 @@ export type AdministrativeUnitUpdateWithoutNghiepVuBanGhisInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -7723,7 +8609,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutNghiepVuBanGhisInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -7770,8 +8662,14 @@ export type AdministrativeUnitCreateWithoutDuAnGpmbsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
   children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
@@ -7819,7 +8717,13 @@ export type AdministrativeUnitUncheckedCreateWithoutDuAnGpmbsInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
   children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutXaInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
   incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
@@ -7882,8 +8786,14 @@ export type AdministrativeUnitUpdateWithoutDuAnGpmbsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -7931,7 +8841,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutDuAnGpmbsInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -7963,6 +8879,238 @@ export type AdministrativeUnitUncheckedUpdateWithoutDuAnGpmbsInput = {
   lanhDaoXa?: Prisma.LanhDaoXaUncheckedUpdateManyWithoutWardNestedInput
 }
 
+export type AdministrativeUnitCreateWithoutHtktDoiTuongInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
+  parent?: Prisma.AdministrativeUnitCreateNestedOneWithoutChildrenInput
+  children?: Prisma.AdministrativeUnitCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportCreateNestedManyWithoutWardInput
+  users?: Prisma.UserCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitUncheckedCreateWithoutHtktDoiTuongInput = {
+  id?: string
+  code: string
+  name: string
+  fullName?: string | null
+  type: $Enums.AdministrativeUnitType
+  parentId?: string | null
+  centerLat?: number | null
+  centerLon?: number | null
+  isActive?: boolean
+  dienTichKm2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: number | null
+  trungTamHc?: string | null
+  truocSapNhap?: string | null
+  huyenThiCu?: string | null
+  vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
+  children?: Prisma.AdministrativeUnitUncheckedCreateNestedManyWithoutParentInput
+  assets?: Prisma.AssetUncheckedCreateNestedManyWithoutWardInput
+  incidents?: Prisma.IncidentUncheckedCreateNestedManyWithoutWardInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutWardInput
+  streets?: Prisma.StreetUncheckedCreateNestedManyWithoutWardInput
+  wardReports?: Prisma.WardReportUncheckedCreateNestedManyWithoutWardInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutWardInput
+  reportDuong?: Prisma.ReportDuongUncheckedCreateNestedManyWithoutWardInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedCreateNestedManyWithoutWardInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedCreateNestedManyWithoutWardInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedCreateNestedManyWithoutWardInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedCreateNestedManyWithoutWardInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedCreateNestedManyWithoutWardInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedCreateNestedOneWithoutWardInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedCreateNestedManyWithoutWardInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedCreateNestedManyWithoutWardInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutWardInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutWardInput
+  hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutWardInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutWardInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedCreateNestedManyWithoutWardInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedCreateNestedManyWithoutWardInput
+  capVienThong?: Prisma.CapVienThongUncheckedCreateNestedManyWithoutWardInput
+  viaHe?: Prisma.ViaHeUncheckedCreateNestedManyWithoutWardInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedCreateNestedManyWithoutWardInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedCreateNestedManyWithoutWardInput
+  tramBom?: Prisma.TramBomUncheckedCreateNestedManyWithoutWardInput
+  toChuc?: Prisma.ToChucUncheckedCreateNestedManyWithoutDonViHCInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedCreateNestedManyWithoutWardInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedCreateNestedManyWithoutWardInput
+}
+
+export type AdministrativeUnitCreateOrConnectWithoutHtktDoiTuongInput = {
+  where: Prisma.AdministrativeUnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUncheckedCreateWithoutHtktDoiTuongInput>
+}
+
+export type AdministrativeUnitUpsertWithoutHtktDoiTuongInput = {
+  update: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutHtktDoiTuongInput>
+  create: Prisma.XOR<Prisma.AdministrativeUnitCreateWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUncheckedCreateWithoutHtktDoiTuongInput>
+  where?: Prisma.AdministrativeUnitWhereInput
+}
+
+export type AdministrativeUnitUpdateToOneWithWhereWithoutHtktDoiTuongInput = {
+  where?: Prisma.AdministrativeUnitWhereInput
+  data: Prisma.XOR<Prisma.AdministrativeUnitUpdateWithoutHtktDoiTuongInput, Prisma.AdministrativeUnitUncheckedUpdateWithoutHtktDoiTuongInput>
+}
+
+export type AdministrativeUnitUpdateWithoutHtktDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parent?: Prisma.AdministrativeUnitUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUpdateManyWithoutWardNestedInput
+}
+
+export type AdministrativeUnitUncheckedUpdateWithoutHtktDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumAdministrativeUnitTypeFieldUpdateOperationsInput | $Enums.AdministrativeUnitType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  centerLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  centerLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dienTichKm2?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  danSo?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  trungTamHc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
+  incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
+  streets?: Prisma.StreetUncheckedUpdateManyWithoutWardNestedInput
+  wardReports?: Prisma.WardReportUncheckedUpdateManyWithoutWardNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutWardNestedInput
+  reportDuong?: Prisma.ReportDuongUncheckedUpdateManyWithoutWardNestedInput
+  reportDienCS?: Prisma.ReportDienCSUncheckedUpdateManyWithoutWardNestedInput
+  reportThoatNuoc?: Prisma.ReportThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportCayXanh?: Prisma.ReportCayXanhUncheckedUpdateManyWithoutWardNestedInput
+  reportCongVien?: Prisma.ReportCongVienUncheckedUpdateManyWithoutWardNestedInput
+  reportCapNuoc?: Prisma.ReportCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  reportBaiDoXe?: Prisma.ReportBaiDoXeUncheckedUpdateManyWithoutWardNestedInput
+  wardGisLength?: Prisma.WardGisLengthUncheckedUpdateOneWithoutWardNestedInput
+  wardKhaiBao?: Prisma.WardKhaiBaoUncheckedUpdateManyWithoutWardNestedInput
+  nghiepVuBanGhis?: Prisma.NghiepVuBanGhiUncheckedUpdateManyWithoutWardNestedInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutWardNestedInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutWardNestedInput
+  hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutWardNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutWardNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedUpdateManyWithoutWardNestedInput
+  capVienThong?: Prisma.CapVienThongUncheckedUpdateManyWithoutWardNestedInput
+  viaHe?: Prisma.ViaHeUncheckedUpdateManyWithoutWardNestedInput
+  tuyenMangLuoi?: Prisma.TuyenMangLuoiUncheckedUpdateManyWithoutWardNestedInput
+  nhaMayXuLy?: Prisma.NhaMayXuLyNuocThaiUncheckedUpdateManyWithoutWardNestedInput
+  tramBom?: Prisma.TramBomUncheckedUpdateManyWithoutWardNestedInput
+  toChuc?: Prisma.ToChucUncheckedUpdateManyWithoutDonViHCNestedInput
+  lanhDaoXa?: Prisma.LanhDaoXaUncheckedUpdateManyWithoutWardNestedInput
+  duAnGpmbs?: Prisma.DsDuAnGpmbUncheckedUpdateManyWithoutWardNestedInput
+}
+
 export type AdministrativeUnitCreateManyParentInput = {
   id?: string
   code: string
@@ -7978,6 +9126,11 @@ export type AdministrativeUnitCreateManyParentInput = {
   truocSapNhap?: string | null
   huyenThiCu?: string | null
   vungLoi?: string | null
+  soHieuDxTu?: number | null
+  soHieuDxDen?: number | null
+  soHieuDthTu?: number | null
+  soHieuDthDen?: number | null
+  soHieuCanCu?: string | null
 }
 
 export type AdministrativeUnitUpdateWithoutParentInput = {
@@ -7995,7 +9148,13 @@ export type AdministrativeUnitUpdateWithoutParentInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutWardNestedInput
@@ -8043,7 +9202,13 @@ export type AdministrativeUnitUncheckedUpdateWithoutParentInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   children?: Prisma.AdministrativeUnitUncheckedUpdateManyWithoutParentNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutXaNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutWardNestedInput
   incidents?: Prisma.IncidentUncheckedUpdateManyWithoutWardNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutWardNestedInput
@@ -8091,6 +9256,11 @@ export type AdministrativeUnitUncheckedUpdateManyWithoutParentInput = {
   truocSapNhap?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   huyenThiCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vungLoi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  soHieuDxTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDxDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthTu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuDthDen?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  soHieuCanCu?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -8100,6 +9270,7 @@ export type AdministrativeUnitUncheckedUpdateManyWithoutParentInput = {
 
 export type AdministrativeUnitCountOutputType = {
   children: number
+  htktDoiTuong: number
   assets: number
   incidents: number
   projects: number
@@ -8133,6 +9304,7 @@ export type AdministrativeUnitCountOutputType = {
 
 export type AdministrativeUnitCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   children?: boolean | AdministrativeUnitCountOutputTypeCountChildrenArgs
+  htktDoiTuong?: boolean | AdministrativeUnitCountOutputTypeCountHtktDoiTuongArgs
   assets?: boolean | AdministrativeUnitCountOutputTypeCountAssetsArgs
   incidents?: boolean | AdministrativeUnitCountOutputTypeCountIncidentsArgs
   projects?: boolean | AdministrativeUnitCountOutputTypeCountProjectsArgs
@@ -8179,6 +9351,13 @@ export type AdministrativeUnitCountOutputTypeDefaultArgs<ExtArgs extends runtime
  */
 export type AdministrativeUnitCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AdministrativeUnitWhereInput
+}
+
+/**
+ * AdministrativeUnitCountOutputType without action
+ */
+export type AdministrativeUnitCountOutputTypeCountHtktDoiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.htkt_doi_tuongWhereInput
 }
 
 /**
@@ -8401,8 +9580,14 @@ export type AdministrativeUnitSelect<ExtArgs extends runtime.Types.Extensions.In
   truocSapNhap?: boolean
   huyenThiCu?: boolean
   vungLoi?: boolean
+  soHieuDxTu?: boolean
+  soHieuDxDen?: boolean
+  soHieuDthTu?: boolean
+  soHieuDthDen?: boolean
+  soHieuCanCu?: boolean
   parent?: boolean | Prisma.AdministrativeUnit$parentArgs<ExtArgs>
   children?: boolean | Prisma.AdministrativeUnit$childrenArgs<ExtArgs>
+  htktDoiTuong?: boolean | Prisma.AdministrativeUnit$htktDoiTuongArgs<ExtArgs>
   assets?: boolean | Prisma.AdministrativeUnit$assetsArgs<ExtArgs>
   incidents?: boolean | Prisma.AdministrativeUnit$incidentsArgs<ExtArgs>
   projects?: boolean | Prisma.AdministrativeUnit$projectsArgs<ExtArgs>
@@ -8452,6 +9637,11 @@ export type AdministrativeUnitSelectCreateManyAndReturn<ExtArgs extends runtime.
   truocSapNhap?: boolean
   huyenThiCu?: boolean
   vungLoi?: boolean
+  soHieuDxTu?: boolean
+  soHieuDxDen?: boolean
+  soHieuDthTu?: boolean
+  soHieuDthDen?: boolean
+  soHieuCanCu?: boolean
   parent?: boolean | Prisma.AdministrativeUnit$parentArgs<ExtArgs>
 }, ExtArgs["result"]["administrativeUnit"]>
 
@@ -8471,6 +9661,11 @@ export type AdministrativeUnitSelectUpdateManyAndReturn<ExtArgs extends runtime.
   truocSapNhap?: boolean
   huyenThiCu?: boolean
   vungLoi?: boolean
+  soHieuDxTu?: boolean
+  soHieuDxDen?: boolean
+  soHieuDthTu?: boolean
+  soHieuDthDen?: boolean
+  soHieuCanCu?: boolean
   parent?: boolean | Prisma.AdministrativeUnit$parentArgs<ExtArgs>
 }, ExtArgs["result"]["administrativeUnit"]>
 
@@ -8490,12 +9685,18 @@ export type AdministrativeUnitSelectScalar = {
   truocSapNhap?: boolean
   huyenThiCu?: boolean
   vungLoi?: boolean
+  soHieuDxTu?: boolean
+  soHieuDxDen?: boolean
+  soHieuDthTu?: boolean
+  soHieuDthDen?: boolean
+  soHieuCanCu?: boolean
 }
 
-export type AdministrativeUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "fullName" | "type" | "parentId" | "centerLat" | "centerLon" | "isActive" | "dienTichKm2" | "danSo" | "trungTamHc" | "truocSapNhap" | "huyenThiCu" | "vungLoi", ExtArgs["result"]["administrativeUnit"]>
+export type AdministrativeUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "fullName" | "type" | "parentId" | "centerLat" | "centerLon" | "isActive" | "dienTichKm2" | "danSo" | "trungTamHc" | "truocSapNhap" | "huyenThiCu" | "vungLoi" | "soHieuDxTu" | "soHieuDxDen" | "soHieuDthTu" | "soHieuDthDen" | "soHieuCanCu", ExtArgs["result"]["administrativeUnit"]>
 export type AdministrativeUnitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parent?: boolean | Prisma.AdministrativeUnit$parentArgs<ExtArgs>
   children?: boolean | Prisma.AdministrativeUnit$childrenArgs<ExtArgs>
+  htktDoiTuong?: boolean | Prisma.AdministrativeUnit$htktDoiTuongArgs<ExtArgs>
   assets?: boolean | Prisma.AdministrativeUnit$assetsArgs<ExtArgs>
   incidents?: boolean | Prisma.AdministrativeUnit$incidentsArgs<ExtArgs>
   projects?: boolean | Prisma.AdministrativeUnit$projectsArgs<ExtArgs>
@@ -8540,6 +9741,7 @@ export type $AdministrativeUnitPayload<ExtArgs extends runtime.Types.Extensions.
   objects: {
     parent: Prisma.$AdministrativeUnitPayload<ExtArgs> | null
     children: Prisma.$AdministrativeUnitPayload<ExtArgs>[]
+    htktDoiTuong: Prisma.$htkt_doi_tuongPayload<ExtArgs>[]
     assets: Prisma.$AssetPayload<ExtArgs>[]
     incidents: Prisma.$IncidentPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
@@ -8587,6 +9789,11 @@ export type $AdministrativeUnitPayload<ExtArgs extends runtime.Types.Extensions.
     truocSapNhap: string | null
     huyenThiCu: string | null
     vungLoi: string | null
+    soHieuDxTu: number | null
+    soHieuDxDen: number | null
+    soHieuDthTu: number | null
+    soHieuDthDen: number | null
+    soHieuCanCu: string | null
   }, ExtArgs["result"]["administrativeUnit"]>
   composites: {}
 }
@@ -8983,6 +10190,7 @@ export interface Prisma__AdministrativeUnitClient<T, Null = never, ExtArgs exten
   readonly [Symbol.toStringTag]: "PrismaPromise"
   parent<T extends Prisma.AdministrativeUnit$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$parentArgs<ExtArgs>>): Prisma.Prisma__AdministrativeUnitClient<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.AdministrativeUnit$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  htktDoiTuong<T extends Prisma.AdministrativeUnit$htktDoiTuongArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$htktDoiTuongArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$htkt_doi_tuongPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assets<T extends Prisma.AdministrativeUnit$assetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   incidents<T extends Prisma.AdministrativeUnit$incidentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$incidentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncidentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.AdministrativeUnit$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdministrativeUnit$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9057,6 +10265,11 @@ export interface AdministrativeUnitFieldRefs {
   readonly truocSapNhap: Prisma.FieldRef<"AdministrativeUnit", 'String'>
   readonly huyenThiCu: Prisma.FieldRef<"AdministrativeUnit", 'String'>
   readonly vungLoi: Prisma.FieldRef<"AdministrativeUnit", 'String'>
+  readonly soHieuDxTu: Prisma.FieldRef<"AdministrativeUnit", 'Int'>
+  readonly soHieuDxDen: Prisma.FieldRef<"AdministrativeUnit", 'Int'>
+  readonly soHieuDthTu: Prisma.FieldRef<"AdministrativeUnit", 'Int'>
+  readonly soHieuDthDen: Prisma.FieldRef<"AdministrativeUnit", 'Int'>
+  readonly soHieuCanCu: Prisma.FieldRef<"AdministrativeUnit", 'String'>
 }
     
 
@@ -9498,6 +10711,30 @@ export type AdministrativeUnit$childrenArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.AdministrativeUnitScalarFieldEnum | Prisma.AdministrativeUnitScalarFieldEnum[]
+}
+
+/**
+ * AdministrativeUnit.htktDoiTuong
+ */
+export type AdministrativeUnit$htktDoiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the htkt_doi_tuong
+   */
+  select?: Prisma.htkt_doi_tuongSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the htkt_doi_tuong
+   */
+  omit?: Prisma.htkt_doi_tuongOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.htkt_doi_tuongInclude<ExtArgs> | null
+  where?: Prisma.htkt_doi_tuongWhereInput
+  orderBy?: Prisma.htkt_doi_tuongOrderByWithRelationInput | Prisma.htkt_doi_tuongOrderByWithRelationInput[]
+  cursor?: Prisma.htkt_doi_tuongWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Htkt_doi_tuongScalarFieldEnum | Prisma.Htkt_doi_tuongScalarFieldEnum[]
 }
 
 /**

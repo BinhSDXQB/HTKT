@@ -225,6 +225,7 @@ export type StreetWhereInput = {
   length?: Prisma.FloatNullableFilter<"Street"> | number | null
   isActive?: Prisma.BoolFilter<"Street"> | boolean
   ward?: Prisma.XOR<Prisma.AdministrativeUnitNullableScalarRelationFilter, Prisma.AdministrativeUnitWhereInput> | null
+  htktDoiTuong?: Prisma.Htkt_doi_tuongListRelationFilter
   assets?: Prisma.AssetListRelationFilter
   denChieuSang?: Prisma.DenChieuSangListRelationFilter
   cayXanh?: Prisma.CayXanhDuongListRelationFilter
@@ -247,6 +248,7 @@ export type StreetOrderByWithRelationInput = {
   length?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   ward?: Prisma.AdministrativeUnitOrderByWithRelationInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongOrderByRelationAggregateInput
   assets?: Prisma.AssetOrderByRelationAggregateInput
   denChieuSang?: Prisma.DenChieuSangOrderByRelationAggregateInput
   cayXanh?: Prisma.CayXanhDuongOrderByRelationAggregateInput
@@ -272,6 +274,7 @@ export type StreetWhereUniqueInput = Prisma.AtLeast<{
   length?: Prisma.FloatNullableFilter<"Street"> | number | null
   isActive?: Prisma.BoolFilter<"Street"> | boolean
   ward?: Prisma.XOR<Prisma.AdministrativeUnitNullableScalarRelationFilter, Prisma.AdministrativeUnitWhereInput> | null
+  htktDoiTuong?: Prisma.Htkt_doi_tuongListRelationFilter
   assets?: Prisma.AssetListRelationFilter
   denChieuSang?: Prisma.DenChieuSangListRelationFilter
   cayXanh?: Prisma.CayXanhDuongListRelationFilter
@@ -319,6 +322,7 @@ export type StreetCreateInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -340,6 +344,7 @@ export type StreetUncheckedCreateInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -361,6 +366,7 @@ export type StreetUpdateInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -382,6 +388,7 @@ export type StreetUncheckedUpdateInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -695,12 +702,29 @@ export type StreetUpdateOneWithoutAssetsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StreetUpdateToOneWithWhereWithoutAssetsInput, Prisma.StreetUpdateWithoutAssetsInput>, Prisma.StreetUncheckedUpdateWithoutAssetsInput>
 }
 
+export type StreetCreateNestedOneWithoutHtktDoiTuongInput = {
+  create?: Prisma.XOR<Prisma.StreetCreateWithoutHtktDoiTuongInput, Prisma.StreetUncheckedCreateWithoutHtktDoiTuongInput>
+  connectOrCreate?: Prisma.StreetCreateOrConnectWithoutHtktDoiTuongInput
+  connect?: Prisma.StreetWhereUniqueInput
+}
+
+export type StreetUpdateOneWithoutHtktDoiTuongNestedInput = {
+  create?: Prisma.XOR<Prisma.StreetCreateWithoutHtktDoiTuongInput, Prisma.StreetUncheckedCreateWithoutHtktDoiTuongInput>
+  connectOrCreate?: Prisma.StreetCreateOrConnectWithoutHtktDoiTuongInput
+  upsert?: Prisma.StreetUpsertWithoutHtktDoiTuongInput
+  disconnect?: Prisma.StreetWhereInput | boolean
+  delete?: Prisma.StreetWhereInput | boolean
+  connect?: Prisma.StreetWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StreetUpdateToOneWithWhereWithoutHtktDoiTuongInput, Prisma.StreetUpdateWithoutHtktDoiTuongInput>, Prisma.StreetUncheckedUpdateWithoutHtktDoiTuongInput>
+}
+
 export type StreetCreateWithoutWardInput = {
   id?: string
   code: string
   name: string
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -721,6 +745,7 @@ export type StreetUncheckedCreateWithoutWardInput = {
   name: string
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -780,6 +805,7 @@ export type StreetCreateWithoutDenChieuSangInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutStreetInput
@@ -800,6 +826,7 @@ export type StreetUncheckedCreateWithoutDenChieuSangInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutStreetInput
@@ -836,6 +863,7 @@ export type StreetUpdateWithoutDenChieuSangInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutStreetNestedInput
@@ -856,6 +884,7 @@ export type StreetUncheckedUpdateWithoutDenChieuSangInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutStreetNestedInput
@@ -876,6 +905,7 @@ export type StreetCreateWithoutCayXanhInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutStreetInput
@@ -896,6 +926,7 @@ export type StreetUncheckedCreateWithoutCayXanhInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutStreetInput
@@ -932,6 +963,7 @@ export type StreetUpdateWithoutCayXanhInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutStreetNestedInput
@@ -952,6 +984,7 @@ export type StreetUncheckedUpdateWithoutCayXanhInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutStreetNestedInput
@@ -972,6 +1005,7 @@ export type StreetCreateWithoutHoGaInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -992,6 +1026,7 @@ export type StreetUncheckedCreateWithoutHoGaInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1028,6 +1063,7 @@ export type StreetUpdateWithoutHoGaInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1048,6 +1084,7 @@ export type StreetUncheckedUpdateWithoutHoGaInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1068,6 +1105,7 @@ export type StreetCreateWithoutCongThoatNuocInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1088,6 +1126,7 @@ export type StreetUncheckedCreateWithoutCongThoatNuocInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1124,6 +1163,7 @@ export type StreetUpdateWithoutCongThoatNuocInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1144,6 +1184,7 @@ export type StreetUncheckedUpdateWithoutCongThoatNuocInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1164,6 +1205,7 @@ export type StreetCreateWithoutOngCapNuocInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1184,6 +1226,7 @@ export type StreetUncheckedCreateWithoutOngCapNuocInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1220,6 +1263,7 @@ export type StreetUpdateWithoutOngCapNuocInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1240,6 +1284,7 @@ export type StreetUncheckedUpdateWithoutOngCapNuocInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1260,6 +1305,7 @@ export type StreetCreateWithoutVanCapNuocInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1280,6 +1326,7 @@ export type StreetUncheckedCreateWithoutVanCapNuocInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1316,6 +1363,7 @@ export type StreetUpdateWithoutVanCapNuocInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1336,6 +1384,7 @@ export type StreetUncheckedUpdateWithoutVanCapNuocInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1356,6 +1405,7 @@ export type StreetCreateWithoutCapVienThongInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1376,6 +1426,7 @@ export type StreetUncheckedCreateWithoutCapVienThongInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1412,6 +1463,7 @@ export type StreetUpdateWithoutCapVienThongInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1432,6 +1484,7 @@ export type StreetUncheckedUpdateWithoutCapVienThongInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1452,6 +1505,7 @@ export type StreetCreateWithoutViaHeInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1472,6 +1526,7 @@ export type StreetUncheckedCreateWithoutViaHeInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1508,6 +1563,7 @@ export type StreetUpdateWithoutViaHeInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1528,6 +1584,7 @@ export type StreetUncheckedUpdateWithoutViaHeInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1548,6 +1605,7 @@ export type StreetCreateWithoutDoanCongInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1568,6 +1626,7 @@ export type StreetUncheckedCreateWithoutDoanCongInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1604,6 +1663,7 @@ export type StreetUpdateWithoutDoanCongInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1624,6 +1684,7 @@ export type StreetUncheckedUpdateWithoutDoanCongInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1644,6 +1705,7 @@ export type StreetCreateWithoutDoanOngInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1664,6 +1726,7 @@ export type StreetUncheckedCreateWithoutDoanOngInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1700,6 +1763,7 @@ export type StreetUpdateWithoutDoanOngInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1720,6 +1784,7 @@ export type StreetUncheckedUpdateWithoutDoanOngInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1740,6 +1805,7 @@ export type StreetCreateWithoutTramBomInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
@@ -1760,6 +1826,7 @@ export type StreetUncheckedCreateWithoutTramBomInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
@@ -1796,6 +1863,7 @@ export type StreetUpdateWithoutTramBomInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1816,6 +1884,7 @@ export type StreetUncheckedUpdateWithoutTramBomInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1836,6 +1905,7 @@ export type StreetCreateWithoutAssetsInput = {
   length?: number | null
   isActive?: boolean
   ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
   hoGa?: Prisma.HoGaCreateNestedManyWithoutStreetInput
@@ -1856,6 +1926,7 @@ export type StreetUncheckedCreateWithoutAssetsInput = {
   wardId?: string | null
   length?: number | null
   isActive?: boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedCreateNestedManyWithoutStreetInput
   denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
   cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
   hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutStreetInput
@@ -1892,6 +1963,7 @@ export type StreetUpdateWithoutAssetsInput = {
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
   hoGa?: Prisma.HoGaUpdateManyWithoutStreetNestedInput
@@ -1912,6 +1984,107 @@ export type StreetUncheckedUpdateWithoutAssetsInput = {
   wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
+  hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutStreetNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedUpdateManyWithoutStreetNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedUpdateManyWithoutStreetNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedUpdateManyWithoutStreetNestedInput
+  capVienThong?: Prisma.CapVienThongUncheckedUpdateManyWithoutStreetNestedInput
+  viaHe?: Prisma.ViaHeUncheckedUpdateManyWithoutStreetNestedInput
+  doanCong?: Prisma.DoanTuyenCongUncheckedUpdateManyWithoutStreetNestedInput
+  doanOng?: Prisma.DoanTuyenOngUncheckedUpdateManyWithoutStreetNestedInput
+  tramBom?: Prisma.TramBomUncheckedUpdateManyWithoutStreetNestedInput
+}
+
+export type StreetCreateWithoutHtktDoiTuongInput = {
+  id?: string
+  code: string
+  name: string
+  length?: number | null
+  isActive?: boolean
+  ward?: Prisma.AdministrativeUnitCreateNestedOneWithoutStreetsInput
+  assets?: Prisma.AssetCreateNestedManyWithoutStreetInput
+  denChieuSang?: Prisma.DenChieuSangCreateNestedManyWithoutStreetInput
+  cayXanh?: Prisma.CayXanhDuongCreateNestedManyWithoutStreetInput
+  hoGa?: Prisma.HoGaCreateNestedManyWithoutStreetInput
+  congThoatNuoc?: Prisma.CongThoatNuocCreateNestedManyWithoutStreetInput
+  ongCapNuoc?: Prisma.OngCapNuocCreateNestedManyWithoutStreetInput
+  vanCapNuoc?: Prisma.VanCapNuocCreateNestedManyWithoutStreetInput
+  capVienThong?: Prisma.CapVienThongCreateNestedManyWithoutStreetInput
+  viaHe?: Prisma.ViaHeCreateNestedManyWithoutStreetInput
+  doanCong?: Prisma.DoanTuyenCongCreateNestedManyWithoutStreetInput
+  doanOng?: Prisma.DoanTuyenOngCreateNestedManyWithoutStreetInput
+  tramBom?: Prisma.TramBomCreateNestedManyWithoutStreetInput
+}
+
+export type StreetUncheckedCreateWithoutHtktDoiTuongInput = {
+  id?: string
+  code: string
+  name: string
+  wardId?: string | null
+  length?: number | null
+  isActive?: boolean
+  assets?: Prisma.AssetUncheckedCreateNestedManyWithoutStreetInput
+  denChieuSang?: Prisma.DenChieuSangUncheckedCreateNestedManyWithoutStreetInput
+  cayXanh?: Prisma.CayXanhDuongUncheckedCreateNestedManyWithoutStreetInput
+  hoGa?: Prisma.HoGaUncheckedCreateNestedManyWithoutStreetInput
+  congThoatNuoc?: Prisma.CongThoatNuocUncheckedCreateNestedManyWithoutStreetInput
+  ongCapNuoc?: Prisma.OngCapNuocUncheckedCreateNestedManyWithoutStreetInput
+  vanCapNuoc?: Prisma.VanCapNuocUncheckedCreateNestedManyWithoutStreetInput
+  capVienThong?: Prisma.CapVienThongUncheckedCreateNestedManyWithoutStreetInput
+  viaHe?: Prisma.ViaHeUncheckedCreateNestedManyWithoutStreetInput
+  doanCong?: Prisma.DoanTuyenCongUncheckedCreateNestedManyWithoutStreetInput
+  doanOng?: Prisma.DoanTuyenOngUncheckedCreateNestedManyWithoutStreetInput
+  tramBom?: Prisma.TramBomUncheckedCreateNestedManyWithoutStreetInput
+}
+
+export type StreetCreateOrConnectWithoutHtktDoiTuongInput = {
+  where: Prisma.StreetWhereUniqueInput
+  create: Prisma.XOR<Prisma.StreetCreateWithoutHtktDoiTuongInput, Prisma.StreetUncheckedCreateWithoutHtktDoiTuongInput>
+}
+
+export type StreetUpsertWithoutHtktDoiTuongInput = {
+  update: Prisma.XOR<Prisma.StreetUpdateWithoutHtktDoiTuongInput, Prisma.StreetUncheckedUpdateWithoutHtktDoiTuongInput>
+  create: Prisma.XOR<Prisma.StreetCreateWithoutHtktDoiTuongInput, Prisma.StreetUncheckedCreateWithoutHtktDoiTuongInput>
+  where?: Prisma.StreetWhereInput
+}
+
+export type StreetUpdateToOneWithWhereWithoutHtktDoiTuongInput = {
+  where?: Prisma.StreetWhereInput
+  data: Prisma.XOR<Prisma.StreetUpdateWithoutHtktDoiTuongInput, Prisma.StreetUncheckedUpdateWithoutHtktDoiTuongInput>
+}
+
+export type StreetUpdateWithoutHtktDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ward?: Prisma.AdministrativeUnitUpdateOneWithoutStreetsNestedInput
+  assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
+  denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
+  cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
+  hoGa?: Prisma.HoGaUpdateManyWithoutStreetNestedInput
+  congThoatNuoc?: Prisma.CongThoatNuocUpdateManyWithoutStreetNestedInput
+  ongCapNuoc?: Prisma.OngCapNuocUpdateManyWithoutStreetNestedInput
+  vanCapNuoc?: Prisma.VanCapNuocUpdateManyWithoutStreetNestedInput
+  capVienThong?: Prisma.CapVienThongUpdateManyWithoutStreetNestedInput
+  viaHe?: Prisma.ViaHeUpdateManyWithoutStreetNestedInput
+  doanCong?: Prisma.DoanTuyenCongUpdateManyWithoutStreetNestedInput
+  doanOng?: Prisma.DoanTuyenOngUpdateManyWithoutStreetNestedInput
+  tramBom?: Prisma.TramBomUpdateManyWithoutStreetNestedInput
+}
+
+export type StreetUncheckedUpdateWithoutHtktDoiTuongInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  wardId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
   hoGa?: Prisma.HoGaUncheckedUpdateManyWithoutStreetNestedInput
@@ -1939,6 +2112,7 @@ export type StreetUpdateWithoutWardInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUpdateManyWithoutStreetNestedInput
@@ -1959,6 +2133,7 @@ export type StreetUncheckedUpdateWithoutWardInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   length?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  htktDoiTuong?: Prisma.htkt_doi_tuongUncheckedUpdateManyWithoutStreetNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutStreetNestedInput
   denChieuSang?: Prisma.DenChieuSangUncheckedUpdateManyWithoutStreetNestedInput
   cayXanh?: Prisma.CayXanhDuongUncheckedUpdateManyWithoutStreetNestedInput
@@ -1987,6 +2162,7 @@ export type StreetUncheckedUpdateManyWithoutWardInput = {
  */
 
 export type StreetCountOutputType = {
+  htktDoiTuong: number
   assets: number
   denChieuSang: number
   cayXanh: number
@@ -2002,6 +2178,7 @@ export type StreetCountOutputType = {
 }
 
 export type StreetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  htktDoiTuong?: boolean | StreetCountOutputTypeCountHtktDoiTuongArgs
   assets?: boolean | StreetCountOutputTypeCountAssetsArgs
   denChieuSang?: boolean | StreetCountOutputTypeCountDenChieuSangArgs
   cayXanh?: boolean | StreetCountOutputTypeCountCayXanhArgs
@@ -2024,6 +2201,13 @@ export type StreetCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
    * Select specific fields to fetch from the StreetCountOutputType
    */
   select?: Prisma.StreetCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StreetCountOutputType without action
+ */
+export type StreetCountOutputTypeCountHtktDoiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.htkt_doi_tuongWhereInput
 }
 
 /**
@@ -2119,6 +2303,7 @@ export type StreetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   length?: boolean
   isActive?: boolean
   ward?: boolean | Prisma.Street$wardArgs<ExtArgs>
+  htktDoiTuong?: boolean | Prisma.Street$htktDoiTuongArgs<ExtArgs>
   assets?: boolean | Prisma.Street$assetsArgs<ExtArgs>
   denChieuSang?: boolean | Prisma.Street$denChieuSangArgs<ExtArgs>
   cayXanh?: boolean | Prisma.Street$cayXanhArgs<ExtArgs>
@@ -2166,6 +2351,7 @@ export type StreetSelectScalar = {
 export type StreetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "name" | "wardId" | "length" | "isActive", ExtArgs["result"]["street"]>
 export type StreetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ward?: boolean | Prisma.Street$wardArgs<ExtArgs>
+  htktDoiTuong?: boolean | Prisma.Street$htktDoiTuongArgs<ExtArgs>
   assets?: boolean | Prisma.Street$assetsArgs<ExtArgs>
   denChieuSang?: boolean | Prisma.Street$denChieuSangArgs<ExtArgs>
   cayXanh?: boolean | Prisma.Street$cayXanhArgs<ExtArgs>
@@ -2191,6 +2377,7 @@ export type $StreetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Street"
   objects: {
     ward: Prisma.$AdministrativeUnitPayload<ExtArgs> | null
+    htktDoiTuong: Prisma.$htkt_doi_tuongPayload<ExtArgs>[]
     assets: Prisma.$AssetPayload<ExtArgs>[]
     denChieuSang: Prisma.$DenChieuSangPayload<ExtArgs>[]
     cayXanh: Prisma.$CayXanhDuongPayload<ExtArgs>[]
@@ -2606,6 +2793,7 @@ readonly fields: StreetFieldRefs;
 export interface Prisma__StreetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   ward<T extends Prisma.Street$wardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Street$wardArgs<ExtArgs>>): Prisma.Prisma__AdministrativeUnitClient<runtime.Types.Result.GetResult<Prisma.$AdministrativeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  htktDoiTuong<T extends Prisma.Street$htktDoiTuongArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Street$htktDoiTuongArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$htkt_doi_tuongPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assets<T extends Prisma.Street$assetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Street$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   denChieuSang<T extends Prisma.Street$denChieuSangArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Street$denChieuSangArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DenChieuSangPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cayXanh<T extends Prisma.Street$cayXanhArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Street$cayXanhArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CayXanhDuongPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3070,6 +3258,30 @@ export type Street$wardArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   include?: Prisma.AdministrativeUnitInclude<ExtArgs> | null
   where?: Prisma.AdministrativeUnitWhereInput
+}
+
+/**
+ * Street.htktDoiTuong
+ */
+export type Street$htktDoiTuongArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the htkt_doi_tuong
+   */
+  select?: Prisma.htkt_doi_tuongSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the htkt_doi_tuong
+   */
+  omit?: Prisma.htkt_doi_tuongOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.htkt_doi_tuongInclude<ExtArgs> | null
+  where?: Prisma.htkt_doi_tuongWhereInput
+  orderBy?: Prisma.htkt_doi_tuongOrderByWithRelationInput | Prisma.htkt_doi_tuongOrderByWithRelationInput[]
+  cursor?: Prisma.htkt_doi_tuongWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Htkt_doi_tuongScalarFieldEnum | Prisma.Htkt_doi_tuongScalarFieldEnum[]
 }
 
 /**

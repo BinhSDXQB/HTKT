@@ -190,7 +190,8 @@ export const ModelName = {
   ThanhTichCon: 'ThanhTichCon',
   cchn_ho_so: 'cchn_ho_so',
   cchn_kinh_nghiem: 'cchn_kinh_nghiem',
-  cchn_lich_su: 'cchn_lich_su'
+  cchn_lich_su: 'cchn_lich_su',
+  htkt_doi_tuong: 'htkt_doi_tuong'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -293,7 +294,12 @@ export const AdministrativeUnitScalarFieldEnum = {
   trungTamHc: 'trungTamHc',
   truocSapNhap: 'truocSapNhap',
   huyenThiCu: 'huyenThiCu',
-  vungLoi: 'vungLoi'
+  vungLoi: 'vungLoi',
+  soHieuDxTu: 'soHieuDxTu',
+  soHieuDxDen: 'soHieuDxDen',
+  soHieuDthTu: 'soHieuDthTu',
+  soHieuDthDen: 'soHieuDthDen',
+  soHieuCanCu: 'soHieuCanCu'
 } as const
 
 export type AdministrativeUnitScalarFieldEnum = (typeof AdministrativeUnitScalarFieldEnum)[keyof typeof AdministrativeUnitScalarFieldEnum]
@@ -1207,6 +1213,7 @@ export type CanBoScalarFieldEnum = (typeof CanBoScalarFieldEnum)[keyof typeof Ca
 export const ReportDuongScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tenDuong: 'tenDuong',
@@ -1237,6 +1244,7 @@ export type ReportDuongScalarFieldEnum = (typeof ReportDuongScalarFieldEnum)[key
 export const ReportDienCSScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyenDuong: 'tuyenDuong',
@@ -1263,6 +1271,7 @@ export type ReportDienCSScalarFieldEnum = (typeof ReportDienCSScalarFieldEnum)[k
 export const ReportThoatNuocScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyen: 'tuyen',
@@ -1291,6 +1300,7 @@ export type ReportThoatNuocScalarFieldEnum = (typeof ReportThoatNuocScalarFieldE
 export const ReportCayXanhScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyen: 'tuyen',
@@ -1317,6 +1327,7 @@ export type ReportCayXanhScalarFieldEnum = (typeof ReportCayXanhScalarFieldEnum)
 export const ReportCongVienScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tenCongVien: 'tenCongVien',
@@ -1341,6 +1352,7 @@ export type ReportCongVienScalarFieldEnum = (typeof ReportCongVienScalarFieldEnu
 export const ReportCapNuocScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tuyenDuong: 'tuyenDuong',
@@ -1362,6 +1374,7 @@ export type ReportCapNuocScalarFieldEnum = (typeof ReportCapNuocScalarFieldEnum)
 export const ReportBaiDoXeScalarFieldEnum = {
   id: 'id',
   wardId: 'wardId',
+  doiTuongId: 'doiTuongId',
   year: 'year',
   stt: 'stt',
   tenBai: 'tenBai',
@@ -3184,6 +3197,58 @@ export const Cchn_lich_suScalarFieldEnum = {
 } as const
 
 export type Cchn_lich_suScalarFieldEnum = (typeof Cchn_lich_suScalarFieldEnum)[keyof typeof Cchn_lich_suScalarFieldEnum]
+
+
+export const Htkt_doi_tuongScalarFieldEnum = {
+  id: 'id',
+  ma_doi_tuong: 'ma_doi_tuong',
+  ma_xa: 'ma_xa',
+  linh_vuc: 'linh_vuc',
+  ten: 'ten',
+  tuyen_duong_id: 'tuyen_duong_id',
+  street_id: 'street_id',
+  cap_duong: 'cap_duong',
+  phan_loai_do_thi: 'phan_loai_do_thi',
+  thon: 'thon',
+  sh_so: 'sh_so',
+  sh_chu_cai: 'sh_chu_cai',
+  so_hieu: 'so_hieu',
+  sh_trang_thai: 'sh_trang_thai',
+  sh_so_qd: 'sh_so_qd',
+  sh_ngay_qd: 'sh_ngay_qd',
+  so_hieu_khac: 'so_hieu_khac',
+  so_hieu_cu: 'so_hieu_cu',
+  ten_cu: 'ten_cu',
+  diem_dau: 'diem_dau',
+  diem_cuoi: 'diem_cuoi',
+  vi_tri: 'vi_tri',
+  chieu_dai_m: 'chieu_dai_m',
+  be_rong_nen_m: 'be_rong_nen_m',
+  be_rong_mat_m: 'be_rong_mat_m',
+  ket_cau_mat: 'ket_cau_mat',
+  dien_tich_m2: 'dien_tich_m2',
+  so_luong: 'so_luong',
+  nam_su_dung: 'nam_su_dung',
+  tinh_trang: 'tinh_trang',
+  don_vi_quan_ly: 'don_vi_quan_ly',
+  de_xuat_dieu_chinh: 'de_xuat_dieu_chinh',
+  thong_so: 'thong_so',
+  geometry: 'geometry',
+  chieu_dai_gis_m: 'chieu_dai_gis_m',
+  dien_tich_gis_m2: 'dien_tich_gis_m2',
+  tam_lat: 'tam_lat',
+  tam_lng: 'tam_lng',
+  ngoai_ranh_pct: 'ngoai_ranh_pct',
+  lich_su: 'lich_su',
+  ghi_chu: 'ghi_chu',
+  created_by_id: 'created_by_id',
+  updated_by_id: 'updated_by_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type Htkt_doi_tuongScalarFieldEnum = (typeof Htkt_doi_tuongScalarFieldEnum)[keyof typeof Htkt_doi_tuongScalarFieldEnum]
 
 
 export const SortOrder = {

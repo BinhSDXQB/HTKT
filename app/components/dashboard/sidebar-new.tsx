@@ -161,6 +161,7 @@ const navGroups: NavGroup[] = [
       { label: 'Dữ liệu phường/xã', href: '/dashboard/bao-cao/du-lieu-phuong-xa', icon: FileSpreadsheet },
       { label: 'Điện chiếu sáng thông minh', href: '/dashboard/bao-cao/den-chieu-sang', icon: Zap },
       { label: 'Nhập liệu biểu mẫu HTKT', href: '/dashboard/bao-cao/nhap-lieu', icon: FileSpreadsheet },
+      { label: 'Hồ sơ HTKT & số hiệu đường', href: '/dashboard/bao-cao/ha-tang-xa', icon: Link2 },
     ],
   },
   {
