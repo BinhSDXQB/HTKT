@@ -24,7 +24,7 @@
 2. **Cookie:** xác nhận chỉ truy cập qua **HTTPS**. Còn `http://IP:3001` nội bộ → đặt tạm `COOKIE_SECURE=false`, nếu không sẽ **không đăng nhập được** qua HTTP.
 3. **CSDL:** sao lưu → chạy `049_chatbot_log_token.sql` **trước** mã mới. **Không** backfill/đặt default cho `soLanGoi` (cột này là mốc phân biệt log trước/sau bản vá).
 4. **Phát hành trọn gói một lần** trên mọi instance PM2; không dùng bản trung gian ghi `soLanGoi` mà thiếu dấu kế thừa, kể cả khi rollback.
-5. **Build:** Prisma **7.8.0** (client trong repo sinh bằng 7.8.0); repo không có lockfile (S21) — ghim phiên bản khi build.
+5. **Build:** Prisma **7.8.0** (client trong repo sinh bằng 7.8.0); lockfile đã được commit trên `main` (commit `834e557`, S21 đã xử lý; lockfile ghi Prisma 7.8.0, khớp VPS đã kiểm 26/10/2026) — nhánh này chưa có, gộp `main` vào để dùng; cài bằng `npm ci`.
 6. **Kiểm thử khói:** đăng nhập; TK chuyên viên hỏi hồ sơ đồng nghiệp → chỉ SĐT/email; TK có quyền nhạy cảm → đủ; TK xã; "cập nhật lương …" → báo tạm tắt; hỏi dữ liệu nhạy cảm → "nhắc lại" → thu hồi quyền → hỏi tiếp: không còn dữ liệu cũ; kiểm `audit_logs` có `VIEW_SENSITIVE`.
 7. **Hoàn nguyên:** mã về bản trước → (nếu cần) `049_chatbot_log_token_rollback.sql`.
 
@@ -48,7 +48,7 @@
 
 | Mã | Phát hiện | Đề xuất |
 |---|---|---|
-| S21 | Repo không lưu lockfile (`package-lock.json` trong `.gitignore`) → mỗi lần cài có thể khác phiên bản production (đã gặp: Prisma 7.8.0 → 7.10.1) | Commit lockfile; build bằng `npm ci` |
+| S21 | Repo không lưu lockfile (`package-lock.json` trong `.gitignore`) → mỗi lần cài có thể khác phiên bản production (đã gặp: Prisma 7.8.0 → 7.10.1) | ĐÃ XỬ LÝ trên `main` (`834e557`: commit lockfile, Prisma 7.8.0; VPS đã kiểm Prisma/client = 7.8.0, Node 24.16.0). Nhánh này lấy bằng cách gộp `main`; build bằng `npm ci` |
 | S22 | RAG cho TK có quyền Văn phòng tra phạm vi `NOI_BO_SO` không theo quyền nhạy cảm — nếu kho chứa QĐ lương/hồ sơ có ngày sinh, CCCD thì người thiếu quyền vẫn đọc được | Kiểm nội dung kho `NOI_BO_SO`; phân quyền theo tài liệu ở B1/B2 |
 
 ## 6. Sau phản biện
