@@ -1565,7 +1565,7 @@ model CanBo {
 
   // ── Phân loại đối tượng & hợp đồng lao động ──
   doiTuong             DoiTuongNhanSu?            // CC / VC / NLĐ — áp đúng chế độ
-  viTriViecLam         String?                    // Vị trí việc làm (NĐ 62/2020, 106/2020)
+  viTriViecLam         String?                    // Vị trí việc làm (CC: NĐ 361/2025 · VC: NĐ 106/2020); chuỗi cũ, sẽ thay bằng khoá ngoại tới danh mục VTVL
   loaiHopDong          String?                    // Với NLĐ: KXĐTH / XĐTH 12 tháng / HĐ111...
   ngayKetThucHopDong   DateTime? @db.Date         // Hạn HĐ (NLĐ) — cảnh báo hết hạn
 

@@ -132,8 +132,8 @@ const FIELDS: FieldDef[] = [
   { field: 'ngayNangLuongKeTiep', label: 'Ngày nâng lương lần sau (cột AA)', tier: 'required', empty: (c) => isBlank(c.ngayNangLuongKeTiep), when: laBienChe },
   { field: 'ngayBoNhiemNgach', label: 'Ngày bổ nhiệm vào ngạch (cột AC)',  tier: 'recommended', empty: (c) => isBlank(c.ngayBoNhiemNgach), when: laBienChe },
   { field: 'trinhDoChuyenMon', label: 'Trình độ chuyên môn (cột AE)',      tier: 'required', empty: (c) => isBlank(c.trinhDoChuyenMon) },
-  // Vị trí việc làm — bắt buộc với công chức/viên chức (NĐ 62/2020, 106/2020).
-  { field: 'viTriViecLam',     label: 'Vị trí việc làm (NĐ 62/2020)',      tier: 'required', empty: (c) => isBlank(c.viTriViecLam), when: laBienChe },
+  // Vị trí việc làm — bắt buộc với công chức (NĐ 361/2025) và viên chức (NĐ 106/2020).
+  { field: 'viTriViecLam',     label: 'Vị trí việc làm (CC: NĐ 361/2025 · VC: NĐ 106/2020)', tier: 'required', empty: (c) => isBlank(c.viTriViecLam), when: laBienChe },
 
   // ── Hợp đồng lao động (với NLĐ) ──
   { field: 'ngayKetThucHopDong', label: 'Ngày kết thúc hợp đồng', tier: 'recommended', empty: (c) => isBlank(c.ngayKetThucHopDong), when: (c) => c.doiTuong === 'NGUOI_LAO_DONG' },

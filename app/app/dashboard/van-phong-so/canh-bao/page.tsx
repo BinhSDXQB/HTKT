@@ -48,7 +48,7 @@ export default async function CanhBaoPage() {
   // (đã loại Vị trí việc làm — VTVL do quản lý gán, theo dõi ở mục riêng bên dưới).
   const thieuChoTelegram = list.filter((cb) => missingRequiredChoCanhBao(cb).length > 0).length
 
-  // Công chức/viên chức chưa được gán vị trí việc làm (NĐ 62/2020, 106/2020)
+  // Công chức/viên chức chưa được gán vị trí việc làm (NĐ 361/2025 với công chức, NĐ 106/2020 với viên chức)
   const chuaVTVL = list.filter(
     (cb) => (cb.doiTuong === 'CONG_CHUC' || cb.doiTuong === 'VIEN_CHUC') && !cb.viTriViecLam?.trim(),
   )
@@ -165,7 +165,7 @@ export default async function CanhBaoPage() {
       {/* 2. Chưa cập nhật vị trí việc làm */}
       <section id="vtvl" className="rounded-xl border bg-white p-5 space-y-3 scroll-mt-4">
         <SectionHead icon={Building2} color="text-violet-600" title="Chưa cập nhật vị trí việc làm" count={chuaVTVL.length}
-          desc="Người quản lý phải gán vị trí việc làm cho từng công chức/viên chức — NĐ 62/2020, NĐ 106/2020, Luật CBCC 2025 (hiệu lực 01/7/2025)." />
+          desc="Người quản lý phải gán vị trí việc làm cho từng công chức/viên chức — NĐ 361/2025 (công chức), NĐ 106/2020 (viên chức), Luật CBCC 2025 (hiệu lực 01/7/2025)." />
         {chuaVTVL.length === 0 ? (
           <Empty text="Tất cả công chức/viên chức đã có vị trí việc làm." />
         ) : (
@@ -259,7 +259,7 @@ export default async function CanhBaoPage() {
       {/* 4. Cảnh báo nghỉ hưu */}
       <section id="nghi-huu" className="rounded-xl border bg-white p-5 space-y-3 scroll-mt-4">
         <SectionHead icon={CalendarClock} color="text-amber-600" title="Cảnh báo nghỉ hưu" count={nghiHuu.length}
-          desc="Trước 6 tháng: Thông báo + bàn giao công việc · Trước 3 tháng: Quyết định nghỉ hưu (NĐ 46/2010)." />
+          desc="Công chức (NĐ 170/2025): trước 6 tháng ra Thông báo (Điều 62, Mẫu số 2), chuẩn bị bàn giao · trước 3 tháng ra Quyết định nghỉ hưu (Điều 63, Mẫu số 3)." />
         {nghiHuu.length === 0 ? (
           <Empty text="Không có cán bộ đến mốc thông báo/quyết định nghỉ hưu." />
         ) : (
