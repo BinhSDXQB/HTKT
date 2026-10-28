@@ -19,7 +19,7 @@ Cập nhật: 2026-10-28 · Nguồn: kiểm tra chỉ-đọc ngày 28/10/2026 (V
 - Kiểm thử: 1 tệp `lib/qd72/danh-gia.test.ts` + các `app/scripts/smoke-*.mjs`; chưa có test runner và CI chưa chạy test.
 
 ## Bộ nhớ
-- Chỉ mục: `C:\Users\Administrator\.claude\projects\C--Troly-HTKT\memory\MEMORY.md` (89 tệp).
+- Chỉ mục: `C:\Users\Administrator\.claude\projects\C--Troly-HTKT\memory\MEMORY.md` (88 tệp memory + chỉ mục). Mỗi tệp có `metadata.updated`, `source`, `confidence` (verified | inferred | unreviewed; mặc định `unreviewed` = chưa rà lại). Kiểm tra: `node tools/memory-lint.mjs`.
 - Tri thức pháp lý: kho VBPL `G:\My Drive\Tailieu_VBPL` đồng bộ hai chiều với RAG.
 
 ## Điều CHƯA xác minh
