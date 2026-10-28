@@ -19,4 +19,8 @@ Bẫy đã gặp và cách tránh. Thêm mới ở cuối: ngày · bẫy · cá
 16. **Test mới phải qua kiểm tra đột biến** (sửa thử mã trên bản sao, test phải đỏ) — tránh test luôn xanh.
 17. **Sự đồng ý trong chat không tới được hook** `guard.mjs`; đặt biến môi trường trong lệnh cũng không tác dụng (hook chạy trước lệnh). Với push `main`, người dùng tự chạy trong terminal (28/10/2026).
 18. **Kiểm đường dẫn trong tài liệu/skill bằng script** trước khi commit: đã bắt lỗi `app/api/...` phải là `app/app/api/...`.
+19. **Hàm kiểm quyền thật nằm trong `lib/auth.ts`** (kéo `server-only`/`db`/`next/navigation`) nên khó test; dùng bộ nạp test thay vì tách hàm sang tệp mới (không đụng mã bảo mật). Test phân quyền KHÔNG ghi CCCD thật: lấy từ các tập hằng đã export hoặc dùng số giả.
+20. **Đột biến tương đương không phải test yếu:** bỏ chặn chia 0 trong `tinhBieuThuc` vẫn ra `null` nhờ `Number.isFinite` ở cuối. Phân biệt trước khi vá test.
+21. **Khoảng trắng bị gỡ trước khi tính** trong `tinhBieuThuc`: `"1 2"` = 12 (hành vi hiện tại, có thể cố ý). Chưa kết luận lỗi.
+22. **Tệp `*.test.ts` trong `app/` bị Next build kiểm kiểu** (tsconfig `**/*.ts`): lỗi kiểu trong test làm vỡ bản build trên GitHub dù `npm test` xanh. Luôn kiểm kiểu giới hạn trước khi commit (tsconfig tạm `extends` + `files`), không chạy `tsc` toàn dự án. Lần này bắt được 1 lỗi thật ở `auth.test.ts`.
 14. **`Read(//c//**)` trong permissions user quá rộng** (phát hiện 28/10/2026, cần thu hẹp ở AI-02).

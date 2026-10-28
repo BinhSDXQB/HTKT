@@ -5,7 +5,7 @@ Nguồn: `master_prompt_v2/TESTING.md`, thu hẹp theo thực tế. Cập nhật
 ## Lệnh và phạm vi hiện có
 | Lệnh (chạy trong `app/` trừ khi ghi khác) | Phủ | Ghi chú |
 |---|---|---|
-| `npm test` | `lib/luong.ts`, `lib/nghi-huu.ts`, `lib/qd72/danh-gia`, hook `guard.mjs`, validator handoff — 49 test (ngày 28/10/2026) | `node:test` có sẵn Node 24; chạy trong GitHub Actions trước bước build |
+| `npm test` | Lương, nghỉ hưu, QĐ72, **phân quyền** (`auth.ts`, `permissions`, `salary-perms`, `ward-report-perms`, `lich-scope`), CCCD/tên đăng nhập, biểu thức dự toán, hook `guard.mjs`, validator handoff — 85 test (28/10/2026) | `node:test` có sẵn Node 24; chạy trong GitHub Actions trước bước build. Nạp qua `tools/test-support/register.mjs` (alias `@/`, giả `server-only`/`db`/`session`; `db` bị gọi sẽ ném lỗi nên test không chạm CSDL) |
 | `node tools/memory-lint.mjs` (gốc repo) | Frontmatter + chỉ mục bộ nhớ | Bộ nhớ nằm ngoài repo → không chạy trong CI |
 | `node scripts/smoke-*.mjs` | Chatbot, trang chủ, hồ sơ nghiệp vụ, tham định… | Cần web đang chạy; chạy sau triển khai, chưa tự động |
 | `scripts/healthcheck.mjs` / `QLHTKT_Healthcheck_Daily` | Sức khoẻ hằng ngày | Đã có |
@@ -16,10 +16,11 @@ Cấm: `tsc --noEmit` / `npm run build` toàn dự án trên VPS 6GB (build do G
 ## Ma trận cần có (✔ có, ◐ một phần, ✘ chưa)
 | Hạng mục | Trạng thái |
 |---|---|
-| Đơn vị cho logic thuần (lương, nghỉ hưu, QĐ72) | ◐ — chưa phủ kiểm tra dự toán, tổng hợp Phụ lục 1, chatbot |
-| Hồi quy cho lỗi đã vá | ◐ — vuotKhung, thuế TNCN, ngày hưu trí đã có; ngày DATE pg, ký tự "Đạt" chưa |
+| Đơn vị cho logic thuần (lương, nghỉ hưu, QĐ72) | ◐ — kiểm tra dự toán mới phủ `tinhBieuThuc` (các hàm quét Excel/THKP/tổng hợp chưa), chưa phủ tổng hợp Phụ lục 1, chatbot |
+| Hồi quy cho lỗi đã vá | ◐ — vuotKhung, thuế TNCN, ngày hưu trí, bẫy chữ→biểu thức ("Đạt") đã có; bẫy ngày DATE pg chưa (chỉ nằm trong `scripts/sinh-nhat.mjs`, không có hàm để test) |
 | Hook bảo vệ | ✔ |
-| Phân quyền âm tính (API không lộ CCCD/lương khi không đủ quyền) | ✘ |
+| Phân quyền âm tính ở tầng hàm kiểm quyền (CCCD/lương/hồ sơ cán bộ/báo cáo phường) | ✔ — 13 đột biến trên mã thật đều bị bắt (1 đột biến tương đương) |
+| Phân quyền âm tính ở tầng API/route (từng endpoint trả đúng 401/403, không lộ CCCD) | ✘ — cần web + CSDL chạy; hàm kiểm quyền đúng chưa chứng minh route nào cũng gọi nó |
 | Tích hợp với CSDL | ✘ (không có CSDL thử riêng) |
 | E2E / Staging | ✘ (không có môi trường staging) |
 | RAG: cô lập phạm vi, tài liệu hết hiệu lực, prompt injection | ✘ |
