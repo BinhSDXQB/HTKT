@@ -7,7 +7,7 @@ Cập nhật: 2026-10-28. Mỗi việc: ID · mục tiêu · trạng thái · ti
 |---|---|---|---|
 | AI-01 | Quy tắc gốc + docs/ai (CLAUDE, AGENTS, CONTEXT, DECISIONS, TASKS, LESSONS, CHANGELOG) | Đã tạo, chờ người dùng xem | Không quy tắc trùng; CLAUDE.md ≤100 dòng |
 | AI-02 | Hooks bảo vệ + thu hẹp permissions cấp dự án | Hook xong (28/10/2026): `.claude/hooks/guard.mjs`, 15 ca + warn-mode + JSON hỏng đều đạt. Còn: thu hẹp `Read(//c//**)` ở settings cấp USER (cần người dùng làm), chưa có test tự động trong repo | Ca nguy hiểm bị chặn, có bằng chứng chạy |
-| AI-03 | Test runner + test hồi quy cho `lib/` | Chưa bắt đầu | `npm test` chạy, kết quả đính kèm |
+| AI-03 | Test runner + test hồi quy cho `lib/` | Giai đoạn đầu xong (28/10/2026): `npm test` = `node:test` có sẵn Node 24, không cài thêm thư viện. 24 test đạt (luong 13, nghi-huu 10, qd72 1 tệp/17 kiểm tra); 8/8 đột biến thử đều bị bắt. Còn: chatbot, tham-dinh, kiem-tra-du-toan, API không lộ CCCD | `npm test` chạy, kết quả đính kèm |
 | AI-04 | Skills: phản-biện-codex, rà-soát-vbpl, nhập-excel | Chưa bắt đầu | Mỗi skill có ca kiểm thử |
 | AI-05 | Chuẩn hoá frontmatter memory (source/updated/confidence) | Chưa bắt đầu | Có sao lưu trước, 89 tệp hợp lệ |
 | AI-06 | `npm test` trong Actions + runbook deploy/rollback | Chưa bắt đầu | Deploy vẫn thành công |

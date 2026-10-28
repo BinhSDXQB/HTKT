@@ -15,4 +15,6 @@ Bẫy đã gặp và cách tránh. Thêm mới ở cuối: ngày · bẫy · cá
 11. **Menu thật là `sidebar-new.tsx`.** (`sidebar-thuc-te-2026`)
 12. **Codex có thể sai hoặc hết token:** kiểm chứng lại; workaround `OPENAI_API_KEY` qua `CODEX_HOME`. (`ra-soat-phap-ly-phong-codex-2026-08`)
 13. **Mật khẩu Postgres từng bị đổi ngoài ý muốn** (chưa rõ ai): theo dõi. (`su-co-mat-khau-postgres-2026-06`)
+15. **Hook `guard.mjs` chặn nhầm** lệnh xoá đệ quy thư mục tạm có chữ "Troly" trong đường dẫn scratchpad (28/10/2026). Tránh xoá thư mục tạm; dùng thư mục mới. Cân nhắc nới luật nếu tái diễn.
+16. **Test mới phải qua kiểm tra đột biến** (sửa thử mã trên bản sao, test phải đỏ) — tránh test luôn xanh.
 14. **`Read(//c//**)` trong permissions user quá rộng** (phát hiện 28/10/2026, cần thu hẹp ở AI-02).
