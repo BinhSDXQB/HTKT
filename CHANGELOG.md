@@ -1,0 +1,10 @@
+# CHANGELOG
+
+Lịch sử chi tiết lấy từ Git (`git log`); tệp này chỉ ghi mốc lớn, không viết lại từng commit.
+
+## 2026-10-28
+- Thêm lớp quy tắc AI: `CLAUDE.md`, `AGENTS.md` gốc và `docs/ai/` (PROJECT_CONTEXT, DECISIONS, TASKS, LESSONS_LEARNED). Không thay đổi mã ứng dụng.
+- Chuyển `SKILL.md` (session-handoff) từ gốc repo vào `.claude/skills/session-handoff/`.
+
+## Trước đó
+- Xem `git log` (69 commit tính đến 28/10/2026): triển khai tự động qua GitHub Actions, bảng trung tâm HTKT theo mã xã, rà soát pháp lý 01/07/2026, v.v.
