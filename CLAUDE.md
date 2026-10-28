@@ -7,6 +7,7 @@ Quy tắc cốt lõi cho mọi phiên AI. Chi tiết nằm ở `docs/ai/` và b�
 - Quyết định đã chốt: `docs/ai/DECISIONS.md`
 - Việc đang làm / chờ: `docs/ai/TASKS.md`
 - Bẫy đã gặp: `docs/ai/LESSONS_LEARNED.md`
+- Triển khai và hoàn tác: `docs/ai/RUNBOOK_DEPLOY.md`
 - Lịch sử thay đổi: `CHANGELOG.md`
 - Next.js của dự án khác bản quen thuộc: đọc `app/AGENTS.md` và `app/node_modules/next/dist/docs/` trước khi viết code Next.
 
