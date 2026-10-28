@@ -50,6 +50,12 @@ jobs:
           DATABASE_URL: postgresql://build:build@localhost:5432/build
         run: npx prisma generate
 
+      # Kiểm thử đơn vị (node:test, không cần CSDL). Lỗi thì workflow thất bại → KHÔNG có bản build thành công
+      # mới → tác vụ QLHTKT_AutoDeploy trên VPS không triển khai commit này. Đặt trước build để dừng sớm.
+      - name: Chạy kiểm thử (npm test)
+        working-directory: C:\Troly\HTKT\app
+        run: npm test
+
       - name: Build Next.js
         working-directory: C:\Troly\HTKT\app
         env:

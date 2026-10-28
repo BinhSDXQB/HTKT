@@ -9,7 +9,8 @@
     "build:safe": "powershell -ExecutionPolicy Bypass -File scripts/build-zero-downtime.ps1",
     "build:lowram": "powershell -ExecutionPolicy Bypass -File scripts/build-low-ram.ps1",
     "start": "next start -p 3001",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --import ../tools/test-support/register.mjs --test \"lib/**/*.test.ts\" \"../.claude/hooks/*.test.mjs\" \"../tools/*.test.mjs\""
   },
   "prisma": {
     "seed": "node_modules/.bin/jiti prisma/seed.ts"
