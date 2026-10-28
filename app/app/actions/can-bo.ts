@@ -246,10 +246,37 @@ export async function deleteCanBoAction(prev: OfficeFormState, formData: FormDat
   if (!id) return { error: 'Thiếu mã hồ sơ.' }
   const cb = await db.canBo.findUnique({ where: { id }, select: { hoTen: true } })
   if (!cb) return { error: 'Không tìm thấy hồ sơ.' }
+  // Phần lớn khoá ngoại tới can_bo ở CSDL là ON DELETE CASCADE (migration 002, 003, 004, 007, 046; riêng văn bản
+  // đã sinh là SET NULL): cứ xoá thì lịch sử lương, khen thưởng, kỷ luật, nghỉ phép... bị xoá theo mà không báo lỗi.
+  // Khoá dòng can_bo (FOR UPDATE) TRƯỚC khi đếm: lệnh chèn bảng con cần khoá FOR KEY SHARE trên dòng cha nên phải chờ,
+  // vì vậy không có dữ liệu nào lọt vào giữa lúc đếm và lúc xoá.
+  const NHAN = {
+    phanCongs: 'phân công', salaryHistory: 'quá trình lương', workHistory: 'quá trình công tác', rewardRecords: 'khen thưởng',
+    annualEvaluations: 'đánh giá xếp loại', disciplineRecords: 'kỷ luật', salaryReviewCases: 'rà soát nâng lương',
+    generatedDocuments: 'văn bản đã sinh', leaveRequests: 'nghỉ phép', conCai: 'con cán bộ',
+  } as const
+  let kq: { xoa: true } | { xoa: false; conDuLieu: string[] }
   try {
-    await db.canBo.delete({ where: { id } })
-  } catch {
-    return { error: 'Không thể xoá: hồ sơ đang có dữ liệu liên quan (lương, khen thưởng, nghỉ phép...). Hãy chuyển trạng thái thay vì xoá.' }
+    kq = await db.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM can_bo WHERE id = ${id} FOR UPDATE`
+      const dem = await tx.canBo.findUnique({
+        where: { id },
+        select: { _count: { select: Object.fromEntries(Object.keys(NHAN).map((k) => [k, true])) as Record<keyof typeof NHAN, true> } },
+      })
+      if (!dem) return { xoa: false as const, conDuLieu: [] }  // người khác vừa xoá
+      const con = (Object.keys(NHAN) as (keyof typeof NHAN)[]).filter((k) => dem._count[k] > 0)
+      if (con.length > 0) return { xoa: false as const, conDuLieu: con.map((k) => `${NHAN[k]}: ${dem._count[k]}`) }
+      await tx.canBo.delete({ where: { id } })
+      return { xoa: true as const }
+    })
+  } catch (e) {
+    console.error('[deleteCanBoAction]', e)
+    return { error: 'Không thể xoá hồ sơ lúc này. Vui lòng thử lại; nếu vẫn lỗi, hãy chuyển trạng thái thay vì xoá.' }
+  }
+  if (!kq.xoa) {
+    return kq.conDuLieu.length > 0
+      ? { error: `Không thể xoá: hồ sơ còn dữ liệu liên quan (${kq.conDuLieu.join(', ')}). Hãy chuyển trạng thái thay vì xoá.` }
+      : { error: 'Không tìm thấy hồ sơ (có thể vừa được xoá).' }
   }
   await logAction({
     userId: user.id, action: 'DELETE', module: MODULES.OFFICE,

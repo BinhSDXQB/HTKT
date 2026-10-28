@@ -393,26 +393,21 @@ export async function generateRegularReviewListAction(prev: OfficeFormState, for
   // Lọc thêm theo quy tắc hưởng lương ngạch bậc (bắt trường hợp doiTuong null nhưng là HĐ).
   const canBoList = canBoRaw.filter((cb) => huongLuongNgachBac(cb))
 
-  let created = 0
-  for (const cb of canBoList) {
-    const existing = await db.officeSalaryReviewCase.findUnique({
-      where: { canBoId_namRaSoat_loai: { canBoId: cb.id, namRaSoat, loai: 'THUONG_XUYEN' } },
-    })
-    if (existing) continue
-    await db.officeSalaryReviewCase.create({
-      data: {
-        canBoId:     cb.id,
-        loai:        'THUONG_XUYEN',
-        namRaSoat,
-        dotRaSoat,
-        ngayDenHan:  cb.ngayNangLuong,
-        heSoHienTai: cb.heSoLuong,
-        trangThai:   'DU_KIEN',
-        createdById: user.id,
-      },
-    })
-    created++
-  }
+  // Một câu lệnh thay cho 2 truy vấn/cán bộ; skipDuplicates dựa vào @@unique(canBoId, namRaSoat, loai)
+  // nên hồ sơ đã có được giữ nguyên, và hai người bấm cùng lúc không tạo trùng.
+  const { count: created } = await db.officeSalaryReviewCase.createMany({
+    data: canBoList.map((cb) => ({
+      canBoId:     cb.id,
+      loai:        'THUONG_XUYEN' as const,
+      namRaSoat,
+      dotRaSoat,
+      ngayDenHan:  cb.ngayNangLuong,
+      heSoHienTai: cb.heSoLuong,
+      trangThai:   'DU_KIEN' as const,
+      createdById: user.id,
+    })),
+    skipDuplicates: true,
+  })
 
   await logAction({
     userId: user.id, action: 'GENERATE_LIST', module: MODULES.OFFICE,

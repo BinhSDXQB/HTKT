@@ -162,7 +162,7 @@ export function CanBoProfileForm({ defaults, toChucOptions, chucDanhOptions }: {
             <option value="NGUOI_LAO_DONG">Người lao động (hợp đồng)</option>
           </select>
         </Field>
-        <Field label="Vị trí việc làm (NĐ 62/2020 · với CC/VC)" span={2}>
+        <Field label="Vị trí việc làm (CC: NĐ 361/2025 · VC: NĐ 106/2020)" span={2}>
           <Input name="viTriViecLam" defaultValue={defaults.viTriViecLam} className="h-9" placeholder="VD: Chuyên viên quản lý hạ tầng kỹ thuật" />
         </Field>
         <Field label="Loại hợp đồng (với NLĐ)">
