@@ -197,8 +197,12 @@ try {
     try {
       $h = Invoke-RestMethod -Uri 'http://localhost:3001/api/health' -TimeoutSec 15
       # Ca 2 tien trinh ql-htkt phai khoi dong lai SAU luc hoan doi (khong phai tien trinh cu tra loi)
-      $procs = @((& $Pm2 jlist 2>$null | Out-String | ConvertFrom-Json) | Where-Object { $_.name -eq 'ql-htkt' })
-      $moi = @($procs | Where-Object { $_.pm2_env.status -eq 'online' -and $_.pm2_env.pm_uptime -ge $mocHoanDoi })
+      # ConvertFrom-Json (PS 5.1) bo tay khi JSON co 2 khoa chi khac hoa/thuong (username/USERNAME trong env pm2) -> dung JavaScriptSerializer
+      Add-Type -AssemblyName System.Web.Extensions
+      $ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+      $ser.MaxJsonLength = [int]::MaxValue
+      $procs = @($ser.DeserializeObject(($(& $Pm2 jlist 2>$null) | Out-String)) | Where-Object { $_['name'] -eq 'ql-htkt' })
+      $moi = @($procs | Where-Object { $_['pm2_env']['status'] -eq 'online' -and $_['pm2_env']['pm_uptime'] -ge $mocHoanDoi })
       $okLan = ($h.status -eq 'ok') -and $procs.Count -gt 0 -and ($moi.Count -eq $procs.Count)
     } catch { $okLan = $false }
     if ($okLan) { break }
