@@ -6,7 +6,7 @@ Cập nhật: 2026-10-28. Mỗi việc: ID · mục tiêu · trạng thái · ti
 | ID | Mục tiêu | Trạng thái | Nghiệm thu |
 |---|---|---|---|
 | AI-01 | Quy tắc gốc + docs/ai (CLAUDE, AGENTS, CONTEXT, DECISIONS, TASKS, LESSONS, CHANGELOG) | Đã tạo, chờ người dùng xem | Không quy tắc trùng; CLAUDE.md ≤100 dòng |
-| AI-02 | Hooks bảo vệ + thu hẹp permissions cấp dự án | Chưa bắt đầu | Ca nguy hiểm bị chặn, có bằng chứng chạy |
+| AI-02 | Hooks bảo vệ + thu hẹp permissions cấp dự án | Hook xong (28/10/2026): `.claude/hooks/guard.mjs`, 15 ca + warn-mode + JSON hỏng đều đạt. Còn: thu hẹp `Read(//c//**)` ở settings cấp USER (cần người dùng làm), chưa có test tự động trong repo | Ca nguy hiểm bị chặn, có bằng chứng chạy |
 | AI-03 | Test runner + test hồi quy cho `lib/` | Chưa bắt đầu | `npm test` chạy, kết quả đính kèm |
 | AI-04 | Skills: phản-biện-codex, rà-soát-vbpl, nhập-excel | Chưa bắt đầu | Mỗi skill có ca kiểm thử |
 | AI-05 | Chuẩn hoá frontmatter memory (source/updated/confidence) | Chưa bắt đầu | Có sao lưu trước, 89 tệp hợp lệ |
