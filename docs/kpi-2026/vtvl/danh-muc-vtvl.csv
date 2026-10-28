@@ -1,0 +1,68 @@
+﻿ma,ten,ngach,don_vi,nhom,dong
+LĐ.01,Giám đốc,Chuyên viên cao cấp,Lãnh đạo Sở,"Lãnh đạo, quản lý",1
+LĐ.02,Phó Giám đốc,Chuyên viên cao cấp,Lãnh đạo Sở,"Lãnh đạo, quản lý",1
+LĐ.02,Phó Giám đốc,Chuyên viên chính,Lãnh đạo Sở,"Lãnh đạo, quản lý",2
+LĐ.03,Chánh Văn phòng,Chuyên viên chính,Văn phòng,"Lãnh đạo, quản lý",1
+LĐ.04,Trưởng phòng,Chuyên viên chính,"Phòng chuyên môn, nghiệp vụ","Lãnh đạo, quản lý",1
+LĐ.05,Phó Chánh Văn phòng,Chuyên viên chính,Văn phòng,"Lãnh đạo, quản lý",1
+LĐ.06,Phó Trưởng phòng,Chuyên viên chính,"Phòng chuyên môn, nghiệp vụ","Lãnh đạo, quản lý",1
+LĐ.06,Phó Trưởng phòng,Chuyên viên,"Phòng chuyên môn, nghiệp vụ","Lãnh đạo, quản lý",2
+CMNV.01,Pháp chế viên,Pháp chế viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.02,Chuyên viên chính về tổ chức - biên chế,Chuyên viên chính,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.03,Chuyên viên về tổ chức - biên chế,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.04,"Chuyên viên chính về cán bộ, công chức, viên chức và công vụ",Chuyên viên chính,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.05,"Chuyên viên về cán bộ, công chức, viên chức và công vụ",Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.06,Chuyên viên về cải cách hành chính,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.07,"Chuyên viên về thi đua, khen thưởng",Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.08,Chuyên viên về quản trị công sở,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.09,Chuyên viên chính về hành chính - văn phòng,Chuyên viên chính,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.10,Chuyên viên về hành chính - văn phòng,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.11,Văn thư viên,Văn thư viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.12,Chuyên viên về lưu trữ,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.13,Chuyên viên chính về tổng hợp,Chuyên viên chính,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.14,Chuyên viên về tổng hợp,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.15,Chuyên viên về quản lý ứng dụng công nghệ thông tin và chuyển đổi số,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.16,Chuyên viên về tiếp công dân và xử lý đơn,Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.17,"Chuyên viên về phòng, chống tham nhũng, lãng phí, tiêu cực",Chuyên viên,Văn phòng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.18,Chuyên viên về quản lý đầu tư,Chuyên viên,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.19,Chuyên viên về quản lý đấu thầu,Chuyên viên,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.20,"Chuyên viên chính về quản lý tài chính, ngân sách nhà nước",Chuyên viên chính,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.21,"Chuyên viên về quản lý tài chính, ngân sách nhà nước",Chuyên viên,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.22,Chuyên viên chính về quản lý tài sản công,Chuyên viên chính,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.23,Chuyên viên về quản lý tài sản công,Chuyên viên,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.24,Kế toán trưởng /Phụ trách Kế toán (khi bổ nhiệm),,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.25,Kế toán viên chính,Kế toán viên chính,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.26,Kế toán viên,Kế toán viên,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.27,Chuyên viên thủ quỹ,Chuyên viên,Phòng Kế hoạch - Tài chính,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.28,Chuyên viên chính Quản lý quy hoạch đô thị và nông thôn,Chuyên viên chính,Phòng Quy hoạch - Kiến trúc,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.29,Chuyên viên Quản lý quy hoạch đô thị và nông thôn,Chuyên viên,Phòng Quy hoạch - Kiến trúc,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.30,Chuyên viên chính Quản lý kiến trúc,Chuyên viên chính,Phòng Quy hoạch - Kiến trúc,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.31,Chuyên viên Quản lý kiến trúc,Chuyên viên,Phòng Quy hoạch - Kiến trúc,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.32,Chuyên viên chính Quản lý hoạt động đầu tư xây dựng,Chuyên viên chính,Phòng Quản lý hoạt động xây dựng; Phòng Kinh tế và Vật liệu xây dựng; Phòng Hạ tầng kỹ thuật,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.33,Chuyên viên Quản lý hoạt động đầu tư xây dựng,Chuyên viên,Phòng Quản lý hoạt động xây dựng; Phòng Kinh tế và Vật liệu xây dựng; Phòng Hạ tầng kỹ thuật,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.34,Chuyên viên chính về giám định và quản lý chất lượng công trình xây dựng,Chuyên viên chính,Phòng Quản lý hoạt động xây dựng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.35,Chuyên viên về giám định và quản lý chất lượng công trình xây dựng,Chuyên viên,Phòng Quản lý hoạt động xây dựng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.36,Chuyên viên chính Quản lý vật liệu xây dựng,Chuyên viên chính,Phòng Kinh tế và Vật liệu xây dựng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.37,Chuyên viên Quản lý vật liệu xây dựng,Chuyên viên,Phòng Kinh tế và Vật liệu xây dựng,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.38,Chuyên viên chính Quản lý hạ tầng kỹ thuật,Chuyên viên chính,Phòng hạ tầng kỹ thuật,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.39,Chuyên viên Quản lý hạ tầng kỹ thuật,Chuyên viên,Phòng hạ tầng kỹ thuật,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.40,Chuyên viên chính Quản lý phát triển đô thị,Chuyên viên chính,Phòng Phát triển đô thị,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.41,Chuyên viên Quản lý phát triển đô thị,Chuyên viên,Phòng Phát triển đô thị,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.42,Chuyên viên chính Quản lý về nhà ở,Chuyên viên chính,Phòng Quản lý nhà và thị trường bất động sản,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.43,Chuyên viên Quản lý về nhà ở,Chuyên viên,Phòng Quản lý nhà và thị trường bất động sản,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.44,Chuyên viên chính Quản lý thị trường bất động sản,Chuyên viên chính,Phòng Quản lý nhà và thị trường bất động sản,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.45,Chuyên viên Quản lý thị trường bất động sản,Chuyên viên,Phòng Quản lý nhà và thị trường bất động sản,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.46,Chuyên viên chính về quản lý vận tải,Chuyên viên chính,Phòng Quản lý vận tải,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.47,Chuyên viên về quản lý vận tải,Chuyên viên,Phòng Quản lý vận tải,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.48,Chuyên viên chính về quản lý phương tiện và người lái,Chuyên viên chính,Phòng Quản lý vận tải,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.49,Chuyên viên về quản lý phương tiện và người lái,Chuyên viên,Phòng Quản lý vận tải,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.50,Chuyên viên chính về quản lý đăng kiểm,Chuyên viên chính,Phòng Quản lý vận tải,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.51,Chuyên viên về quản lý đăng kiểm,Chuyên viên,Phòng Quản lý vận tải,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.52,Chuyên viên chính về kết cấu hạ tầng giao thông,Chuyên viên chính,Phòng Quản lý kết cấu hạ tầng giao thông; Phòng Hạ tầng kỹ thuật; Phòng Quản lý chất lượng công trình giao thông,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.53,Chuyên viên về kết cấu hạ tầng giao thông,Chuyên viên,Phòng Quản lý kết cấu hạ tầng giao thông; Phòng Hạ tầng kỹ thuật; Phòng Quản lý chất lượng công trình giao thông,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.54,"Chuyên viên chính về an ninh, an toàn giao thông",Chuyên viên chính,Phòng Quản lý kết cấu hạ tầng giao thông; Phòng Quản lý chất lượng công trình giao thông,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.55,"Chuyên viên về an ninh, an toàn giao thông",Chuyên viên,Phòng Quản lý kết cấu hạ tầng giao thông; Phòng Quản lý chất lượng công trình giao thông,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.56,Chuyên viên chính về quản lý đầu tư theo phương thức đối tác công - tư,Chuyên viên chính,Phòng Quản lý chất lượng công trình giao thông,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.57,Chuyên viên về quản lý đầu tư theo phương thức đối tác công - tư,Chuyên viên,Phòng Quản lý chất lượng công trình giao thông,"Công chức chuyên môn, nghiệp vụ",1
+CMNV.58,Chuyên viên về kiểm tra chuyên ngành,Chuyên viên,"Văn phòng; Các phòng chuyên môn, nghiệp vụ","Công chức chuyên môn, nghiệp vụ",1
+CMNV.59,"Chuyên viên về giải quyết khiếu nại, tố cáo",Chuyên viên,"Văn phòng; Các phòng chuyên môn, nghiệp vụ","Công chức chuyên môn, nghiệp vụ",1

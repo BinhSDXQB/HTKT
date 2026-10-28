@@ -3,6 +3,8 @@
 > Lập 26/10/2026. **Chỉ thiết kế, chưa sửa `schema.prisma`, chưa tạo migration, chưa nhập dữ liệu thật.**
 > Căn cứ: Kết luận 107-KL/TW (17/10/2026), Kế hoạch 109-KH/TU (25/10/2026), Phụ lục KPI Kế hoạch 2026, CV 9409/SXD-VP và CSDL hiện có (`CanBo`, `ToChuc`, `ChucDanh`, `PhanCong`).
 
+> **Cập nhật 28/10/2026:** đã có Quyết định phê duyệt VTVL (QĐ 1239/QĐ-SXD) và 94 bản mô tả công việc. Bảng `vi_tri_viec_lam` (§4.1) nay là **danh mục chính thức 65 mã** nạp từ QĐ, và có thêm nhóm bảng bản mô tả, hồ sơ xếp ngạch. Xem `03-vtvl-chinh-thuc-cap-nhat.md`; chỗ nào hai bản khác nhau thì theo bản 03.
+
 ## 0. Điều cần nói trước
 
 1. **Chưa có Hướng dẫn 07-HD/BTCTW và 09 biểu nghiệp vụ.** Hai văn bản được dán chỉ nêu tên 08 bước và các biểu A1, A2, B1, B2, C1, C2, C3, D1, D2 (không có cột, công thức, mã định danh). Thiết kế dưới đây bám **ý nghĩa từng bước**, nên tên cột và công thức quỹ giờ **phải đối chiếu lại khi có bộ biểu Excel của Trung ương**. Kế hoạch 109 cấm "tự đặt định mức hoặc hệ số quy đổi" và "sửa ô công thức đã khóa": hệ thống chỉ lưu và kiểm tra, **không tự đặt định mức**.
