@@ -14,7 +14,8 @@ Codex chỉ ĐỀ XUẤT. Nó từng sai (ngày hiệu lực, trích nguồn tr�
 ## Quy trình
 1. **Báo chi phí/hạn mức trước.** Mỗi lượt có thể 35–100k token. Gộp nhiều mục vào ÍT lượt (tối đa 2 vòng). Nếu báo hết hạn mức ("try again at HH:MM") thì dừng, báo người dùng. KHÔNG tự chuyển sang `OPENAI_API_KEY` của dự án: nó dùng chung số dư với chatbot/RAG, từng làm sập chatbot khi hết credit. Chỉ dùng khoá dự án khi người dùng đồng ý rõ.
 2. **Chuẩn bị đầu vào** trong thư mục tạm (không phải trong repo): xuất diff (`git diff`) hoặc tệp cần rà ra tệp văn bản. KHÔNG đưa `.env`, mật khẩu, token, CCCD, lương thật vào prompt.
-3. **Viết prompt** với vai "NGƯỜI PHẢN BIỆN (devil's advocate), không khen", nêu từng mục cần soi (A/B/C…), yêu cầu mỗi lỗi kèm `tệp:dòng` + kịch bản hỏng + cách sửa, và phân biệt "đã chạy/đã đọc" với "suy luận". Với pháp lý: dán TRÍCH NGUYÊN VĂN văn bản gốc vào prompt (Codex không đọc được ổ G:, và sẽ bác sai những gì không được dán).
+3. **Gói bàn giao cho người phản biện** (theo `docs/ai/WORKFLOW.md`): commit nền (`git rev-parse HEAD`), diff, tiêu chí nghiệm thu, lệnh đã chạy + kết quả test thật, rủi ro đã biết, câu hỏi còn mở. Người phản biện KHÔNG merge và KHÔNG sửa; người viết thay đổi không tự duyệt thay đổi của chính mình.
+   **Viết prompt** với vai "NGƯỜI PHẢN BIỆN (devil's advocate), không khen", nêu từng mục cần soi (A/B/C…), yêu cầu mỗi lỗi kèm `tệp:dòng` + kịch bản hỏng + cách sửa, và phân biệt "đã chạy/đã đọc" với "suy luận". Với pháp lý: dán TRÍCH NGUYÊN VĂN văn bản gốc vào prompt (Codex không đọc được ổ G:, và sẽ bác sai những gì không được dán).
 4. **Chạy** (chỉ đọc), ví dụ:
    ```
    codex exec -c model_reasoning_effort="high" --sandbox read-only --skip-git-repo-check -o ketqua.txt - < prompt.txt
@@ -25,7 +26,8 @@ Codex chỉ ĐỀ XUẤT. Nó từng sai (ngày hiệu lực, trích nguồn tr�
    - Lỗi mã: mở đúng `tệp:dòng`, tự tái hiện hoặc chạy thử (ví dụ `npm test` trong `app/`).
    - Lỗi pháp lý: đối chiếu văn bản gốc (Công báo / chinhphu.vn / kho VBPL). Không xác minh được → ghi "cần đối chiếu", KHÔNG ghi thẳng "hết hiệu lực". Không tự đổi căn cứ trong văn bản do lãnh đạo ký.
    - Nguồn Codex dẫn: kiểm tra URL có thật và nội dung khớp kết luận.
-6. **Báo cáo cho người dùng** một bảng: phát hiện · mức · đã kiểm chứng (đúng/sai/chưa rõ, bằng cách nào) · đã sửa chưa. Ghi bài học mới vào `docs/ai/LESSONS_LEARNED.md`.
+6. **Phân mức** mỗi phát hiện đã kiểm chứng: BLOCKER (không được phát hành) · HIGH · MEDIUM · LOW. BLOCKER/HIGH phải sửa và được kiểm lại trước khi coi là xong (cổng phát hành trong `docs/ai/TESTING.md`).
+7. **Báo cáo cho người dùng** một bảng: phát hiện · mức · đã kiểm chứng (đúng/sai/chưa rõ, bằng cách nào) · đã sửa chưa. Ghi bài học mới vào `docs/ai/LESSONS_LEARNED.md`.
 
 ## Tiêu chí hoàn thành
 Mỗi phát hiện của Codex có trạng thái kiểm chứng rõ ràng; phần đã sửa có bằng chứng chạy lại (test/smoke); không có secret trong prompt hay đầu ra.
