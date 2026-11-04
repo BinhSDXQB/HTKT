@@ -21,3 +21,4 @@ Cập nhật: 2026-10-28. Mỗi việc: ID · mục tiêu · trạng thái · ti
 - 2 Lê Anh Tuấn chờ xác nhận; bảng lương tháng chưa được Codex rà.
 - Audit bậc↔hệ số: 2 MISMATCH chờ xác nhận.
 - Mig 049 (`htkt_doi_tuong`) chưa áp CSDL.
+- Cảnh báo cấp phó phòng (`lib/cap-pho-phong.ts`, trang Cảnh báo Văn phòng Sở): đã commit, chưa push/triển khai, chưa xem trên giao diện; đối chiếu KL 213, HD 07-HD/BTCTU khi có bản gốc rồi sửa định mức nếu khác.
