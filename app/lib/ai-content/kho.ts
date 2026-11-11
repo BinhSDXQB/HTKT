@@ -43,6 +43,15 @@ type Bai = {
 type PhienBan = { id: string; version_no: number; title: string; body_md: string; content_hash: string; created_by: string }
 type BienThe = { id: string; channel: Kenh; body: string; created_by: string }
 
+/**
+ * Mọi cột thời gian trả ra ngoài đều đổi sang CHUỖI ISO-8601 UTC ngay trong SQL.
+ * Lý do: đọc timestamptz qua $queryRaw của Prisma (adapter pg) trên máy đặt múi giờ +07 trả về Date lệch 7 giờ
+ * (lịch 08:30 hiện thành 15:30), còn đọc qua pg thuần thì đúng. Chuỗi do PostgreSQL tự định dạng thì
+ * không phụ thuộc trình điều khiển hay múi giờ máy chủ.
+ */
+const iso = (cot: string, ten = cot.split('.').pop()) =>
+  `to_char(${cot} at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as ${ten}`
+
 const GIOI_HAN_TIEU_DE = 300
 const GIOI_HAN_THAN_BAI = 100_000
 
@@ -435,11 +444,11 @@ export async function donDepHangDoi(db: Db): Promise<{ treo: number; quaHan: num
   return db.tx(async (d) => {
     const treo = await d.q<{ id: string }>(
       `update ai_publication_schedules set status = 'UNKNOWN_OUTCOME', error_code = 'WORKER_TREO', updated_at = now()
-        where status = 'PUBLISHING' and locked_at < now() - make_interval(mins => $1) returning id::text`, [KHOA_TREO_PHUT])
+        where status = 'PUBLISHING' and locked_at < now() - make_interval(mins => $1::int) returning id::text`, [KHOA_TREO_PHUT])
     const quaHan = await d.q<{ id: string }>(
       `update ai_publication_schedules set status = 'EXPIRED', error_code = 'QUA_HAN', updated_at = now()
         where status = 'SCHEDULED' and adapter <> 'manual'
-          and scheduled_at_utc < now() - make_interval(hours => $1) returning id::text`, [QUA_HAN_GIO])
+          and scheduled_at_utc < now() - make_interval(hours => $1::int) returning id::text`, [QUA_HAN_GIO])
     const cid = randomUUID()
     for (const r of treo) await ghiNhatKy(d, cid, null, 'LICH_TREO', 'schedule', r.id)
     for (const r of quaHan) await ghiNhatKy(d, cid, null, 'LICH_QUA_HAN', 'schedule', r.id)
@@ -458,7 +467,7 @@ export async function nhanViec(db: Db, workerId: string): Promise<ViecDang | nul
       `select id::text, content_id::text from ai_publication_schedules
         where status in ('SCHEDULED','RETRY_PENDING') and adapter <> 'manual'
           and coalesce(next_attempt_at, scheduled_at_utc) <= now()
-          and scheduled_at_utc >= now() - make_interval(hours => $1)   -- quá hạn thì KHÔNG đăng bù (xem donDepHangDoi)
+          and scheduled_at_utc >= now() - make_interval(hours => $1::int)   -- quá hạn thì KHÔNG đăng bù (xem donDepHangDoi)
         order by coalesce(next_attempt_at, scheduled_at_utc)
         limit 1 for update skip locked`, [QUA_HAN_GIO])
     if (!ung) return null
@@ -522,7 +531,7 @@ export async function ghiKetQua(db: Db, maNhan: string, lichId: string, kq: KetQ
 // ── Đọc ───────────────────────────────────────────────────────────────────────
 export async function danhSachBai(db: Db, loc: { trangThai?: string; tu?: string } = {}) {
   return db.q(
-    `select i.id::text, i.title, i.status, i.classification, i.ai_generated, i.updated_at, u.name as nguoi_tao,
+    `select i.id::text, i.title, i.status, i.classification, i.ai_generated, ${iso('i.updated_at')}, u.name as nguoi_tao,
             v.version_no,
             coalesce((select array_agg(s.status order by s.channel) from ai_publication_schedules s where s.content_id = i.id), '{}') as lich
        from ai_content_items i
@@ -536,22 +545,22 @@ export async function danhSachBai(db: Db, loc: { trangThai?: string; tu?: string
 
 export async function chiTietBai(db: Db, idRaw: string) {
   const id = canUuid(idRaw, 'Mã bài')
-  const [bai] = await db.q<Bai & { updated_at: Date }>(
-    `select id::text, title, status, classification, ai_generated, may_mislead, current_version_id::text, created_by, updated_at
+  const [bai] = await db.q<Bai & { updated_at: string }>(
+    `select id::text, title, status, classification, ai_generated, may_mislead, current_version_id::text, created_by, ${iso('updated_at')}
        from ai_content_items where id = $1::uuid and deleted_at is null`, [id])
   if (!bai) throw new LoiNghiepVu(404, 'Không tìm thấy bài viết')
   const phienBan = await layPhienBan(db, bai.current_version_id)
   const bienThe = await layBienThe(db, phienBan.id)
   const nguon = await layNguon(db, id)
   const pheDuyet = await db.q(
-    `select a.id::text, a.decision, a.approved_hash, a.note, a.created_at, a.version_id::text, u.name as nguoi
+    `select a.id::text, a.decision, a.approved_hash, a.note, ${iso('a.created_at')}, a.version_id::text, u.name as nguoi
        from ai_approvals a join users u on u.id = a.actor_id where a.content_id = $1::uuid order by a.seq desc limit 20`, [id])
   const lich = await db.q(
-    `select id::text, channel, adapter, status, scheduled_at_utc, timezone, retry_count, external_post_id, external_url,
-            error_code, error_detail, published_at, version_id::text
+    `select id::text, channel, adapter, status, ${iso('scheduled_at_utc')}, timezone, retry_count, external_post_id, external_url,
+            error_code, error_detail, ${iso('published_at')}, version_id::text
        from ai_publication_schedules where content_id = $1::uuid order by created_at desc limit 50`, [id])
   const lichSuPhienBan = await db.q(
-    `select v.id::text, v.version_no, v.created_at, u.name as nguoi from ai_content_versions v join users u on u.id = v.created_by
+    `select v.id::text, v.version_no, ${iso('v.created_at')}, u.name as nguoi from ai_content_versions v join users u on u.id = v.created_by
       where v.content_id = $1::uuid order by v.version_no desc limit 30`, [id])
   const bam = bamPheDuyet(bai, phienBan, bienThe, nguon.map((n) => n.id))
   return { bai, phienBan, bienThe, nguon, pheDuyet, lich, lichSuPhienBan, bamHienTai: bam }
@@ -559,7 +568,7 @@ export async function chiTietBai(db: Db, idRaw: string) {
 
 export async function lichTrongKhoang(db: Db, tuIso: string, denIso: string) {
   return db.q(
-    `select s.id::text, s.content_id::text, s.channel, s.adapter, s.status, s.scheduled_at_utc, s.timezone, s.external_url, i.title
+    `select s.id::text, s.content_id::text, s.channel, s.adapter, s.status, ${iso('s.scheduled_at_utc')}, s.timezone, s.external_url, i.title
        from ai_publication_schedules s join ai_content_items i on i.id = s.content_id
       where s.scheduled_at_utc >= $1::timestamptz and s.scheduled_at_utc < $2::timestamptz
       order by s.scheduled_at_utc limit 500`, [tuIso, denIso])
@@ -567,8 +576,8 @@ export async function lichTrongKhoang(db: Db, tuIso: string, denIso: string) {
 
 export async function nhatKy(db: Db, gioiHan = 100) {
   return db.q(
-    `select e.id::text, e.correlation_id::text, e.action, e.target_type, e.target_id, e.detail, e.created_at, u.name as nguoi
-       from ai_audit_events e left join users u on u.id = e.actor_id order by e.id desc limit $1`, [Math.min(Math.max(gioiHan, 1), 500)])
+    `select e.id::text, e.correlation_id::text, e.action, e.target_type, e.target_id, e.detail, ${iso('e.created_at')}, u.name as nguoi
+       from ai_audit_events e left join users u on u.id = e.actor_id order by e.id desc limit $1::int`, [Math.min(Math.max(gioiHan, 1), 500)])
 }
 
 export async function thongKe(db: Db) {

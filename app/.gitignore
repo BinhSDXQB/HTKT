@@ -43,3 +43,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# máy chủ dev thử của module Nội dung AI (scripts/ai-content/dev-thu.mjs)
+/.next-ai-dev/

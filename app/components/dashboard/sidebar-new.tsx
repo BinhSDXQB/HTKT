@@ -75,6 +75,7 @@ type NavItem = {
   officeOnly?: boolean
   htktOnly?: boolean
   congViecOnly?: boolean
+  aiOnly?: boolean            // module Nội dung AI: chỉ hiện khi cờ AI_CONTENT_ENABLED bật VÀ người dùng có quyền (tính ở máy chủ)
 }
 
 type NavGroup = {
@@ -379,6 +380,17 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
+    // Nhóm AI Workspace — ẩn hoàn toàn khi cờ tính năng tắt hoặc người dùng không có quyền (canAi tính ở máy chủ).
+    label: 'AI Workspace',
+    icon: Sparkles,
+    defaultOpen: false,
+    items: [
+      { label: 'Nội dung truyền thông', href: '/dashboard/ai-workspace', icon: Sparkles, aiOnly: true },
+      { label: 'Soạn bài mới', href: '/dashboard/ai-workspace/moi', icon: FileText, aiOnly: true },
+      { label: 'Lịch xuất bản', href: '/dashboard/ai-workspace/lich', icon: CalendarDays, aiOnly: true },
+    ],
+  },
+  {
     label: 'Cấu hình',
     icon: Settings,
     defaultOpen: false,
@@ -399,12 +411,13 @@ type SidebarProps = {
   canOffice?: boolean
   canHtkt?: boolean
   canCongViec?: boolean
+  canAi?: boolean
   toChucMa?: string | null
   mobileOpen?: boolean
   onClose?: () => void
 }
 
-export function SidebarNew({ roleName, email, canOffice = false, canHtkt = false, canCongViec = false, toChucMa = null, mobileOpen = false, onClose }: SidebarProps) {
+export function SidebarNew({ roleName, email, canOffice = false, canHtkt = false, canCongViec = false, canAi = false, toChucMa = null, mobileOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname()
   const isAdmin = roleName === 'admin'
   // Lãnh đạo Sở (GĐ/PGĐ thuộc nhóm LANH_DAO_SO) — xem được module của TẤT CẢ các phòng.
@@ -432,6 +445,7 @@ export function SidebarNew({ roleName, email, canOffice = false, canHtkt = false
     if (item.officeOnly) return canOffice
     if (item.htktOnly) return canHtkt
     if (item.congViecOnly) return canCongViec
+    if (item.aiOnly) return canAi
     if (item.adminOnly) return isAdminOrManager
     return true
   }
