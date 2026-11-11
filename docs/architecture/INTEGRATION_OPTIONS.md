@@ -19,3 +19,32 @@ Chuyển sang B nếu: n8n/worker buộc chạy cùng máy, hoặc yêu cầu c�
 
 ## Câu hỏi cần quyết (xem BASELINE_REPORT)
 1. n8n hiện ở đâu, ai quản trị, có API? 2. Nhà cung cấp sinh ảnh và chính sách dữ liệu? 3. Nơi lưu media? 4. Tài khoản MXH thử nghiệm? 5. Ai là người phê duyệt có thẩm quyền (vai trò nào)?
+
+## Phụ lục — Lựa chọn thay n8n để điều phối (INFERRED từ kiến thức chung, CHƯA đối chiếu tài liệu/giấy phép hiện hành)
+
+Ràng buộc đã VERIFIED: Windows Server 2022, 2 lõi, RAM trống ~1,8 GB, đã có PostgreSQL 16, PM2, Task Scheduler; không có Redis/Docker trong inventory.
+
+| Phương án | RAM thêm | Hạ tầng mới | Phù hợp ràng buộc | Nhược điểm |
+|---|---|---|---|---|
+| **W1. Hàng đợi trong Postgres (pg-boss) + worker PM2** (khuyến nghị) | ~80–150 MB (1 tiến trình) | Không (dùng PG sẵn có) | Cao | Tự viết workflow bằng mã; không có UI kéo thả |
+| W2. BullMQ | ~100 MB + Redis | Redis (không chính thức trên Windows) | Thấp | Thêm Redis phải vận hành |
+| W3. Task Scheduler + script `.mjs` (mẫu đã có: sync VBPL, Telegram) | ~0 | Không | Cao cho lịch đơn giản | Không có retry/idempotency/lock sẵn; tự dựng |
+| W4. Temporal / Windmill / Trigger.dev tự host | 1–4 GB+ | Docker, nhiều dịch vụ | Thấp (RAM 6GB) | Quá nặng cho máy production chung |
+| W5. Node-RED | ~150–250 MB | Node-RED | Trung bình | Logic nằm trong luồng, khó test/audit như n8n |
+| W6. n8n (giữ lại, chạy ngoài VPS) | 0 trên VPS | Máy khác | Phụ thuộc UNKNOWN | Token/logic ngoài app, khó kiểm thử |
+
+### Khuyến nghị: W1
+- Job `ai_publication_jobs` đã nằm trong CSDL (khoá hàng `FOR UPDATE SKIP LOCKED`, idempotency key unique, retry backoff+jitter, dead-letter) — pg-boss cung cấp sẵn các cơ chế này; nếu không muốn thêm thư viện thì tự viết bằng đúng các câu SQL đó.
+- Worker chạy thành tiến trình PM2 riêng (`ai-worker`), tắt được bằng cờ; không chạm 2 instance `ql-htkt`.
+- Lịch 08:30 Asia/Ho_Chi_Minh: bản ghi `scheduled_at_utc`, worker quét mỗi phút, không cần cron ngoài.
+- Token mạng xã hội chỉ nằm trong app (mã hoá), không rời CSDL.
+- Giữ n8n làm tuỳ chọn sau này cho tích hợp thông báo; adapter vẫn thay được.
+
+### Chưa kiểm chứng
+Phiên bản, giấy phép, trạng thái bảo trì, yêu cầu RAM thực tế của pg-boss/Node-RED/Windmill; việc pg-boss chạy ổn trên Prisma 7 + pg hiện tại. Cần thử trên CSDL thử trước khi chốt (thêm package = HIGH, phải được duyệt).
+
+### Kiểm chứng pg-boss (11/11/2026, nguồn: README GitHub + metadata npm qua tìm kiếm web)
+- VERIFIED (nguồn công khai): giấy phép MIT; cần Node >= 22.12 và PostgreSQL >= 13 (máy này Node 24.16, PG 16 — đạt); có cron/RRULE, retry backoff luỹ thừa, dead-letter + redrive; dựa trên `SKIP LOCKED`.
+- UNKNOWN: số phiên bản mới nhất chính xác (nguồn lẫn lộn 10.x/12.x — phải xem npm registry khi cài); hỗ trợ múi giờ cho lịch cron (README không nêu → lưu `scheduled_at_utc` trong bảng riêng, không phụ thuộc); khoá idempotency (xem pgboss.io); chạy ổn với Prisma 7 + `pg` hiện tại và RAM thực tế (NOT_RUN).
+- Rủi ro: một người bảo trì → giữ lớp bao `JobQueue` để thay được, hoặc tự viết bằng SQL `SKIP LOCKED` (đơn giản, không phụ thuộc).
+- Lưu ý: pg-boss tự tạo schema `pgboss` trong CSDL → tính là migration, cần CSDL thử và kế hoạch gỡ schema đó trước khi chạy thật.
