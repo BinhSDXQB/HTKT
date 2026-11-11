@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {
   bamNoiDung, gioDiaPhuongSangUtc, kiemTraCongXuatBan, chuyenTheTheoQuyTac, kiemTraBienThe, chiaDoan,
   thoiGianCho, phanLoaiLoi, trangThaiSauLoi, aiContentBat, lyDoKhongDuocDuyet, duocSoan, coNhanAi,
-  NGAN_CACH_CHUOI, SO_LAN_THU_TOI_DA, NHAN_AI, type DauVaoCong,
+  NGAN_CACH_CHUOI, SO_LAN_THU_TOI_DA, NHAN_AI, nguonGocHopLe, type DauVaoCong,
 } from './nghiep-vu'
 import { duocChuyenNoiDung, duocChuyenLich, tongHopXuatBan } from './trang-thai'
 
@@ -160,4 +160,16 @@ test('tổng hợp nhiều kênh suy ra động (AT-11)', () => {
   assert.equal(tongHopXuatBan(['SCHEDULED', 'CANCELLED']), 'DA_DAT_LICH')
   assert.equal(tongHopXuatBan(['FAILED', 'SCHEDULED']), 'LOI')
   assert.equal(tongHopXuatBan(['CANCELLED', 'EXPIRED']), 'DA_HUY')
+})
+
+test('nguồn gốc yêu cầu ghi: đúng host hoặc tên miền công khai sau reverse proxy; Origin lạ/"null" bị từ chối', () => {
+  const host = ['localhost:3001', null, 'qlhtkt.htkt.com.vn']
+  assert.equal(nguonGocHopLe(null, host), true)
+  assert.equal(nguonGocHopLe('https://qlhtkt.htkt.com.vn', host), true)
+  assert.equal(nguonGocHopLe('https://QLHTKT.htkt.com.vn', host), true)
+  assert.equal(nguonGocHopLe('http://localhost:3001', host), true)
+  assert.equal(nguonGocHopLe('https://evil.example', host), false)
+  assert.equal(nguonGocHopLe('https://qlhtkt.htkt.com.vn.evil.example', host), false)
+  assert.equal(nguonGocHopLe('null', host), false)
+  assert.equal(nguonGocHopLe('https://a.vn', []), false)
 })

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { getCurrentUser, isLeadership, type CurrentUser } from '@/lib/auth'
 import { DEPARTMENT_CODES } from '@/lib/permissions'
-import { aiContentBat, duocSoan, type NguoiDungToiThieu } from './nghiep-vu'
+import { aiContentBat, duocSoan, nguonGocHopLe, type NguoiDungToiThieu } from './nghiep-vu'
 import { LoiNghiepVu, type Db } from './kho'
 
 type PrismaToiThieu = {
@@ -44,6 +44,16 @@ export function duocVaoAiWorkspace(user: CurrentUser): boolean {
   return aiContentBat() && duocSoan(vaiTroAi(user))
 }
 
+/**
+ * Tên miền công khai của hệ thống. Production đứng sau IIS reverse proxy: trình duyệt gửi Origin là tên miền công khai
+ * còn Host tới Node có thể là localhost:3001 — nếu chỉ so Origin với Host thì MỌI thao tác ghi sẽ bị 403.
+ * Giữ khớp với experimental.serverActions.allowedOrigins trong next.config.ts; bổ sung qua APP_URL.
+ */
+const HOST_DUOC_PHEP: string[] = [
+  'qlhtkt.htkt.com.vn', '36.50.27.222', '36.50.27.222:81', 'localhost:3001',
+  ...(() => { try { return process.env.APP_URL ? [new URL(process.env.APP_URL).host] : [] } catch { return [] } })(),
+]
+
 type Ctx<P> = { params: Promise<P> }
 type XuLy<P> = (a: { req: NextRequest; params: P; nd: NguoiDungToiThieu; user: CurrentUser }) => Promise<unknown>
 
@@ -55,9 +65,8 @@ export function routeAi<P = Record<string, never>>(xuLy: XuLy<P>) {
   return async (req: NextRequest, ctx: Ctx<P>) => {
     if (!aiContentBat()) return NextResponse.json({ error: 'Không tìm thấy' }, { status: 404 })
     if (req.method !== 'GET') {
-      const origin = req.headers.get('origin')
-      const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host')
-      if (origin && host && new URL(origin).host !== host) {
+      const hostCuaYeuCau = [req.headers.get('host'), req.headers.get('x-forwarded-host'), ...HOST_DUOC_PHEP]
+      if (!nguonGocHopLe(req.headers.get('origin'), hostCuaYeuCau)) {
         return NextResponse.json({ error: 'Yêu cầu từ nguồn không hợp lệ' }, { status: 403 })
       }
     }

@@ -228,3 +228,15 @@ export function lyDoKhongDuocDuyet(u: NguoiDungToiThieu, nguoiTaoPhienBanId: str
   if (u.id === nguoiTaoPhienBanId) return 'Người duyệt phải khác người soạn phiên bản này.'
   return null
 }
+
+/**
+ * Chống giả mạo yêu cầu chéo trang cho thao tác ghi: Origin (nếu trình duyệt gửi) phải trỏ về một host của hệ thống.
+ * Không có Origin (công cụ dòng lệnh, cùng nguồn kiểu cũ) → cho qua vì cookie phiên đã đặt SameSite=Lax.
+ * Origin không phân tích được (vd "null" từ trang sandbox) → từ chối.
+ */
+export function nguonGocHopLe(origin: string | null | undefined, hostHopLe: (string | null | undefined)[]): boolean {
+  if (!origin) return true
+  let host: string
+  try { host = new URL(origin).host.toLowerCase() } catch { return false }
+  return hostHopLe.some((h) => !!h && h.toLowerCase() === host)
+}
