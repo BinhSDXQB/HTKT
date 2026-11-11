@@ -21,4 +21,5 @@ Cập nhật: 2026-10-28. Mỗi việc: ID · mục tiêu · trạng thái · ti
 - 2 Lê Anh Tuấn chờ xác nhận; bảng lương tháng chưa được Codex rà.
 - Audit bậc↔hệ số: 2 MISMATCH chờ xác nhận.
 - Mig 049 (`htkt_doi_tuong`) chưa áp CSDL.
+- Tiến độ thẩm định 77 khu TĐC/nghĩa trang đường sắt tốc độ cao: ĐÃ GHI CSDL 11/11/2026 (61 cập nhật, 16 tạo mới, chạy lại 0 thay đổi; sao lưu `C:\Backup_QLHTKT\cong_viec_truoc_qltd_20261111_1443.dump`). Còn chờ các phòng: 1 nghĩa trang Phòng KT-VLXD tab tổng hợp tính "đã thẩm định" nhưng tab Dulieu ghi chưa trình; 4 ngày đảo (TĐC-20/30/32/41); TĐC-15/25/29 có thể đã nộp lại; NT-19/NT-20 trùng tên. Chưa xem trên giao diện. Không chạy lại `import-dsct-tdc-bc-311026.mjs` (số liệu cũ hơn, sẽ ghi đè).
 - Cảnh báo cấp phó phòng (`lib/cap-pho-phong.ts`, trang Cảnh báo Văn phòng Sở): đã commit, chưa push/triển khai, chưa xem trên giao diện; đối chiếu KL 213, HD 07-HD/BTCTU khi có bản gốc rồi sửa định mức nếu khác.
