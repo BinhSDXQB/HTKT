@@ -74,43 +74,74 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 62/2020/NĐ-CP',
         ngayBanHanh: '01/6/2020',
         hieuLucTu: '20/7/2020',
-        canhBao: 'CHƯA XÁC ĐỊNH DỨT ĐIỂM (rà 24/9/2026, qua Codex phản biện chéo): phần "vị trí việc làm công chức" '
-          + 'đã có Nghị định 361/2025/NĐ-CP (hiệu lực 31/12/2025) quy định lại, nhưng KHÔNG có nguồn xác nhận toàn '
-          + 'bộ NĐ 62/2020 (kể cả phần "biên chế công chức") đã bị bãi bỏ. Ưu tiên dùng NĐ 361/2025/NĐ-CP cho nội '
-          + 'dung vị trí việc làm; đối chiếu văn bản gốc trước khi khẳng định NĐ 62/2020 còn/hết hiệu lực phần biên chế.',
-        trichYeu: 'Về VỊ TRÍ VIỆC LÀM và biên chế công chức.',
+        canhBao: 'HẾT HIỆU LỰC MỘT PHẦN (VERIFIED 11/11/2026, đọc trong kho 361_2025_ND-CP_682793.docx). Nguyên văn Điều 13 khoản 2 '
+          + 'NĐ 361/2025: "Kể từ ngày Nghị định này có hiệu lực thi hành, các quy định liên quan đến vị trí việc làm công chức '
+          + 'tại Nghị định số 62/2020/NĐ-CP ngày 01 tháng 6 năm 2020 của Chính phủ về vị trí việc làm và biên chế công chức hết hiệu lực thi hành." '
+          + '→ từ 31/12/2025 các quy định về VỊ TRÍ VIỆC LÀM công chức của NĐ 62/2020 KHÔNG còn áp dụng; dùng NĐ 361/2025. '
+          + 'Văn bản này KHÔNG bị bãi bỏ toàn bộ theo điều khoản đó. Phần BIÊN CHẾ công chức: UNKNOWN — kho không có văn bản nào '
+          + 'bãi bỏ hay thay thế, chưa tra được ngoài kho; đối chiếu trước khi khẳng định còn/hết hiệu lực. '
+          + 'Toàn văn NĐ 62/2020 KHÔNG có trong kho nên chưa xác định chính xác điều/khoản nào thuộc phạm vi "quy định liên quan đến vị trí việc làm công chức": '
+          + 'các Điều 3–7 dưới đây là tóm tắt cũ về nội dung vị trí việc làm, nhiều khả năng thuộc phạm vi đó nhưng CHƯA đối chiếu từng điều.',
+        trichYeu: 'Về VỊ TRÍ VIỆC LÀM và biên chế công chức. Các quy định liên quan đến vị trí việc làm công chức ĐÃ HẾT HIỆU LỰC từ 31/12/2025 (NĐ 361/2025 Điều 13 khoản 2); phần biên chế chưa xác định.',
         dieuKhoan: [
-          'Điều 3: Căn cứ xác định vị trí việc làm (chức năng, nhiệm vụ, tổ chức bộ máy; tính chất, đặc điểm, khối lượng công việc).',
-          'Điều 4: Phân loại vị trí việc làm (theo khối lượng công việc; theo tính chất, nội dung công việc: lãnh đạo–quản lý, nghiệp vụ chuyên ngành, nghiệp vụ dùng chung, hỗ trợ–phục vụ).',
-          'Điều 5–7: Bản mô tả công việc, khung năng lực và xác định cơ cấu ngạch công chức.',
+          '(Nội dung VTVL — nhiều khả năng đã hết hiệu lực theo NĐ 361/2025, chưa đối chiếu từng điều; chỉ để đối chiếu lịch sử) Điều 3:Căn cứ xác định vị trí việc làm (chức năng, nhiệm vụ, tổ chức bộ máy; tính chất, đặc điểm, khối lượng công việc).',
+          '(Nội dung VTVL — xem lưu ý trên) Điều 4:Phân loại vị trí việc làm (theo khối lượng công việc; theo tính chất, nội dung công việc: lãnh đạo–quản lý, nghiệp vụ chuyên ngành, nghiệp vụ dùng chung, hỗ trợ–phục vụ).',
+          '(Nội dung VTVL — xem lưu ý trên) Điều 5–7:Bản mô tả công việc, khung năng lực và xác định cơ cấu ngạch công chức.',
         ],
       },
       {
         soHieu: 'Nghị định 361/2025/NĐ-CP',
         ngayBanHanh: '31/12/2025',
         hieuLucTu: '31/12/2025',
-        canhBao: 'Rà 24/9/2026 qua WebSearch + Codex (nguồn tổng hợp, CHƯA đọc toàn văn/Công báo) — cần đối chiếu '
-          + 'văn bản gốc để trích dẫn điều/khoản chi tiết. Gồm 4 Chương 15 Điều; hạn chót bố trí công chức theo '
-          + 'vị trí việc làm là 01/7/2027 (với công chức tuyển dụng trước 01/7/2025).',
-        trichYeu: 'Quy định (mới) về VỊ TRÍ VIỆC LÀM CÔNG CHỨC — thay thế nội dung tương ứng của NĐ 62/2020/NĐ-CP.',
+        canhBao: 'VERIFIED 11/11/2026 từ toàn văn trong kho (361_2025_ND-CP_682793.docx): 4 Chương, 15 Điều; Điều 13 khoản 1: '
+          + 'có hiệu lực kể từ ngày ký ban hành (31/12/2025). Mục lục: Điều 7 (tỷ lệ công chức bố trí theo VTVL ở bộ), '
+          + 'Điều 8 (ở cấp tỉnh và cấp xã), Điều 9 (xếp ngạch công chức theo VTVL) — chưa tóm tắt nội dung chi tiết ở đây, đọc văn bản gốc khi cần trích.',
+        trichYeu: 'Quy định về VỊ TRÍ VIỆC LÀM CÔNG CHỨC (căn cứ Luật CBCC 80/2025) — thay các quy định về vị trí việc làm công chức của NĐ 62/2020/NĐ-CP (Điều 13 khoản 2).',
+        dieuKhoan: [
+          'Điều 9 khoản 1 (nguyên tắc xếp ngạch công chức theo vị trí việc làm, VERIFIED, trích): a) công chức được bố trí vào vị trí việc làm nào thì xếp ngạch tương ứng với vị trí việc làm đó; với công chức chuyên môn, nghiệp vụ phải căn cứ bản mô tả công việc, khung năng lực của vị trí việc làm; c) việc xếp ngạch theo vị trí việc làm lãnh đạo, quản lý là người đứng đầu KHÔNG áp dụng đối với người được giao quyền; d) phải đúng tỷ lệ do cơ quan có thẩm quyền phê duyệt vị trí việc làm quyết định.',
+          'Điều 13 khoản 3 (nguyên văn): "Trường hợp cấp có thẩm quyền ban hành văn bản quy định về công tác cán bộ có nội dung khác với quy định tại Nghị định này thì thực hiện theo quy định mới của cấp có thẩm quyền."',
+          'Điều 14 khoản 1 (nguyên văn, trích): "Chậm nhất đến ngày 01 tháng 7 năm 2026, các bộ, ngành, cơ quan trung ương, Ủy ban nhân dân cấp tỉnh, Văn phòng Đoàn Đại biểu Quốc hội và Hội đồng nhân dân cấp tỉnh phải chỉ đạo tổ chức thực hiện và ban hành quyết định phê duyệt vị trí việc làm của cơ quan, tổ chức thuộc phạm vi quản lý … để thay thế các quyết định về vị trí việc làm đã ban hành trước đó. Trong thời gian cơ quan có thẩm quyền chưa ban hành quyết định phê duyệt vị trí việc làm theo quy định tại Nghị định này, các quyết định phê duyệt vị trí việc làm ban hành trước đó được tiếp tục áp dụng." → mốc 01/7/2026 ĐÃ QUA (tính đến 11/11/2026): cơ quan nào chưa có quyết định phê duyệt mới thì quyết định cũ vẫn áp dụng; cần kiểm tra Sở/đơn vị đã có quyết định phê duyệt VTVL theo NĐ 361 chưa.',
+          'Điều 14 khoản 2 (nguyên văn, trích): "Chậm nhất đến ngày 01 tháng 7 năm 2027, các bộ, ngành, cơ quan trung ương, địa phương phải hoàn thành việc bố trí vào vị trí việc làm và xếp ngạch tương ứng với vị trí việc làm đối với công chức được tuyển dụng trước ngày 01 tháng 7 năm 2025 thuộc phạm vi quản lý." → mốc 01/7/2027 CHƯA đến.',
+        ],
       },
       {
         soHieu: 'Nghị định 106/2020/NĐ-CP',
         ngayBanHanh: '10/9/2020',
         hieuLucTu: '15/11/2020',
-        canhBao: 'CHƯA RÀ (24/9/2026): vị trí việc làm VIÊN CHỨC. Nghị định 259/2026/NĐ-CP (tuyển dụng/sử dụng/quản '
-          + 'lý viên chức, hiệu lực 01/7/2026 — xem mục nghi_huu) KHÔNG được xác nhận là có thay thế NĐ 106/2020 hay '
-          + 'không; cần tra riêng trước khi khẳng định còn/hết hiệu lực.',
-        trichYeu: 'Về VỊ TRÍ VIỆC LÀM và số lượng người làm việc trong đơn vị sự nghiệp công lập (áp dụng cho viên chức).',
+        canhBao: 'HẾT HIỆU LỰC MỘT PHẦN (VERIFIED 11/11/2026, đọc trong kho 232_2026_ND-CP_712592.docx, nạp 17:10). Nguyên văn Điều 16 khoản 2 '
+          + 'NĐ 232/2026: "Kể từ ngày Nghị định này có hiệu lực thi hành, các quy định liên quan đến vị trí việc làm viên chức tại Nghị định số 106/2020/NĐ-CP '
+          + 'ngày 10 tháng 9 năm 2020 của Chính phủ về vị trí việc làm và số lượng người làm việc trong đơn vị sự nghiệp công lập hết hiệu lực thi hành." '
+          + '→ từ 01/7/2026 các quy định về VỊ TRÍ VIỆC LÀM viên chức của NĐ 106/2020 KHÔNG còn áp dụng; dùng NĐ 232/2026. '
+          + 'Điều khoản đó KHÔNG bãi bỏ toàn bộ NĐ 106/2020: phần SỐ LƯỢNG NGƯỜI LÀM VIỆC (biên chế viên chức) UNKNOWN — kho không có văn bản nào bãi bỏ hay thay thế; '
+          + 'kho cũng không có toàn văn NĐ 106/2020 nên chưa xác định chính xác điều/khoản nào thuộc phạm vi bị bãi bỏ. '
+          + 'NĐ 259/2026 Điều 61 khoản 2 không liệt kê NĐ 106/2020 (chỉ NĐ 115/2020, 85/2023, 101/2017, 89/2021).',
+        trichYeu: 'Về VỊ TRÍ VIỆC LÀM và số lượng người làm việc trong đơn vị sự nghiệp công lập. Các quy định liên quan đến vị trí việc làm viên chức ĐÃ HẾT HIỆU LỰC từ 01/7/2026 (NĐ 232/2026 Điều 16 khoản 2); phần số lượng người làm việc chưa xác định.',
         dieuKhoan: [
-          'Điều 3–4: Căn cứ, nguyên tắc xác định vị trí việc làm và số lượng người làm việc.',
+          '(Nội dung vị trí việc làm — nhiều khả năng thuộc phạm vi đã hết hiệu lực, chưa đối chiếu từng điều) Điều 3–4: Căn cứ, nguyên tắc xác định vị trí việc làm và số lượng người làm việc.',
+        ],
+      },
+      {
+        soHieu: 'Nghị định 232/2026/NĐ-CP',
+        ngayBanHanh: '26/6/2026',
+        hieuLucTu: '01/7/2026',
+        canhBao: 'VERIFIED 11/11/2026 từ toàn văn trong kho (232_2026_ND-CP_712592.docx): ban hành 26/6/2026, 4 Chương (I Quy định chung, II Xác định vị trí việc làm viên chức, '
+          + 'III Thẩm quyền, trách nhiệm quản lý, phê duyệt, điều chỉnh danh mục vị trí việc làm, IV Điều khoản thi hành, từ Điều 16). Căn cứ Luật Viên chức 129/2025. '
+          + 'Chương II–III chưa tóm tắt chi tiết ở đây — đọc văn bản gốc khi cần trích. LƯU Ý: mốc chuyển tiếp của VIÊN CHỨC là 01/7/2027, KHÁC mốc 01/7/2026 của công chức (NĐ 361/2025).',
+        trichYeu: 'Quy định về VỊ TRÍ VIỆC LÀM VIÊN CHỨC (căn cứ Luật Viên chức 129/2025) — làm hết hiệu lực các quy định về vị trí việc làm viên chức của NĐ 106/2020/NĐ-CP (Điều 16 khoản 2).',
+        dieuKhoan: [
+          'Điều 16 khoản 1, 3 (nguyên văn): hiệu lực từ ngày 01 tháng 7 năm 2026; "Trường hợp cấp có thẩm quyền ban hành văn bản quy định về công tác cán bộ có nội dung khác với quy định tại Nghị định này thì thực hiện theo quy định mới của cấp có thẩm quyền."',
+          'Danh mục vị trí việc làm viên chức (VERIFIED): Phụ lục I — vị trí việc làm quản lý; Phụ lục II — vị trí việc làm chuyên môn, nghiệp vụ; Phụ lục III — vị trí việc làm hỗ trợ (các phụ lục này được áp dụng thống nhất trong phạm vi cả nước; chi tiết bậc nghề nghiệp: đọc văn bản gốc).',
+          'Điều 18 khoản 1 điểm a (nguyên văn, trích): "Chậm nhất đến ngày 01 tháng 7 năm 2027, các bộ, Ủy ban nhân dân cấp tỉnh và cơ quan, đơn vị được phân cấp, ủy quyền phê duyệt vị trí việc làm phải hoàn thành … Ban hành quyết định phê duyệt vị trí việc làm viên chức trong đơn vị sự nghiệp công lập thuộc phạm vi quản lý theo quy định tại Nghị định này để thay thế các quyết định về vị trí việc làm đã ban hành trước đó. Trong thời gian cơ quan, đơn vị có thẩm quyền chưa ban hành quyết định phê duyệt … thì các quyết định phê duyệt vị trí việc làm ban hành trước đó được tiếp tục áp dụng trong quá trình tuyển dụng, sử dụng và quản lý viên chức." → mốc 01/7/2027 CHƯA đến.',
+          'Điều 18 khoản 1 điểm b (trích): bố trí viên chức tuyển dụng TRƯỚC 01/7/2026 vào vị trí việc làm theo danh mục đã phê duyệt; viên chức tuyển từ 01/7/2026 mà đơn vị chưa được phê duyệt vị trí việc làm thì chậm nhất 01/7/2027 phải hoàn thành phê duyệt và bố trí.',
+          'Điều 18 khoản 2 (trích): sau khi phê duyệt vị trí việc làm, viên chức chuyển từ chức danh nghề nghiệp sang bậc nghề nghiệp — chức danh xếp lương loại B vào bậc 1 (giữ bậc, hệ số loại B đang hưởng); loại A0 vào bậc 2 … (đọc văn bản gốc cho các trường hợp còn lại).',
         ],
       },
       {
         soHieu: 'Nghị định 170/2025/NĐ-CP',
         ngayBanHanh: '30/6/2025',
         hieuLucTu: '01/7/2025',
-        trichYeu: 'Về tuyển dụng, sử dụng và quản lý công chức — quản lý, bố trí công chức theo vị trí việc làm.',
+        trichYeu: 'Về tuyển dụng, sử dụng và quản lý công chức — quản lý, bố trí công chức theo vị trí việc làm. '
+          + 'ĐÃ ĐƯỢC SỬA ĐỔI, BỔ SUNG bởi Nghị định 300/2026/NĐ-CP (hiệu lực 01/8/2026, sửa 34 điều) — xem mục nghi_huu để biết chi tiết.',
       },
     ],
   },
@@ -261,6 +292,8 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
           'Điều 32 khoản 2 (nguyên văn): "Viên chức được nghỉ hưu theo quy định của pháp luật về lao động và pháp luật về bảo hiểm xã hội; việc nghỉ hưu ở tuổi thấp hơn hoặc ở tuổi cao hơn được thực hiện theo quy định của pháp luật về hoạt động nghề nghiệp hoặc quy định của cấp có thẩm quyền."',
           'Điều 32 khoản 3: Chính phủ quy định thẩm quyền, trình tự, thủ tục thôi việc, nghỉ hưu (hiện là Nghị định 259/2026/NĐ-CP).',
           'Điều 43 khoản 1, 2: hiệu lực 01/7/2026; Luật Viên chức 58/2010 (sửa đổi bởi Luật 52/2019) hết hiệu lực từ ngày này.',
+          'Điều 43 khoản 3 (nguyên văn, trích — VERIFIED 11/11/2026): "Chậm nhất đến ngày 01 tháng 7 năm 2027, các Bộ, ngành, cơ quan trung ương, địa phương, đơn vị sự nghiệp công lập phải hoàn thành việc bố trí vào vị trí việc làm và xếp lương tương ứng đối với viên chức được tuyển dụng trước ngày Luật này có hiệu lực thi hành thuộc phạm vi quản lý theo quy định của Luật này." → mốc 01/7/2027 CHƯA đến.',
+          'Điều 23: vị trí việc làm viên chức gồm tên gọi và bản mô tả công việc + khung năng lực; phân loại: quản lý, chuyên môn nghiệp vụ, hỗ trợ; khoản 4: Chính phủ quy định chi tiết (xem mục vi_tri_viec_lam: NĐ 232/2026 về vị trí việc làm viên chức, hiệu lực 01/7/2026).',
         ],
       },
       {
@@ -420,6 +453,8 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
             + 'ĐÃ ĐỐI CHIẾU: KHÔNG sửa Điều 61 (thời điểm nghỉ hưu, lùi nghỉ hưu), Điều 62 (thông báo, Mẫu số 2), Điều 63 (quyết định, Mẫu số 3) — phần nghỉ hưu giữ nguyên.',
           'Điều 28 thay toàn bộ Điều 57 "Thẩm quyền, trình tự, thủ tục giải quyết thôi việc" — do Điều 61 khoản 1 dẫn chiếu Điều 57 nên THẨM QUYỀN CHO NGHỈ HƯU cũng theo quy định mới: '
             + 'khoản 1 điểm a người đứng đầu cơ quan có thẩm quyền TUYỂN DỤNG (công chức không giữ chức vụ lãnh đạo, quản lý); điểm b người đứng đầu cơ quan có thẩm quyền BỔ NHIỆM (công chức giữ chức vụ lãnh đạo, quản lý).',
+          'Điều 8 (sửa Điều 23 NĐ 170/2025, VERIFIED trong kho, trích): thay đổi vị trí việc làm của công chức phải bảo đảm tương quan giữa vị trí việc làm dự kiến bố trí với trình độ, năng lực, hiệu suất thực hiện nhiệm vụ (theo tiêu chí: mức độ hoàn thành nhiệm vụ; độ khó, phức tạp; tiến độ, chất lượng sản phẩm; trách nhiệm cá nhân; mức độ quan trọng của công việc), đúng tỷ lệ công chức bố trí theo vị trí việc làm đã được phê duyệt, công khai, minh bạch, đúng thẩm quyền.',
+          'Điều 9 (sửa Điều 24 NĐ 170/2025, VERIFIED, trích): công chức khi thay đổi vị trí việc làm thì được xếp lương ở ngạch tương ứng với vị trí việc làm mới; thời gian hưởng lương ở ngạch tương đương hoặc cao hơn ngạch hiện giữ được tính làm căn cứ xếp lương ở ngạch mới; khoản 2: khi bố trí vào vị trí việc làm có ngạch cao hơn ngạch hiện giữ thì căn cứ hệ số lương cộng phụ cấp thâm niên vượt khung (nếu có) đang hưởng để xếp vào hệ số bằng hoặc cao hơn gần nhất ở ngạch mới (các trường hợp còn lại: đọc văn bản gốc).',
           'Điều 36: Nghị định này có hiệu lực thi hành từ ngày 01 tháng 8 năm 2026.',
         ],
       },
@@ -480,20 +515,28 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         soHieu: 'Nghị định 335/2025/NĐ-CP',
         ngayBanHanh: '21/12/2025',
         hieuLucTu: '01/01/2026',
-        trichYeu: 'Đánh giá, xếp loại chất lượng CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC và CÔNG CHỨC — bãi bỏ phần tương ứng của NĐ 90/2020/NĐ-CP.',
+        trichYeu: 'Đánh giá, xếp loại chất lượng CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC và CÔNG CHỨC — bãi bỏ phần công chức của NĐ 90/2020/NĐ-CP.',
         dieuKhoan: [
-          'Nguyên văn (đã xác minh qua xaydungchinhsach.chinhphu.vn 24/9/2026): "Bãi bỏ các quy định về đánh giá, xếp loại chất lượng đối với công chức tại Nghị định số 90/2020/NĐ-CP ngày 13/8/2020" (được sửa đổi tại Nghị định 48/2023/NĐ-CP).',
+          'Điều hiệu lực thi hành, khoản 1, 2 (nguyên văn, VERIFIED 11/11/2026 từ kho 335_2025_ND-CP__686369.docx): "Nghị định này có hiệu lực thi hành kể từ ngày 01 tháng 01 năm 2026. … Bãi bỏ các quy định về đánh giá, xếp loại chất lượng đối với công chức tại Nghị định số 90/2020/NĐ-CP ngày 13 tháng 8 năm 2020 của Chính phủ … (được sửa đổi, bổ sung tại Nghị định số 48/2023/NĐ-CP ngày 17 tháng 7 năm 2023)."',
         ],
-        canhBao: 'Phạm vi xác nhận được là CÔNG CHỨC + cơ quan hành chính (không áp dụng Quân đội, Công an, tổ chức cơ yếu). CHƯA xác minh văn bản nào bãi bỏ phần "CÁN BỘ" (chức danh bầu cử) của NĐ 90/2020 — nếu phát sinh câu hỏi về đánh giá CÁN BỘ, cần tra thêm.',
+        canhBao: 'Phạm vi xác nhận được là CÔNG CHỨC + cơ quan hành chính (không áp dụng Quân đội, Công an, tổ chức cơ yếu). '
+          + 'Toàn bộ NĐ 90/2020 sau đó hết hiệu lực từ 01/7/2026 theo NĐ 233/2026 Điều 19 khoản 2 (VERIFIED, xem bên dưới). '
+          + 'Văn bản hướng dẫn đánh giá, xếp loại CÁN BỘ (chức danh bầu cử) sau mốc này: UNKNOWN — kho không có; nếu phát sinh câu hỏi về đánh giá CÁN BỘ, cần tra thêm.',
       },
       {
         soHieu: 'Nghị định 233/2026/NĐ-CP',
         ngayBanHanh: '26/6/2026',
         hieuLucTu: '01/7/2026',
-        trichYeu: 'Đánh giá, xếp loại chất lượng ĐƠN VỊ SỰ NGHIỆP CÔNG LẬP và VIÊN CHỨC — thay thế phần viên chức của NĐ 90/2020/NĐ-CP.',
-        canhBao: 'Rà 24/9/2026 qua WebSearch + Codex — đã xác nhận ngày ban hành/hiệu lực và đối tượng áp dụng qua trang '
-          + 'xaydungchinhsach.chinhphu.vn, nhưng CHƯA đọc được nguyên văn điều khoản bãi bỏ NĐ 90/2020. Cần đối chiếu '
-          + 'văn bản gốc trước khi trích dẫn điều/khoản cụ thể.',
+        trichYeu: 'Đánh giá, xếp loại chất lượng ĐƠN VỊ SỰ NGHIỆP CÔNG LẬP và VIÊN CHỨC — làm hết hiệu lực toàn bộ NĐ 90/2020/NĐ-CP (Điều 19 khoản 2).',
+        canhBao: 'VERIFIED 11/11/2026 từ toàn văn trong kho (233_2026_ND-CP_712593.docx). LƯU Ý KỲ ĐÁNH GIÁ CUỐI NĂM 2026: '
+          + 'Điều 20 khoản 1: TẠI THỜI ĐIỂM đánh giá, xếp loại viên chức cuối năm 2026, nếu đơn vị sự nghiệp công lập CHƯA ban hành Quy chế '
+          + 'đánh giá của đơn vị (theo điểm a khoản 3 Điều 18) thì căn cứ Quy chế đánh giá theo NĐ 90/2020 (sửa đổi bởi NĐ 48/2023) để đánh giá viên chức thuộc phạm vi quản lý — '
+          + 'tức NĐ 90/2020 hết hiệu lực nhưng vẫn là căn cứ chuyển tiếp cho kỳ cuối năm 2026 nếu đơn vị chưa có quy chế riêng; cần kiểm tra từng đơn vị đã ban hành quy chế chưa.',
+        dieuKhoan: [
+          'Điều 19 khoản 1, 2 (nguyên văn, VERIFIED): "Nghị định này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026. Nghị định số 90/2020/NĐ-CP ngày 13 tháng 8 năm 2020 của Chính phủ về đánh giá, xếp loại chất lượng cán bộ, công chức, viên chức (được sửa đổi, bổ sung tại Nghị định số 48/2023/NĐ-CP ngày 17 tháng 7 năm 2023) hết hiệu lực thi hành kể từ ngày Nghị định này có hiệu lực."',
+          'Điều 20 khoản 1 (nguyên văn, trích): "Đến thời điểm đánh giá, xếp loại chất lượng viên chức cuối năm 2026 mà đơn vị sự nghiệp công lập chưa ban hành Quy chế đánh giá của đơn vị theo quy định tại điểm a khoản 3 Điều 18 Nghị định này thì đơn vị căn cứ vào Quy chế đánh giá theo quy định tại Nghị định số 90/2020/NĐ-CP … để đánh giá, xếp loại chất lượng đối với viên chức thuộc phạm vi quản lý."',
+          'Điều 20 khoản 2: người đứng đầu đơn vị sự nghiệp công lập quyết định việc áp dụng Nghị định này đối với người làm việc theo chế độ hợp đồng lao động thuộc phạm vi quản lý.',
+        ],
       },
       {
         soHieu: 'Nghị định 90/2020/NĐ-CP',
@@ -501,7 +544,7 @@ export const CO_SO_PHAP_LY: PhapLyMuc[] = [
         hieuLucTu: '20/8/2020',
         hieuLucDen: '30/6/2026',
         thayTheBoi: 'Nghị định 335/2025/NĐ-CP (công chức, từ 01/01/2026) và Nghị định 233/2026/NĐ-CP (viên chức, từ 01/7/2026)',
-        trichYeu: 'Đánh giá, xếp loại chất lượng cán bộ, công chức, viên chức (4 mức: HTXSNV, HTTNV, HTNV, không HTNV). ĐÃ HẾT HIỆU LỰC (phần công chức thay từ 01/01/2026, phần viên chức thay từ 01/7/2026 — cả hai mốc đã qua tính đến hiện tại). Phần "cán bộ" (chức danh bầu cử) CHƯA xác minh văn bản thay thế, xem canhBao ở NĐ 335/2025/NĐ-CP.',
+        trichYeu: 'Đánh giá, xếp loại chất lượng cán bộ, công chức, viên chức (4 mức: HTXSNV, HTTNV, HTNV, không HTNV). ĐÃ HẾT HIỆU LỰC (VERIFIED 11/11/2026): phần công chức bị NĐ 335/2025 bãi bỏ từ 01/01/2026; toàn bộ văn bản hết hiệu lực từ 01/7/2026 theo NĐ 233/2026 Điều 19 khoản 2 — nhưng NĐ 233/2026 Điều 20 khoản 1 cho đơn vị sự nghiệp chưa có quy chế riêng tạm căn cứ Quy chế theo NĐ 90 cho kỳ đánh giá cuối năm 2026. Văn bản thay phần "cán bộ" (chức danh bầu cử): UNKNOWN.',
       },
       {
         soHieu: 'Nghị định 48/2023/NĐ-CP',
