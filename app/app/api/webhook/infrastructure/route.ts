@@ -19,15 +19,27 @@
  * }
  */
 import { NextRequest, NextResponse } from 'next/server'
+import { timingSafeEqual } from 'node:crypto'
 import { db } from '@/lib/db'
 
-const WEBHOOK_TOKEN = process.env.WEBHOOK_SECRET ?? 'htkt-webhook-2025'
+// Không có giá trị mặc định: thiếu WEBHOOK_SECRET thì từ chối mọi yêu cầu (fail-closed).
+const WEBHOOK_TOKEN = process.env.WEBHOOK_SECRET?.trim() ?? ''
+
+function tokenHopLe(token: string): boolean {
+  if (!WEBHOOK_TOKEN || !token) return false
+  const a = Buffer.from(token)
+  const b = Buffer.from(WEBHOOK_TOKEN)
+  return a.length === b.length && timingSafeEqual(a, b)
+}
 
 export async function POST(req: NextRequest) {
+  if (!WEBHOOK_TOKEN) {
+    return NextResponse.json({ error: 'Webhook chưa được cấu hình (thiếu WEBHOOK_SECRET)' }, { status: 503 })
+  }
   // Xác thực token
   const auth = req.headers.get('Authorization') ?? req.headers.get('X-API-Key') ?? ''
   const token = auth.replace('Bearer ', '').trim()
-  if (token !== WEBHOOK_TOKEN) {
+  if (!tokenHopLe(token)) {
     return NextResponse.json({ error: 'Unauthorized — sai API token' }, { status: 401 })
   }
 
@@ -133,11 +145,11 @@ export async function GET() {
     endpoint: '/api/webhook/infrastructure',
     method: 'POST',
     auth: 'Bearer <WEBHOOK_SECRET> header',
-    env_var: 'WEBHOOK_SECRET (mặc định: htkt-webhook-2025)',
+    env_var: 'WEBHOOK_SECRET (bắt buộc, không có mặc định)',
     supportedTypes: ['TRAM_BOM', 'NHA_MAY_XU_LY'],
     example: {
       url: 'https://qlhtkt.htkt.com.vn/api/webhook/infrastructure',
-      headers: { 'Authorization': 'Bearer htkt-webhook-2025', 'Content-Type': 'application/json' },
+      headers: { 'Authorization': 'Bearer <WEBHOOK_SECRET>', 'Content-Type': 'application/json' },
       body: {
         source: 'SCADA_STATION_01',
         type: 'TRAM_BOM',
