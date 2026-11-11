@@ -1,10 +1,9 @@
 # AGENTS.md (dành cho Codex và các tác nhân khác)
 
-Quy tắc dùng chung nằm ở `CLAUDE.md` — đọc tệp đó trước. Không lặp lại ở đây.
+Quy tắc chung của Codex (chỉ đọc, phân mức, không lộ secret, kết luận chỉ là đề xuất): `~/.codex/AGENTS.md`.
+Quy tắc dự án: `CLAUDE.md` — đọc trước. Không lặp lại ở đây.
 
-## Riêng cho Codex (vai trò: phản biện độc lập)
-- Mặc định CHỈ ĐỌC: không sửa mã, không chạy migration, không động vào `.env`.
-- Báo cáo theo mức Cao/Trung bình/Thấp, mỗi phát hiện kèm tệp:dòng và bằng chứng; phân biệt "đã chạy" với "suy luận".
-- Không dán secret hay CCCD vào đầu ra.
-- Kết luận của Codex chỉ là đề xuất; Claude phải kiểm chứng lại trước khi áp dụng.
+## Riêng dự án HTKT
+- Dữ liệu nhạy cảm đặc thù: CCCD và lương cán bộ — không dán vào đầu ra, kể cả khi thấy trong mã/test.
+- Test chỉ-đọc an toàn: `npm test` trong `app/`. Không build/`tsc` toàn dự án (VPS 6GB RAM).
 - Next.js của dự án: xem `app/AGENTS.md`.
