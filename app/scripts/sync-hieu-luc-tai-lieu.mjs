@@ -15,6 +15,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 import pg from 'pg'
+import { layKhoaChayDon } from '../prisma/sync-vbpl-core.mjs'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const env = (k) =>
@@ -59,6 +60,15 @@ async function main() {
   const dangKy = JSON.parse(readFileSync(join(root, 'prisma', 'hieu-luc-vbpl.json'), 'utf8')).vanBan ?? {}
   const client = new pg.Client({ connectionString: env('DIRECT_DATABASE_URL') || env('DATABASE_URL') })
   await client.connect()
+
+  // Dùng CHUNG khoá với prisma/sync-vbpl.mjs: sync đang thay bản (chép hiệu lực của bản cũ sang bản mới
+  // rồi xoá bản cũ) thì cập nhật hiệu lực ghi vào bản cũ bị mất. Lấy TRƯỚC khi đọc, giữ tới khi ghi xong.
+  if (!DRY && !(await layKhoaChayDon(client))) {
+    console.log('⏸️  Đang có tiến trình đồng bộ/nạp VBPL chạy → chưa ghi. Chạy lại sau ít phút.')
+    await client.end()
+    process.exitCode = 1
+    return
+  }
 
   const { rows } = await client.query(
     `SELECT id, nguon, "tieuDe", "tinhTrangHieuLuc", "thayTheBoi", "ghiChuHieuLuc" FROM tai_lieu WHERE "deletedAt" IS NULL AND nguon IS NOT NULL`,

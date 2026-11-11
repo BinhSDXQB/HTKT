@@ -18,6 +18,13 @@ import pg from 'pg'
 const APPLY = process.argv.includes('--apply')
 const REPORT = process.argv.find((a) => a.startsWith('--report='))?.slice(9)
 
+// ĐÃ THAY bằng import-dsct-qltd-111126.mjs (bảng QuanLyTienDo 11/11/2026, đã ghi CSDL). Số liệu báo cáo
+// 31/10 cũ hơn và đưa 47 khu vào Hoàn thành bất kể tình trạng thật → ghi đè dữ liệu đúng. Chỉ cho chạy thử.
+if (APPLY) {
+  console.error('⛔ Script này đã bị thay bởi prisma/import-dsct-qltd-111126.mjs — không ghi CSDL.')
+  process.exit(1)
+}
+
 const env = {}
 for (const line of readFileSync(new URL('../.env', import.meta.url), 'utf-8').split('\n')) {
   const m = line.match(/^([A-Z0-9_]+)="?(.*?)"?\s*$/)
