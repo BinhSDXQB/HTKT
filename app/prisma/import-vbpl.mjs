@@ -11,6 +11,7 @@ import { join, extname, basename } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import pg from 'pg'
 import OpenAI from 'openai'
+import { layKhoaChayDon } from './sync-vbpl-core.mjs'
 
 const FOLDER = process.argv[2] || 'G:\\My Drive\\Tailieu_VBPL'
 const LOAI = 'VB_PHAP_LUAT'
@@ -134,6 +135,13 @@ function tieuDeTuTenFile(name) {
 
 // ── Chạy ─────────────────────────────────────────────────────────────
 await client.connect()
+// Script cũ, đã thay bằng sync-vbpl.mjs. Dùng CHUNG khoá chạy đơn: chạy chồng thì sync có thể xoá cứng
+// bản ghi 'dang_xu_ly' importer đang nhúng dở (bản ghi không metadata bị coi là legacy thuộc kho).
+if (!(await layKhoaChayDon(client))) {
+  console.log('⏸️  Đang có tiến trình đồng bộ/nạp VBPL khác chạy → dừng.')
+  await client.end()
+  process.exit(1)
+}
 const all = readdirSync(FOLDER)
 const targets = all.filter((f) => ['.pdf', '.docx'].includes(extname(f).toLowerCase()))
 const skipped = all.filter((f) => ['.doc', '.gdoc'].includes(extname(f).toLowerCase()))

@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 import { requireAuth, isOfficeLeader, canManageSalary, canManageCanBo, canAccessOffice, type CurrentUser } from '@/lib/auth'
 import { searchTaiLieu } from '@/lib/rag/search'
+import { tachSoHieu, locTheoSoHieu, soHieuKhongMauThuan } from '@/lib/rag/so-hieu-van-ban'
 import { hasPermission, MODULES } from '@/lib/permissions'
 import { timPhapLy, formatPhapLyMuc, timVanBanNhanSu } from '@/lib/data/co-so-phap-ly-nhan-su'
 import { thoiDiemNghiHuu, TRUONG_HOP_LUI, thangDuTuoi, ngayKetThucLamViec, type MaTruongHopLui } from '@/lib/nghi-huu'
@@ -1746,7 +1747,7 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       const [, so, nam] = m
       // Tên tệp trong kho dùng cả "217_2026", "217 2026", "217/2026" → so khớp nới lỏng.
       const soRaw = String(Number(so))
-      const dsKho = await db.$queryRaw<Array<{
+      const dsKhoTho = await db.$queryRaw<Array<{
         tieuDe: string; nguon: string; tinhTrangHieuLuc: string; thayTheBoi: string | null; ghiChuHieuLuc: string | null
       }>>`
         SELECT "tieuDe", nguon, "tinhTrangHieuLuc", "thayTheBoi", "ghiChuHieuLuc"
@@ -1754,7 +1755,16 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
          WHERE "deletedAt" IS NULL
            AND regexp_replace(nguon || ' ' || "tieuDe", '[^0-9A-Za-z]+', ' ', 'g')
                ~ ${`(^| )0*${soRaw} ${nam}( |$)`}
-         LIMIT 5`
+         ORDER BY "updatedAt" DESC, id
+         LIMIT 30`
+      // SQL chỉ lọc thô theo số + năm; lọc tiếp theo LOẠI-CƠ QUAN để 73/2026/TT-BXD không nhận 73/2026/TT-BTC.
+      // Chỉ có văn bản khác ký hiệu → coi như không có toàn văn, đi tiếp nhánh tra danh mục bên dưới.
+      const q = tachSoHieu(raw) ?? { so: soRaw, nam, kyHieu: [] }
+      const loc = locTheoSoHieu(dsKhoTho, q)
+      const lechKyHieu = loc.khacKyHieu.length
+        ? `\n\nLƯU Ý: kho còn ${loc.khacKyHieu.length} văn bản CÙNG số/năm nhưng KHÁC loại/cơ quan (${loc.khacKyHieu.slice(0, 3).map((d) => d.tieuDe).join('; ')}) — KHÔNG phải văn bản được hỏi.`
+        : ''
+      const dsKho = loc.phuHop.slice(0, 5)
 
       const nhan = (t: string) =>
         t === 'con_hieu_luc' ? 'CÒN HIỆU LỰC (đã rà soát)'
@@ -1767,9 +1777,10 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
           `Văn bản ${so}/${nam} — CÓ trong kho tài liệu của Sở:\n` +
           dsKho.map((d) =>
             `• ${d.tieuDe} (tệp: ${d.nguon})\n  Tình trạng: ${nhan(d.tinhTrangHieuLuc)}` +
+            (loc.chuaRo.includes(d) ? `\n  ⚠️ Tên tệp chỉ khớp số/năm, KHÔNG xác định được loại/cơ quan — phải đối chiếu đúng số hiệu "${raw}" trước khi dùng` : '') +
             (d.thayTheBoi ? `\n  Thay thế bởi: ${d.thayTheBoi}` : '') +
             (d.ghiChuHieuLuc ? `\n  Căn cứ rà soát: ${d.ghiChuHieuLuc}` : ''),
-          ).join('\n') +
+          ).join('\n') + lechKyHieu +
           `\n\nMuốn trích nội dung điều khoản thì gọi tiếp tool tra_cuu_tai_lieu.`
         )
       }
@@ -1777,7 +1788,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       // Không có toàn văn → tra tiếp danh mục chuyên ngành (có thể chỉ có ở mức danh mục)
       // Thử lại cơ sở pháp lý nhân sự theo SỐ HIỆU vừa bóc được — mô hình có thể truyền số hiệu
       // viết khác cách ghi trong dữ liệu, hoặc người dùng nêu tên kèm số hiệu sai.
-      const nhanSuTheoSo = timVanBanNhanSu(`${soRaw}/${nam}`)
+      // Chỉ giữ văn bản có ĐÚNG số/năm trong số hiệu và không mâu thuẫn loại/cơ quan được hỏi.
+      const nhanSuTheoSo = timVanBanNhanSu(`${soRaw}/${nam}`).filter(({ vanBan: v }) => soHieuKhongMauThuan(v.soHieu, q))
       if (nhanSuTheoSo.length) {
         return (
           `Văn bản ${so}/${nam} KHÔNG có toàn văn trong kho, nhưng cơ sở pháp lý nhân sự đã rà soát có:\n` +
@@ -1792,6 +1804,8 @@ async function executeTool(name: string, args: Record<string, string>, ctx: Tool
       }
 
       const trongDanhMuc = timPhapLyChuyenNganh(`${soRaw}/${nam}`)
+        .map((n) => ({ ...n, vanBan: n.vanBan.filter((vb) => soHieuKhongMauThuan(vb.soHieu, q)) }))
+        .filter((n) => n.vanBan.length)
       if (trongDanhMuc.length) {
         return (
           `Văn bản ${so}/${nam} KHÔNG có TOÀN VĂN trong kho tài liệu, nhưng CÓ trong danh mục pháp lý chuyên ngành của Sở:\n` +

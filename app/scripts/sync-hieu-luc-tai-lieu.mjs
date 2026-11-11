@@ -12,7 +12,7 @@
 // nhắc người dùng tự đối chiếu thay vì khẳng định chắc chắn.
 
 import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 import pg from 'pg'
 
@@ -24,33 +24,57 @@ const env = (k) =>
 const DRY = process.argv.includes('--dry')
 const HOP_LE = new Set(['con_hieu_luc', 'het_hieu_luc', 'du_thao', 'can_kiem_chung'])
 
+/**
+ * So bảng đăng ký với kho → danh sách cần ghi. So CẢ BA trường (trước đây chỉ so trạng thái nên
+ * sửa ghiChu/thayTheBoi không bao giờ vào kho). Tài liệu không còn key → đặt lại can_kiem_chung.
+ */
+export function keHoachHieuLuc(rows, dangKy) {
+  if (!dangKy || !Object.keys(dangKy).length) throw new Error('Bảng đăng ký hiệu lực rỗng — dừng để không đặt lại toàn bộ kho.')
+  const capNhat = []
+  let giuNguyen = 0, khongCoTrongDangKy = 0, saGiaTri = 0
+  for (const tl of rows) {
+    const muc = dangKy[tl.nguon]
+    let muon
+    if (!muc) {
+      khongCoTrongDangKy++
+      muon = { tinhTrang: 'can_kiem_chung', thayTheBoi: null, ghiChu: null }
+    } else {
+      if (!HOP_LE.has(muc.tinhTrang)) {
+        console.warn(`  ! Giá trị tinhTrang không hợp lệ "${muc.tinhTrang}" — bỏ qua: ${tl.nguon}`)
+        saGiaTri++
+        continue
+      }
+      muon = { tinhTrang: muc.tinhTrang, thayTheBoi: muc.thayTheBoi || null, ghiChu: muc.ghiChu || null }
+    }
+    if (tl.tinhTrangHieuLuc === muon.tinhTrang && (tl.thayTheBoi || null) === muon.thayTheBoi && (tl.ghiChuHieuLuc || null) === muon.ghiChu) {
+      if (muc) giuNguyen++
+      continue
+    }
+    capNhat.push({ id: tl.id, nguon: tl.nguon, ...muon, datLai: !muc })
+  }
+  return { capNhat, giuNguyen, khongCoTrongDangKy, saGiaTri }
+}
+
 async function main() {
   const dangKy = JSON.parse(readFileSync(join(root, 'prisma', 'hieu-luc-vbpl.json'), 'utf8')).vanBan ?? {}
   const client = new pg.Client({ connectionString: env('DIRECT_DATABASE_URL') || env('DATABASE_URL') })
   await client.connect()
 
   const { rows } = await client.query(
-    `SELECT id, nguon, "tieuDe", "tinhTrangHieuLuc" FROM tai_lieu WHERE "deletedAt" IS NULL AND nguon IS NOT NULL`,
+    `SELECT id, nguon, "tieuDe", "tinhTrangHieuLuc", "thayTheBoi", "ghiChuHieuLuc" FROM tai_lieu WHERE "deletedAt" IS NULL AND nguon IS NOT NULL`,
   )
 
-  let capNhat = 0, giuNguyen = 0, khongCoTrongDangKy = 0, saGiaTri = 0
-  for (const tl of rows) {
-    const muc = dangKy[tl.nguon]
-    if (!muc) { khongCoTrongDangKy++; continue }
-    const tinhTrang = muc.tinhTrang
-    if (!HOP_LE.has(tinhTrang)) {
-      console.warn(`  ! Giá trị tinhTrang không hợp lệ "${tinhTrang}" — bỏ qua: ${tl.nguon}`)
-      saGiaTri++
-      continue
-    }
-    if (tl.tinhTrangHieuLuc === tinhTrang) { giuNguyen++; continue }
+  const kh = keHoachHieuLuc(rows, dangKy)
+  const { giuNguyen, khongCoTrongDangKy, saGiaTri } = kh
+  const capNhat = kh.capNhat.length
+  for (const u of kh.capNhat) {
+    if (u.datLai) console.log(`  ↺ đặt lại can_kiem_chung (không còn trong bảng đăng ký): ${u.nguon}`)
     if (!DRY) {
       await client.query(
-        `UPDATE tai_lieu SET "tinhTrangHieuLuc"=$1, "thayTheBoi"=NULLIF($2,''), "ghiChuHieuLuc"=NULLIF($3,'') WHERE id=$4`,
-        [tinhTrang, muc.thayTheBoi ?? '', muc.ghiChu ?? '', tl.id],
+        `UPDATE tai_lieu SET "tinhTrangHieuLuc"=$1, "thayTheBoi"=$2, "ghiChuHieuLuc"=$3 WHERE id=$4`,
+        [u.tinhTrang, u.thayTheBoi, u.ghiChu, u.id],
       )
     }
-    capNhat++
   }
 
   const { rows: thongKe } = await client.query(
@@ -69,4 +93,7 @@ async function main() {
   await client.end()
 }
 
-main().catch((e) => { console.error(e); process.exit(1) })
+// Chỉ chạy khi gọi trực tiếp bằng node — test import hàm thuần không được chạm CSDL.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((e) => { console.error(e); process.exit(1) })
+}
