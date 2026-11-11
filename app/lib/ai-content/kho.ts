@@ -39,9 +39,13 @@ function canUuid(s: unknown, ten: string): string {
 type Bai = {
   id: string; title: string; status: TrangThaiNoiDung; classification: string
   ai_generated: boolean; may_mislead: boolean; current_version_id: string; created_by: string
+  /** Những người đã đổi phân loại / cờ AI / nguồn kể từ phiên bản hiện hành — tính vào nguyên tắc bốn mắt. */
+  meta_editors: string[]
 }
+const COT_BAI = 'id::text, title, status, classification, ai_generated, may_mislead, current_version_id::text, created_by, meta_editors'
 type PhienBan = { id: string; version_no: number; title: string; body_md: string; content_hash: string; created_by: string }
-type BienThe = { id: string; channel: Kenh; body: string; created_by: string }
+/** editors: MỌI người từng sửa biến thể này trong phiên bản hiện hành (không chỉ người lưu cuối). */
+type BienThe = { id: string; channel: Kenh; body: string; created_by: string; editors: string[] }
 
 /**
  * Mọi cột thời gian trả ra ngoài đều đổi sang CHUỖI ISO-8601 UTC ngay trong SQL.
@@ -65,9 +69,7 @@ async function ghiNhatKy(d: Db, cid: string, actorId: string | null, action: str
 
 async function khoaBai(d: Db, id: string): Promise<Bai> {
   const [b] = await d.q<Bai>(
-    `select id::text, title, status, classification, ai_generated, may_mislead,
-            current_version_id::text, created_by
-       from ai_content_items where id = $1::uuid and deleted_at is null for update`, [id])
+    `select ${COT_BAI} from ai_content_items where id = $1::uuid and deleted_at is null for update`, [id])
   if (!b) throw new LoiNghiepVu(404, 'Không tìm thấy bài viết')
   return b
 }
@@ -81,7 +83,7 @@ async function layPhienBan(d: Db, id: string): Promise<PhienBan> {
 
 async function layBienThe(d: Db, versionId: string): Promise<BienThe[]> {
   return d.q<BienThe>(
-    `select id::text, channel, body, created_by from ai_channel_variants where version_id = $1::uuid order by channel`, [versionId])
+    `select id::text, channel, body, created_by, editors from ai_channel_variants where version_id = $1::uuid order by channel`, [versionId])
 }
 
 async function layNguon(d: Db, contentId: string): Promise<(NguonTrich & { id: string })[]> {
@@ -98,21 +100,30 @@ async function layNguon(d: Db, contentId: string): Promise<(NguonTrich & { id: s
  * Băm PHÊ DUYỆT: bao trọn mọi thứ người duyệt đã nhìn thấy — nội dung phiên bản, phân loại, cờ AI,
  * từng biến thể kênh và danh sách nguồn. Đổi bất kỳ thứ nào sau khi duyệt → băm lệch → cổng chặn.
  */
-export function bamPheDuyet(b: Pick<Bai, 'classification' | 'ai_generated' | 'may_mislead'>, v: Pick<PhienBan, 'id' | 'content_hash'>,
+export function goiPheDuyet(b: Pick<Bai, 'classification' | 'ai_generated' | 'may_mislead'>, v: Pick<PhienBan, 'id' | 'content_hash'>,
   bienThe: Pick<BienThe, 'channel' | 'body'>[], nguonIds: string[]): string {
-  const duLieu = JSON.stringify({
+  return JSON.stringify({
     v: v.id, h: v.content_hash, c: b.classification, ai: b.ai_generated, ml: b.may_mislead,
     bt: [...bienThe].sort((x, y) => x.channel.localeCompare(y.channel)).map((x) => [x.channel, chuanHoa(x.body)]),
     ng: [...nguonIds].sort(),
   })
-  return createHash('sha256').update(duLieu, 'utf8').digest('hex')
 }
 
-async function bamHienTai(d: Db, b: Bai): Promise<{ bam: string; v: PhienBan; bienThe: BienThe[]; nguon: (NguonTrich & { id: string })[] }> {
+export function bamPheDuyet(...a: Parameters<typeof goiPheDuyet>): string {
+  return createHash('sha256').update(goiPheDuyet(...a), 'utf8').digest('hex')
+}
+
+async function bamHienTai(d: Db, b: Bai): Promise<{ bam: string; goi: string; v: PhienBan; bienThe: BienThe[]; nguon: (NguonTrich & { id: string })[] }> {
   const v = await layPhienBan(d, b.current_version_id)
   const bienThe = await layBienThe(d, v.id)
   const nguon = await layNguon(d, b.id)
-  return { bam: bamPheDuyet(b, v, bienThe, nguon.map((n) => n.id)), v, bienThe, nguon }
+  const goi = goiPheDuyet(b, v, bienThe, nguon.map((n) => n.id))
+  return { bam: createHash('sha256').update(goi, 'utf8').digest('hex'), goi, v, bienThe, nguon }
+}
+
+/** Mọi người có phần trong nội dung thuộc phạm vi duyệt: người soạn phiên bản, người đổi phân loại/cờ/nguồn, người sửa biến thể. */
+export function tacGiaTrongPhamViDuyet(b: Pick<Bai, 'meta_editors'>, v: Pick<PhienBan, 'created_by'>, bienThe: Pick<BienThe, 'created_by' | 'editors'>[]): string[] {
+  return [...new Set([v.created_by, ...b.meta_editors, ...bienThe.flatMap((x) => [x.created_by, ...x.editors])])]
 }
 
 /** Huỷ mọi lịch CHƯA đăng của bài (khi nội dung đổi hoặc phê duyệt bị thu hồi). Lịch đang đăng không huỷ được. */
@@ -160,8 +171,8 @@ export async function taoBai(db: Db, u: NguoiDungToiThieu, dauVao: DauVaoBai): P
   const i = chuanDauVao(dauVao)
   return db.tx(async (d) => {
     const [{ id }] = await d.q<{ id: string }>(
-      `insert into ai_content_items (title, classification, ai_generated, may_mislead, created_by)
-       values ($1, $2, $3, $4, $5) returning id::text`, [i.tieuDe, i.phanLoai, i.doAiTao, i.coTheGayNhamLan, u.id])
+      `insert into ai_content_items (title, classification, ai_generated, may_mislead, created_by, meta_editors)
+       values ($1, $2, $3, $4, $5, array[$5]::text[]) returning id::text`, [i.tieuDe, i.phanLoai, i.doAiTao, i.coTheGayNhamLan, u.id])
     const [{ id: vid }] = await d.q<{ id: string }>(
       `insert into ai_content_versions (content_id, version_no, title, body_md, content_hash, created_by)
        values ($1::uuid, 1, $2, $3, $4, $5) returning id::text`, [id, i.tieuDe, i.noiDung, bamNoiDung(i.tieuDe, i.noiDung), u.id])
@@ -187,7 +198,15 @@ export async function suaBai(db: Db, u: NguoiDungToiThieu, idRaw: string, dauVao
     const bamMoi = bamNoiDung(i.tieuDe, i.noiDung)
     let versionId = v.id
     let soPhienBan = v.version_no
-    if (bamMoi !== v.content_hash) {
+    const nguonCu = (await layNguon(d, id)).map((n) => n.id).sort().join('\n')
+    const metaDoi = b.classification !== i.phanLoai || b.ai_generated !== i.doAiTao || b.may_mislead !== i.coTheGayNhamLan ||
+      nguonCu !== [...i.nguonIds].sort().join('\n')
+    const noiDungDoi = bamMoi !== v.content_hash
+    // Không đổi gì → không làm gì (không kéo bài đã duyệt về nháp, không ghi tên người bấm lưu vào danh sách tác giả).
+    if (!noiDungDoi && !metaDoi) return { id, phienBan: soPhienBan, khongDoi: true }
+    // Phiên bản mới: danh sách người sửa siêu dữ liệu tính lại từ người tạo phiên bản. Chỉ đổi siêu dữ liệu: cộng thêm người sửa.
+    const metaEditors = noiDungDoi ? [u.id] : [...new Set([...b.meta_editors, u.id])]
+    if (noiDungDoi) {
       soPhienBan = v.version_no + 1
       const [nv] = await d.q<{ id: string }>(
         `insert into ai_content_versions (content_id, version_no, title, body_md, content_hash, created_by)
@@ -196,8 +215,8 @@ export async function suaBai(db: Db, u: NguoiDungToiThieu, idRaw: string, dauVao
     }
     await d.q(
       `update ai_content_items set title = $2, classification = $3, ai_generated = $4, may_mislead = $5,
-              current_version_id = $6::uuid, status = 'DRAFT', updated_at = now() where id = $1::uuid`,
-      [id, i.tieuDe, i.phanLoai, i.doAiTao, i.coTheGayNhamLan, versionId])
+              current_version_id = $6::uuid, meta_editors = $7::text[], status = 'DRAFT', updated_at = now() where id = $1::uuid`,
+      [id, i.tieuDe, i.phanLoai, i.doAiTao, i.coTheGayNhamLan, versionId, metaEditors])
     await ganNguon(d, id, i.nguonIds)
     const huy = await huyLichChuaDang(d, id, 'NOI_DUNG_DA_SUA')
     await ghiNhatKy(d, randomUUID(), u.id, 'SUA_BAI', 'content', id, { phienBan: soPhienBan, tuTrangThai: b.status, lichBiHuy: huy })
@@ -215,37 +234,52 @@ export async function luuBienThe(db: Db, u: NguoiDungToiThieu, idRaw: string, ke
   if (loi.length) throw new LoiNghiepVu(400, 'Biến thể chưa hợp lệ', loi)
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
-    if (b.status === 'CANCELLED') throw new LoiNghiepVu(409, 'Bài đã huỷ')
-    await d.q(
-      `insert into ai_channel_variants (content_id, version_id, channel, body, created_by)
-       values ($1::uuid, $2::uuid, $3, $4, $5)
-       on conflict (version_id, channel) do update set body = excluded.body, created_by = excluded.created_by, updated_at = now()`,
-      [id, b.current_version_id, kenh, noiDung, u.id])
-    let huy = 0
-    if (b.status !== 'DRAFT') {
-      await d.q(`update ai_content_items set status = 'DRAFT', updated_at = now() where id = $1::uuid`, [id])
-      huy = await huyLichChuaDang(d, id, 'BIEN_THE_DA_SUA')
-    }
-    await ghiNhatKy(d, randomUUID(), u.id, 'LUU_BIEN_THE', 'content', id, { kenh, tuTrangThai: b.status, lichBiHuy: huy })
-    return { id, kenh }
+    return { id, kenh, ...(await luuBienTheTrong(d, b, u, kenh, noiDung)) }
   })
+}
+
+/** Phần lõi của lưu biến thể — PHẢI gọi trong giao dịch đã khoá hàng bài. Trả trạng thái bài sau khi lưu. */
+async function luuBienTheTrong(d: Db, b: Bai, u: NguoiDungToiThieu, kenh: Kenh, noiDung: string): Promise<{ khongDoi: boolean }> {
+  if (b.status === 'CANCELLED') throw new LoiNghiepVu(409, 'Bài đã huỷ')
+  const [cu] = await d.q<{ body: string }>(
+    `select body from ai_channel_variants where version_id = $1::uuid and channel = $2`, [b.current_version_id, kenh])
+  // Lưu lại đúng nguyên văn → không làm gì: không đổi tác giả (nếu đổi, người viết thật sẽ lọt khỏi kiểm tra bốn mắt).
+  if (cu && chuanHoa(cu.body) === noiDung) return { khongDoi: true }
+  await d.q(
+    `insert into ai_channel_variants (content_id, version_id, channel, body, created_by, editors)
+     values ($1::uuid, $2::uuid, $3, $4, $5, array[$5]::text[])
+     on conflict (version_id, channel) do update set body = excluded.body, created_by = excluded.created_by, updated_at = now(),
+       editors = (select array_agg(distinct e) from unnest(ai_channel_variants.editors || excluded.editors) e)`,
+    [b.id, b.current_version_id, kenh, noiDung, u.id])
+  let huy = 0
+  const tuTrangThai = b.status
+  if (b.status !== 'DRAFT') {
+    await d.q(`update ai_content_items set status = 'DRAFT', updated_at = now() where id = $1::uuid`, [b.id])
+    huy = await huyLichChuaDang(d, b.id, 'BIEN_THE_DA_SUA')
+    b.status = 'DRAFT'
+  }
+  await ghiNhatKy(d, randomUUID(), u.id, 'LUU_BIEN_THE', 'content', b.id, { kenh, tuTrangThai, lichBiHuy: huy })
+  return { khongDoi: false }
 }
 
 /** Tạo biến thể theo quy tắc (không gọi AI) cho các kênh yêu cầu. */
 export async function taoBienTheTheoQuyTac(db: Db, u: NguoiDungToiThieu, idRaw: string, kenhs: string[]) {
+  kiemQuyenSoan(u)
   const id = canUuid(idRaw, 'Mã bài')
-  const [b] = await db.q<Bai>(
-    `select id::text, title, status, classification, ai_generated, may_mislead, current_version_id::text, created_by
-       from ai_content_items where id = $1::uuid and deleted_at is null`, [id])
-  if (!b) throw new LoiNghiepVu(404, 'Không tìm thấy bài viết')
-  const v = await layPhienBan(db, b.current_version_id)
-  const kq: string[] = []
-  for (const k of kenhs) {
-    if (!laKenh(k)) throw new LoiNghiepVu(400, `Kênh không hợp lệ: ${k}`)
-    await luuBienThe(db, u, id, k, chuyenTheTheoQuyTac(k, v.title, v.body_md, b.ai_generated && b.may_mislead))
-    kq.push(k)
-  }
-  return { id, kenh: kq }
+  const ds = [...new Set(kenhs)]
+  for (const k of ds) if (!laKenh(k)) throw new LoiNghiepVu(400, `Kênh không hợp lệ: ${k}`)
+  // Đọc phiên bản và ghi biến thể trong CÙNG giao dịch đã khoá bài: không thể lấy thân bài cũ gắn vào phiên bản mới.
+  return db.tx(async (d) => {
+    const b = await khoaBai(d, id)
+    const v = await layPhienBan(d, b.current_version_id)
+    for (const k of ds as Kenh[]) {
+      const noiDung = chuanHoa(chuyenTheTheoQuyTac(k, v.title, v.body_md, b.ai_generated && b.may_mislead))
+      const loi = kiemTraBienThe(k, noiDung)
+      if (loi.length) throw new LoiNghiepVu(400, 'Biến thể chưa hợp lệ', loi)
+      await luuBienTheTrong(d, b, u, k, noiDung)
+    }
+    return { id, kenh: ds }
+  })
 }
 
 export async function guiDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string) {
@@ -262,21 +296,29 @@ export async function guiDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string) {
   })
 }
 
-/** Quyết định duyệt/từ chối. Bốn mắt: người duyệt khác người soạn phiên bản VÀ khác người soạn mọi biến thể. */
-export async function quyetDinhDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string, quyetDinh: string, ghiChu?: string) {
+/**
+ * Quyết định duyệt/từ chối.
+ *  - bamDuKien: mã băm của bản mà người duyệt ĐANG XEM trên màn hình. Nếu trong lúc đó bài đã đổi (người khác sửa rồi
+ *    gửi duyệt lại) thì băm lệch → 409: không ai duyệt được nội dung mình chưa nhìn thấy.
+ *  - Bốn mắt: người duyệt phải khác MỌI người có phần trong phạm vi duyệt (tacGiaTrongPhamViDuyet).
+ *  - Toàn bộ gói đã duyệt (nội dung các biến thể, phân loại, nguồn) được lưu kèm quyết định để phục dựng về sau.
+ */
+export async function quyetDinhDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string, quyetDinh: string, bamDuKien: string, ghiChu?: string) {
   const id = canUuid(idRaw, 'Mã bài')
   if (quyetDinh !== 'APPROVED' && quyetDinh !== 'REJECTED') throw new LoiNghiepVu(400, 'Quyết định không hợp lệ')
+  if (!/^[0-9a-f]{64}$/.test(String(bamDuKien ?? ''))) throw new LoiNghiepVu(400, 'Thiếu mã băm của bản đang xem')
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
     if (b.status !== 'PENDING_REVIEW') throw new LoiNghiepVu(409, 'Bài không ở trạng thái chờ duyệt')
-    const { bam, v, bienThe } = await bamHienTai(d, b)
-    for (const tacGia of new Set([v.created_by, ...bienThe.map((x) => x.created_by)])) {
+    const { bam, goi, v, bienThe } = await bamHienTai(d, b)
+    if (bam !== bamDuKien) throw new LoiNghiepVu(409, 'Bài đã thay đổi kể từ lúc bạn mở. Tải lại để xem bản mới nhất rồi mới quyết định.')
+    for (const tacGia of tacGiaTrongPhamViDuyet(b, v, bienThe)) {
       const lyDo = lyDoKhongDuocDuyet(u, tacGia)
       if (lyDo) throw new LoiNghiepVu(403, lyDo)
     }
     const [{ id: aid }] = await d.q<{ id: string }>(
-      `insert into ai_approvals (content_id, version_id, decision, approved_hash, actor_id, note)
-       values ($1::uuid, $2::uuid, $3, $4, $5, $6) returning id::text`, [id, v.id, quyetDinh, bam, u.id, ghiChu?.slice(0, 2000) ?? null])
+      `insert into ai_approvals (content_id, version_id, decision, approved_hash, approved_payload, actor_id, note)
+       values ($1::uuid, $2::uuid, $3, $4, $7::jsonb, $5, $6) returning id::text`, [id, v.id, quyetDinh, bam, u.id, ghiChu?.slice(0, 2000) ?? null, goi])
     await d.q(`update ai_content_items set status = $2, updated_at = now() where id = $1::uuid`, [id, quyetDinh])
     await ghiNhatKy(d, randomUUID(), u.id, quyetDinh === 'APPROVED' ? 'DUYET' : 'TU_CHOI', 'content', id, { pheDuyet: aid, bam })
     return { id, pheDuyetId: aid }
@@ -290,10 +332,10 @@ export async function thuHoiDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string, g
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
     if (b.status !== 'APPROVED') throw new LoiNghiepVu(409, 'Bài không ở trạng thái đã duyệt')
-    const { bam, v } = await bamHienTai(d, b)
+    const { bam, goi, v } = await bamHienTai(d, b)
     await d.q(
-      `insert into ai_approvals (content_id, version_id, decision, approved_hash, actor_id, note)
-       values ($1::uuid, $2::uuid, 'REVOKED', $3, $4, $5)`, [id, v.id, bam, u.id, ghiChu?.slice(0, 2000) ?? null])
+      `insert into ai_approvals (content_id, version_id, decision, approved_hash, approved_payload, actor_id, note)
+       values ($1::uuid, $2::uuid, 'REVOKED', $3, $6::jsonb, $4, $5)`, [id, v.id, bam, u.id, ghiChu?.slice(0, 2000) ?? null, goi])
     await d.q(`update ai_content_items set status = 'DRAFT', updated_at = now() where id = $1::uuid`, [id])
     const huy = await huyLichChuaDang(d, id, 'THU_HOI_PHE_DUYET')
     const dangDang = await d.q(`select id from ai_publication_schedules where content_id = $1::uuid and status = 'PUBLISHING'`, [id])
@@ -307,6 +349,11 @@ export async function thuHoiDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string, g
  * Phải gọi trong giao dịch đã khoá hàng bài viết.
  */
 async function congTrongGiaoDich(d: Db, b: Bai, kenh: Kenh): Promise<{ loi: string[]; pheDuyetId: string | null; bienThe: BienThe | null; versionId: string }> {
+  // Khoá chia sẻ các tài liệu nguồn đến hết giao dịch: việc xoá tài liệu hay đồng bộ hiệu lực không thể chen vào
+  // giữa lúc kiểm cổng và lúc ghi kết quả. Thứ tự khoá toàn module: bài → lịch → tài liệu (tiến trình khác chỉ khoá tài liệu).
+  await d.q(
+    `select t.id from tai_lieu t where t.id in (select tai_lieu_id from ai_content_sources where content_id = $1::uuid)
+      order by t.id for share`, [b.id])
   const { bam, v, bienThe, nguon } = await bamHienTai(d, b)
   const [pd] = await d.q<{ id: string; decision: string; approved_hash: string; version_id: string }>(
     `select id::text, decision, approved_hash, version_id::text from ai_approvals
@@ -344,13 +391,15 @@ export async function datLich(db: Db, u: NguoiDungToiThieu, idRaw: string, i: Da
     const song = await d.q<{ id: string; status: string }>(
       `select id::text, status from ai_publication_schedules
         where version_id = $1::uuid and channel = $2
-          and status in ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME','PUBLISHED')`, [c.versionId, kenh])
+          and (adapter = 'dry_run') = ($3 = 'dry_run')   -- chạy thử không chiếm chỗ của lịch đăng thật, và ngược lại
+          and status in ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME','PUBLISHED')`, [c.versionId, kenh, adapter])
     if (song.length) throw new LoiNghiepVu(409, `Kênh này đã có lịch (${song[0].status}) cho phiên bản hiện hành`)
     const [{ id: lid }] = await d.q<{ id: string }>(
       `insert into ai_publication_schedules
-         (content_id, version_id, variant_id, channel, adapter, scheduled_at_utc, timezone, approval_id, idempotency_key, created_by)
-       values ($1::uuid, $2::uuid, $3::uuid, $4, $5, $6::timestamptz, $7, $8::uuid, $9, $10) returning id::text`,
-      [id, c.versionId, c.bienThe!.id, kenh, adapter, luc.toISOString(), muiGio, c.pheDuyetId, `${khoa}:${randomUUID()}`, u.id])
+         (content_id, version_id, variant_id, channel, adapter, scheduled_at_utc, timezone, approval_id, idempotency_key, created_by, body_snapshot)
+       values ($1::uuid, $2::uuid, $3::uuid, $4, $5, $6::timestamptz, $7, $8::uuid, $9, $10, $11) returning id::text`,
+      // body_snapshot: đúng văn bản đã duyệt cho kênh này — giữ lại vĩnh viễn dù biến thể về sau bị sửa.
+      [id, c.versionId, c.bienThe!.id, kenh, adapter, luc.toISOString(), muiGio, c.pheDuyetId, `${khoa}:${randomUUID()}`, u.id, c.bienThe!.body])
     await ghiNhatKy(d, randomUUID(), u.id, 'DAT_LICH', 'schedule', lid, { kenh, luc: luc.toISOString(), muiGio, adapter })
     return { id: lid, scheduledAtUtc: luc.toISOString() }
   })
@@ -447,7 +496,7 @@ export async function donDepHangDoi(db: Db): Promise<{ treo: number; quaHan: num
         where status = 'PUBLISHING' and locked_at < now() - make_interval(mins => $1::int) returning id::text`, [KHOA_TREO_PHUT])
     const quaHan = await d.q<{ id: string }>(
       `update ai_publication_schedules set status = 'EXPIRED', error_code = 'QUA_HAN', updated_at = now()
-        where status = 'SCHEDULED' and adapter <> 'manual'
+        where status in ('SCHEDULED','RETRY_PENDING') and adapter <> 'manual'
           and scheduled_at_utc < now() - make_interval(hours => $1::int) returning id::text`, [QUA_HAN_GIO])
     const cid = randomUUID()
     for (const r of treo) await ghiNhatKy(d, cid, null, 'LICH_TREO', 'schedule', r.id)
@@ -462,21 +511,33 @@ export async function donDepHangDoi(db: Db): Promise<{ treo: number; quaHan: num
  * Lịch đăng tay (adapter 'manual') không bao giờ được worker nhận.
  */
 export async function nhanViec(db: Db, workerId: string): Promise<ViecDang | null> {
+  // Một lịch bị cổng chặn hoặc bài đang bị người dùng thao tác KHÔNG được làm dừng cả hàng đợi: bỏ qua nó, thử lịch kế.
+  const boQua: string[] = []
+  for (let i = 0; i < 10; i++) {
+    const r = await nhanMot(db, workerId, boQua)
+    if (r === null) return null
+    if ('viec' in r) return r.viec
+    boQua.push(r.boQua)
+  }
+  return null
+}
+
+async function nhanMot(db: Db, workerId: string, boQua: string[]): Promise<{ viec: ViecDang } | { boQua: string } | null> {
   return db.tx(async (d) => {
     const [ung] = await d.q<{ id: string; content_id: string }>(
       `select id::text, content_id::text from ai_publication_schedules
         where status in ('SCHEDULED','RETRY_PENDING') and adapter <> 'manual'
           and coalesce(next_attempt_at, scheduled_at_utc) <= now()
           and scheduled_at_utc >= now() - make_interval(hours => $1::int)   -- quá hạn thì KHÔNG đăng bù (xem donDepHangDoi)
+          and id <> all($2::uuid[])
         order by coalesce(next_attempt_at, scheduled_at_utc)
-        limit 1 for update skip locked`, [QUA_HAN_GIO])
+        limit 1 for update skip locked`, [QUA_HAN_GIO, boQua])
     if (!ung) return null
     // Giải phóng thứ tự khoá: bài trước, lịch sau (giống các thao tác của người dùng) — tránh deadlock
     // bằng cách KHÔNG giữ khoá lịch khi chờ khoá bài: thử khoá bài không chờ.
     const [bai] = await d.q<Bai>(
-      `select id::text, title, status, classification, ai_generated, may_mislead, current_version_id::text, created_by
-         from ai_content_items where id = $1::uuid and deleted_at is null for update skip locked`, [ung.content_id])
-    if (!bai) return null                       // bài đang bị thao tác khác giữ → vòng sau thử lại
+      `select ${COT_BAI} from ai_content_items where id = $1::uuid and deleted_at is null for update skip locked`, [ung.content_id])
+    if (!bai) return { boQua: ung.id }          // bài đang bị thao tác khác giữ → lần quét sau thử lại, giờ sang lịch kế
     const l = await khoaLich(d, ung.id)
     const c = await congTrongGiaoDich(d, bai, l.channel)
     const cid = randomUUID()
@@ -486,13 +547,13 @@ export async function nhanViec(db: Db, workerId: string): Promise<ViecDang | nul
         `update ai_publication_schedules set status = 'CANCELLED', error_code = 'CONG_XUAT_BAN_CHAN', error_detail = $2, updated_at = now()
           where id = $1::uuid`, [l.id, c.loi.join(' | ').slice(0, 2000)])
       await ghiNhatKy(d, cid, null, 'CONG_CHAN', 'schedule', l.id, { loi: c.loi })
-      return null
+      return { boQua: l.id }
     }
     await d.q(
       `update ai_publication_schedules set status = 'PUBLISHING', locked_at = now(), locked_by = $2, updated_at = now()
         where id = $1::uuid`, [l.id, maNhan])
     await ghiNhatKy(d, cid, null, 'BAT_DAU_DANG', 'schedule', l.id, { workerId, lanThu: l.retry_count + 1 })
-    return { lichId: l.id, contentId: l.content_id, kenh: l.channel, adapter: l.adapter, noiDung: c.bienThe!.body, khoaIdempotency: l.idempotency_key, lanThu: l.retry_count + 1, maNhan }
+    return { viec: { lichId: l.id, contentId: l.content_id, kenh: l.channel, adapter: l.adapter, noiDung: c.bienThe!.body, khoaIdempotency: l.idempotency_key, lanThu: l.retry_count + 1, maNhan } }
   })
 }
 
@@ -533,7 +594,9 @@ export async function danhSachBai(db: Db, loc: { trangThai?: string; tu?: string
   return db.q(
     `select i.id::text, i.title, i.status, i.classification, i.ai_generated, ${iso('i.updated_at')}, u.name as nguoi_tao,
             v.version_no,
-            coalesce((select array_agg(s.status order by s.channel) from ai_publication_schedules s where s.content_id = i.id), '{}') as lich
+            -- chỉ lịch của PHIÊN BẢN HIỆN HÀNH và là lịch đăng thật: bản cũ đã đăng không làm bản mới trông như "đã đăng"
+            coalesce((select array_agg(s.status order by s.channel) from ai_publication_schedules s
+                       where s.content_id = i.id and s.version_id = i.current_version_id and s.adapter <> 'dry_run'), '{}') as lich
        from ai_content_items i
        join users u on u.id = i.created_by
        join ai_content_versions v on v.id = i.current_version_id
@@ -546,7 +609,7 @@ export async function danhSachBai(db: Db, loc: { trangThai?: string; tu?: string
 export async function chiTietBai(db: Db, idRaw: string) {
   const id = canUuid(idRaw, 'Mã bài')
   const [bai] = await db.q<Bai & { updated_at: string }>(
-    `select id::text, title, status, classification, ai_generated, may_mislead, current_version_id::text, created_by, ${iso('updated_at')}
+    `select ${COT_BAI}, ${iso('updated_at')}
        from ai_content_items where id = $1::uuid and deleted_at is null`, [id])
   if (!bai) throw new LoiNghiepVu(404, 'Không tìm thấy bài viết')
   const phienBan = await layPhienBan(db, bai.current_version_id)

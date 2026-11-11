@@ -29,7 +29,15 @@ function docEnv() {
   return (k) => process.env[k] || (t.match(new RegExp(`^${k}=(.*)$`, 'm'))?.[1].trim().replace(/^["']|["']$/g, '') ?? '')
 }
 const env = docEnv()
-const coBat = () => aiContentBat({ AI_CONTENT_ENABLED: THU ? '1' : env('AI_CONTENT_ENABLED') })
+// Cờ được ĐỌC LẠI TỪ TỆP .env mỗi lần hỏi (không dùng bản đã nạp lúc khởi động, không dùng biến môi trường của
+// tiến trình): gỡ AI_CONTENT_ENABLED khỏi .env là worker đang chạy dừng nhận việc ở lần kiểm kế tiếp, không cần khởi động lại.
+function coBat() {
+  if (THU) return true
+  try {
+    const dong = readFileSync(join(APP, '.env'), 'utf8').match(/^AI_CONTENT_ENABLED=(.*)$/m)
+    return aiContentBat({ AI_CONTENT_ENABLED: dong?.[1].trim().replace(/^["']|["']$/g, '') })
+  } catch { return false }     // không đọc được .env → coi như tắt
+}
 
 /** Adapter mốc M1. Mỗi adapter nhận việc và trả KetQuaDang; ném lỗi = coi như chưa gửi được. */
 const ADAPTER = {

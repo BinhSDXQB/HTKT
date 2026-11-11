@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { CalendarDays, FilePlus2, Loader2, RefreshCw, Search, Sparkles, TriangleAlert } from 'lucide-react'
 import { tongHopXuatBan, type TrangThaiLich } from '@/lib/ai-content/trang-thai'
@@ -33,7 +33,9 @@ export function AiTongQuan() {
   const [loi, setLoi] = useState<string | null>(null)
   const [dangTai, setDangTai] = useState(false)
 
+  const luot = useRef(0)
   const tai = useCallback(async (trangThai: string, tuKhoa: string) => {
+    const cuaToi = ++luot.current     // chỉ nhận phản hồi của lần lọc/tìm mới nhất
     setDangTai(true)
     setLoi(null)
     try {
@@ -44,11 +46,12 @@ export function AiTongQuan() {
         goi<{ items: Bai[] }>(`/api/ai/v1/noi-dung?${q}`),
         goi<{ thongKe: ThongKe; nhatKy: SuKien[] }>('/api/ai/v1/tong-quan?nhatKy=15'),
       ])
+      if (cuaToi !== luot.current) return
       setBai(a.items); setTk(b.thongKe); setNk(b.nhatKy)
     } catch (e) {
-      setLoi((e as Error).message)
+      if (cuaToi === luot.current) setLoi((e as Error).message)
     } finally {
-      setDangTai(false)
+      if (cuaToi === luot.current) setDangTai(false)
     }
   }, [])
 

@@ -33,6 +33,10 @@ Dành cho cán bộ Văn phòng Sở (soạn bài) và lãnh đạo Sở (duyệ
 - **Thu hồi phê duyệt** huỷ mọi lịch chưa đăng. Với kênh **đăng tay**, hệ thống không thể ngăn một người đã chép nội dung ra ngoài tự đăng — hãy báo trực tiếp cho cán bộ phụ trách kênh khi thu hồi.
 - **"Cần đối soát"**: hệ thống không biết bài đã lên hay chưa. Mở kênh kiểm tra rồi chọn *Đã đăng* (kèm đường dẫn) hoặc *Không có bài*. Hệ thống không tự đăng lại.
 - Đường dẫn bài đăng tay là **do người dùng khai báo**; hệ thống không kiểm tra bài có thật trên nền tảng.
+- **Lưu từng phần một:** bài gốc và mỗi bản theo kênh lưu riêng. Khi một phần còn thay đổi chưa lưu, hệ thống khoá các nút gửi duyệt, duyệt, đặt lịch và nhắc bạn lưu hoặc bỏ thay đổi trước.
+- **Người duyệt:** nếu bài bị sửa sau khi bạn mở trang, hệ thống từ chối quyết định và yêu cầu tải lại — bạn chỉ duyệt được đúng bản đang thấy.
+- **Bốn mắt tính rộng:** ai đã đổi phân loại, cờ AI, tài liệu nguồn hoặc từng sửa bản theo kênh đều không được duyệt bài đó.
+- **Chạy thử** tính riêng với đăng thật: thử xong vẫn đặt được lịch đăng tay cho cùng bản; kết quả chạy thử không được tính là "đã đăng".
 - Ảnh do AI tạo chưa được hỗ trợ ở mốc này.
 - Giới hạn ký tự của Facebook/LinkedIn/Threads hiện ghi "chưa đối chiếu tài liệu chính thức": hãy tự kiểm tra trên nền tảng trước khi đăng.
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ChevronLeft, ChevronRight, LayoutGrid, List, TriangleAlert } from 'lucide-react'
 import { goi, gioVn, NhanLich, NUT_PHU, TEN_KENH, THE } from './dung-chung'
@@ -23,13 +23,17 @@ export function AiLich() {
   const [muc, setMuc] = useState<Muc[] | null>(null)
   const [loi, setLoi] = useState<string | null>(null)
 
+  const luot = useRef(0)
   const tai = useCallback(async () => {
+    // Chuyển tháng nhanh: phản hồi của tháng cũ về muộn KHÔNG được ghi đè tháng đang xem.
+    const cuaToi = ++luot.current
     setMuc(null); setLoi(null)
     try {
       const tu = nuaDemVn(nam, thang, 1).toISOString()
       const den = nuaDemVn(nam, thang + 1, 1).toISOString()
-      setMuc((await goi<{ items: Muc[] }>(`/api/ai/v1/lich?tu=${encodeURIComponent(tu)}&den=${encodeURIComponent(den)}`)).items)
-    } catch (e) { setLoi((e as Error).message) }
+      const kq = await goi<{ items: Muc[] }>(`/api/ai/v1/lich?tu=${encodeURIComponent(tu)}&den=${encodeURIComponent(den)}`)
+      if (cuaToi === luot.current) setMuc(kq.items)
+    } catch (e) { if (cuaToi === luot.current) setLoi((e as Error).message) }
   }, [nam, thang])
   useEffect(() => {
     const t = setTimeout(() => { void tai() }, 0)

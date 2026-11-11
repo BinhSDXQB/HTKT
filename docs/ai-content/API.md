@@ -1,13 +1,13 @@
 # API module Nội dung AI — `/api/ai/v1` (mốc M1)
 
-Mọi route: cờ `AI_CONTENT_ENABLED` khác `1` → **404**; chưa đăng nhập → **401**; không thuộc nhóm được soạn → **403**; yêu cầu ghi có `Origin` khác `Host` → **403**. Người thực hiện luôn lấy từ phiên đăng nhập phía máy chủ, không nhận từ body. Lỗi nghiệp vụ trả `{ error, chiTiet?: string[] }` với mã 400/403/404/409. Mọi thời điểm trả về là chuỗi ISO-8601 UTC.
+Mọi route: cờ `AI_CONTENT_ENABLED` khác `1` → **404**; chưa đăng nhập → **401**; không thuộc nhóm được soạn → **403**; yêu cầu ghi có `Origin` không thuộc tên miền của hệ thống (Host của yêu cầu hoặc danh sách trong `lib/ai-content/may-chu.ts`) → **403**. Người thực hiện luôn lấy từ phiên đăng nhập phía máy chủ, không nhận từ body. Lỗi nghiệp vụ trả `{ error, chiTiet?: string[] }` với mã 400/403/404/409. Mọi thời điểm trả về là chuỗi ISO-8601 UTC.
 
 | Phương thức | Đường dẫn | Việc |
 |---|---|---|
 | GET | `/noi-dung?trangThai=&tu=` | Danh sách bài (tối đa 200) |
 | POST | `/noi-dung` | Tạo bài: `{ tieuDe, noiDung, phanLoai?, doAiTao?, coTheGayNhamLan?, nguonIds? }` → `{ id }` |
 | GET | `/noi-dung/{id}` | Chi tiết: bài, phiên bản hiện hành, biến thể, nguồn, lịch sử duyệt, lịch, `bamHienTai`, `quyen` |
-| PUT | `/noi-dung/{id}` | Sửa bài (body như tạo). Nội dung đổi → phiên bản mới; luôn về `DRAFT`, huỷ lịch chưa đăng |
+| PUT | `/noi-dung/{id}` | Sửa bài (body như tạo). Nội dung đổi → phiên bản mới; có thay đổi thì về `DRAFT` và huỷ lịch chưa đăng; không đổi gì → `{ khongDoi: true }`, giữ nguyên trạng thái |
 | POST | `/noi-dung/{id}` | Hành động, body `{ loai, ... }` — xem bảng dưới |
 | GET | `/lich?tu=ISO&den=ISO` | Lịch trong khoảng (≤ 62 ngày, ≤ 500 dòng) |
 | POST | `/lich/{id}` | `{ loai: 'huy' }` · `{ loai: 'xac_nhan', url }` · `{ loai: 'doi_soat', ketQua: 'PUBLISHED'\|'FAILED', url? }` |
@@ -21,9 +21,9 @@ Hành động trên bài (`POST /noi-dung/{id}`):
 | `bien_the` | `kenh`, `noiDung` | Hợp lệ theo cấu hình kênh; sửa khi không ở `DRAFT` → về `DRAFT` |
 | `bien_the_tu_dong` | `kenh: string[]` | Sinh theo quy tắc từ bài gốc (không gọi AI) |
 | `gui_duyet` | — | `DRAFT`/`REJECTED`, có ≥ 1 biến thể |
-| `duyet` / `tu_choi` | `ghiChu?` | `PENDING_REVIEW`; quản trị/lãnh đạo; khác mọi tác giả |
+| `duyet` / `tu_choi` | `bamDangXem` (bắt buộc), `ghiChu?` | `PENDING_REVIEW`; quản trị/lãnh đạo; khác MỌI người có phần trong phạm vi duyệt (người soạn phiên bản, người đổi phân loại/cờ AI/nguồn, mọi người từng sửa biến thể). `bamDangXem` = `bamHienTai` của bản đang hiển thị; lệch với CSDL → 409 (không duyệt bản chưa xem) |
 | `thu_hoi` | `ghiChu?` | `APPROVED`; quản trị/lãnh đạo |
-| `dat_lich` | `kenh`, `ngay` (YYYY-MM-DD), `gio` (HH:mm), `adapter?` (`manual`\|`dry_run`) | Qua cổng xuất bản; thời điểm ở tương lai; chưa có lịch sống cho phiên bản + kênh |
+| `dat_lich` | `kenh`, `ngay` (YYYY-MM-DD), `gio` (HH:mm), `adapter?` (`manual`\|`dry_run`) | Qua cổng xuất bản; thời điểm ở tương lai; chưa có lịch sống cùng loại cho phiên bản + kênh (chạy thử và đăng thật tính riêng) |
 
 ## Trạng thái
 - Bài: `DRAFT → PENDING_REVIEW → APPROVED | REJECTED`, `CANCELLED`.
@@ -36,3 +36,8 @@ Hành động trên bài (`POST /noi-dung/{id}`):
 3. Mọi tài liệu nguồn: còn trong kho, phạm vi `CONG_KHAI`, `con_hieu_luc`.
 4. Bài "AI tạo, có thể gây nhầm lẫn": phần đầu của bản sẽ đăng chứa thông báo chuẩn.
 5. Có biến thể cho kênh và biến thể hợp lệ theo cấu hình kênh.
+
+## Lưu vết
+- `ai_approvals.approved_payload` (jsonb): toàn bộ gói đã duyệt — nội dung từng biến thể, phân loại, cờ AI, nguồn.
+- `ai_publication_schedules.body_snapshot`: đúng văn bản đã duyệt cho kênh lúc đặt lịch; không đổi dù biến thể về sau bị sửa.
+- `ai_audit_events`: mọi thao tác ghi, cùng giao dịch với thao tác (nhật ký lỗi thì thao tác không thành). Không chứa nội dung bài.

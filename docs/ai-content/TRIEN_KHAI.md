@@ -19,7 +19,7 @@
 ## Hoàn tác (theo mức, ưu tiên mức nhẹ nhất)
 | Mức | Cách | Hệ quả |
 |---|---|---|
-| 1 | Bỏ `AI_CONTENT_ENABLED` khỏi `.env`, `pm2 reload ql-htkt` (worker tự ngừng nhận việc ở vòng kế) | Module biến mất với người dùng; dữ liệu giữ nguyên |
+| 1 | Bỏ `AI_CONTENT_ENABLED` khỏi `.env`, `pm2 reload ql-htkt`. Worker đọc lại tệp `.env` trước mỗi việc nên tự ngừng nhận việc, không cần khởi động lại | Module biến mất với người dùng; dữ liệu giữ nguyên |
 | 2 | `pm2 delete ai-worker` | Dừng hẳn worker |
 | 3 | `git revert` các commit của nhánh rồi deploy | Gỡ mã; bảng `ai_*` còn nhưng không ai dùng |
 | 4 | `050_ai_content_rollback.sql` | **Xoá toàn bộ dữ liệu module** kể cả nhật ký và lịch "cần đối soát". Trước đó: xuất `pg_dump -t 'ai_*'`, và đối soát xong mọi lịch `UNKNOWN_OUTCOME`. Bài đã đăng ngoài mạng xã hội KHÔNG tự gỡ |
@@ -35,6 +35,7 @@ Không bảng nào của hệ thống cũ bị sửa nên hoàn tác không ản
 
 ## Môi trường thử
 - `node scripts/ai-content/tao-csdl-thu.mjs [--lam-lai]` — tạo `ql_htkt_ai_test` (bản sao cấu trúc, 0 dòng dữ liệu thật).
-- `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-tich-hop.mjs` — 29 ca; script từ chối chạy nếu CSDL không có đuôi `_ai_test`.
+- `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-tich-hop.mjs` — 40 ca (trình điều khiển pg); script từ chối chạy nếu CSDL không có đuôi `_ai_test`.
+- `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-prisma.mjs` — 7 ca qua Prisma + adapter pg, đúng đường mà route production dùng.
 - `node scripts/ai-content/dev-thu.mjs` — máy chủ dev riêng: cổng 3098, build `.next-ai-dev`, CSDL thử, `SESSION_SECRET` ngẫu nhiên (phiên thử không dùng được trên production).
 - Xoá môi trường thử khi không cần: `dropdb ql_htkt_ai_test`, xoá thư mục `app/.next-ai-dev`.

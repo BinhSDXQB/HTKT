@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS ai_content_items (
   ai_generated        BOOLEAN NOT NULL DEFAULT FALSE,   -- có dùng AI tạo/chỉnh sửa nội dung
   may_mislead         BOOLEAN NOT NULL DEFAULT FALSE,   -- có thể gây nhầm lẫn về tính xác thực (Luật 134/2025 Đ11 k3)
   current_version_id  UUID,
+  -- những người đã đổi phân loại / cờ AI / nguồn kể từ phiên bản hiện hành (tính vào nguyên tắc bốn mắt)
+  meta_editors        TEXT[] NOT NULL DEFAULT '{}',
   created_by          TEXT NOT NULL REFERENCES users(id),
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -77,7 +79,8 @@ CREATE TABLE IF NOT EXISTS ai_channel_variants (
   version_id    UUID NOT NULL REFERENCES ai_content_versions(id) ON DELETE CASCADE,
   channel       TEXT NOT NULL CHECK (channel IN ('facebook','linkedin','threads','website')),
   body          TEXT NOT NULL,
-  created_by    TEXT NOT NULL REFERENCES users(id),
+  created_by    TEXT NOT NULL REFERENCES users(id),   -- người lưu cuối
+  editors       TEXT[] NOT NULL DEFAULT '{}',          -- MỌI người từng sửa biến thể này (bốn mắt)
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (version_id, channel),
@@ -94,6 +97,7 @@ CREATE TABLE IF NOT EXISTS ai_approvals (
   UNIQUE (id, version_id),
   decision      TEXT NOT NULL CHECK (decision IN ('APPROVED','REJECTED','REVOKED')),
   approved_hash TEXT NOT NULL CHECK (approved_hash ~ '^[0-9a-f]{64}$'),
+  approved_payload JSONB NOT NULL,   -- toàn bộ gói đã duyệt (nội dung từng biến thể, phân loại, nguồn) để phục dựng
   actor_id      TEXT NOT NULL REFERENCES users(id),
   note          TEXT,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -124,6 +128,7 @@ CREATE TABLE IF NOT EXISTS ai_publication_schedules (
   error_detail      TEXT,
   published_at      TIMESTAMPTZ,
   idempotency_key   TEXT NOT NULL UNIQUE,
+  body_snapshot     TEXT NOT NULL,     -- đúng văn bản đã duyệt cho kênh này lúc đặt lịch; không đổi dù biến thể bị sửa sau
   locked_at         TIMESTAMPTZ,
   locked_by         TEXT,
   created_by        TEXT NOT NULL REFERENCES users(id),
@@ -136,7 +141,8 @@ CREATE INDEX IF NOT EXISTS ix_ai_pub_due ON ai_publication_schedules (scheduled_
   WHERE status IN ('SCHEDULED','RETRY_PENDING');
 CREATE INDEX IF NOT EXISTS ix_ai_pub_content ON ai_publication_schedules (content_id);
 -- Mỗi (phiên bản, kênh) chỉ MỘT lịch còn sống — chống đặt trùng/đăng trùng.
-CREATE UNIQUE INDEX IF NOT EXISTS ux_ai_pub_song ON ai_publication_schedules (version_id, channel)
+-- Chạy thử (dry_run) và đăng thật tính riêng: thử quy trình xong vẫn đặt được lịch đăng thật cho cùng bản.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_ai_pub_song ON ai_publication_schedules (version_id, channel, (adapter = 'dry_run'))
   WHERE status IN ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME','PUBLISHED');
 
 CREATE TABLE IF NOT EXISTS ai_audit_events (
