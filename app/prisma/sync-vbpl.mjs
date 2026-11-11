@@ -3,6 +3,11 @@
 //   node prisma/sync-vbpl.mjs                 → đồng bộ thư mục mặc định + xuất báo cáo
 //   node prisma/sync-vbpl.mjs --report        → CHỈ xuất báo cáo, không thay đổi dữ liệu
 //   node prisma/sync-vbpl.mjs "G:\\thu\\muc"  → đồng bộ thư mục khác
+//   node prisma/sync-vbpl.mjs --allow-mass-delete → cho phép gỡ vượt ngưỡng an toàn (chạy tay, có chủ đích)
+//   Cờ khác → từ chối, thoát 2. Bị khoá (tiến trình khác đang chạy) → thoát 0. Lỗi/hết hạn mức/chặn xoá → 1.
+//
+// Tệp CÙNG TÊN nhưng byte khác: chữ y hệt → chỉ cập nhật mã băm; nội dung ĐÃ SỬA → nạp bản mới rồi thay
+// bản cũ (giữ tiêu đề, phạm vi, tình trạng hiệu lực). Chỉ xét bản ghi thuộc kho (xem thuocKho trong core).
 //
 // Việc script làm:
 //   1. THÊM MỚI  : file .pdf/.docx chưa có trong kho → trích xuất + nhúng vector.
@@ -14,17 +19,28 @@
 //
 // Mỗi tài liệu nạp qua đây được gắn metadata = { fileHash, noiDungHash, thuMuc } để
 // nhận diện trùng & giới hạn phạm vi xoá-đồng-bộ đúng thư mục này (không đụng tài liệu nhập tay).
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { join, extname, basename } from 'node:path'
 import { randomUUID, createHash } from 'node:crypto'
 import pg from 'pg'
 import OpenAI from 'openai'
 import * as XLSX from 'xlsx'
+import {
+  layKhoaChayDon, maThoat, docThamSo, lietKeTep, thuocKho, chonBanGhiCuaKho, quyetDinhTheoTen, keHoachXoa,
+  cungDanhSachDoan, LOAI_VBPL,
+} from './sync-vbpl-core.mjs'
 
-const ARGS = process.argv.slice(2)
-const REPORT_ONLY = ARGS.includes('--report')
-const FOLDER = ARGS.find((a) => !a.startsWith('--')) || 'G:\\My Drive\\Tailieu_VBPL'
-const LOAI = 'VB_PHAP_LUAT'
+// Cờ lạ (--dry, --plan…) trước đây bị bỏ qua và script CHẠY ĐỒNG BỘ THẬT → nay từ chối.
+const THAM_SO = docThamSo(process.argv.slice(2))
+if (THAM_SO.deQuy) THAM_SO.loi.push('--recursive chưa được hỗ trợ trong script này')
+if (THAM_SO.loi.length) {
+  console.error(THAM_SO.loi.map((x) => `⛔ ${x}`).join('\n'))
+  console.error('Dùng: node prisma/sync-vbpl.mjs [--report] [--allow-mass-delete] ["thư mục"]')
+  process.exit(2)
+}
+const REPORT_ONLY = THAM_SO.reportOnly
+const FOLDER = THAM_SO.folder
+const LOAI = LOAI_VBPL
 const PHAM_VI = 'CONG_KHAI'
 
 const env = {}
@@ -160,7 +176,9 @@ const tieuDeTuTenFile = (name) => basename(name, extname(name)).replace(/^\d+\s*
 // NĐ 335, 365/2025) nằm trong kho mà chatbot KHÔNG đọc được đoạn nào.
 // Nay: lỗi giữa chừng → xoá sạch bản ghi dở + đánh dấu lỗi, và bước (a) coi bản ghi
 // 0 đoạn là chưa nạp để nạp lại.
-async function ingest(f, text, fileHash) {
+// trangThaiCuoi='cho_thay': bản thay thế nạp xong vẫn VÔ HÌNH với RAG (search chỉ đọc 'san_sang'),
+// chỉ được công bố trong giao dịch thayBanCu. phamVi: lấy của bản cũ để bản nội bộ không lúc nào thành công khai.
+async function ingest(f, text, fileHash, { phamVi = PHAM_VI, trangThaiCuoi = 'san_sang' } = {}) {
   const tieuDe = tieuDeTuTenFile(f)
   const chunks = chunkText(text)
   if (!chunks.length) throw new Error('Không tách được đoạn nào.')
@@ -169,7 +187,7 @@ async function ingest(f, text, fileHash) {
   await client.query(
     `INSERT INTO tai_lieu (id,"tieuDe",loai,"phamVi",nguon,metadata,"trangThai","soChunk","soKyTu","createdAt","updatedAt")
      VALUES ($1,$2,$3,$4,$5,$6::jsonb,'dang_xu_ly',0,$7,now(),now())`,
-    [docId, tieuDe, LOAI, PHAM_VI, f, meta, text.length])
+    [docId, tieuDe, LOAI, phamVi, f, meta, text.length])
   try {
     const vecs = await embedTexts(chunks.map((c) => c.content))
     for (let i = 0; i < chunks.length; i++) {
@@ -179,8 +197,8 @@ async function ingest(f, text, fileHash) {
          VALUES ($1,$2,$3,$4,$5::vector,$6,$7,now())`,
         [randomUUID(), docId, c.index, c.content, vlit(vecs[i]), c.soToken, viTriTuNoiDung(c.content)])
     }
-    await client.query(`UPDATE tai_lieu SET "trangThai"='san_sang', "soChunk"=$2 WHERE id=$1`, [docId, chunks.length])
-    return chunks.length
+    await client.query(`UPDATE tai_lieu SET "trangThai"=$3, "soChunk"=$2 WHERE id=$1`, [docId, chunks.length, trangThaiCuoi])
+    return { id: docId, soDoan: chunks.length }
   } catch (e) {
     // Dọn sạch để lần chạy sau nạp lại được, không để lại bản ghi rỗng chặn đường.
     await client.query(`DELETE FROM tai_lieu_chunk WHERE "taiLieuId"=$1`, [docId])
@@ -195,6 +213,25 @@ const chuaNapXong = (r) => r.trangThai !== 'san_sang' || !r.soChunk
 async function xoaHanBanGhi(id) {
   await client.query(`DELETE FROM tai_lieu_chunk WHERE "taiLieuId"=$1`, [id])
   await client.query(`DELETE FROM tai_lieu WHERE id=$1`, [id])
+}
+
+// Bản mới (đang 'cho_thay', RAG chưa thấy) → mang sang những gì người dùng/script hiệu lực đã đặt cho
+// bản cũ (tiêu đề sửa tay, mô tả, phạm vi, tình trạng hiệu lực), công bố 'san_sang' và xoá bản cũ trong
+// MỘT giao dịch: RAG không lúc nào thấy hai bản hay mất văn bản. Chết trước COMMIT → bản 'cho_thay'
+// là bản dở của kho, lượt sau bước (a) dọn rồi thay lại.
+async function thayBanCu(cu, moiId) {
+  await client.query('BEGIN')
+  try {
+    await client.query(
+      `UPDATE tai_lieu SET "tieuDe"=$2, "moTa"=$3, "phamVi"=$4, "tinhTrangHieuLuc"=$5, "thayTheBoi"=$6, "ghiChuHieuLuc"=$7,
+              "trangThai"='san_sang', "updatedAt"=now() WHERE id=$1`,
+      [moiId, cu.tieuDe, cu.moTa, cu.phamVi, cu.tinhTrangHieuLuc, cu.thayTheBoi, cu.ghiChuHieuLuc])
+    await xoaHanBanGhi(cu.id)
+    await client.query('COMMIT')
+  } catch (e) {
+    await client.query('ROLLBACK').catch(() => {})
+    throw e
+  }
 }
 
 // ── Báo cáo ──────────────────────────────────────────────────────────
@@ -235,19 +272,33 @@ async function xuatBaoCao() {
     const out = join(FOLDER, '_BaoCao_KhoTaiLieu.xlsx')
     XLSX.writeFile(wb, out)
     console.log(`📄 Đã ghi báo cáo Excel: ${out}`)
-  } catch (e) { console.log('⚠️ Không ghi được Excel:', e.message) }
+    return true
+  } catch (e) { console.log('⚠️ Không ghi được Excel:', e.message); return false }
 }
 
 // ── Chạy ─────────────────────────────────────────────────────────────
 await client.connect()
 
+// Dùng CHUNG khoá với prisma/import-vbpl.mjs. Chạy chồng (chạy tay trùng lượt định kỳ, hoặc trùng importer)
+// thì bước (a)/(b) coi bản ghi 'dang_xu_ly' của tiến trình kia là "bản rỗng" rồi XOÁ HẲN trong khi nó đang nhúng.
+// Task Scheduler (IgnoreNew) chỉ chặn chồng giữa các lượt định kỳ. --report chỉ đọc nên không cần khoá.
+// Bị khoá là tình huống bình thường, không phải lỗi → thoát 0 để tác vụ lịch không báo hỏng.
+if (!REPORT_ONLY && !(await layKhoaChayDon(client))) {
+  console.log('⏸️  Đang có tiến trình đồng bộ/nạp VBPL khác chạy → bỏ qua lượt này.')
+  await client.end()
+  process.exit(0)
+}
+
+const ketQua = { loi: 0, hetHanMuc: false, xoaBiChan: false }
 if (!REPORT_ONLY) {
-  const all = readdirSync(FOLDER)
+  // Thư mục không tồn tại / chưa mount → ném lỗi, dừng trước mọi bước ghi/xoá.
+  const all = lietKeTep(FOLDER)
   const targets = all.filter((f) => ['.pdf', '.docx'].includes(extname(f).toLowerCase()))
   const boQua = all.filter((f) => ['.doc', '.gdoc'].includes(extname(f).toLowerCase()))
   console.log(`📁 ${FOLDER}\n   ${targets.length} file PDF/DOCX · ${boQua.length} file .doc/.gdoc bỏ qua\n`)
 
-  let them = 0, daCo = 0, trungFile = 0, trungND = 0, loi = 0, napLai = 0, hetHanMuc = false
+  let them = 0, daCo = 0, trungFile = 0, trungND = 0, loi = 0, napLai = 0, napLaiND = 0, capNhatMa = 0, trungTen = 0
+  let hetHanMuc = false, xoaBiChan = false
   const canOcr = []
   for (const f of targets) {
     try {
@@ -255,35 +306,43 @@ if (!REPORT_ONLY) {
       const fileHash = sha256(buf)
 
       // (a) đã có đúng file này (theo mã băm bytes)?
-      const byHash = await client.query(`SELECT id, nguon, "trangThai", "soChunk" FROM tai_lieu WHERE metadata->>'fileHash'=$1 AND "deletedAt" IS NULL LIMIT 1`, [fileHash])
-      if (byHash.rows.length && !chuaNapXong(byHash.rows[0])) {
-        if (byHash.rows[0].nguon === f) { daCo++ }
-        else { console.log(`🟰 TRÙNG FILE: "${f}" giống hệt "${byHash.rows[0].nguon}" → bỏ qua`); trungFile++ }
-        continue
+      const byHash = await client.query(`SELECT id, nguon, loai, metadata, "createdById", "trangThai", "soChunk" FROM tai_lieu WHERE metadata->>'fileHash'=$1 AND "deletedAt" IS NULL LIMIT 1`, [fileHash])
+      const h = byHash.rows[0]
+      let banTrungTepKhac = false
+      if (h && !chuaNapXong(h)) {
+        if (h.nguon === f) { daCo++; continue }
+        banTrungTepKhac = true   // byte trùng một tệp KHÁC: nếu kho đã có bản cùng tên thì vẫn phải cập nhật ở (b)
       }
-      if (byHash.rows.length) {
-        console.log(`♻️  NẠP LẠI: "${byHash.rows[0].nguon}" có trong kho nhưng ${byHash.rows[0].soChunk} đoạn (trạng thái ${byHash.rows[0].trangThai}) → xoá bản ghi rỗng và nạp lại`)
-        await xoaHanBanGhi(byHash.rows[0].id)
+      if (h && !banTrungTepKhac) {
+        // Chỉ dọn bản ghi dở của CHÍNH kho này. Bản ghi ngoài kho (tải lên qua giao diện, không lấy khoá)
+        // có thể đang nhúng → để lượt sau.
+        if (!thuocKho(h, FOLDER)) { console.log(`⏳ BỎ QUA LƯỢT NÀY: "${f}" trùng byte với "${h.nguon}" đang xử lý ngoài kho`); continue }
+        console.log(`♻️  NẠP LẠI: "${h.nguon}" có trong kho nhưng ${h.soChunk} đoạn (trạng thái ${h.trangThai}) → xoá bản ghi rỗng và nạp lại`)
+        await xoaHanBanGhi(h.id)
         napLai++
       }
 
-      // (b) bản ghi cũ cùng tên nhưng chưa có mã băm (nạp từ script import trước) → backfill, coi như đã có.
-      const byName = await client.query(`SELECT id, metadata, "trangThai", "soChunk" FROM tai_lieu WHERE nguon=$1 AND "deletedAt" IS NULL LIMIT 1`, [f])
-      if (byName.rows.length && chuaNapXong(byName.rows[0])) {
-        console.log(`♻️  NẠP LẠI: "${f}" có bản ghi ${byName.rows[0].soChunk} đoạn (trạng thái ${byName.rows[0].trangThai}) → xoá bản ghi rỗng và nạp lại`)
-        await xoaHanBanGhi(byName.rows[0].id)
+      // (b) bản ghi CÙNG TÊN của kho này. Tài liệu cùng tên tải lên qua giao diện (có người tạo) không bị đụng.
+      const byName = await client.query(
+        `SELECT id, "tieuDe", "moTa", loai, "phamVi", metadata, "createdById", "trangThai", "soChunk",
+                "tinhTrangHieuLuc", "thayTheBoi", "ghiChuHieuLuc"
+           FROM tai_lieu WHERE nguon=$1 AND "deletedAt" IS NULL ORDER BY "createdAt"`, [f])
+      let cu = chonBanGhiCuaKho(byName.rows, FOLDER)
+      if (cu && chuaNapXong(cu)) {
+        console.log(`♻️  NẠP LẠI: "${f}" có bản ghi ${cu.soChunk} đoạn (trạng thái ${cu.trangThai}) → xoá bản ghi rỗng và nạp lại`)
+        await xoaHanBanGhi(cu.id)
         napLai++
-        byName.rows.length = 0
+        cu = null
       }
-      if (byName.rows.length) {
-        const text0 = await extractText(buf, f)
-        const meta = JSON.stringify({ ...(byName.rows[0].metadata || {}), fileHash, noiDungHash: noiDungHashCua(text0), thuMuc: FOLDER })
-        await client.query(`UPDATE tai_lieu SET metadata=$2::jsonb WHERE id=$1`, [byName.rows[0].id, meta])
-        daCo++
+      if (banTrungTepKhac && !cu) { console.log(`🟰 TRÙNG FILE: "${f}" giống hệt "${h.nguon}" → bỏ qua`); trungFile++; continue }
+      if (!cu && byName.rows.length) {
+        // Cùng tên với tài liệu NGOÀI kho (tải lên qua giao diện): trước đây bị "nhận" làm bản của kho;
+        // nạp thêm thì chatbot có hai bản. Không tự xử lý → báo để người quản trị quyết.
+        console.log(`⚠️  TRÙNG TÊN NGOÀI KHO: "${f}" trùng tên tài liệu tải lên qua giao diện → bỏ qua, cần xử lý tay`)
+        trungTen++
         continue
       }
 
-      // (c) file mới → trích xuất, kiểm tra TRÙNG NỘI DUNG.
       const text = await extractText(buf, f)
 
       // CHẶN "HỐ ĐEN" PDF SCAN — lỗi đã xảy ra thật (phát hiện 20/8/2026):
@@ -301,6 +360,36 @@ if (!REPORT_ONLY) {
       }
 
       const ndHash = noiDungHashCua(text)
+
+      if (cu) {
+        // Tệp cùng tên, byte đã khác (bước (a) không khớp).
+        const qd = quyetDinhTheoTen(cu, { fileHash, noiDungHash: ndHash })
+        if (qd === 'da_co') { daCo++; continue }
+        const ghiMaBam = () => client.query(`UPDATE tai_lieu SET metadata=$2::jsonb WHERE id=$1`,
+          [cu.id, JSON.stringify({ ...(cu.metadata || {}), fileHash, noiDungHash: ndHash, thuMuc: FOLDER })])
+        if (qd === 'cap_nhat_meta') {   // lưu lại / ký số lại, chữ y hệt → không nhúng lại
+          await ghiMaBam(); capNhatMa++; continue
+        }
+        // Bản import cũ chưa có mã băm: đoạn đang lưu giống hệt đoạn tách mới → chỉ ghi mã băm, không tốn phí nhúng.
+        if (!cu.metadata?.fileHash) {
+          const { rows: doan } = await client.query(`SELECT "noiDung" FROM tai_lieu_chunk WHERE "taiLieuId"=$1 ORDER BY "chunkIndex"`, [cu.id])
+          if (cungDanhSachDoan(doan.map((d) => d.noiDung), chunkText(text).map((c) => c.content))) { await ghiMaBam(); capNhatMa++; continue }
+        }
+        // NỘI DUNG ĐÃ SỬA: giữ đoạn cũ thì chatbot trả lời theo bản cũ. Nạp bản mới TRƯỚC (lỗi/hết hạn mức thì
+        // bản cũ còn nguyên, lượt sau thử lại), rồi mới thay bản cũ.
+        const moi = await ingest(f, text, fileHash, { phamVi: cu.phamVi, trangThaiCuoi: 'cho_thay' })
+        try {
+          await thayBanCu(cu, moi.id)
+        } catch (e) {
+          await xoaHanBanGhi(moi.id).catch(() => {})   // thay lỗi → bỏ bản mới, giữ bản cũ; lượt sau thử lại
+          throw e
+        }
+        console.log(`🔄 NẠP LẠI NỘI DUNG ĐÃ SỬA: ${f} → ${moi.soDoan} đoạn (thay bản cũ ${cu.soChunk} đoạn)`)
+        napLaiND++
+        continue
+      }
+
+      // (c) file mới → kiểm tra TRÙNG NỘI DUNG.
       const byContent = await client.query(`SELECT nguon FROM tai_lieu WHERE metadata->>'noiDungHash'=$1 AND "deletedAt" IS NULL LIMIT 1`, [ndHash])
       if (byContent.rows.length) {
         console.log(`📑 TRÙNG NỘI DUNG: "${f}" trùng nội dung với "${byContent.rows[0].nguon}" → bỏ qua`)
@@ -308,7 +397,7 @@ if (!REPORT_ONLY) {
         continue
       }
 
-      const n = await ingest(f, text, fileHash)
+      const { soDoan: n } = await ingest(f, text, fileHash)
       console.log(`✅ THÊM MỚI: ${f} → ${n} đoạn`)
       them++
     } catch (e) {
@@ -325,23 +414,33 @@ if (!REPORT_ONLY) {
     }
   }
 
-  // (d) XOÁ ĐỒNG BỘ: tài liệu thuộc thư mục này nhưng file đã biến mất.
+  // (d) XOÁ ĐỒNG BỘ: tài liệu thuộc kho này nhưng file đã biến mất.
   // Bỏ qua khi phải dừng giữa chừng vì hết hạn mức — lúc đó vòng quét chưa đi hết
   // thư mục, xoá đồng bộ dễ gỡ nhầm tài liệu vẫn còn tệp.
-  const trongThuMuc = new Set(all)
-  const managed = await client.query(`SELECT id, nguon FROM tai_lieu WHERE metadata->>'thuMuc'=$1 AND "deletedAt" IS NULL`, [FOLDER])
+  // NGƯỠNG AN TOÀN: Drive đang đồng bộ/lỗi cache có thể trả thư mục rỗng hoặc thiếu → trước đây sẽ gỡ
+  // hàng loạt. Vượt ngưỡng thì chặn, trừ khi chạy tay với --allow-mass-delete.
+  const { rows: ungVien } = await client.query(
+    `SELECT id, nguon, loai, metadata, "createdById" FROM tai_lieu
+      WHERE "deletedAt" IS NULL AND (metadata->>'thuMuc' IS NOT NULL OR ("createdById" IS NULL AND loai=$1))`, [LOAI])
+  // Đếm tệp PDF/DOCX, không đếm .doc/.gdoc/Excel báo cáo: Drive lỗi chỉ trả _BaoCao_KhoTaiLieu.xlsx
+  // thì vẫn phải coi là thư mục rỗng.
+  const keHoach = keHoachXoa(ungVien.filter((r) => thuocKho(r, FOLDER)), new Set(all),
+    { soTepQuetDuoc: targets.length, choPhepXoaNhieu: THAM_SO.choPhepXoaNhieu })
   let xoa = 0
-  for (const m of managed.rows) {
+  if (!hetHanMuc && keHoach.chan) {
+    console.log(`\n⛔ CHẶN XOÁ ĐỒNG BỘ: ${keHoach.chan}. Kiểm tra ổ G:/Google Drive. Nếu đúng là đã bỏ nhiều tệp, chạy tay: node prisma/sync-vbpl.mjs --allow-mass-delete`)
+    keHoach.duKien.slice(0, 10).forEach((m) => console.log(`   - ${m.nguon}`))
+    xoaBiChan = true
+  }
+  for (const m of keHoach.xoa) {
     if (hetHanMuc) break
-    if (!trongThuMuc.has(m.nguon)) {
-      await client.query(`UPDATE tai_lieu SET "deletedAt"=now() WHERE id=$1`, [m.id])
-      console.log(`🗑️  ĐÃ GỠ khỏi kho (file không còn trong thư mục): ${m.nguon}`)
-      xoa++
-    }
+    await client.query(`UPDATE tai_lieu SET "deletedAt"=now() WHERE id=$1`, [m.id])
+    console.log(`🗑️  ĐÃ GỠ khỏi kho (file không còn trong thư mục): ${m.nguon}`)
+    xoa++
   }
 
   console.log(`\n──────── ĐỒNG BỘ ────────`)
-  console.log(`✅ Thêm mới: ${them}  ·  ♻️ Nạp lại bản rỗng: ${napLai}  ·  ⏭️ Đã có: ${daCo}  ·  🟰 Trùng file: ${trungFile}  ·  📑 Trùng nội dung: ${trungND}  ·  🗑️ Đã gỡ: ${xoa}  ·  ❌ Lỗi: ${loi}`)
+  console.log(`✅ Thêm mới: ${them}  ·  🔄 Nạp lại nội dung đã sửa: ${napLaiND}  ·  🔖 Cập nhật mã băm: ${capNhatMa}  ·  ♻️ Nạp lại bản rỗng: ${napLai}  ·  ⏭️ Đã có: ${daCo}  ·  🟰 Trùng file: ${trungFile}  ·  📑 Trùng nội dung: ${trungND}  ·  ⚠️ Trùng tên ngoài kho: ${trungTen}  ·  🗑️ Đã gỡ: ${xoa}${xoaBiChan ? ' (CHẶN ' + keHoach.duKien.length + ')' : ''}  ·  ❌ Lỗi: ${loi}`)
   if (canOcr.length) {
     console.log(`
 🔍 ${canOcr.length} tệp CẦN OCR trước khi nạp (bản scan, không có lớp văn bản):`)
@@ -349,7 +448,10 @@ if (!REPORT_ONLY) {
     console.log('   → Dùng Adobe Acrobat / công cụ OCR để tạo lớp văn bản, hoặc tải bản .docx từ Công báo, rồi chạy lại.')
   }
   if (boQua.length) console.log(`⚠️ Không xử lý (.doc cũ/.gdoc shortcut): ${boQua.length} file — lưu lại thành .docx/PDF rồi chạy lại.`)
+  Object.assign(ketQua, { loi, hetHanMuc, xoaBiChan })
 }
 
-await xuatBaoCao()
+if (!(await xuatBaoCao())) ketQua.loi++   // báo cáo là việc chính của --report: lỗi thì không báo thành công
 await client.end()
+// Trước đây luôn thoát 0 kể cả khi nạp lỗi/hết hạn mức → Task Scheduler báo "thành công", không ai biết.
+process.exitCode = maThoat(ketQua)

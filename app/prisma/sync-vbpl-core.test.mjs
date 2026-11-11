@@ -107,6 +107,15 @@ test('bản ghi nhập tay (có người tạo) cùng tên KHÔNG thuộc kho', 
   assert.equal(thuocKho({ metadata: null, createdById: null, loai: 'VB_PHAP_LUAT' }, KHO), true)
   assert.equal(thuocKho({ metadata: null, createdById: null, loai: 'KHAC' }, KHO), false)
 })
+test('bản import cũ KHÔNG thuộc kho thư mục khác (chạy sync với thư mục khác không gỡ/thay bản kho chính)', () => {
+  assert.equal(thuocKho({ metadata: null, createdById: null, loai: 'VB_PHAP_LUAT' }, 'D:\\kho-khac'), false)
+  assert.equal(thuocKho({ metadata: null, createdById: null, loai: 'VB_PHAP_LUAT' }, 'g:/my drive/tailieu_vbpl/'), true)
+})
+test('Drive lỗi chỉ trả tệp Excel báo cáo → đếm 0 tệp văn bản → CHẶN xoá', () => {
+  const k = keHoachXoa(managed(3), new Set(['_BaoCao_KhoTaiLieu.xlsx']), { soTepQuetDuoc: 0 })
+  assert.ok(k.chan)
+  assert.equal(k.xoa.length, 0)
+})
 test('chonBanGhiCuaKho bỏ qua bản ghi ngoài kho', () => {
   const rows = [
     { id: 'tay', metadata: null, createdById: 'u1', loai: 'VB_PHAP_LUAT' },

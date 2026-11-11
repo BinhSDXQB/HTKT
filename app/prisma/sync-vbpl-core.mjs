@@ -57,7 +57,8 @@ export function thuocKho(row, folder) {
   if (thuMuc) return cungThuMuc(thuMuc, folder)
   // Bản ghi do prisma/import-vbpl.mjs cũ nạp: không metadata, không người tạo, loại VBPL.
   // Tài liệu người dùng tải lên qua giao diện luôn có createdById → không bao giờ bị "nhận quyền".
-  return !row?.createdById && row?.loai === LOAI_VBPL
+  // Chỉ KHO MẶC ĐỊNH được nhận bản cũ: chạy với thư mục khác thì không được thay/gỡ bản của kho chính.
+  return cungThuMuc(folder, THU_MUC_MAC_DINH) && !row?.createdById && row?.loai === LOAI_VBPL
 }
 export const chonBanGhiCuaKho = (rows, folder) => rows.find((r) => thuocKho(r, folder)) ?? null
 
