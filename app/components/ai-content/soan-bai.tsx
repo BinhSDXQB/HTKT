@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -117,6 +117,8 @@ export function AiSoanBai({ id }: { id?: string }) {
     return Object.entries(banNhapBt).filter(([k, v]) => v !== (ct.bienThe.find((b) => b.channel === k)?.body ?? '')).map(([k]) => k)
   }, [ct, banNhapBt])
   const coNhapDo = chuaLuu || kenhChuaLuu.length > 0
+  const coNhapDoRef = useRef(false)
+  useEffect(() => { coNhapDoRef.current = coNhapDo }, [coNhapDo])
 
   useEffect(() => {
     if (!coNhapDo) return
@@ -127,7 +129,12 @@ export function AiSoanBai({ id }: { id?: string }) {
 
   const lam = async (fn: () => Promise<unknown>, thanhCong: string) => {
     setBan(true)
-    try { await fn(); toast.success(thanhCong); await tai() } catch (e) { baoLoi(e) } finally { setBan(false) }
+    try { await fn(); toast.success(thanhCong); await tai() } catch (e) {
+      baoLoi(e)
+      // Bị từ chối thường vì dữ liệu trên màn hình đã cũ (người khác vừa sửa/duyệt): tải lại để thấy bản mới nhất.
+      // Không tải lại khi đang có bản nháp chưa lưu, để không xoá mất chữ người dùng đang gõ.
+      if (!coNhapDoRef.current) await tai()
+    } finally { setBan(false) }
   }
 
   const luuBai = async () => {

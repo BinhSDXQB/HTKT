@@ -9,7 +9,8 @@ Nhánh `ai-content-m1`. Nhãn: **DONE** đã làm và có bằng chứng chạy 
 | `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-tich-hop.mjs` | 40/40 ca đạt trên `ql_htkt_ai_test` (trình điều khiển pg) |
 | `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-prisma.mjs` | 7/7 ca đạt qua Prisma + adapter pg (đường production dùng) |
 | Đột biến thử trên 4 điểm sửa theo Codex vòng 2 | 4/4 bị test bắt |
-| 19 kiểm tra API qua máy chủ dev thử (Next + Prisma thật, cổng 3098) | đạt ngày 11/11, TRƯỚC các sửa đổi theo Codex vòng 2. Sau đó máy chủ dev bị dừng nên **chưa chạy lại ở tầng HTTP** (đã thay bằng 7 ca Prisma ở trên) |
+| 23 kiểm tra API qua máy chủ dev thử (Next + Prisma thật, cổng 3098) | 23/23 đạt ngày 12/11, SAU các sửa đổi theo Codex vòng 2 (gồm: thiếu băm → 400, băm cũ → 409, 401, 403, Origin lạ → 403) |
+| Kiểm giao diện trên trình duyệt (12/11, tài khoản mẫu trong CSDL thử) | xem mục "Kiểm giao diện" bên dưới |
 | ESLint các tệp của module | 0 lỗi |
 | Kiểm kiểu cục bộ bằng TypeScript API (không chạy `tsc` toàn dự án) | 0 lỗi trên tệp của module |
 | `node scripts/ai-content/tao-csdl-thu.mjs` | 142/142 bảng khớp, 0 dòng dữ liệu thật |
@@ -22,7 +23,7 @@ Nhánh `ai-content-m1`. Nhãn: **DONE** đã làm và có bằng chứng chạy 
 | AT-02 | Tạo bài gốc từ nội dung người dùng | DONE | test tích hợp + API |
 | AT-03 | Ba phiên bản Facebook/LinkedIn/Threads | DONE (theo quy tắc) | chuyển thể không gọi AI; viết lại bằng AI: NOT STARTED |
 | AT-04 | Tạo ảnh, lưu metadata | NOT STARTED | chưa chọn nhà cung cấp ảnh, chưa có nơi lưu media |
-| AT-05 | Bản nháp và xem trước | PARTIAL | đã có mã; mới xem trang tổng quan trên trình duyệt, CHƯA xem màn hình soạn bài/lịch |
+| AT-05 | Bản nháp và xem trước | DONE | đã chạy trên trình duyệt: soạn bài, bản theo kênh, xem trước, lịch |
 | AT-06 | Không đăng khi chưa duyệt | DONE | test thuần + tích hợp + API (409) |
 | AT-07 | Lịch 08:30 giờ Việt Nam | DONE | lưu `01:30:00Z`, đọc lại qua Prisma đúng |
 | AT-08 | Đăng thử lên tài khoản thử | BLOCKED | chưa có tài khoản/Page thử, chưa có adapter thật. "Chạy thử" KHÔNG phải đăng thật |
@@ -36,6 +37,27 @@ Nhánh `ai-content-m1`. Nhãn: **DONE** đã làm và có bằng chứng chạy 
 | AT-16 | Hoàn tác không mất dữ liệu nghiệp vụ | DONE trên CSDL thử | áp → hoàn nguyên → số bảng như cũ. Trên CSDL thật: NOT_RUN |
 | AT-17 | Báo cáo rõ phần xong/chưa xong | DONE | tài liệu này |
 | AT-18 | Không lỗi nghiêm trọng trong security review | PARTIAL | Hai vòng Codex: mọi BLOCKER/HIGH đã sửa và có test, trừ các mục ghi "giới hạn" bên dưới. Các sửa đổi vòng 2 CHƯA được Codex rà lại |
+
+## Kiểm giao diện trên trình duyệt (12/11/2026)
+Máy chủ dev thử cổng 3098, CSDL thử, hai tài khoản quản trị mẫu (người soạn, người duyệt). Không có lỗi trên console ngoài mã 409 chủ ý.
+
+| Bước | Kết quả |
+|---|---|
+| Trang tổng quan: 8 ô số liệu, lọc, tìm, danh sách, nhật ký | Đạt |
+| Soạn bài mới: nhập tiêu đề, nội dung, phân loại; ô tìm nguồn hiện 3 tài liệu mẫu kèm nhãn "dùng được / không dùng được cho bài công khai"; nguồn nội bộ tô đỏ | Đạt |
+| Tạo bài → chuyển sang trang bài, hiện "Bản nháp · Phiên bản 1", khung lịch nêu rõ điều kiện còn thiếu | Đạt |
+| "Tạo từ bài gốc" cho Facebook và Threads; tab kênh đánh dấu ✓ | Đạt |
+| Gõ thêm vào bản Facebook chưa lưu: nút Gửi duyệt, Lưu bài, Tạo từ bài gốc bị khoá; hiện "Lưu bản Facebook trước khi gửi duyệt"; tab có dấu •; có nút Bỏ thay đổi | Đạt |
+| Gửi duyệt; người soạn thấy "Người duyệt phải khác người soạn" và không có nút Duyệt | Đạt |
+| Người duyệt mở trang, bài bị sửa ở nơi khác, bấm Duyệt → bị từ chối: "Bài đã thay đổi kể từ lúc bạn mở…" | Đạt |
+| Người duyệt tải lại, bấm Duyệt → "Đã duyệt bởi … lúc 07:06 12/11/2026" (đúng giờ Việt Nam) | Đạt |
+| Đặt lịch Facebook: mặc định ngày mai 08:30 → hiện "Đã đặt lịch 08:30 13/11/2026 · đăng tay" kèm ô khai đường dẫn | Đạt |
+| Lịch xuất bản: lưới tháng (hôm nay được đánh dấu), kiểu danh sách | Đạt |
+| Bề rộng điện thoại 375px: trang bài và trang tổng quan không tràn ngang | Đạt |
+| Thu hồi phê duyệt, huỷ lịch, xác nhận "Đã đăng", đối soát | CHƯA bấm trên trình duyệt (đã kiểm ở tầng API và test tích hợp) |
+| Chế độ tối; vai trò "lãnh đạo" và "cán bộ Văn phòng" thật | CHƯA kiểm |
+
+Ghi chú: một bài thử trong CSDL thử hiện chữ lỗi dấu — do tôi gửi dữ liệu thử bằng `curl` từ cửa sổ lệnh Windows (bảng mã cp1252), không phải lỗi ứng dụng: bài tạo từ trình duyệt và từ script Node đều lưu đúng tiếng Việt.
 
 ## Giới hạn còn tồn tại
 1. Chưa đăng tự động lên mạng xã hội nào; chưa sinh ảnh; chưa soạn bằng AI; chưa có phân tích số liệu, chi phí.
@@ -70,17 +92,16 @@ Codex chỉ đề xuất; mỗi mục dưới đây đã được đối chiếu
 | 2.4 | HIGH | Sửa biến thể tại chỗ làm mất bản đã duyệt/đăng | Đúng | `approved_payload` + `body_snapshot`; có test |
 | 2.5 | MEDIUM | Biến thể tự động lấy thân bài cũ gắn phiên bản mới | Đúng | Đọc–ghi trong một giao dịch khoá bài; test chạy đua |
 | 2.6 | HIGH | Trạng thái nguồn không được khoá | Đúng | Khoá chia sẻ nguồn trong cổng; có test. Sau khi giao dịch kết thúc nguồn vẫn có thể đổi — bản chất, không sửa |
-| 2.7 | MEDIUM | Giao diện giấu lịch đang đăng khi thu hồi | Đúng | Cảnh báo riêng, không báo "thành công" trơn. Chưa xem trên trình duyệt |
+| 2.7 | MEDIUM | Giao diện giấu lịch đang đăng khi thu hồi | Đúng | Cảnh báo riêng, không báo "thành công" trơn. CHƯA bấm thử trên trình duyệt (nút mở hộp xác nhận của trình duyệt) |
 | 2.8 | MEDIUM | Worker không đọc lại cờ | Đúng | Đọc lại `.env` trước mỗi việc. Chưa có test tự động |
 | 2.9–2.11 | MEDIUM | RETRY_PENDING quá hạn treo; một việc chặn dừng cả vòng; chạy thử chặn đăng thật | Đúng | Đã sửa; mỗi mục một test |
-| 2.12, 2.13 | MEDIUM | Biến thể chưa lưu không khoá thao tác; lưu một phần mất phần khác | Đúng | Khoá nút khi còn nháp, lưu từng phần. **Chỉ kiểm bằng ESLint + kiểm kiểu, chưa xem trên trình duyệt** |
+| 2.12, 2.13 | MEDIUM | Biến thể chưa lưu không khoá thao tác; lưu một phần mất phần khác | Đúng | Khoá nút khi còn nháp, lưu từng phần. Đã xác nhận trên trình duyệt |
 | 2.14 | MEDIUM | Danh sách trộn lịch phiên bản cũ | Đúng | Chỉ tính phiên bản hiện hành; có test |
-| 2.15 | MEDIUM | Phản hồi cũ ghi đè tháng đang xem | Đúng | Chỉ nhận phản hồi mới nhất. Chưa xem trên trình duyệt |
+| 2.15 | MEDIUM | Phản hồi cũ ghi đè tháng đang xem | Đúng | Chỉ nhận phản hồi mới nhất. Trang lịch đã mở được; chưa tái hiện riêng tình huống chuyển tháng nhanh |
 | 2.16 | LOW | `Origin: null` gây 500 | Đúng | Đã sửa trước khi có kết quả Codex (kèm lỗi nặng hơn tự tìm: so Origin với Host sẽ chặn mọi thao tác ghi sau IIS) |
 | 2.17 | MEDIUM | Test chạy đua đạt cả khi thu hồi lỗi | Đúng | Bắt buộc thu hồi và nhận việc đều thành công |
 
 ## Việc cần người quản trị quyết định / duyệt
-1. Cho chạy lại máy chủ dev thử để xem giao diện (đã dừng giữa chừng) — hoặc tự xem theo `TRIEN_KHAI.md` mục "Môi trường thử".
 2. Codex rà lại các sửa đổi vòng 2 (thêm một lượt, tốn hạn mức Codex).
 3. Merge `main` (= deploy), áp migration 050, bật cờ — từng bước riêng.
 4. Kênh đăng thật, nhà cung cấp ảnh/AI, nơi lưu media, vai trò duyệt, xác nhận của Pháp chế về thông báo AI.
