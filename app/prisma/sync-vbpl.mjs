@@ -176,8 +176,10 @@ const tieuDeTuTenFile = (name) => basename(name, extname(name)).replace(/^\d+\s*
 // NĐ 335, 365/2025) nằm trong kho mà chatbot KHÔNG đọc được đoạn nào.
 // Nay: lỗi giữa chừng → xoá sạch bản ghi dở + đánh dấu lỗi, và bước (a) coi bản ghi
 // 0 đoạn là chưa nạp để nạp lại.
-// trangThaiCuoi='cho_thay': bản thay thế nạp xong vẫn VÔ HÌNH với RAG (search chỉ đọc 'san_sang'),
-// chỉ được công bố trong giao dịch thayBanCu. phamVi: lấy của bản cũ để bản nội bộ không lúc nào thành công khai.
+// trangThaiCuoi='dang_xu_ly' ("chờ thay"): bản thay thế nạp xong vẫn VÔ HÌNH với RAG (search chỉ đọc 'san_sang'),
+// chỉ được công bố trong giao dịch thayBanCu. KHÔNG dùng giá trị riêng 'cho_thay': CSDL có CHECK
+// tai_lieu_trangthai_check (migration 034) chỉ cho dang_xu_ly/san_sang/loi — ghi 'cho_thay' là lỗi ngay sau khi
+// đã nhúng xong (phát hiện 12/11/2026, nhánh này khi đó chưa từng chạy tới). phamVi: lấy của bản cũ để bản nội bộ không lúc nào thành công khai.
 async function ingest(f, text, fileHash, { phamVi = PHAM_VI, trangThaiCuoi = 'san_sang' } = {}) {
   const tieuDe = tieuDeTuTenFile(f)
   const chunks = chunkText(text)
@@ -215,9 +217,9 @@ async function xoaHanBanGhi(id) {
   await client.query(`DELETE FROM tai_lieu WHERE id=$1`, [id])
 }
 
-// Bản mới (đang 'cho_thay', RAG chưa thấy) → mang sang những gì người dùng/script hiệu lực đã đặt cho
+// Bản mới (đang chờ thay — 'dang_xu_ly', RAG chưa thấy) → mang sang những gì người dùng/script hiệu lực đã đặt cho
 // bản cũ (tiêu đề sửa tay, mô tả, phạm vi, tình trạng hiệu lực), công bố 'san_sang' và xoá bản cũ trong
-// MỘT giao dịch: RAG không lúc nào thấy hai bản hay mất văn bản. Chết trước COMMIT → bản 'cho_thay'
+// MỘT giao dịch: RAG không lúc nào thấy hai bản hay mất văn bản. Chết trước COMMIT → bản chờ thay
 // là bản dở của kho, lượt sau bước (a) dọn rồi thay lại.
 async function thayBanCu(cu, moiId) {
   await client.query('BEGIN')
@@ -377,7 +379,7 @@ if (!REPORT_ONLY) {
         }
         // NỘI DUNG ĐÃ SỬA: giữ đoạn cũ thì chatbot trả lời theo bản cũ. Nạp bản mới TRƯỚC (lỗi/hết hạn mức thì
         // bản cũ còn nguyên, lượt sau thử lại), rồi mới thay bản cũ.
-        const moi = await ingest(f, text, fileHash, { phamVi: cu.phamVi, trangThaiCuoi: 'cho_thay' })
+        const moi = await ingest(f, text, fileHash, { phamVi: cu.phamVi, trangThaiCuoi: 'dang_xu_ly' })
         try {
           await thayBanCu(cu, moi.id)
         } catch (e) {
