@@ -24,7 +24,7 @@ Cấm: `tsc --noEmit` / `npm run build` toàn dự án trên VPS 6GB (build do G
 | Tích hợp với CSDL | ✘ (không có CSDL thử riêng) |
 | E2E / Staging | ✘ (không có môi trường staging) |
 | RAG: cô lập phạm vi, tài liệu hết hiệu lực, prompt injection | ✘ |
-| Sao lưu / khôi phục | ◐ — có sao lưu; chưa diễn tập khôi phục |
+| Sao lưu / khôi phục | ✔ diễn tập dữ liệu 12/11/2026 22:05: bản `ql_htkt_20261112_020002.dump` (175 MB) khôi phục vào CSDL tạm bằng `pg_restore -j 1` trong 113 giây, 0 lỗi; 142/142 bảng, 552/552 chỉ mục, 25.627/25.627 véc-tơ, 37.251/37.255 dòng (lệch 4 dòng `audit_logs` phát sinh sau 02:00); CSDL tạm đã xoá. Chưa diễn tập: khôi phục đè lên CSDL thật, khôi phục trên máy khác, bản sao lưu ngoài máy (U: có hay không). Nên lặp lại trước mỗi migration lớn |
 
 ## Quy tắc báo cáo kết quả
 Mỗi kết quả ghi: lệnh, commit SHA, môi trường, kết quả **PASS / FAIL / NOT_RUN**, thời điểm. Không ghi PASS nếu chưa chạy. Test mới phải qua kiểm tra đột biến (sửa thử mã trên bản sao → test phải đỏ), xem `LESSONS_LEARNED.md` #16.
