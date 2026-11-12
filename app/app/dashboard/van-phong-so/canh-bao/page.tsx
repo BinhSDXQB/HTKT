@@ -14,14 +14,21 @@ import { classifyContractAlert } from '@/lib/hop-dong-alert'
 import { DOI_TUONG_NHAN_SU_LABEL, doiTuongBadgeClass } from '@/lib/office-labels'
 import { CO_SO_PHAP_LY } from '@/lib/data/co-so-phap-ly-nhan-su'
 import { thoiDiemNghiHuu } from '@/lib/nghi-huu'
+import { doiChieuCapPhoPhong, HAN_DE_XUAT_CAP_PHO, type TrangThaiCapPho } from '@/lib/cap-pho-phong'
 import { GuiCanhBaoTelegramButton } from '@/components/van-phong-so/gui-canh-bao-telegram-button'
 import {
   Briefcase, ChevronRight, TriangleAlert, FileWarning, Wallet, CalendarClock,
   FileDown, FileText, ClipboardList, BellRing, FileClock, Building2, Scale,
-  IdCard, UserX,
+  IdCard, UserX, Users,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+
+const CAP_PHO_BADGE: Record<TrangThaiCapPho, string> = {
+  THUA: 'bg-red-100 text-red-700 border-red-200',
+  THIEU: 'bg-amber-100 text-amber-700 border-amber-200',
+  DU: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+}
 
 function fmtDate(d: Date | null | undefined): string {
   return d ? new Date(d).toLocaleDateString('vi-VN') : '—'
@@ -35,7 +42,7 @@ export default async function CanhBaoPage() {
   const soIds = await getSoToChucIds()
   const list = await db.canBo.findMany({
     where: { toChucId: { in: soIds }, trangThai: { in: ['DANG_CONG_TAC', 'HOP_DONG'] } },
-    include: { chucDanh: { select: { ten: true } }, toChuc: { select: { ten: true } } },
+    include: { chucDanh: { select: { ten: true } }, toChuc: { select: { ten: true, ma: true } } },
     orderBy: [{ toChuc: { thuTu: 'asc' } }, { hoTen: 'asc' }],
   })
 
@@ -95,6 +102,16 @@ export default async function CanhBaoPage() {
     .filter((x) => x.lyDo !== '')
   const chuaCoTaiKhoan = list.filter((cb) => !cb.userId)
 
+  // Chỉ đếm theo phòng, không chỉ ra người dôi dư (xem lib/cap-pho-phong.ts).
+  const capPho = doiChieuCapPhoPhong(list.map((cb) => ({
+    toChucMa: cb.toChuc?.ma,
+    chucVu: cb.chucVu,
+    chucDanhTen: cb.chucDanh?.ten,
+    doiTuong: cb.doiTuong,
+  })))
+  const soPhongLechCapPho = capPho.soPhongThua + capPho.soPhongThieu
+  const conHanDeXuatCapPho = new Date() < HAN_DE_XUAT_CAP_PHO
+
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <nav className="flex items-center gap-1.5 text-sm text-slate-500">
@@ -121,7 +138,58 @@ export default async function CanhBaoPage() {
         <StatCard label="Đến hạn nâng lương" value={napLuong.length} tone={napLuong.length ? 'amber' : 'ok'} href="#nang-luong" />
         <StatCard label="Cán bộ chưa có tài khoản" value={chuaCoTaiKhoan.length} tone={chuaCoTaiKhoan.length ? 'red' : 'ok'} href="#chua-tk" />
         <StatCard label="CCCD chưa hợp lệ" value={cccdChuaHopLe.length} tone={cccdChuaHopLe.length ? 'red' : 'ok'} href="#cccd" />
+        <StatCard label="Phòng thừa/thiếu cấp phó" value={soPhongLechCapPho} tone={soPhongLechCapPho ? 'red' : 'ok'} href="#cap-pho" />
       </div>
+
+      {/* Cấp phó các phòng so với định mức */}
+      <section id="cap-pho" className="rounded-xl border bg-white p-5 space-y-3 scroll-mt-4">
+        <SectionHead icon={Users} color="text-red-600" title="Số lượng cấp phó các phòng so với định mức" count={soPhongLechCapPho}
+          desc="Định mức theo công văn của Sở Xây dựng về rà soát, sắp xếp cấp phó các phòng theo Kết luận 213-KL/TU. Số thực tế đếm trực tiếp từ hồ sơ cán bộ đang công tác." />
+        <p className="text-sm text-slate-700">
+          Tổng cộng: <b>{capPho.tongThucTe}</b> cấp phó / định mức <b>{capPho.tongDinhMuc}</b>
+          {' · '}thừa <b>{capPho.soNguoiThua}</b> người ở {capPho.soPhongThua} phòng
+          {' · '}thiếu <b>{capPho.soNguoiThieu}</b> người ở {capPho.soPhongThieu} phòng.
+        </p>
+        {capPho.soPhongThua > 0 && conHanDeXuatCapPho && (
+          <p className="text-xs text-red-800 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            ⚠️ Phòng thừa cấp phó gửi văn bản đề xuất về Văn phòng Sở <b>trước ngày 07/11/2026</b>, sau khi đánh giá đội ngũ cấp phó và trao đổi nguyện vọng từng người.
+          </p>
+        )}
+        <div className="rounded-lg border overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-left text-xs">
+              <tr>
+                <th className="px-3 py-2 font-semibold">Phòng</th>
+                <th className="px-3 py-2 font-semibold text-center">Công chức</th>
+                <th className="px-3 py-2 font-semibold text-center">Định mức</th>
+                <th className="px-3 py-2 font-semibold text-center">Thực tế</th>
+                <th className="px-3 py-2 font-semibold">Đánh giá</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {capPho.dong.map((d) => (
+                <tr key={d.ma} className={d.trangThai === 'DU' ? '' : 'bg-red-50/40'}>
+                  <td className="px-3 py-2 font-medium text-slate-900">{d.ten}</td>
+                  <td className="px-3 py-2 text-center text-slate-700">{d.soCongChuc}</td>
+                  <td className="px-3 py-2 text-center text-slate-700">{d.dinhMuc}</td>
+                  <td className="px-3 py-2 text-center font-semibold text-slate-900">{d.thucTe}</td>
+                  <td className="px-3 py-2">
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${CAP_PHO_BADGE[d.trangThai]}`}>
+                      {d.trangThai === 'THUA' ? `Thừa ${d.chenhLech}` : d.trangThai === 'THIEU' ? `Thiếu ${-d.chenhLech}` : 'Đủ'}
+                    </span>
+                    {d.canRaLaiDinhMuc && (
+                      <span className="block mt-1 text-xs text-amber-700">Từ 10 công chức trở lên: cần rà lại định mức.</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-[11px] text-slate-400">
+          Bảng chỉ cho biết số lượng theo phòng, không xác định người dôi dư. Việc lựa chọn và bố trí do phòng đề xuất, Lãnh đạo Sở quyết định.
+        </p>
+      </section>
 
       {/* 1. Hồ sơ chưa đầy đủ */}
       <section id="thieu-ho-so" className="rounded-xl border bg-white p-5 space-y-3 scroll-mt-4">

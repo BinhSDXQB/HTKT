@@ -2,6 +2,7 @@ import { requireAuth, canAccessOffice, canAccessHtkt, canAccessCongViec } from '
 import { db } from '@/lib/db'
 import { DashboardChrome } from '@/components/dashboard/dashboard-chrome'
 import { ChatWidget } from '@/components/chatbot/chat-widget'
+import { duocVaoAiWorkspace } from '@/lib/ai-content/may-chu'
 
 export default async function DashboardLayout({
   children,
@@ -51,6 +52,7 @@ export default async function DashboardLayout({
         canOffice={canAccessOffice(user)}
         canHtkt={canAccessHtkt(user)}
         canCongViec={canAccessCongViec(user)}
+        canAi={duocVaoAiWorkspace(user)}
         toChucMa={dbUser?.toChuc?.ma ?? null}
       />
       <main className="lg:ml-64 pt-14 min-h-screen">
