@@ -224,10 +224,12 @@ async function xoaHanBanGhi(id) {
 async function thayBanCu(cu, moiId) {
   await client.query('BEGIN')
   try {
-    await client.query(
+    const { rowCount } = await client.query(
       `UPDATE tai_lieu SET "tieuDe"=$2, "moTa"=$3, "phamVi"=$4, "tinhTrangHieuLuc"=$5, "thayTheBoi"=$6, "ghiChuHieuLuc"=$7,
               "trangThai"='san_sang', "updatedAt"=now() WHERE id=$1`,
       [moiId, cu.tieuDe, cu.moTa, cu.phamVi, cu.tinhTrangHieuLuc, cu.thayTheBoi, cu.ghiChuHieuLuc])
+    // Bản mới đã bị xoá ở nơi khác (API xoá tài liệu không dùng khoá của sync) → KHÔNG xoá bản cũ, nếu không văn bản mất hẳn.
+    if (rowCount !== 1) throw new Error(`Bản mới ${moiId} không còn trong kho (đã bị xoá?) — giữ nguyên bản cũ ${cu.id}`)
     await xoaHanBanGhi(cu.id)
     await client.query('COMMIT')
   } catch (e) {

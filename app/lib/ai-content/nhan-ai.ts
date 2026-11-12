@@ -39,13 +39,30 @@ function chuanNhan(s: string): string {
 }
 
 /**
+ * Ký tự là "chữ" hoặc dấu phụ theo Unicode nhưng hiển thị TRỐNG (Hangul filler, variation selector, tag…): chỉ cấm trong câu
+ * CẤU HÌNH — không cấm trong bài, vì biểu tượng cảm xúc ở tiêu đề dùng variation selector hợp lệ. Viết bằng số mã điểm để
+ * đọc và rà soát được (ký tự vô hình gõ thẳng vào mã nguồn thì không ai nhìn thấy).
+ */
+const KHOANG_KY_TU_TRONG: Array<[number, number]> = [
+  [0x034f, 0x034f], [0x115f, 0x1160], [0x17b4, 0x17b5], [0x180b, 0x180f], [0x3164, 0x3164],
+  [0xfe00, 0xfe0f], [0xffa0, 0xffa0], [0xe0000, 0xe0fff],
+]
+function coKyTuTrong(s: string): boolean {
+  for (const c of s) {
+    const m = c.codePointAt(0)!
+    if (KHOANG_KY_TU_TRONG.some(([a, b]) => m >= a && m <= b)) return true
+  }
+  return false
+}
+
+/**
  * Câu cấu hình hợp lệ: 20–200 ký tự (đủ nằm trọn trong bài đầu của mọi kênh), có chữ, không ký tự ẩn, không chứa dấu ngăn
  * chuỗi. Không hợp lệ → dùng câu mặc định (chặt hơn), không âm thầm chấp nhận một "thông báo" vô hình.
  */
 export function nhanAiTuCauHinh(tho: string | undefined): { nhan: string; loi: string | null } {
   const s = chuanNhan(tho ?? '').replace(/\s+/g, ' ').trim()
   if (!s) return { nhan: NHAN_AI_MAC_DINH, loi: null }
-  const loi = KY_TU_AN.test(tho ?? '') ? 'chứa ký tự ẩn/điều khiển'
+  const loi = KY_TU_AN.test(tho ?? '') || coKyTuTrong(tho ?? '') ? 'chứa ký tự ẩn/điều khiển'
     : s.length < 20 || s.length > 200 ? 'phải dài 20–200 ký tự'
       : !/\p{L}{2,}/u.test(s) ? 'không có chữ'
         : s.includes('———') ? 'chứa dấu ngăn chuỗi bài' : null
@@ -73,12 +90,20 @@ export type LoiNhanAi = 'thieu' | 'sai_vi_tri' | 'bi_che'
 export function loiNhanAi(baiDau: string, nhan: string = NHAN_AI, viTri: ViTriNhanAi = VI_TRI_NHAN_AI): LoiNhanAi | null {
   // Chỉ nhắc tới "AI" trong bài không được tính là thông báo: phải có đúng câu chuẩn.
   // Gộp khoảng trắng và xuống dòng đơn (câu bị ngắt dòng vẫn nhận ra), GIỮ ngắt đoạn để đếm đoạn đứng trước.
-  const phang = chuanNhan(chuanHoa(baiDau)).replace(/[ \t]+/g, ' ').replace(/ ?\n ?/g, '\n').replace(/(?<!\n)\n(?!\n)/g, ' ')
-  const vt = phang.indexOf(chuanNhan(nhan))
-  if (vt < 0) return 'thieu'
+  const phangHoa = (s: string) => s.replace(/[ \t]+/g, ' ').replace(/ ?\n ?/g, '\n').replace(/(?<!\n)\n(?!\n)/g, ' ')
+  const tho = chuanNhan(chuanHoa(baiDau))
+  const cau = chuanNhan(nhan)
+  // Chú thích HTML đã đóng không hiển thị: bỏ khỏi văn bản đem xét, để câu nằm trong chú thích không được tính và
+  // một chú thích đứng trước không làm hỏng thông báo hiển thị thật ở phía sau.
+  const phang = phangHoa(tho.replace(/<!--[\s\S]*?-->/g, ''))
+  const vt = phang.indexOf(cau)
+  // Câu chỉ có trong phần bị bỏ (chú thích) → báo "bị che" thay vì "thiếu" để người soạn hiểu vì sao.
+  if (vt < 0) return phangHoa(tho).includes(cau) ? 'bi_che' : 'thieu'
   const truoc = phang.slice(0, vt)
-  // Nằm trong <!-- … --> chưa đóng (không hiển thị khi dựng Markdown/HTML), hoặc đứng sau ký tự ẩn/đổi hướng chữ.
-  if (truoc.lastIndexOf('<!--') > truoc.lastIndexOf('-->') || KY_TU_AN.test(truoc)) return 'bi_che'
+  // Đứng trước thông báo KHÔNG được có: thẻ HTML hay chú thích chưa đóng (thông báo có thể nằm trong phần tử ẩn như
+  // <span style="display:none">, <details>), định nghĩa tham chiếu Markdown kiểu "[//]: # (" (không hiển thị), ký tự ẩn/đổi
+  // hướng chữ. Đây là chặn theo dấu hiệu, KHÔNG phải dựng trang: khi có adapter Website thật phải kiểm trên văn bản đã dựng.
+  if (/<[A-Za-z/!?]/.test(truoc) || /\[[^\]\n]*\]:\s*\S+\s*[("'“]{0,2}$/.test(truoc) || KY_TU_AN.test(truoc)) return 'bi_che'
   if (viTri === 'bat_ky') return null
   // Phần đứng trước = tiêu đề. Bỏ dấu "#" của tiêu đề Markdown và tối đa 2 ký tự bao câu ( " “ [ — KHÔNG bỏ vô hạn.
   const tieuDe = truoc.replace(/[(\[“"]{0,2}$/, '').trim().replace(/^#{1,6} +/, '')
@@ -89,7 +114,7 @@ export function loiNhanAi(baiDau: string, nhan: string = NHAN_AI, viTri: ViTriNh
 /** Câu báo lỗi cho người dùng — dùng chung cho cổng và giao diện. Tách rõ căn cứ pháp lý với quy định của hệ thống. */
 export function thongBaoLoiNhanAi(l: LoiNhanAi, nhan: string = NHAN_AI): string {
   if (l === 'thieu') return `Thiếu thông báo AI (Luật 134/2025/QH15 Điều 11 khoản 3: phải thông báo rõ ràng). Thêm đúng câu: "${nhan}"`
-  if (l === 'bi_che') return `Thông báo AI đang bị che (nằm trong chú thích HTML hoặc sau ký tự ẩn) — NĐ 142/2026/NĐ-CP Điều 18 khoản 3 điểm c: không được che giấu hoặc làm giảm khả năng nhận biết. Đặt câu "${nhan}" thành văn bản hiển thị bình thường.`
+  if (l === 'bi_che') return `Thông báo AI đang bị che (nằm trong chú thích/thẻ HTML, định nghĩa tham chiếu Markdown, hoặc sau ký tự ẩn) — NĐ 142/2026/NĐ-CP Điều 18 khoản 3 điểm c: không được che giấu hoặc làm giảm khả năng nhận biết. Đặt câu "${nhan}" thành văn bản hiển thị bình thường.`
   return `Theo quy định xuất bản của hệ thống, thông báo AI đứng ngay sau tiêu đề, trước nội dung — để bảo đảm NĐ 142/2026/NĐ-CP Điều 18 khoản 3 điểm b ("trước hoặc tại thời điểm người tiếp nhận tiếp cận nội dung"). Chuyển câu "${nhan}" lên đầu bài.`
 }
 

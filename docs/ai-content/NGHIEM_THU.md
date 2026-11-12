@@ -233,3 +233,20 @@ VERIFIED: CSDL `ql_htkt` có `CHECK ("trangThai" = ANY (ARRAY['dang_xu_ly','san_
 | `tsc --noEmit` / `npm run build` toàn dự án | NOT_RUN (quy tắc RAM 6GB) |
 
 Chưa làm trong lần này (giữ nguyên trạng thái ở các mục trên): bấm "Đã đăng"/"Không có bài" trên lịch đăng tay bằng trình duyệt; vai trò lãnh đạo và cán bộ Văn phòng thật; smoke 190 route; diễn tập khôi phục dữ liệu; lệnh PM2 của worker; chặn nút Quay lại khi còn nháp; Codex rà các sửa vòng 5.
+
+## Codex vòng 6 (12/11/2026) — rà các sửa vòng 5 (người dùng yêu cầu, vượt giới hạn 2 vòng cấp L)
+
+Codex chỉ đọc trên `5ea6ccc`, 8 phát hiện (2 HIGH, 4 MEDIUM, 2 LOW); không thấy lỗi mới ở `gopTheoKenh`, `kenhDaDang`, đăng lại, thứ tự khoá, `lam`/`nen`, số điều khoản trong thông báo lỗi. Claude tự kiểm bằng đọc mã và chạy. Sau sửa: `npm test` 152/152 · tích hợp 51/51 · Prisma 7/7 · worker `--thu --once` chạy được · ESLint 0 lỗi · kiểm kiểu giới hạn 22 tệp 0 lỗi. Đột biến: trả `nhan-ai.ts` về bản cũ thì ca mới đỏ ("span ẩn"). Các sửa vòng 6 CHƯA được Codex rà lại. `tsc`/build toàn dự án: NOT_RUN.
+
+| # | Mức Codex | Kiểm chứng | Xử lý |
+|---|---|---|---|
+| 1 | HIGH | Đúng (đọc mã): thông báo nằm trong `<span style="display:none">`, `<details>`, `[//]: # (…)` vẫn qua cổng. Mức thực tế ở M1 thấp hơn: chưa có kênh nào tự dựng HTML/Markdown (đăng tay, người duyệt đọc văn bản thô) | Đã sửa theo dấu hiệu: trước thông báo có thẻ HTML, chú thích chưa đóng hoặc định nghĩa tham chiếu Markdown → `bi_che` (cả hai chế độ); 8 ca test. GIỚI HẠN: không phải dựng trang — CSS ngoài, lớp ẩn… không bắt được; khi làm adapter Website phải kiểm trên văn bản ĐÃ DỰNG. Tác dụng phụ: tiêu đề có thẻ HTML đứng trước thông báo bị chặn (thông báo lỗi nêu rõ) |
+| 2 | HIGH | Đúng (đọc mã `thayBanCu`): bản mới bị xoá qua API giữa lúc nạp và lúc thay → `UPDATE` 0 hàng nhưng vẫn xoá bản cũ, văn bản mất khỏi kho. Chưa tái hiện trên PostgreSQL | Đã sửa `prisma/sync-vbpl.mjs`: `rowCount !== 1` → ném lỗi, ROLLBACK, giữ bản cũ; lượt sau nạp lại. `node --check` đạt. LƯU Ý: tác vụ đồng bộ 15 phút chạy thẳng từ thư mục này nên sửa có hiệu lực ngay; nhánh này chỉ chạy khi có tệp trong kho bị sửa nội dung. Hoàn tác: `git checkout app/prisma/sync-vbpl.mjs` |
+| 3 | MEDIUM | Đúng (chạy thử): bộ đọc `.env` tự viết của worker đọc sai khi có chú thích cuối dòng hoặc BOM → worker dùng câu/vị trí khác web | Đã sửa: worker dùng `dotenv.parse` (thư viện có sẵn) cho cả hai khoá và cờ bật/tắt. Thử tệp giả có BOM + CRLF + chú thích cuối dòng + dấu nháy: đọc đúng cả ba khoá |
+| 4 | MEDIUM | Đúng (chạy thử): câu cấu hình toàn Hangul filler hoặc variation selector được nhận. Chỉ người sửa được `.env` mới gây ra → hạ LOW | Đã sửa: `coKyTuTrong` (bảng mã điểm, chỉ áp cho câu cấu hình — không áp cho bài vì biểu tượng cảm xúc dùng variation selector); 3 ca test + 1 ca "tiêu đề có biểu tượng cảm xúc vẫn đạt" |
+| 5 | MEDIUM | Đúng theo mã, CHƯA tự tái hiện: tiêu đề 300 + câu cấu hình 200 ký tự → bản Threads tự sinh cắt đôi câu, cổng báo thiếu. Hỏng theo hướng an toàn (bị chặn, người soạn sửa tay); câu mặc định 70 ký tự không gặp | Hoãn (LOW) |
+| 6 | MEDIUM | Đúng: chú thích chứa câu đứng trước làm chặn cả thông báo hiển thị thật phía sau | Đã sửa: bỏ chú thích đã đóng khỏi văn bản đem xét; câu chỉ có trong chú thích → `bi_che`; test cả hai chế độ |
+| 7 | LOW | Đúng (đọc mã): 3 giây miễn hỏi sau khi đồng ý rời trang áp cho mọi lần rời trang | Hoãn; cùng nhóm với nút Quay lại chưa chặn |
+| 8 | LOW | Đúng theo mã, chưa tự chạy: chữ `ß` viết hoa thành `SS` làm tiêu đề Facebook/LinkedIn dài 301. Tiếng Việt không có chữ đổi độ dài khi viết hoa; hỏng theo hướng bị chặn | Hoãn |
+
+Phát hiện phụ khi sửa: công cụ ghi tệp đổi mã thoát `\uXXXX` (BMP) thành ký tự thật, nên hai biểu thức ký tự ẩn có sẵn trong `nhan-ai.ts` chứa ký tự vô hình gõ thẳng (đã in mã điểm ra kiểm: đúng tập ghi trong chú thích, hoạt động đúng). Mã mới dùng bảng số mã điểm và dạng `\u{…}` (không bị đổi).

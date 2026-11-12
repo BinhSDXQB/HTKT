@@ -14,6 +14,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import pg from 'pg'
+import { parse as docDotenv } from 'dotenv'
 import { APP, moPoolThu, dbTuPool } from './_csdl-thu.mjs'
 
 const MOT_LAN = process.argv.includes('--once')
@@ -22,9 +23,12 @@ const CHU_KY_MS = 60_000
 const TOI_DA_MOI_VONG = 20
 const HAN_ADAPTER_MS = 30_000
 
+// Đọc .env bằng chính bộ phân tích dotenv (web cũng nạp .env theo cú pháp này): BOM đầu tệp, chú thích cuối dòng, dấu nháy
+// phải cho cùng kết quả ở web và worker — lệch là bài qua cổng web nhưng bị worker huỷ.
+const docTepEnv = () => docDotenv(readFileSync(join(APP, '.env'), 'utf8').replace(/^\u{FEFF}/u, ''))
 function docEnv() {
-  const t = readFileSync(join(APP, '.env'), 'utf8')
-  return (k) => process.env[k] || (t.match(new RegExp(`^${k}=(.*)$`, 'm'))?.[1].trim().replace(/^["']|["']$/g, '') ?? '')
+  const t = docTepEnv()
+  return (k) => process.env[k] || (t[k] ?? '').trim()
 }
 const env = docEnv()
 // Câu thông báo AI và quy định vị trí được đọc MỘT LẦN lúc nạp module nghiệp vụ (hằng số). Worker không chạy qua Next nên
@@ -38,8 +42,7 @@ const { aiContentBat } = await import('../../lib/ai-content/nghiep-vu.ts')
 function coBat() {
   if (THU) return true
   try {
-    const dong = readFileSync(join(APP, '.env'), 'utf8').match(/^AI_CONTENT_ENABLED=(.*)$/m)
-    return aiContentBat({ AI_CONTENT_ENABLED: dong?.[1].trim().replace(/^["']|["']$/g, '') })
+    return aiContentBat({ AI_CONTENT_ENABLED: docTepEnv().AI_CONTENT_ENABLED?.trim() })
   } catch { return false }     // không đọc được .env → coi như tắt
 }
 

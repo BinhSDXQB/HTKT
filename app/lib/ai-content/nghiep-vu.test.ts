@@ -76,6 +76,20 @@ test('cổng xuất bản: nội dung AI có thể gây nhầm lẫn phải có 
   assert.equal(loiNhanAi(`<!-- ghi chú -->\n\n${NHAN_AI}\n\nThân`), null, 'chú thích đã đóng trước thông báo: hợp lệ')
   assert.equal(loiNhanAi(`Tiêu đề‮\n\n${NHAN_AI}`), 'bi_che', '#1: ký tự đổi hướng chữ đứng trước')
   assert.equal(loiNhanAi(`A\n\nB\n\n<!--${NHAN_AI}-->`, NHAN_AI, 'bat_ky'), 'bi_che', 'chế độ bat_ky vẫn không nhận thông báo bị che')
+  // Codex vòng 6: phần tử ẩn, định nghĩa tham chiếu Markdown; chú thích chứa câu không làm hỏng thông báo thật phía sau.
+  for (const vt of ['dau', 'bat_ky'] as const) {
+    assert.equal(loiNhanAi(`<span style="display:none">${NHAN_AI}</span>\n\nThân`, NHAN_AI, vt), 'bi_che', `span ẩn (${vt})`)
+    assert.equal(loiNhanAi(`<details><summary>Ghi chú</summary>${NHAN_AI}</details>\n\nThân`, NHAN_AI, vt), 'bi_che', `details (${vt})`)
+    assert.equal(loiNhanAi(`[//]: # (${NHAN_AI})\n\nThân`, NHAN_AI, vt), 'bi_che', `tham chiếu Markdown (${vt})`)
+    assert.equal(loiNhanAi(`Tiêu đề\n\n<!-- chưa đóng\n\n${NHAN_AI}`, NHAN_AI, vt), 'bi_che', `chú thích chưa đóng (${vt})`)
+    assert.equal(loiNhanAi(`<!-- ${NHAN_AI} -->\n\n${NHAN_AI}\n\nThân`, NHAN_AI, vt), null, `chú thích chứa câu + câu hiển thị thật (${vt})`)
+  }
+  assert.equal(loiNhanAi(`\u{1F4E2}\u{FE0F} Thông báo lịch cắt nước\n\n${NHAN_AI}\n\nThân`), null, 'biểu tượng cảm xúc ở tiêu đề không bị coi là ký tự ẩn')
+  assert.equal(loiNhanAi(`Chi phí < 5 triệu\n\n${NHAN_AI}\n\nThân`), null, 'dấu < thường trong tiêu đề không phải thẻ')
+  for (const x of ['\u{3164}'.repeat(20), 'aa' + '\u{FE0F}'.repeat(20), 'Nội dung do AI tạo ra\u{E0041}\u{E0042} thật']) {
+    assert.ok(nhanAiTuCauHinh(x).loi, 'câu cấu hình có ký tự hiển thị trống bị từ chối')
+    assert.equal(nhanAiTuCauHinh(x).nhan, NHAN_AI_MAC_DINH)
+  }
   assert.match(kiemTraCongXuatBan({ ...d, noiDungSeDang: `T\n\n<!--${NHAN_AI}-->` })[0], /Điều 18 khoản 3 điểm c/)
   assert.match(cuoi[0], /Theo quy định xuất bản của hệ thống/, '#9: không viết như thể luật bắt buộc đúng vị trí')
   for (const n of [298, 299, 300]) {
