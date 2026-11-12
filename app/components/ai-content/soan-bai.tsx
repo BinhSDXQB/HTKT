@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, CalendarClock, Check, CircleAlert, Info, Loader2, Save, Search, Send, ShieldCheck, Undo2, Wand2, X,
+  ArrowLeft, CalendarClock, Check, CircleAlert, Eye, Info, Loader2, Save, Search, Send, ShieldCheck, Undo2, Wand2, X,
 } from 'lucide-react'
 import {
   goi, gioVn, LoiGoi, NhanLich, NhanNoiDung, NUT_CHINH, NUT_NGUY, NUT_PHU, O_NHAP, TEN_KENH, TEN_LOI_LICH, TEN_PHAN_LOAI, THE,
@@ -75,6 +75,8 @@ export function AiSoanBai({ id }: { id?: string }) {
 
   // Biến thể
   const [kenh, setKenh] = useState<string>('facebook')
+  // Phần đang mở trong khung soạn: 'goc' (bài gốc) hoặc mã kênh. `kenh` giữ kênh mở gần nhất cho các phép tính theo kênh.
+  const [tab, setTab] = useState<string>('goc')
   const [banNhapBt, setBanNhapBt] = useState<Record<string, string>>({})
 
   // Duyệt & lịch
@@ -256,6 +258,17 @@ export function AiSoanBai({ id }: { id?: string }) {
     if (nguonXau.length) thieu.push(`${nguonXau.length} tài liệu nguồn không dùng được cho bài công khai.`)
   }
 
+  // Thanh bước: chỉ để người dùng biết bài đang ở đâu — suy từ dữ liệu máy chủ, không lưu cờ, không thay cho kiểm tra của cổng.
+  const coLichHienHanh = !!ct?.lich.some((l) => l.version_id === ct.bai.current_version_id && !['CANCELLED', 'EXPIRED', 'FAILED'].includes(l.status))
+  const buoc = [
+    { ten: 'Soạn bài', xong: !!ct },
+    { ten: 'Bản theo kênh', xong: !!ct && ct.bienThe.length > 0 },
+    { ten: 'Phê duyệt', xong: duyetConHieuLuc },
+    { ten: 'Đặt lịch', xong: duyetConHieuLuc && coLichHienHanh },
+  ]
+  const buocHienTai = buoc.findIndex((b) => !b.xong)
+  const lopTab = (chon: boolean) => `rounded-md px-3 py-1.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${chon ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
@@ -272,9 +285,40 @@ export function AiSoanBai({ id }: { id?: string }) {
         )}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-5">
-        {/* ── Cột trái: bài gốc ── */}
-        <section className={`${THE} space-y-3 lg:col-span-3`} aria-label="Bài gốc">
+      {ct && (
+        <ol className="flex flex-wrap gap-1.5 text-xs" aria-label="Các bước của bài">
+          {buoc.map((b, i) => (
+            <li key={b.ten} aria-current={i === buocHienTai ? 'step' : undefined}
+              className={`flex items-center gap-1 rounded-md px-2 py-1 ${b.xong ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200' : i === buocHienTai ? 'bg-indigo-50 font-medium text-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'}`}>
+              {b.xong ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <span aria-hidden="true">{i + 1}</span>}
+              {b.ten}{b.xong ? <span className="sr-only"> (xong)</span> : null}
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <div className="grid items-start gap-4 lg:grid-cols-5">
+        {/* ── Cột trái: MỘT khung soạn, mỗi lúc một phần (bài gốc hoặc một kênh) — khớp quy tắc lưu từng phần ── */}
+        <div className="space-y-4 lg:col-span-3">
+          <section className={THE} aria-label="Soạn nội dung">
+            {ct && (
+              <div className="mb-3 flex flex-wrap gap-1 border-b border-slate-100 pb-3 dark:border-slate-800" role="tablist" aria-label="Phần đang soạn">
+                <button role="tab" aria-selected={tab === 'goc'} onClick={() => setTab('goc')} className={lopTab(tab === 'goc')}>
+                  Bài gốc{chuaLuu ? ' •' : ''}
+                </button>
+                {KENH.map((k) => {
+                  const co = ct.bienThe.some((b) => b.channel === k)
+                  return (
+                    <button key={k} role="tab" aria-selected={tab === k} onClick={() => { setTab(k); setKenh(k) }} className={lopTab(tab === k)}>
+                      {TEN_KENH[k]}{co ? ' ✓' : ''}{kenhChuaLuu.includes(k) ? ' •' : ''}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {tab === 'goc' || !ct ? (
+              <div className="space-y-3">
           <div>
             <label htmlFor="ai-tieu-de" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Tiêu đề</label>
             <input id="ai-tieu-de" value={tieuDe} onChange={(e) => setTieuDe(e.target.value)} maxLength={300} className={O_NHAP} placeholder="Tiêu đề bài viết" />
@@ -349,16 +393,93 @@ export function AiSoanBai({ id }: { id?: string }) {
             {chuaLuu && kenhChuaLuu.length > 0 && <span className="text-xs text-amber-700 dark:text-amber-300">Cả bài gốc và bản {tenKenhChuaLuu} đều chưa lưu: hãy bỏ thay đổi (hoặc chép ra ngoài) ở một bên, lưu bên còn lại rồi làm lại bên kia — mỗi lần lưu tải lại toàn bộ.</span>}
             {ct && chuaLuu && <button onClick={() => nap(ct)} disabled={ban} className={NUT_PHU}><Undo2 className="h-4 w-4" />Bỏ thay đổi</button>}
           </div>
-        </section>
+              </div>
+            ) : (
+              <div>
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <button type="button" onClick={() => setTab('goc')} className="min-w-0 flex-1 truncate text-left text-xs text-slate-500 underline-offset-2 hover:underline dark:text-slate-400">
+                    Thuộc tính bài: {TEN_PHAN_LOAI[ct.bai.classification]} · {ct.bai.ai_generated ? 'có dùng AI' : 'không dùng AI'} · {ct.nguon.length} tài liệu nguồn — sửa ở tab Bài gốc
+                  </button>
+            <button disabled={ban || coNhapDo} className={`${NUT_PHU} ml-auto`} title={chuaLuu ? 'Lưu bài gốc trước' : kenhChuaLuu.length ? `Bản ${tenKenhChuaLuu} đang có thay đổi chưa lưu — lưu hoặc bỏ nó trước` : undefined}
+              onClick={() => hanhDong({ loai: 'bien_the_tu_dong', kenh: [kenh], bamNen: nen?.bam }, `Đã tạo bản ${TEN_KENH[kenh]} từ bài gốc`)}>
+              <Wand2 className="h-4 w-4" />Tạo từ bài gốc
+            </button>
+                </div>
+              <label htmlFor="ai-bien-the" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Nội dung sẽ đăng trên {TEN_KENH[kenh]}</label>
+              <textarea id="ai-bien-the" value={banNhap} onChange={(e) => setBanNhapBt({ ...banNhapBt, [kenh]: e.target.value })} rows={12} className={`${O_NHAP} leading-relaxed`}
+                placeholder={`Chưa có bản ${TEN_KENH[kenh]}. Bấm "Tạo từ bài gốc" hoặc tự soạn.`} />
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 text-xs">
+                <span className={vuot ? 'font-medium text-rose-700 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}>
+                  {doan.length > 1 ? `${doan.length} bài nối tiếp · dài nhất ${Math.max(...doan.map((d) => d.length))}` : `${banNhap.length}`} ký tự
+                  {ch?.gioiHanKyTu ? ` / giới hạn ${ch.gioiHanKyTu} mỗi bài` : ''}
+                </span>
+                {ch && !ch.daXacMinh && <span className="text-amber-700 dark:text-amber-300">Giới hạn kênh chưa đối chiếu tài liệu chính thức: {ch.ghiChu}</span>}
+              </div>
+              {ct.bai.ai_generated && ct.bai.may_mislead && (() => {
+                // Cùng hàm với cổng xuất bản: giao diện báo đúng điều máy chủ sẽ chặn.
+                const l = loiNhanAi(doan[0], ct.nhanAi, ct.viTriNhanAi)
+                if (!l) return null
+                return <p className="mt-1 text-xs font-medium text-rose-700 dark:text-rose-300">{thongBaoLoiNhanAi(l, ct.nhanAi)}</p>
+              })()}
+              <div className="mt-2 flex items-center gap-2">
+                <button disabled={ban || !btChuaLuu || !banNhap.trim() || vuot || chuaLuu || kenhChuaLuu.some((k) => k !== kenh)} className={NUT_CHINH}
+                  onClick={() => {
+                    if (tt !== 'DRAFT' && !window.confirm('Sửa bản theo kênh sẽ đưa bài về bản nháp, huỷ lịch chưa đăng và phải duyệt lại. Tiếp tục?')) return
+                    void hanhDong({ loai: 'bien_the', kenh, noiDung: banNhap, phienBanNen: nen?.phienBanId, bienTheNen: nen?.bienThe[kenh] ?? '' }, `Đã lưu bản ${TEN_KENH[kenh]}`)
+                  }}>
+                  <Save className="h-4 w-4" />Lưu bản {TEN_KENH[kenh]}
+                </button>
+                {btChuaLuu && <button type="button" onClick={() => setBanNhapBt({ ...banNhapBt, [kenh]: btHienTai?.body ?? '' })} disabled={ban} className={NUT_PHU}><Undo2 className="h-4 w-4" />Bỏ thay đổi</button>}
+                {btChuaLuu && <span className="text-sm text-amber-700 dark:text-amber-300">
+                  {chuaLuu ? 'Lưu bài gốc trước (lưu từng phần một để không mất thay đổi)' : kenhChuaLuu.some((k) => k !== kenh) ? `Lưu bản ${kenhChuaLuu.filter((k) => k !== kenh).map((k) => TEN_KENH[k]).join(', ')} trước` : 'Chưa lưu'}
+                </span>}
+              </div>
+              </div>
+            )}
+          </section>
 
-        {/* ── Cột phải: quy trình ── */}
-        <div className="space-y-4 lg:col-span-2">
+      {ct && ct.lichSuPhienBan.length > 1 && (
+        <section className={THE} aria-label="Lịch sử phiên bản">
+          <h2 className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Lịch sử phiên bản</h2>
+          <ul className="text-sm text-slate-600 dark:text-slate-300">
+            {ct.lichSuPhienBan.map((v) => <li key={v.id}>Phiên bản {v.version_no} · {v.nguoi} · {gioVn(v.created_at)}{v.id === ct.bai.current_version_id ? ' (hiện hành)' : ''}</li>)}
+          </ul>
+        </section>
+      )}
+        </div>
+
+        {/* ── Cột phải: xem trước → phê duyệt → lịch. Người duyệt đọc bản sẽ đăng và bấm Duyệt ở cùng một chỗ ── */}
+        <div className="space-y-4 lg:sticky lg:top-20 lg:col-span-2 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
           {!ct ? (
             <section className={THE}>
               <p className="flex gap-2 text-sm text-slate-600 dark:text-slate-300"><Info className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />Tạo bài trước; sau đó tạo bản theo từng kênh, gửi lãnh đạo duyệt rồi đặt lịch.</p>
             </section>
           ) : (
             <>
+              <section className={THE} aria-label="Xem trước">
+                <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100"><Eye className="h-4 w-4" />Xem trước · {tab === 'goc' ? 'Bài gốc' : TEN_KENH[kenh]}</h2>
+                {tab === 'goc' ? (
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                    <p className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{tieuDe || 'Chưa có tiêu đề'}</p>
+                    <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-800 dark:text-slate-200">{noiDung || 'Chưa có nội dung.'}</p>
+                    <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Bài gốc không đăng trực tiếp. Mở tab của từng kênh để xem đúng bản sẽ đăng.</p>
+                  </div>
+                ) : (
+                  <>
+              {banNhap.trim() ? (
+                <div className="space-y-2">
+                  {doan.map((d, i) => (
+                    <div key={i} className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                      <p className="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">Sở Xây dựng Quảng Trị{doan.length > 1 ? ` · bài ${i + 1}/${doan.length}` : ''}</p>
+                      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-800 dark:text-slate-200">{d}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">Chưa có nội dung để xem trước.</p>}
+                  </>
+                )}
+              </section>
+
               <section className={THE} aria-label="Phê duyệt">
                 <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100"><ShieldCheck className="h-4 w-4" />Phê duyệt</h2>
                 {tt === 'DRAFT' || tt === 'REJECTED' ? (
@@ -483,13 +604,13 @@ export function AiSoanBai({ id }: { id?: string }) {
                           </p>
                         )}
                         {((l.status === 'SCHEDULED' && l.adapter === 'manual') || l.status === 'UNKNOWN_OUTCOME') && (
-                          <div className="mt-1 flex gap-1.5">
-                            <input value={url[l.id] ?? ''} onChange={(e) => setUrl({ ...url, [l.id]: e.target.value })} placeholder="https://… đường dẫn bài đã đăng" aria-label="Đường dẫn bài đã đăng" className={`${O_NHAP} py-1.5`} />
-                            <button disabled={ban || !/^https:\/\//i.test((url[l.id] ?? '').trim())} className={NUT_PHU}
+                          <div className="mt-1 flex flex-wrap gap-1.5">
+                            <input value={url[l.id] ?? ''} onChange={(e) => setUrl({ ...url, [l.id]: e.target.value })} placeholder="https://… đường dẫn bài đã đăng" aria-label="Đường dẫn bài đã đăng" className={`${O_NHAP} min-w-40 flex-1 py-1.5`} />
+                            <button disabled={ban || !/^https:\/\//i.test((url[l.id] ?? '').trim())} className={`${NUT_PHU} shrink-0 whitespace-nowrap`}
                               onClick={() => hanhDongLich(l.id, l.status === 'UNKNOWN_OUTCOME' ? { loai: 'doi_soat', ketQua: 'PUBLISHED', url: url[l.id] } : { loai: 'xac_nhan', url: url[l.id] }, 'Đã ghi nhận bài đăng')}>
                               Đã đăng
                             </button>
-                            {l.status === 'UNKNOWN_OUTCOME' && <button disabled={ban} className={NUT_NGUY} onClick={() => hanhDongLich(l.id, { loai: 'doi_soat', ketQua: 'FAILED' }, 'Đã ghi nhận: không có bài')}>Không có bài</button>}
+                            {l.status === 'UNKNOWN_OUTCOME' && <button disabled={ban} className={`${NUT_NGUY} shrink-0 whitespace-nowrap`} onClick={() => hanhDongLich(l.id, { loai: 'doi_soat', ketQua: 'FAILED' }, 'Đã ghi nhận: không có bài')}>Không có bài</button>}
                           </div>
                         )}
                       </li>
@@ -501,85 +622,6 @@ export function AiSoanBai({ id }: { id?: string }) {
           )}
         </div>
       </div>
-
-      {/* ── Bản theo kênh ── */}
-      {ct && (
-        <section className={THE} aria-label="Bản theo kênh">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <h2 className="mr-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Bản theo kênh</h2>
-            <div className="flex flex-wrap gap-1" role="tablist" aria-label="Kênh">
-              {KENH.map((k) => {
-                const co = ct.bienThe.some((b) => b.channel === k)
-                return (
-                  <button key={k} role="tab" aria-selected={kenh === k} onClick={() => setKenh(k)}
-                    className={`rounded-md px-3 py-1.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${kenh === k ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`}>
-                    {TEN_KENH[k]}{co ? ' ✓' : ''}{kenhChuaLuu.includes(k) ? ' •' : ''}
-                  </button>
-                )
-              })}
-            </div>
-            <button disabled={ban || coNhapDo} className={`${NUT_PHU} ml-auto`} title={chuaLuu ? 'Lưu bài gốc trước' : kenhChuaLuu.length ? `Bản ${tenKenhChuaLuu} đang có thay đổi chưa lưu — lưu hoặc bỏ nó trước` : undefined}
-              onClick={() => hanhDong({ loai: 'bien_the_tu_dong', kenh: [kenh], bamNen: nen?.bam }, `Đã tạo bản ${TEN_KENH[kenh]} từ bài gốc`)}>
-              <Wand2 className="h-4 w-4" />Tạo từ bài gốc
-            </button>
-          </div>
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div>
-              <label htmlFor="ai-bien-the" className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Nội dung sẽ đăng trên {TEN_KENH[kenh]}</label>
-              <textarea id="ai-bien-the" value={banNhap} onChange={(e) => setBanNhapBt({ ...banNhapBt, [kenh]: e.target.value })} rows={12} className={`${O_NHAP} leading-relaxed`}
-                placeholder={`Chưa có bản ${TEN_KENH[kenh]}. Bấm "Tạo từ bài gốc" hoặc tự soạn.`} />
-              <div className="mt-1 flex flex-wrap items-center gap-x-3 text-xs">
-                <span className={vuot ? 'font-medium text-rose-700 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}>
-                  {doan.length > 1 ? `${doan.length} bài nối tiếp · dài nhất ${Math.max(...doan.map((d) => d.length))}` : `${banNhap.length}`} ký tự
-                  {ch?.gioiHanKyTu ? ` / giới hạn ${ch.gioiHanKyTu} mỗi bài` : ''}
-                </span>
-                {ch && !ch.daXacMinh && <span className="text-amber-700 dark:text-amber-300">Giới hạn kênh chưa đối chiếu tài liệu chính thức: {ch.ghiChu}</span>}
-              </div>
-              {ct.bai.ai_generated && ct.bai.may_mislead && (() => {
-                // Cùng hàm với cổng xuất bản: giao diện báo đúng điều máy chủ sẽ chặn.
-                const l = loiNhanAi(doan[0], ct.nhanAi, ct.viTriNhanAi)
-                if (!l) return null
-                return <p className="mt-1 text-xs font-medium text-rose-700 dark:text-rose-300">{thongBaoLoiNhanAi(l, ct.nhanAi)}</p>
-              })()}
-              <div className="mt-2 flex items-center gap-2">
-                <button disabled={ban || !btChuaLuu || !banNhap.trim() || vuot || chuaLuu || kenhChuaLuu.some((k) => k !== kenh)} className={NUT_CHINH}
-                  onClick={() => {
-                    if (tt !== 'DRAFT' && !window.confirm('Sửa bản theo kênh sẽ đưa bài về bản nháp, huỷ lịch chưa đăng và phải duyệt lại. Tiếp tục?')) return
-                    void hanhDong({ loai: 'bien_the', kenh, noiDung: banNhap, phienBanNen: nen?.phienBanId, bienTheNen: nen?.bienThe[kenh] ?? '' }, `Đã lưu bản ${TEN_KENH[kenh]}`)
-                  }}>
-                  <Save className="h-4 w-4" />Lưu bản {TEN_KENH[kenh]}
-                </button>
-                {btChuaLuu && <button type="button" onClick={() => setBanNhapBt({ ...banNhapBt, [kenh]: btHienTai?.body ?? '' })} disabled={ban} className={NUT_PHU}><Undo2 className="h-4 w-4" />Bỏ thay đổi</button>}
-                {btChuaLuu && <span className="text-sm text-amber-700 dark:text-amber-300">
-                  {chuaLuu ? 'Lưu bài gốc trước (lưu từng phần một để không mất thay đổi)' : kenhChuaLuu.some((k) => k !== kenh) ? `Lưu bản ${kenhChuaLuu.filter((k) => k !== kenh).map((k) => TEN_KENH[k]).join(', ')} trước` : 'Chưa lưu'}
-                </span>}
-              </div>
-            </div>
-            <div>
-              <p className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-300">Xem trước</p>
-              {banNhap.trim() ? (
-                <div className="space-y-2">
-                  {doan.map((d, i) => (
-                    <div key={i} className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
-                      <p className="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">Sở Xây dựng Quảng Trị{doan.length > 1 ? ` · bài ${i + 1}/${doan.length}` : ''}</p>
-                      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-800 dark:text-slate-200">{d}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">Chưa có nội dung để xem trước.</p>}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {ct && ct.lichSuPhienBan.length > 1 && (
-        <section className={THE} aria-label="Lịch sử phiên bản">
-          <h2 className="mb-2 text-sm font-semibold text-slate-900 dark:text-slate-100">Lịch sử phiên bản</h2>
-          <ul className="text-sm text-slate-600 dark:text-slate-300">
-            {ct.lichSuPhienBan.map((v) => <li key={v.id}>Phiên bản {v.version_no} · {v.nguoi} · {gioVn(v.created_at)}{v.id === ct.bai.current_version_id ? ' (hiện hành)' : ''}</li>)}
-          </ul>
-        </section>
-      )}
     </div>
   )
 }

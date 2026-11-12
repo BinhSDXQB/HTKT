@@ -250,3 +250,28 @@ Codex chỉ đọc trên `5ea6ccc`, 8 phát hiện (2 HIGH, 4 MEDIUM, 2 LOW); kh
 | 8 | LOW | Đúng theo mã, chưa tự chạy: chữ `ß` viết hoa thành `SS` làm tiêu đề Facebook/LinkedIn dài 301. Tiếng Việt không có chữ đổi độ dài khi viết hoa; hỏng theo hướng bị chặn | Hoãn |
 
 Phát hiện phụ khi sửa: công cụ ghi tệp đổi mã thoát `\uXXXX` (BMP) thành ký tự thật, nên hai biểu thức ký tự ẩn có sẵn trong `nhan-ai.ts` chứa ký tự vô hình gõ thẳng (đã in mã điểm ra kiểm: đúng tập ghi trong chú thích, hoạt động đúng). Mã mới dùng bảng số mã điểm và dạng `\u{…}` (không bị đổi).
+
+## Sắp lại khung trang soạn bài (12/11/2026, người dùng duyệt bản xem trước)
+
+Chỉ đổi bố cục trong `components/ai-content/soan-bai.tsx`; các khối mã cũ được chuyển chỗ nguyên vẹn (không đổi API, quy tắc nghiệp vụ, nền băm, điều kiện khoá nút).
+
+- Thanh bước đầu trang: Soạn bài → Bản theo kênh → Phê duyệt → Đặt lịch (suy từ dữ liệu máy chủ, chỉ để chỉ dẫn; cổng vẫn là nơi quyết định).
+- Cột trái: MỘT khung soạn có tab Bài gốc / Facebook / LinkedIn / Threads / Website — mỗi lúc sửa một phần, khớp quy tắc lưu từng phần. Ở tab kênh có dòng tóm tắt thuộc tính bài, bấm để về tab Bài gốc.
+- Cột phải (dính theo màn hình trên máy tính): Xem trước của tab đang mở → Phê duyệt → Lịch xuất bản. Người duyệt đọc bản sẽ đăng và bấm Duyệt ở cùng một chỗ.
+- Lịch sử phiên bản chuyển xuống dưới khung soạn.
+
+Bằng chứng: ESLint tệp này 0 lỗi; kiểm kiểu giới hạn 22 tệp 0 lỗi; máy chủ thử cổng 3098 biên dịch và trả 200 cho trang bài và trang soạn mới (phiên mẫu `thu-admin1`), log không có lỗi. CHƯA kiểm bằng mắt trên trình duyệt (bấm tab, cột dính, bề rộng 375px, luồng duyệt): phiên này không đưa được phiên thử vào trình duyệt — cần người dùng mở máy chủ thử xem, hoặc cho phép bước đó.
+
+Kiểm khung mới trên trình duyệt (12/11/2026, người dùng cho phép đưa phiên thử vào trình duyệt; máy chủ thử 3098, `thu-admin1`, bài đã duyệt có một lịch Facebook đăng tay):
+
+| Điểm kiểm | Kết quả |
+|---|---|
+| Màn hình 1440px: thanh bước, khung soạn có tab bên trái, Xem trước → Phê duyệt → Lịch bên phải | Đạt |
+| Bấm tab Facebook: khung soạn đổi sang bản kênh, tiêu đề khung phải thành "Xem trước · Facebook" | Đạt |
+| Gõ thêm vào bản Facebook: tab thành "Facebook ✓ •", xem trước cập nhật theo, "Tạo từ bài gốc" bị khoá, có "Lưu bản Facebook" và "Bỏ thay đổi", khung lịch báo "Bản Facebook có thay đổi chưa lưu" | Đạt (các điều kiện khoá cũ còn nguyên) |
+| Cuộn trang: cột phải dính dưới thanh tiêu đề ứng dụng | Lần đầu KHÔNG đạt: cột dính ở 16px, bị thanh tiêu đề (cao 56px) che. Đã sửa `lg:top-20`; đo lại: đỉnh cột 80px, đáy thanh tiêu đề 56px |
+| Nút "Đã đăng" trong cột hẹp | Lần đầu KHÔNG đạt: chữ xuống hai dòng. Đã sửa (ô đường dẫn co giãn, nút không ngắt dòng); đo lại: nút cao 38px, một dòng |
+| Bề rộng 375px (tải lại trang): một cột theo thứ tự Soạn → Xem trước → Phê duyệt → Lịch | Đạt: không phần tử nào tràn ngang |
+| Console | Chỉ có lỗi WebSocket `webpack-hmr` của máy chủ dev. Một lần trang trả 500 ("Unexpected end of JSON input") ngay sau khi sửa tệp, lúc máy chủ dev đang biên dịch lại; các lần tải sau 200 |
+
+CHƯA kiểm trên khung mới: luồng người duyệt bấm Duyệt/Từ chối (`thu-admin2`, bài chờ duyệt), đặt lịch mới, trang "Soạn bài mới" khi chưa có bài, bấm "Đã đăng"/"Không có bài".
