@@ -212,7 +212,7 @@ test('kiemTraUrlBaiDang: đúng miền kênh, chặn miền lạ / lừa @ / htt
   for (const x of [
     'https://evil.example.com/x', 'https://facebook.com.evil.com/x', 'https://evilfacebook.com/x',
     'https://facebook.com@evil.com/x', 'https://user:pw@facebook.com/x', 'http://www.facebook.com/x', 'khong-phai-url', '',
-  ]) assert.throws(() => kiemTraUrlBaiDang('facebook', x), undefined, x)
+  ]) assert.throws(() => kiemTraUrlBaiDang('facebook', x), Error, x)
   assert.equal(kiemTraUrlBaiDang('facebook', 'HTTPS://WWW.FACEBOOK.COM/permalink.php?story_fbid=1&id=2'), 'https://www.facebook.com/permalink.php?story_fbid=1&id=2')
   for (const x of ['https://www.facebook.com/p/1?access_token=abc', 'https://www.facebook.com/p/1?sig=xyz', 'https://www.facebook.com/p/1?api_key=1']) {
     assert.throws(() => kiemTraUrlBaiDang('facebook', x), /xác thực/, x)

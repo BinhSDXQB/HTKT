@@ -3,6 +3,8 @@
 Nhánh `ai-content-m1`. Nhãn: **DONE** đã làm và có bằng chứng chạy · **PARTIAL** · **BLOCKED** · **NOT STARTED** · **UNVERIFIED**.
 
 ## Bằng chứng chạy
+Số liệu mới nhất: xem mục "Kiểm tra lần cuối" ở cuối tài liệu (152/152, 51/51, 7/7). Bảng dưới là số liệu lúc lập báo cáo (sau Codex vòng 2).
+
 | Lệnh | Kết quả |
 |---|---|
 | `npm test` (toàn bộ) | 150/150 đạt (trong đó 18 test của module) — chạy lại sau khi sửa theo Codex vòng 2 |
@@ -106,9 +108,10 @@ Codex chỉ đề xuất; mỗi mục dưới đây đã được đối chiếu
 | 2.17 | MEDIUM | Test chạy đua đạt cả khi thu hồi lỗi | Đúng | Bắt buộc thu hồi và nhận việc đều thành công |
 
 ## Việc cần người quản trị quyết định / duyệt
-2. Codex rà lại các sửa đổi vòng 2 (thêm một lượt, tốn hạn mức Codex).
-3. Merge `main` (= deploy), áp migration 050, bật cờ — từng bước riêng.
-4. Kênh đăng thật, nhà cung cấp ảnh/AI, nơi lưu media, vai trò duyệt, xác nhận của Pháp chế về thông báo AI.
+1. Merge `main` (= deploy), áp migration 050, bật cờ — từng bước riêng.
+2. Kênh đăng thật, nhà cung cấp ảnh/AI, nơi lưu media, vai trò duyệt, xác nhận của Pháp chế về thông báo AI.
+3. Xác nhận quy tắc đăng lại bài đã đăng (cờ `dangLai` + lý do) — hiện là đề xuất.
+4. Có cho Codex rà các sửa đổi vòng 5 hay không (đã vượt giới hạn 2 vòng của cấp L).
 
 ## Phản biện Codex vòng 3 (12/11/2026) — rà lại các sửa đổi vòng 2 + chặn URL theo miền kênh
 Codex chỉ đọc, 16 phát hiện; tôi tự kiểm chứng từng mục bằng đọc mã, chạy test, kiểm đột biến. Test sau sửa: đơn vị 19/19, tích hợp 42/42 (thêm 2 ca; ca "lịch phiên bản cũ" đã kiểm đột biến: bỏ dòng sửa thì ca lỗi), Prisma 7/7, ESLint sạch 4 tệp.
@@ -217,3 +220,16 @@ Nguyên nhân gốc CHƯA xác định (UNKNOWN). Mã thử đã gỡ khỏi `so
 ### Ràng buộc `tai_lieu_trangthai_check` trên CSDL thật (12/11/2026, chỉ đọc, người dùng cho phép)
 
 VERIFIED: CSDL `ql_htkt` có `CHECK ("trangThai" = ANY (ARRAY['dang_xu_ly','san_sang','loi']))`, không có `cho_thay`; 201 tài liệu đều `san_sang`. Log `app/prisma/sync-vbpl.log` chưa có lần "NẠP LẠI NỘI DUNG ĐÃ SỬA" nào và không có lỗi CHECK → nhánh thay bản cũ của `sync-vbpl.mjs` chưa từng chạy; khi có tệp trong kho bị sửa nội dung, nó sẽ lỗi ở `UPDATE … 'cho_thay'` sau khi đã nhúng xong, lặp lại mỗi 15 phút. Đây là lỗi của đồng bộ kho văn bản, ngoài module Nội dung AI. ĐÃ SỬA 12/11/2026 (người dùng duyệt): `sync-vbpl.mjs` dùng `'dang_xu_ly'` cho bản chờ thay; không mã nào phân biệt hai giá trị (`chuaNapXong`, `don-ban-ghi-tai-lieu-rong.mjs` và RAG đều chỉ so với `san_sang`). Bằng chứng: `node --check` đạt; `sync-vbpl-core.test.mjs` 22/22; trên CSDL thử, UPDATE sang `cho_thay` → lỗi 23514 `tai_lieu_trangthai_check`, sang `dang_xu_ly` → OK, rồi chuỗi lệnh `thayBanCu` chạy xong (bản mới thành `san_sang`, bản cũ bị xoá). CHƯA kiểm bằng một lượt đồng bộ thật với tệp đã sửa nội dung (cần nhúng véc-tơ trên CSDL thật). Hoàn tác: `git checkout app/prisma/sync-vbpl.mjs`.
+
+## Kiểm tra lần cuối (12/11/2026, trên commit `26dafe9` + 1 sửa chưa commit)
+
+| Lệnh (trong `app/`) | Kết quả |
+|---|---|
+| `npm test` | PASS 152/152 |
+| `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-tich-hop.mjs` | PASS 51/51 trên `ql_htkt_ai_test` |
+| `node --import ../tools/test-support/register.mjs scripts/ai-content/kiem-thu-prisma.mjs` | PASS 7/7 |
+| ESLint: `app/api/ai`, `app/dashboard/ai-workspace`, `components/ai-content`, `lib/ai-content`, `scripts/ai-content`, `sidebar-new.tsx` | 0 lỗi; 1 cảnh báo có từ trước (`<img>` ở `sidebar-new.tsx:473`) |
+| Kiểm kiểu giới hạn (tsconfig tạm `extends` + `files`, 22 tệp của module) | Lần đầu FAIL: `lib/ai-content/nghiep-vu.test.ts(215)` TS2345 (`assert.throws(fn, undefined, x)`) — lỗi này sẽ làm vỡ bản build trên GitHub Actions (bài học 22). Đã sửa thành `Error`; chạy lại: 0 lỗi, test module 20/20 |
+| `tsc --noEmit` / `npm run build` toàn dự án | NOT_RUN (quy tắc RAM 6GB) |
+
+Chưa làm trong lần này (giữ nguyên trạng thái ở các mục trên): bấm "Đã đăng"/"Không có bài" trên lịch đăng tay bằng trình duyệt; vai trò lãnh đạo và cán bộ Văn phòng thật; smoke 190 route; diễn tập khôi phục dữ liệu; lệnh PM2 của worker; chặn nút Quay lại khi còn nháp; Codex rà các sửa vòng 5.
