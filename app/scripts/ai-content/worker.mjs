@@ -15,8 +15,6 @@ import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import pg from 'pg'
 import { APP, moPoolThu, dbTuPool } from './_csdl-thu.mjs'
-import { nhanViec, ghiKetQua, donDepHangDoi } from '../../lib/ai-content/kho.ts'
-import { aiContentBat } from '../../lib/ai-content/nghiep-vu.ts'
 
 const MOT_LAN = process.argv.includes('--once')
 const THU = process.argv.includes('--thu')
@@ -29,6 +27,12 @@ function docEnv() {
   return (k) => process.env[k] || (t.match(new RegExp(`^${k}=(.*)$`, 'm'))?.[1].trim().replace(/^["']|["']$/g, '') ?? '')
 }
 const env = docEnv()
+// Câu thông báo AI và quy định vị trí được đọc MỘT LẦN lúc nạp module nghiệp vụ (hằng số). Worker không chạy qua Next nên
+// .env chưa nằm trong process.env: nạp hai khoá này TRƯỚC khi import nghiệp vụ, để cổng của worker khớp cổng của web.
+// Đổi hai khoá này trong .env → phải khởi động lại CẢ web lẫn worker.
+for (const k of ['AI_CONTENT_NHAN_AI', 'AI_CONTENT_VI_TRI_NHAN']) { const v = env(k); if (v && !process.env[k]) process.env[k] = v }
+const { nhanViec, ghiKetQua, donDepHangDoi } = await import('../../lib/ai-content/kho.ts')
+const { aiContentBat } = await import('../../lib/ai-content/nghiep-vu.ts')
 // Cờ được ĐỌC LẠI TỪ TỆP .env mỗi lần hỏi (không dùng bản đã nạp lúc khởi động, không dùng biến môi trường của
 // tiến trình): gỡ AI_CONTENT_ENABLED khỏi .env là worker đang chạy dừng nhận việc ở lần kiểm kế tiếp, không cần khởi động lại.
 function coBat() {

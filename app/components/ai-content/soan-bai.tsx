@@ -10,6 +10,7 @@ import {
 import {
   goi, gioVn, LoiGoi, NhanLich, NhanNoiDung, NUT_CHINH, NUT_NGUY, NUT_PHU, O_NHAP, TEN_KENH, TEN_LOI_LICH, TEN_PHAN_LOAI, THE,
 } from './dung-chung'
+import { loiNhanAi, thongBaoLoiNhanAi, type ViTriNhanAi } from '@/lib/ai-content/nhan-ai'
 
 type Nguon = { id: string; tieuDe: string; phamVi: string; tinhTrangHieuLuc: string; daXoa?: boolean }
 type BienThe = { id: string; channel: string; body: string }
@@ -24,11 +25,13 @@ type ChiTiet = {
   nguon: Nguon[]
   pheDuyet: { id: string; decision: string; approved_hash: string; note: string | null; created_at: string; nguoi: string; version_id: string }[]
   lich: Lich[]
+  kenhDaDang: { channel: string; chay_thu: boolean }[]
   lichSuPhienBan: { id: string; version_no: number; created_at: string; nguoi: string }[]
   bamHienTai: string
   cauHinhKenh: Record<string, { ten: string; gioiHanKyTu: number | null; daXacMinh: boolean; ghiChu: string }>
   nganCach: string
   nhanAi: string
+  viTriNhanAi: ViTriNhanAi
   quyen: { duyet: boolean; lyDoKhongDuyet: string | null; thuHoi: boolean }
 }
 
@@ -53,6 +56,8 @@ function ngayMai(): string {
 export function AiSoanBai({ id }: { id?: string }) {
   const router = useRouter()
   const [ct, setCt] = useState<ChiTiet | null>(null)
+  // "Bản nền": ảnh chụp bản máy chủ lúc các ô nhập được nạp. Mọi thao tác ghi gửi NỀN NÀY (không phải ct mới nhất) để máy chủ phát hiện bản đã đổi (409).
+  const [nen, setNen] = useState<{ bam: string; phienBanId: string; bienThe: Record<string, string> } | null>(null)
   const [loiTai, setLoiTai] = useState<string | null>(null)
   const [ban, setBan] = useState(false)
 
@@ -76,19 +81,26 @@ export function AiSoanBai({ id }: { id?: string }) {
   const [ghiChu, setGhiChu] = useState('')
   const [ngay, setNgay] = useState(ngayMai)
   const [gio, setGio] = useState('08:30')
+  const [lyDoDangLai, setLyDoDangLai] = useState('')
   const [cachDang, setCachDang] = useState('manual')
   const [url, setUrl] = useState<Record<string, string>>({})
 
   const nap = useCallback((d: ChiTiet) => {
     setCt(d)
+    setNen({ bam: d.bamHienTai, phienBanId: d.phienBan.id, bienThe: Object.fromEntries(d.bienThe.map((b) => [b.channel, b.body])) })
     setTieuDe(d.phienBan.title); setNoiDung(d.phienBan.body_md); setPhanLoai(d.bai.classification)
     setDoAiTao(d.bai.ai_generated); setNhamLan(d.bai.may_mislead); setNguon(d.nguon)
     setBanNhapBt(Object.fromEntries(d.bienThe.map((b) => [b.channel, b.body])))
   }, [])
 
-  const tai = useCallback(async () => {
+  // giuNhap: chỉ làm mới dữ liệu máy chủ (trạng thái, lịch…), KHÔNG ghi đè các ô đang gõ dở — dùng cho thao tác phụ không lưu bài.
+  const tai = useCallback(async (giuNhap = false) => {
     if (!id) return
-    try { nap(await goi<ChiTiet>(`/api/ai/v1/noi-dung/${id}`)); setLoiTai(null) } catch (e) { setLoiTai((e as Error).message) }
+    try {
+      const d = await goi<ChiTiet>(`/api/ai/v1/noi-dung/${id}`)
+      if (giuNhap) setCt(d); else nap(d)
+      setLoiTai(null)
+    } catch (e) { setLoiTai((e as Error).message) }
   }, [id, nap])
   useEffect(() => {
     const t = setTimeout(() => { void tai() }, 0)
@@ -122,23 +134,51 @@ export function AiSoanBai({ id }: { id?: string }) {
 
   useEffect(() => {
     if (!coNhapDo) return
-    const h = (e: BeforeUnloadEvent) => { e.preventDefault() }
+    // Đã đồng ý rời trang ở hộp hỏi của liên kết thì không hỏi lần hai (liên kết tải lại toàn trang kích hoạt cả hai).
+    let daChoRoi = false
+    const h = (e: BeforeUnloadEvent) => { if (!daChoRoi) e.preventDefault() }
     window.addEventListener('beforeunload', h)
-    return () => window.removeEventListener('beforeunload', h)
+    // beforeunload KHÔNG chạy khi chuyển trang trong ứng dụng (menu bên, nút "Danh sách"…): bắt lần bấm vào liên kết ở pha
+    // capture của document — trước trình xử lý của <Link>. preventDefault ở đây làm <Link> bỏ qua điều hướng (nó kiểm
+    // defaultPrevented) và trình duyệt cũng không tự chuyển trang. Không chặn: mở tab mới, phím bổ trợ, liên kết ngoài, #neo.
+    const bamLienKet = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null
+      if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return
+      const dich = new URL(a.href, window.location.href)
+      if (dich.origin !== window.location.origin) return
+      if (dich.pathname === window.location.pathname && dich.search === window.location.search) return
+      if (!window.confirm('Bài đang có thay đổi chưa lưu. Rời trang sẽ mất phần đang gõ.\n\nBấm OK để rời trang, Huỷ để ở lại và lưu.')) {
+        e.preventDefault()
+        e.stopPropagation()
+      } else {
+        daChoRoi = true
+        setTimeout(() => { daChoRoi = false }, 3000)   // điều hướng không xảy ra (bị chặn ở nơi khác) → bảo vệ lại
+      }
+    }
+    document.addEventListener('click', bamLienKet, true)
+    // CHƯA chặn nút Quay lại/Tiến của trình duyệt (popstate). Đã thử ngày 12/11/2026: bắt popstate ở pha capture rồi đi
+    // ngược lại bằng history.go — kết quả không ổn định (lần Quay lại thứ hai lọt qua không hỏi; có lần không hỏi lần nào),
+    // nên đã gỡ thay vì để lại một lớp bảo vệ không tin được. Xem NGHIEM_THU.md.
+    return () => {
+      window.removeEventListener('beforeunload', h)
+      document.removeEventListener('click', bamLienKet, true)
+    }
   }, [coNhapDo])
 
-  const lam = async (fn: () => Promise<unknown>, thanhCong: string) => {
+  const lam = async (fn: () => Promise<unknown>, thanhCong: string, giuNhap = false) => {
     setBan(true)
-    try { await fn(); toast.success(thanhCong); await tai() } catch (e) {
+    try { await fn(); toast.success(thanhCong); await tai(giuNhap); return true } catch (e) {
       baoLoi(e)
       // Bị từ chối thường vì dữ liệu trên màn hình đã cũ (người khác vừa sửa/duyệt): tải lại để thấy bản mới nhất.
       // Không tải lại khi đang có bản nháp chưa lưu, để không xoá mất chữ người dùng đang gõ.
       if (!coNhapDoRef.current) await tai()
+      return false
     } finally { setBan(false) }
   }
 
   const luuBai = async () => {
-    const body = { tieuDe, noiDung, phanLoai, doAiTao, coTheGayNhamLan: doAiTao && nhamLan, nguonIds: nguon.map((n) => n.id) }
+    const body = { tieuDe, noiDung, phanLoai, doAiTao, coTheGayNhamLan: doAiTao && nhamLan, nguonIds: nguon.map((n) => n.id), bamNen: nen?.bam }
     if (!id) {
       setBan(true)
       try {
@@ -154,7 +194,7 @@ export function AiSoanBai({ id }: { id?: string }) {
   }
 
   const hanhDong = (body: object, thanhCong: string) => lam(() => goi(`/api/ai/v1/noi-dung/${id}`, body), thanhCong)
-  const hanhDongLich = (lichId: string, body: object, thanhCong: string) => lam(() => goi(`/api/ai/v1/lich/${lichId}`, body), thanhCong)
+  const hanhDongLich = (lichId: string, body: object, thanhCong: string) => lam(() => goi(`/api/ai/v1/lich/${lichId}`, body), thanhCong, true)
 
   const thuHoi = async () => {
     if (!window.confirm('Thu hồi phê duyệt? Các lịch chưa đăng sẽ bị huỷ.')) return
@@ -171,7 +211,7 @@ export function AiSoanBai({ id }: { id?: string }) {
           description: 'Với kênh đăng tay: báo cán bộ phụ trách để không đăng nội dung đã chép ra ngoài.', duration: 10000,
         })
       }
-      await tai()
+      await tai(true)
     } catch (e) { baoLoi(e) } finally { setBan(false) }
   }
 
@@ -197,8 +237,13 @@ export function AiSoanBai({ id }: { id?: string }) {
   const pdMoi = ct?.pheDuyet[0]
   const duyetConHieuLuc = !!ct && tt === 'APPROVED' && pdMoi?.decision === 'APPROVED' && pdMoi.approved_hash === ct.bamHienTai
   // Lịch còn hiệu lực của phiên bản hiện hành, CÙNG LOẠI với cách đăng đang chọn (chạy thử và đăng thật tính riêng).
-  const lichSong = (k: string) => ct?.lich.find((l) => l.channel === k && l.version_id === ct.bai.current_version_id &&
-    (l.adapter === 'dry_run') === (cachDang === 'dry_run') && ['SCHEDULED', 'PUBLISHING', 'RETRY_PENDING', 'UNKNOWN_OUTCOME', 'PUBLISHED'].includes(l.status))
+  // Lịch đang chờ/đang đăng được ưu tiên hơn lịch đã đăng: kênh đã đăng mà đang có lịch đăng lại thì KHÔNG mời đăng lại nữa.
+  const lichSong = (k: string) => {
+    const cung = (ct?.lich ?? []).filter((l) => l.channel === k && l.version_id === ct!.bai.current_version_id && (l.adapter === 'dry_run') === (cachDang === 'dry_run'))
+    return cung.find((l) => ['SCHEDULED', 'PUBLISHING', 'RETRY_PENDING', 'UNKNOWN_OUTCOME'].includes(l.status))
+  }
+  // "Đã đăng" lấy từ máy chủ (kenhDaDang), không suy từ danh sách lịch sử bị cắt.
+  const kenhDaDang = (k: string) => !!ct?.kenhDaDang.some((x) => x.channel === k && x.chay_thu === (cachDang === 'dry_run'))
   const tenKenhChuaLuu = kenhChuaLuu.map((k) => TEN_KENH[k]).join(', ')
 
   // Điều kiện còn thiếu để đặt lịch — hiện ngay trên giao diện, máy chủ vẫn kiểm lại.
@@ -219,6 +264,12 @@ export function AiSoanBai({ id }: { id?: string }) {
         {ct && <NhanNoiDung tt={ct.bai.status} />}
         {ct && <span className="text-sm text-slate-500 dark:text-slate-400">Phiên bản {ct.phienBan.version_no}</span>}
         {chuaLuu && <span className="text-sm font-medium text-amber-700 dark:text-amber-300">• Chưa lưu</span>}
+        {ct && nen && ct.bamHienTai !== nen.bam && (
+          <span className="flex items-center gap-2 text-sm font-medium text-rose-700 dark:text-rose-300">
+            Bài đã được người khác thay đổi — các thao tác ghi sẽ bị từ chối.
+            <button type="button" onClick={() => void tai()} className="underline">Tải lại bản mới (bỏ phần đang gõ)</button>
+          </span>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-5">
@@ -295,7 +346,7 @@ export function AiSoanBai({ id }: { id?: string }) {
             <button onClick={luuBai} disabled={ban || !chuaLuu || !tieuDe.trim() || !noiDung.trim() || kenhChuaLuu.length > 0} className={NUT_CHINH}>
               {ban ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{id ? 'Lưu bài' : 'Tạo bài'}
             </button>
-            {chuaLuu && kenhChuaLuu.length > 0 && <span className="text-xs text-amber-700 dark:text-amber-300">Lưu hoặc bỏ thay đổi ở bản {tenKenhChuaLuu} trước — lưu bài gốc sẽ tải lại toàn bộ.</span>}
+            {chuaLuu && kenhChuaLuu.length > 0 && <span className="text-xs text-amber-700 dark:text-amber-300">Cả bài gốc và bản {tenKenhChuaLuu} đều chưa lưu: hãy bỏ thay đổi (hoặc chép ra ngoài) ở một bên, lưu bên còn lại rồi làm lại bên kia — mỗi lần lưu tải lại toàn bộ.</span>}
             {ct && chuaLuu && <button onClick={() => nap(ct)} disabled={ban} className={NUT_PHU}><Undo2 className="h-4 w-4" />Bỏ thay đổi</button>}
           </div>
         </section>
@@ -313,7 +364,7 @@ export function AiSoanBai({ id }: { id?: string }) {
                 {tt === 'DRAFT' || tt === 'REJECTED' ? (
                   <>
                     <p className="mb-2 text-sm text-slate-600 dark:text-slate-300">{tt === 'REJECTED' ? 'Bài bị từ chối. Sửa rồi gửi duyệt lại.' : 'Bài đang là bản nháp.'}</p>
-                    <button onClick={() => hanhDong({ loai: 'gui_duyet' }, 'Đã gửi duyệt')} disabled={ban || coNhapDo || ct.bienThe.length === 0} className={NUT_CHINH}><Send className="h-4 w-4" />Gửi duyệt</button>
+                    <button onClick={() => hanhDong({ loai: 'gui_duyet', bamNen: nen?.bam }, 'Đã gửi duyệt')} disabled={ban || coNhapDo || ct.bienThe.length === 0} className={NUT_CHINH}><Send className="h-4 w-4" />Gửi duyệt</button>
                     {(coNhapDo || ct.bienThe.length === 0) && <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{chuaLuu ? 'Lưu bài trước khi gửi duyệt.' : kenhChuaLuu.length ? `Lưu bản ${tenKenhChuaLuu} trước khi gửi duyệt.` : 'Cần ít nhất một bản theo kênh trước khi gửi duyệt.'}</p>}
                   </>
                 ) : tt === 'PENDING_REVIEW' ? (
@@ -322,8 +373,8 @@ export function AiSoanBai({ id }: { id?: string }) {
                       <p className="text-sm text-slate-600 dark:text-slate-300">Duyệt là xác nhận: nội dung, phân loại <b>{TEN_PHAN_LOAI[ct.bai.classification]}</b>, {ct.bienThe.length} bản theo kênh và {ct.nguon.length} tài liệu nguồn. Người duyệt chịu trách nhiệm về nội dung công bố.</p>
                       <textarea value={ghiChu} onChange={(e) => setGhiChu(e.target.value)} rows={2} placeholder="Ghi chú (không bắt buộc)" aria-label="Ghi chú duyệt" className={O_NHAP} />
                       <div className="flex gap-2">
-                        <button onClick={() => hanhDong({ loai: 'duyet', ghiChu, bamDangXem: ct.bamHienTai }, 'Đã duyệt')} disabled={ban || coNhapDo} className={NUT_CHINH}><Check className="h-4 w-4" />Duyệt</button>
-                        <button onClick={() => hanhDong({ loai: 'tu_choi', ghiChu, bamDangXem: ct.bamHienTai }, 'Đã từ chối')} disabled={ban || coNhapDo} className={NUT_NGUY}><X className="h-4 w-4" />Từ chối</button>
+                        <button onClick={() => hanhDong({ loai: 'duyet', ghiChu, bamDangXem: nen?.bam }, 'Đã duyệt')} disabled={ban || coNhapDo} className={NUT_CHINH}><Check className="h-4 w-4" />Duyệt</button>
+                        <button onClick={() => hanhDong({ loai: 'tu_choi', ghiChu, bamDangXem: nen?.bam }, 'Đã từ chối')} disabled={ban || coNhapDo} className={NUT_NGUY}><X className="h-4 w-4" />Từ chối</button>
                       </div>
                       {coNhapDo && <p className="text-xs text-amber-700 dark:text-amber-300">Bạn đang có thay đổi chưa lưu trên màn hình. Bỏ thay đổi hoặc tải lại trang để duyệt đúng bản đã gửi.</p>}
                       <p className="text-xs text-slate-500 dark:text-slate-400">Nếu bài bị sửa sau khi bạn mở trang, hệ thống sẽ từ chối và yêu cầu tải lại.</p>
@@ -383,14 +434,28 @@ export function AiSoanBai({ id }: { id?: string }) {
                       </select>
                       <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Chưa kết nối tài khoản mạng xã hội nào nên chưa có đăng tự động.</p>
                     </div>
+                    {cachDang !== 'dry_run' && ct.bienThe.some((b) => !lichSong(b.channel) && kenhDaDang(b.channel)) && (
+                      <div>
+                        <label htmlFor="ai-ly-do-dang-lai" className="mb-1 block text-xs text-slate-600 dark:text-slate-400">Lý do đăng lại (kênh đã đăng bản này; 10–500 ký tự)</label>
+                        <input id="ai-ly-do-dang-lai" value={lyDoDangLai} onChange={(e) => setLyDoDangLai(e.target.value)} maxLength={500}
+                          placeholder="Ví dụ: bài trước bị gỡ nhầm; đăng nhắc lại trước hạn nộp hồ sơ" className={O_NHAP} />
+                      </div>
+                    )}
                     <div className="flex flex-wrap gap-2">
                       {ct.bienThe.map((b) => {
                         const s = lichSong(b.channel)
+                        const daDang = !s && kenhDaDang(b.channel)
+                        const canLyDo = daDang && cachDang !== 'dry_run'
+                        const thieuLyDo = canLyDo && lyDoDangLai.trim().length < 10
                         return (
-                          <button key={b.channel} disabled={ban || !!s || !ngay || !gio}
-                            onClick={() => hanhDong({ loai: 'dat_lich', kenh: b.channel, ngay, gio, adapter: cachDang }, `Đã đặt lịch ${TEN_KENH[b.channel]}`)}
-                            title={s ? 'Kênh này đã có lịch cho phiên bản hiện hành' : undefined} className={NUT_PHU}>
-                            Đặt lịch {TEN_KENH[b.channel]}
+                          <button key={b.channel} disabled={ban || !!s || thieuLyDo || !ngay || !gio}
+                            onClick={async () => {
+                              const duoc = await hanhDong({ loai: 'dat_lich', kenh: b.channel, ngay, gio, adapter: cachDang, bamNen: nen?.bam, ...(daDang ? { dangLai: true, lyDoDangLai: lyDoDangLai.trim() } : {}) },
+                                `Đã đặt lịch ${daDang ? 'đăng lại ' : ''}${TEN_KENH[b.channel]}`)
+                              if (daDang && duoc) setLyDoDangLai('')   // thất bại (409, mất mạng) thì giữ lý do đã gõ
+                            }}
+                            title={s ? 'Kênh này đang có lịch cho phiên bản hiện hành' : thieuLyDo ? 'Ghi lý do đăng lại (ít nhất 10 ký tự)' : undefined} className={NUT_PHU}>
+                            {daDang ? 'Đăng lại' : 'Đặt lịch'} {TEN_KENH[b.channel]}
                           </button>
                         )
                       })}
@@ -420,7 +485,7 @@ export function AiSoanBai({ id }: { id?: string }) {
                         {((l.status === 'SCHEDULED' && l.adapter === 'manual') || l.status === 'UNKNOWN_OUTCOME') && (
                           <div className="mt-1 flex gap-1.5">
                             <input value={url[l.id] ?? ''} onChange={(e) => setUrl({ ...url, [l.id]: e.target.value })} placeholder="https://… đường dẫn bài đã đăng" aria-label="Đường dẫn bài đã đăng" className={`${O_NHAP} py-1.5`} />
-                            <button disabled={ban || !(url[l.id] ?? '').startsWith('https://')} className={NUT_PHU}
+                            <button disabled={ban || !/^https:\/\//i.test((url[l.id] ?? '').trim())} className={NUT_PHU}
                               onClick={() => hanhDongLich(l.id, l.status === 'UNKNOWN_OUTCOME' ? { loai: 'doi_soat', ketQua: 'PUBLISHED', url: url[l.id] } : { loai: 'xac_nhan', url: url[l.id] }, 'Đã ghi nhận bài đăng')}>
                               Đã đăng
                             </button>
@@ -453,8 +518,8 @@ export function AiSoanBai({ id }: { id?: string }) {
                 )
               })}
             </div>
-            <button disabled={ban || coNhapDo} className={`${NUT_PHU} ml-auto`} title={chuaLuu ? 'Lưu bài gốc trước' : kenhChuaLuu.length ? `Lưu hoặc bỏ thay đổi ở bản ${tenKenhChuaLuu} trước` : undefined}
-              onClick={() => hanhDong({ loai: 'bien_the_tu_dong', kenh: [kenh] }, `Đã tạo bản ${TEN_KENH[kenh]} từ bài gốc`)}>
+            <button disabled={ban || coNhapDo} className={`${NUT_PHU} ml-auto`} title={chuaLuu ? 'Lưu bài gốc trước' : kenhChuaLuu.length ? `Bản ${tenKenhChuaLuu} đang có thay đổi chưa lưu — lưu hoặc bỏ nó trước` : undefined}
+              onClick={() => hanhDong({ loai: 'bien_the_tu_dong', kenh: [kenh], bamNen: nen?.bam }, `Đã tạo bản ${TEN_KENH[kenh]} từ bài gốc`)}>
               <Wand2 className="h-4 w-4" />Tạo từ bài gốc
             </button>
           </div>
@@ -470,14 +535,17 @@ export function AiSoanBai({ id }: { id?: string }) {
                 </span>
                 {ch && !ch.daXacMinh && <span className="text-amber-700 dark:text-amber-300">Giới hạn kênh chưa đối chiếu tài liệu chính thức: {ch.ghiChu}</span>}
               </div>
-              {ct.bai.ai_generated && ct.bai.may_mislead && !doan[0].includes(ct.nhanAi) && (
-                <p className="mt-1 text-xs font-medium text-rose-700 dark:text-rose-300">Thiếu thông báo AI ở phần đầu: “{ct.nhanAi}”</p>
-              )}
+              {ct.bai.ai_generated && ct.bai.may_mislead && (() => {
+                // Cùng hàm với cổng xuất bản: giao diện báo đúng điều máy chủ sẽ chặn.
+                const l = loiNhanAi(doan[0], ct.nhanAi, ct.viTriNhanAi)
+                if (!l) return null
+                return <p className="mt-1 text-xs font-medium text-rose-700 dark:text-rose-300">{thongBaoLoiNhanAi(l, ct.nhanAi)}</p>
+              })()}
               <div className="mt-2 flex items-center gap-2">
                 <button disabled={ban || !btChuaLuu || !banNhap.trim() || vuot || chuaLuu || kenhChuaLuu.some((k) => k !== kenh)} className={NUT_CHINH}
                   onClick={() => {
                     if (tt !== 'DRAFT' && !window.confirm('Sửa bản theo kênh sẽ đưa bài về bản nháp, huỷ lịch chưa đăng và phải duyệt lại. Tiếp tục?')) return
-                    void hanhDong({ loai: 'bien_the', kenh, noiDung: banNhap }, `Đã lưu bản ${TEN_KENH[kenh]}`)
+                    void hanhDong({ loai: 'bien_the', kenh, noiDung: banNhap, phienBanNen: nen?.phienBanId, bienTheNen: nen?.bienThe[kenh] ?? '' }, `Đã lưu bản ${TEN_KENH[kenh]}`)
                   }}>
                   <Save className="h-4 w-4" />Lưu bản {TEN_KENH[kenh]}
                 </button>

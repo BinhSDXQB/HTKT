@@ -57,7 +57,7 @@ for (const u of ['soan', 'soan2', 'duyet', 'thuong']) {
     [`test-${u}`, `${u}@test.invalid`, `Người ${u}`])
 }
 for (const [id, pv, hl] of [['test-ck', 'CONG_KHAI', 'con_hieu_luc'], ['test-nb', 'NOI_BO_SO', 'con_hieu_luc'], ['test-het', 'CONG_KHAI', 'het_hieu_luc']]) {
-  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "updatedAt") values ($1, $2, $3, $4, now())`, [id, `Tài liệu ${id}`, pv, hl])
+  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "trangThai", "updatedAt") values ($1, $2, $3, $4, 'san_sang', now())`, [id, `Tài liệu ${id}`, pv, hl])
 }
 const SOAN = { id: 'test-soan', laAdmin: false, laVanPhong: true, laLanhDao: false }
 const SOAN2 = { id: 'test-soan2', laAdmin: false, laVanPhong: true, laLanhDao: false }
@@ -210,8 +210,8 @@ await ca('timeout sau khi đã gửi → cần đối soát, KHÔNG tự đăng 
   assert.equal((await kho.ghiKetQua(db, v.maNhan, lichId, { ok: false, ma: 'TIMEOUT', daGui: true })).trangThai, 'UNKNOWN_OUTCOME')
   assert.equal(await kho.nhanViec(db, 'w'), null)
   await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '10:00', adapter: 'dry_run' }), 409, 'đặt lịch mới khi chưa đối soát')
-  await tuChoi(() => kho.doiSoat(db, SOAN, lichId, 'PUBLISHED', 'http://khong-https'), 400)
-  await kho.doiSoat(db, SOAN, lichId, 'PUBLISHED', 'https://example.invalid/bai/1')
+  await tuChoi(() => kho.doiSoat(db, SOAN, lichId, 'PUBLISHED', 'http://www.facebook.com/khong-https'), 400)
+  await kho.doiSoat(db, SOAN, lichId, 'PUBLISHED', 'https://www.facebook.com/bai/1')
   assert.deepEqual((await lichCua(id)).map((l) => l.status), ['PUBLISHED'])
 })
 await ca('lỗi tạm thời → chờ thử lại có backoff; quá số lần → FAILED; lỗi vĩnh viễn → FAILED ngay', async () => {
@@ -246,7 +246,7 @@ await ca('cổng kiểm lại lúc nhận việc: dữ liệu bị sửa thẳng
   assert.equal((await lichCua(b.id))[0].status, 'CANCELLED')
 })
 await ca('tài liệu nguồn bị xoá cứng khỏi kho: xoá vẫn thành công (không FK), bài viện dẫn bị chặn', async () => {
-  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "updatedAt") values ('test-xoa', 'Sẽ bị xoá', 'CONG_KHAI', 'con_hieu_luc', now())`)
+  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "trangThai", "updatedAt") values ('test-xoa', 'Sẽ bị xoá', 'CONG_KHAI', 'con_hieu_luc', 'san_sang', now())`)
   const a = await lichTuDong({ nguonIds: ['test-xoa'] }); await denHan(a.lichId)
   assert.equal((await pool.query(`delete from tai_lieu where id = 'test-xoa'`)).rowCount, 1)
   assert.equal(await kho.nhanViec(db, 'w'), null)
@@ -335,7 +335,7 @@ await ca('lưu vết: gói đã duyệt và văn bản đã đặt lịch còn n
   const id = await baiDaDuyet()
   const { id: lichId } = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
   const goc = (await kho.chiTietBai(db, id)).bienThe[0].body
-  await kho.xacNhanDangTay(db, SOAN, lichId, 'https://example.invalid/p/goc')
+  await kho.xacNhanDangTay(db, SOAN, lichId, 'https://www.facebook.com/p/goc')
   await kho.luuBienThe(db, SOAN, id, 'facebook', 'Nội dung biến thể đã bị sửa sau khi đăng')
   const [l] = await sql(`select body_snapshot, status from ai_publication_schedules where id = $1::uuid`, [lichId])
   assert.equal(l.body_snapshot, goc)
@@ -362,7 +362,10 @@ await ca('chạy thử xong vẫn đặt được lịch đăng thật cho cùng
   const v = await kho.nhanViec(db, 'w'); await kho.ghiKetQua(db, v.maNhan, lichId, { ok: true, externalPostId: 'dryrun-x' })
   await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '09:00', adapter: 'manual' })
   await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '10:00', adapter: 'manual' }), 409)
-  await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '10:00', adapter: 'dry_run' }), 409)
+  // chạy thử đã xong không chiếm chỗ: chạy thử lại được; hai lịch chạy thử cùng chờ thì chặn
+  await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '10:00', adapter: 'dry_run' })
+  await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '11:00', adapter: 'dry_run' }), 409)
+  await pool.query(`update ai_publication_schedules set status = 'CANCELLED' where content_id = $1::uuid and adapter = 'dry_run' and status = 'SCHEDULED'`, [id])
   const ds = await kho.danhSachBai(db, {})
   assert.deepEqual(ds.find((x) => x.id === id).lich, ['SCHEDULED'], 'danh sách không tính kết quả chạy thử là đã đăng')
 })
@@ -390,13 +393,13 @@ await ca('lịch chờ thử lại quá hạn 24 giờ cũng chuyển EXPIRED, k
 await ca('danh sách: phiên bản cũ đã đăng không làm phiên bản mới trông như đã đăng', async () => {
   const id = await baiDaDuyet()
   const { id: lichId } = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
-  await kho.xacNhanDangTay(db, SOAN, lichId, 'https://example.invalid/p/cu')
+  await kho.xacNhanDangTay(db, SOAN, lichId, 'https://www.facebook.com/p/cu')
   await kho.suaBai(db, SOAN, id, { tieuDe: 'Phiên bản hai', noiDung: 'Mới', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] })
   const ds = await kho.danhSachBai(db, {})
   assert.deepEqual(ds.find((x) => x.id === id).lich, [])
 })
 await ca('khoá nguồn: xoá tài liệu nguồn phải chờ giao dịch xác nhận đăng xong (không chen giữa kiểm cổng và ghi kết quả)', async () => {
-  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "updatedAt") values ('test-khoa', 'Nguồn bị khoá', 'CONG_KHAI', 'con_hieu_luc', now()) on conflict do nothing`)
+  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "trangThai", "updatedAt") values ('test-khoa', 'Nguồn bị khoá', 'CONG_KHAI', 'con_hieu_luc', 'san_sang', now()) on conflict do nothing`)
   const id = await baiDaDuyet({ nguonIds: ['test-khoa'] })
   const { id: lichId } = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
   const c = await pool.connect()
@@ -408,7 +411,7 @@ await ca('khoá nguồn: xoá tài liệu nguồn phải chờ giao dịch xác 
     await c.query('COMMIT')
   } finally { c.release() }
   await pool.query(`delete from tai_lieu where id = 'test-khoa'`)
-  await tuChoi(() => kho.xacNhanDangTay(db, SOAN, lichId, 'https://example.invalid/p/3'), 409, 'nguồn đã xoá')
+  await tuChoi(() => kho.xacNhanDangTay(db, SOAN, lichId, 'https://www.facebook.com/p/3'), 409, 'nguồn đã xoá')
 })
 
 // ── 5. Đăng tay, nhiều kênh ───────────────────────────────────────────────────
@@ -417,11 +420,12 @@ await ca('đăng tay: xác nhận kèm URL https; sau khi thu hồi thì không 
   const id = await baiDaDuyet()
   const { id: lichId } = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
   await tuChoi(() => kho.xacNhanDangTay(db, SOAN, lichId, 'khong-phai-url'), 400)
-  await kho.xacNhanDangTay(db, SOAN, lichId, 'https://example.invalid/p/1')
+  await tuChoi(() => kho.xacNhanDangTay(db, SOAN, lichId, 'https://evil.example.com/x'), 400, 'URL ngoài miền kênh Facebook')
+  await kho.xacNhanDangTay(db, SOAN, lichId, 'https://www.facebook.com/p/1')
   const id2 = await baiDaDuyet()
   const l2 = await kho.datLich(db, SOAN, id2, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
   await kho.thuHoiDuyet(db, DUYET, id2)
-  await tuChoi(() => kho.xacNhanDangTay(db, SOAN, l2.id, 'https://example.invalid/p/2'), 409)
+  await tuChoi(() => kho.xacNhanDangTay(db, SOAN, l2.id, 'https://www.facebook.com/p/2'), 409)
 })
 await ca('ba kênh ghi kết quả độc lập, trạng thái tổng hợp suy ra động (AT-03, AT-11)', async () => {
   await rutCan()
@@ -464,6 +468,172 @@ await ca('mọi thao tác ghi đều có nhật ký; nhật ký không chứa n�
   const [{ n }] = await sql(`select count(*)::int n from ai_audit_events where detail::text ilike '%Nội dung **thử**%'`)
   assert.equal(n, 0)
 })
+await ca('lưu đè từ màn hình cũ: bản nền lệch → 409 (bài và biến thể), đúng nền thì lưu được', async () => {
+  const id = await baiDaDuyet()
+  const cu = await kho.chiTietBai(db, id)                       // "màn hình cũ" của người A
+  await kho.suaBai(db, SOAN2, id, { tieuDe: 'B đã sửa', noiDung: 'Nội dung của B', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] }, cu.bamHienTai)
+  await tuChoi(() => kho.suaBai(db, SOAN, id, { tieuDe: 'A ghi đè', noiDung: 'Nội dung của A', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] }, cu.bamHienTai), 409, 'nền cũ')
+  await tuChoi(() => kho.luuBienThe(db, SOAN, id, 'facebook', 'Bản Facebook soạn từ phiên bản cũ', cu.phienBan.id), 409, 'biến thể từ phiên bản cũ')
+  const moi = await kho.chiTietBai(db, id)
+  assert.equal(moi.phienBan.title, 'B đã sửa')                  // không bị A ghi đè
+  await kho.luuBienThe(db, SOAN, id, 'facebook', 'Bản Facebook đúng nền', moi.phienBan.id)
+})
+await ca('lịch thuộc phiên bản cũ không lấy nội dung phiên bản mới (retry sau khi bài đã sửa và duyệt lại)', async () => {
+  const { id, lichId } = await lichTuDong(); await denHan(lichId)
+  const v = await kho.nhanViec(db, 'w')                         // lịch PUBLISHING (V1)
+  assert.equal(v.lichId, lichId)
+  await kho.suaBai(db, SOAN2, id, { tieuDe: 'Phiên bản hai', noiDung: 'Nội dung hai', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] })
+  await kho.taoBienTheTheoQuyTac(db, SOAN2, id, ['facebook'])
+  await kho.guiDuyet(db, SOAN2, id)
+  await duyet(DUYET, id, 'APPROVED')
+  assert.equal((await kho.ghiKetQua(db, v.maNhan, lichId, { ok: false, httpStatus: 429 })).trangThai, 'RETRY_PENDING')
+  await pool.query(`update ai_publication_schedules set next_attempt_at = now() - interval '1 second' where id = $1::uuid`, [lichId])
+  assert.equal(await kho.nhanViec(db, 'w'), null)               // KHÔNG đăng bản V2 bằng lịch của V1
+  assert.deepEqual((await lichCua(id)).map((l) => [l.status, l.error_code]), [['CANCELLED', 'CONG_XUAT_BAN_CHAN']])
+})
+
+await ca('chống lưu đè mức biến thể (cùng phiên bản) và tạo biến thể tự động từ nền cũ → 409', async () => {
+  const { id } = await kho.taoBai(db, SOAN, { tieuDe: 'Bài nền biến thể', noiDung: 'Nội dung gốc', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] })
+  await kho.taoBienTheTheoQuyTac(db, SOAN, id, ['facebook'])
+  const cu = await kho.chiTietBai(db, id)                       // màn hình cũ của A
+  const bodyCu = cu.bienThe.find((x) => x.channel === 'facebook').body
+  await kho.luuBienThe(db, SOAN2, id, 'facebook', 'B sửa tay bản Facebook', cu.phienBan.id, bodyCu)
+  await tuChoi(() => kho.luuBienThe(db, SOAN, id, 'facebook', 'A ghi đè bản B', cu.phienBan.id, bodyCu), 409, 'biến thể cùng phiên bản bị người khác đổi')
+  await tuChoi(() => kho.taoBienTheTheoQuyTac(db, SOAN, id, ['facebook'], cu.bamHienTai), 409, 'tạo tự động từ nền cũ')
+  assert.equal((await kho.chiTietBai(db, id)).bienThe.find((x) => x.channel === 'facebook').body, 'B sửa tay bản Facebook')
+  // biến thể chưa tồn tại lúc mở (nền rỗng) mà người khác đã tạo → 409
+  await tuChoi(() => kho.luuBienThe(db, SOAN, id, 'threads', 'Bản Threads', cu.phienBan.id, 'x'), 409, 'nền biến thể không khớp')
+})
+await ca('gửi duyệt từ màn hình cũ (bài đã sang phiên bản khác) → 409, không gửi nhầm phiên bản mới', async () => {
+  const { id } = await kho.taoBai(db, SOAN, { tieuDe: 'Bài gửi duyệt cũ', noiDung: 'V1', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] })
+  await kho.taoBienTheTheoQuyTac(db, SOAN, id, ['facebook'])
+  const cu = await kho.chiTietBai(db, id)
+  await kho.suaBai(db, SOAN2, id, { tieuDe: 'Bài gửi duyệt cũ', noiDung: 'V2', phanLoai: 'PUBLIC', nguonIds: ['test-ck'] })
+  await kho.taoBienTheTheoQuyTac(db, SOAN2, id, ['facebook'])
+  await tuChoi(() => kho.guiDuyet(db, SOAN, id, cu.bamHienTai), 409, 'gửi duyệt từ nền cũ')
+  assert.equal((await kho.chiTietBai(db, id)).bai.status, 'DRAFT')
+  await kho.guiDuyet(db, SOAN, id, (await kho.chiTietBai(db, id)).bamHienTai)   // đúng nền thì được
+})
+await ca('cùng phiên bản nhưng biến thể bị sửa khi lịch đang đăng: lần thử lại không gửi văn bản mới', async () => {
+  const { id, lichId } = await lichTuDong(); await denHan(lichId)
+  const v = await kho.nhanViec(db, 'w')
+  assert.equal(v.lichId, lichId)
+  await kho.luuBienThe(db, SOAN2, id, 'facebook', 'Văn bản sửa sau khi đặt lịch')       // vẫn phiên bản 1
+  await kho.guiDuyet(db, SOAN2, id)
+  await duyet(DUYET, id, 'APPROVED')
+  assert.equal((await kho.ghiKetQua(db, v.maNhan, lichId, { ok: false, httpStatus: 429 })).trangThai, 'RETRY_PENDING')
+  await pool.query(`update ai_publication_schedules set next_attempt_at = now() - interval '1 second' where id = $1::uuid`, [lichId])
+  assert.equal(await kho.nhanViec(db, 'w'), null)
+  assert.deepEqual((await lichCua(id)).map((l) => [l.status, l.error_code]), [['CANCELLED', 'CONG_XUAT_BAN_CHAN']])
+})
+await ca('thống kê không tính lịch chạy thử (dry_run) nhưng tính lịch đăng tay', async () => {
+  const truoc = await kho.thongKe(db)
+  const a = await lichTuDong(); await denHan(a.lichId)
+  const v = await kho.nhanViec(db, 'w')
+  await kho.ghiKetQua(db, v.maNhan, a.lichId, { ok: true, externalPostId: 'dr' })
+  const giua = await kho.thongKe(db)
+  assert.equal(giua.da_dang, truoc.da_dang)                    // dry_run đã đăng: không tính
+  assert.equal(giua.lich_cho, truoc.lich_cho)
+  const id = await baiDaDuyet()
+  const { id: lichTay } = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
+  assert.equal((await kho.thongKe(db)).lich_cho, truoc.lich_cho + 1)
+  await kho.xacNhanDangTay(db, SOAN, lichTay, 'https://www.facebook.com/p/thong-ke')
+  assert.equal((await kho.thongKe(db)).da_dang, truoc.da_dang + 1)
+})
+
+
+// ── Đăng lại bản đã đăng · khoá với tiến trình đồng bộ kho văn bản ────────────
+console.log('Đăng lại và khoá đồng thời')
+await ca('đăng lại bản đã đăng: mặc định bị chặn; có cờ + lý do thì được, nhật ký ghi lý do; lịch đang chờ vẫn chặn trùng', async () => {
+  const id = await baiDaDuyet()
+  const l1 = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
+  await kho.xacNhanDangTay(db, SOAN, l1.id, 'https://www.facebook.com/p/lan-1')
+  const e = await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '09:00' }), 409, 'đã đăng, không nói là đăng lại')
+  assert.match(e.message, /Đăng lại/)
+  await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '09:00', dangLai: true, lyDoDangLai: 'ngắn' }), 400, 'lý do quá ngắn')
+  const l2 = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '09:00', dangLai: true, lyDoDangLai: 'Bài trước bị gỡ nhầm trên Trang' })
+  const [nk] = await sql(`select detail from ai_audit_events where target_id = $1 and action = 'DAT_LICH'`, [l2.id])
+  assert.equal(nk.detail.dangLai, true); assert.equal(nk.detail.lichTruoc, l1.id); assert.equal(nk.detail.lanDangThu, 2)
+  assert.equal(nk.detail.lyDo, 'Bài trước bị gỡ nhầm trên Trang')
+  // Codex vòng 5 #6, #7: một kênh đã đăng + lịch đăng lại đang chờ → danh sách vẫn là một kênh "đã đăng"; chi tiết báo kênh đã đăng
+  assert.deepEqual((await kho.danhSachBai(db, {})).find((x) => x.id === id).lich, ['PUBLISHED'])
+  assert.deepEqual((await kho.chiTietBai(db, id)).kenhDaDang, [{ channel: 'facebook', chay_thu: false }])
+  // lịch đăng lại đang chờ: không đặt chồng thêm, kể cả có cờ
+  await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '10:00', dangLai: true, lyDoDangLai: 'Đặt chồng lên lịch đang chờ' }), 409)
+  await kho.xacNhanDangTay(db, SOAN, l2.id, 'https://www.facebook.com/p/lan-2')
+  assert.deepEqual((await lichCua(id)).map((x) => x.status), ['PUBLISHED', 'PUBLISHED'])
+})
+await ca('đăng lại vẫn qua cổng: bài đã thu hồi duyệt thì không đăng lại được dù có lý do', async () => {
+  const id = await baiDaDuyet()
+  const l1 = await kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
+  await kho.xacNhanDangTay(db, SOAN, l1.id, 'https://www.facebook.com/p/thu-hoi')
+  await kho.thuHoiDuyet(db, DUYET, id)
+  await tuChoi(() => kho.datLich(db, SOAN, id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '09:00', dangLai: true, lyDoDangLai: 'Thử đăng lại sau khi thu hồi' }), 409)
+})
+await ca('chạy thử đã xong: chạy thử lại không cần lý do', async () => {
+  const a = await lichTuDong(); await denHan(a.lichId)
+  const v = await kho.nhanViec(db, 'w'); await kho.ghiKetQua(db, v.maNhan, a.lichId, { ok: true, externalPostId: 'thu-1' })
+  await kho.datLich(db, SOAN, a.id, { kenh: 'facebook', ngay: NGAY_MAI, gio: '11:00', adapter: 'dry_run' })
+})
+await ca('nguồn chưa nạp xong (chưa san_sang) không gắn được vào bài', async () => {
+  await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "trangThai", "updatedAt") values ('test-cho-thay', 'Bản chờ thay', 'CONG_KHAI', 'con_hieu_luc', 'dang_xu_ly', now()) on conflict do nothing`)
+  await tuChoi(() => kho.taoBai(db, SOAN, { tieuDe: 'Bài', noiDung: 'Nội dung', phanLoai: 'PUBLIC', nguonIds: ['test-cho-thay'] }), 400)
+  await pool.query(`delete from tai_lieu where id = 'test-cho-thay'`)
+})
+// GIỚI HẠN của ca này: nó chứng minh chuỗi khoá THẬT của thayBanCu không deadlock với module khi bài chỉ viện dẫn bản cũ.
+// Nó KHÔNG tự bắt được việc gỡ bộ lọc san_sang ở ganNguon — việc đó do ca "nguồn chưa nạp xong" ngay trên bắt.
+await ca('đồng thời với sync-vbpl (thayBanCu: khoá bản mới rồi xoá bản cũ): không deadlock ở cả hai phía, kết quả nhất quán', async () => {
+  // Đúng chuỗi lệnh của prisma/sync-vbpl.mjs thayBanCu, chạy đua với xác nhận đăng tay và worker nhận việc của bài viện dẫn bản cũ.
+  const thay = async (cu, moi) => {
+    const c = await pool.connect()
+    try {
+      await c.query('BEGIN')
+      await c.query(`update tai_lieu set "trangThai" = 'san_sang', "updatedAt" = now() where id = $1`, [moi])
+      await c.query(`delete from tai_lieu_chunk where "taiLieuId" = $1`, [cu])
+      await c.query(`delete from tai_lieu where id = $1`, [cu])
+      await c.query('COMMIT')
+    } catch (e) { await c.query('ROLLBACK').catch(() => {}); throw e } finally { c.release() }
+  }
+  let xacNhanDuoc = 0, biChan = 0
+  for (let i = 0; i < 10; i++) {
+    // id bản mới xếp TRƯỚC bản cũ ở vòng chẵn, SAU ở vòng lẻ: thử cả hai thứ tự khoá
+    const cu = `test-dl-${i}-m`, moi = i % 2 ? `test-dl-${i}-z` : `test-dl-${i}-a`, khac = `test-dl-${i}-k`
+    // bản mới chưa công bố: CSDL thử chỉ cho 'dang_xu_ly' (ràng buộc CHECK không có 'cho_thay'); với module hai trạng thái này như nhau (chưa san_sang)
+    for (const [id, tt] of [[cu, 'san_sang'], [khac, 'san_sang'], [moi, 'dang_xu_ly']]) {
+      await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "trangThai", "updatedAt") values ($1, $1, 'CONG_KHAI', 'con_hieu_luc', $2, now())`, [id, tt])
+    }
+    const tay = await baiDaDuyet({ nguonIds: [cu, khac] })
+    const lt = await kho.datLich(db, SOAN, tay, { kenh: 'facebook', ngay: NGAY_MAI, gio: '08:30' })
+    const may = await lichTuDong({ nguonIds: [khac, cu] }); await denHan(may.lichId)
+    const [s, x, w] = await Promise.allSettled([
+      thay(cu, moi),
+      kho.xacNhanDangTay(db, SOAN, lt.id, `https://www.facebook.com/p/dl-${i}`),
+      kho.nhanViec(db, 'w-dl'),
+    ])
+    for (const [ten, r] of [['sync', s], ['xác nhận', x], ['worker', w]]) {
+      assert.ok(!/deadlock|40P01/i.test(String(r.reason?.code) + String(r.reason?.message)), `${ten} bị deadlock ở vòng ${i}: ${r.reason?.message}`)
+    }
+    assert.equal(s.status, 'fulfilled', 'sync phải luôn xong: ' + s.reason?.message)
+    assert.equal(w.status, 'fulfilled', 'worker không được ném lỗi: ' + w.reason?.message)
+    // worker: hoặc nhận ĐÚNG lịch của vòng này (thắng sync) rồi ghi kết quả được, hoặc không nhận gì và lịch bị cổng huỷ
+    if (w.value) {
+      assert.equal(w.value.lichId, may.lichId, 'worker nhận nhầm lịch')
+      await kho.ghiKetQua(db, w.value.maNhan, may.lichId, { ok: true, externalPostId: `dl-${i}` })
+      assert.equal((await lichCua(may.id))[0].status, 'PUBLISHED')
+    } else {
+      assert.equal((await lichCua(may.id))[0].error_code, 'CONG_XUAT_BAN_CHAN')
+    }
+    if (x.status === 'fulfilled') xacNhanDuoc++
+    else { assert.equal(x.reason.ma, 409, x.reason.message); biChan++ }
+    const [l] = await lichCua(tay)
+    assert.equal(l.status, x.status === 'fulfilled' ? 'PUBLISHED' : 'SCHEDULED')
+    // sau khi bản cũ bị thay: mọi thao tác tiếp theo trên bài viện dẫn nó đều bị cổng chặn
+    assert.equal((await kho.chiTietBai(db, tay)).nguon.some((n) => n.daXoa), true)
+  }
+  console.log(`     (10 vòng: xác nhận trước khi thay ${xacNhanDuoc}, bị cổng chặn sau khi thay ${biChan})`)
+  await pool.query(`delete from tai_lieu where id like 'test-dl-%'`)
+})
+
 
 console.log(`\nĐạt ${dat} ca${process.exitCode ? ' — CÓ CA LỖI' : ''}`)
 await pool.end()

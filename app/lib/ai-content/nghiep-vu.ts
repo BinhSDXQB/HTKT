@@ -3,13 +3,11 @@
  * Không import CSDL/Next — để test được bằng node:test và để worker (.mjs) dùng chung quy tắc.
  */
 import { createHash, randomInt } from 'node:crypto'
+import { chuanHoa, NHAN_AI, NGAN_CACH_CHUOI, loiNhanAi, thongBaoLoiNhanAi } from './nhan-ai'
+
+export * from './nhan-ai'
 
 // ── Băm nội dung ───────────────────────────────────────────────────────────────
-/** Chuẩn hoá trước khi băm: bỏ khác biệt xuống dòng/khoảng trắng cuối dòng để băm ổn định giữa các hệ. */
-export function chuanHoa(s: string): string {
-  return s.replace(/\r\n?/g, '\n').split('\n').map((l) => l.replace(/[ \t]+$/g, '')).join('\n').trim()
-}
-
 /** SHA-256 của tiêu đề + thân bài. Phê duyệt gắn với băm này: nội dung đổi 1 ký tự là phê duyệt hết khớp. */
 export function bamNoiDung(tieuDe: string, noiDung: string): string {
   return createHash('sha256').update(chuanHoa(tieuDe) + '\n\u0000\n' + chuanHoa(noiDung), 'utf8').digest('hex')
@@ -65,20 +63,8 @@ export type DauVaoCong = {
   noiDungSeDang: string
 }
 
-export const NHAN_AI = 'Nội dung có sử dụng trí tuệ nhân tạo hỗ trợ biên soạn.'
-export const NGAN_CACH_CHUOI = '\n\n———\n\n'
-
-/**
- * Có THÔNG BÁO CHUẨN hay chưa. Chỉ nhắc tới "AI" trong bài không được tính là thông báo
- * (bài viết về lĩnh vực AI không vì thế mà đã minh bạch về cách nó được soạn).
- */
-export function coNhanAi(noiDung: string): boolean {
-  return chuanHoa(noiDung).replace(/\s+/g, ' ').includes(NHAN_AI)
-}
-
 /**
  * CỔNG XUẤT BẢN — fail-closed: trả danh sách lý do chặn; rỗng mới được đăng.
- * Căn cứ nhãn AI: Luật 134/2025/QH15 Đ11 k3; NĐ 142/2026/NĐ-CP Đ18 k1, k3.
  */
 export function kiemTraCongXuatBan(d: DauVaoCong): string[] {
   const loi: string[] = []
@@ -95,10 +81,9 @@ export function kiemTraCongXuatBan(d: DauVaoCong): string[] {
     if (n.tinhTrangHieuLuc !== 'con_hieu_luc') loi.push(`Tài liệu nguồn chưa xác nhận còn hiệu lực: ${n.tieuDe}`)
   }
   if (d.doAiTao && d.coTheGayNhamLan) {
-    // Chuỗi nhiều bài (Threads): người đọc tiếp cận bài ĐẦU trước → thông báo phải nằm ở bài đầu
-    // (NĐ 142/2026 Đ18 k3 b: trước hoặc tại thời điểm tiếp cận nội dung).
-    const dau = d.noiDungSeDang.split(NGAN_CACH_CHUOI)[0]
-    if (!coNhanAi(dau)) loi.push(`Nội dung do AI tạo có thể gây nhầm lẫn nhưng thiếu thông báo chuẩn ở phần đầu: "${NHAN_AI}"`)
+    // Chuỗi nhiều bài (Threads): người đọc tiếp cận bài ĐẦU trước → thông báo phải nằm ở bài đầu.
+    const l = loiNhanAi(d.noiDungSeDang.split(NGAN_CACH_CHUOI)[0])
+    if (l) loi.push(thongBaoLoiNhanAi(l))
   }
   return loi
 }
@@ -119,6 +104,38 @@ export const CAU_HINH_KENH: Record<Kenh, CauHinhKenh> = {
   threads: { ten: 'Threads', gioiHanKyTu: 500, daXacMinh: false, ghiChu: '500 ký tự theo tài liệu bên thứ ba (11/11/2026)' },
   website: { ten: 'Website', gioiHanKyTu: null, daXacMinh: true, ghiChu: 'Không giới hạn' },
 }
+
+/** Miền hợp lệ của đường dẫn bài đã đăng, theo kênh. Website: tên miền riêng của đơn vị, chưa cấu hình → chỉ cần https. */
+const MIEN_KENH: Record<Kenh, string[] | null> = {
+  facebook: ['facebook.com', 'fb.com', 'fb.watch', 'fb.me'],
+  linkedin: ['linkedin.com', 'lnkd.in'],
+  threads: ['threads.net', 'threads.com'],
+  website: null,
+}
+
+/** Chuẩn hoá + kiểm đường dẫn bài đã đăng cho một kênh. Trả chuỗi URL đã chuẩn hoá hoặc ném Error có thông báo. */
+export function kiemTraUrlBaiDang(kenh: string, tho: unknown): string {
+  const s = String(tho ?? '').trim()
+  if (!/^https:\/\/[^\s]{4,500}$/i.test(s)) throw new Error('Cần đường dẫn https của bài đã đăng')
+  let u: URL
+  try { u = new URL(s) } catch { throw new Error('Cần đường dẫn https của bài đã đăng') }
+  if (u.protocol !== 'https:' || u.username || u.password) throw new Error('Đường dẫn không được chứa tên đăng nhập/mật khẩu')
+  // Tham số trông như thông tin xác thực (token, chữ ký…) sẽ bị chép vào nhật ký bất biến → từ chối, không chuẩn hoá lặng lẽ.
+  // Khớp CẢ TÊN (không khớp chuỗi con: "postcode", "design" là hợp lệ), kiểm cả query lẫn fragment (#access_token=…).
+  const TEN_XAC_THUC = /^(access_?token|refresh_?token|id_?token|auth_?token|token|api_?key|apikey|key|client_?secret|secret|password|passwd|pwd|sig|signature|auth|authorization|bearer|session|session_?id|sid|code)$/i
+  const thamSo = [...u.searchParams.keys(), ...new URLSearchParams(u.hash.replace(/^#/, '').replace(/^[^=]*\?/, '')).keys()]
+  for (const ten of thamSo) {
+    if (TEN_XAC_THUC.test(ten)) throw new Error(`Đường dẫn có tham số "${ten}" giống thông tin xác thực — chỉ xoá tham số đó rồi nhập lại (giữ các tham số định danh bài)`)
+  }
+  const mien = MIEN_KENH[kenh as Kenh]
+  if (mien === undefined) throw new Error('Kênh không hợp lệ')
+  if (mien) {
+    const h = u.hostname.toLowerCase().replace(/\.$/, '')
+    if (!mien.some((m) => h === m || h.endsWith('.' + m))) throw new Error(`Đường dẫn phải thuộc ${mien.join(', ')} (kênh ${CAU_HINH_KENH[kenh as Kenh].ten})`)
+  }
+  return u.href
+}
+
 
 export function laKenh(s: string): s is Kenh {
   return (KENH as readonly string[]).includes(s)

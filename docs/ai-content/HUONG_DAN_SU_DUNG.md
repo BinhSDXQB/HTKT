@@ -24,7 +24,7 @@ Dành cho cán bộ Văn phòng Sở (soạn bài) và lãnh đạo Sở (duyệ
 | Bài chưa được duyệt | Chưa gửi duyệt hoặc chưa có quyết định | Gửi duyệt, chờ lãnh đạo |
 | Chưa phân loại "Công khai" | Bài đang là Nội bộ/Hạn chế/Mật | Sửa phân loại (bài sẽ phải duyệt lại) |
 | Tài liệu nguồn không dùng được | Nguồn thuộc phạm vi nội bộ, hết hiệu lực, cần kiểm chứng, hoặc đã bị gỡ khỏi kho | Bỏ nguồn đó hoặc thay bằng văn bản còn hiệu lực |
-| Thiếu thông báo AI ở phần đầu | Bài đánh dấu "AI tạo, có thể gây nhầm lẫn" nhưng bản theo kênh không có câu thông báo chuẩn | Bấm *Tạo từ bài gốc* (tự chèn) hoặc thêm đúng câu thông báo vào đầu bài |
+| Thiếu thông báo AI / thông báo AI sai vị trí | Bài đánh dấu "AI tạo, có thể gây nhầm lẫn" nhưng bản theo kênh không có câu thông báo chuẩn | Bấm *Tạo từ bài gốc* (tự chèn) hoặc thêm đúng câu thông báo vào đầu bài |
 | Người duyệt phải khác người soạn | Nguyên tắc bốn mắt | Nhờ lãnh đạo khác duyệt |
 | Kênh này đã có lịch | Mỗi phiên bản + kênh chỉ một lịch còn hiệu lực | Huỷ lịch cũ rồi đặt lại |
 
@@ -42,3 +42,9 @@ Dành cho cán bộ Văn phòng Sở (soạn bài) và lãnh đạo Sở (duyệ
 
 ## Lịch xuất bản
 *AI Workspace → Lịch xuất bản*: xem theo tháng hoặc danh sách; bấm vào một mục để mở bài. Muốn đổi giờ: mở bài, huỷ lịch cũ, đặt lịch mới.
+
+## Đăng lại một bài đã đăng
+Kênh đã đăng phiên bản hiện hành thì nút đổi thành *Đăng lại*. Ghi lý do (ít nhất 10 ký tự, ví dụ "bài trước bị gỡ nhầm") rồi đặt lịch như thường; lý do được lưu trong nhật ký. Bài vẫn phải còn hiệu lực phê duyệt.
+
+## Rời trang khi chưa lưu
+Bấm một liên kết sang trang khác trong hệ thống khi còn chữ chưa lưu, hệ thống hỏi lại. Nút Quay lại/Tiến của trình duyệt CHƯA được chặn: hãy lưu trước khi bấm.

@@ -2,8 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   bamNoiDung, gioDiaPhuongSangUtc, kiemTraCongXuatBan, chuyenTheTheoQuyTac, kiemTraBienThe, chiaDoan,
-  thoiGianCho, phanLoaiLoi, trangThaiSauLoi, aiContentBat, lyDoKhongDuocDuyet, duocSoan, coNhanAi,
-  NGAN_CACH_CHUOI, SO_LAN_THU_TOI_DA, NHAN_AI, nguonGocHopLe, type DauVaoCong,
+  thoiGianCho, phanLoaiLoi, trangThaiSauLoi, aiContentBat, lyDoKhongDuocDuyet, duocSoan, coNhanAi, loiNhanAi, NHAN_AI_MAC_DINH, nhanAiTuCauHinh, chuyenTheTheoQuyTac as chuyenThe2,
+  NGAN_CACH_CHUOI, kiemTraUrlBaiDang, SO_LAN_THU_TOI_DA, NHAN_AI, nguonGocHopLe, type DauVaoCong,
 } from './nghiep-vu'
 import { duocChuyenNoiDung, duocChuyenLich, tongHopXuatBan } from './trang-thai'
 
@@ -59,7 +59,37 @@ test('cổng xuất bản: chặn dữ liệu nội bộ, nguồn hết hiệu l
 test('cổng xuất bản: nội dung AI có thể gây nhầm lẫn phải có nhãn', () => {
   const d = { ...hopLe(), doAiTao: true, coTheGayNhamLan: true }
   assert.ok(kiemTraCongXuatBan({ ...d, noiDungSeDang: 'Ai cũng biết điều này' }).length > 0)
-  assert.deepEqual(kiemTraCongXuatBan({ ...d, noiDungSeDang: `Bài viết. (${NHAN_AI})` }), [])
+  assert.deepEqual(kiemTraCongXuatBan({ ...d, noiDungSeDang: `TIÊU ĐỀ\n\n(${NHAN_AI})\n\nNội dung.` }), [])
+  // Vị trí (NĐ 142/2026 Đ18 k3 b): thông báo ở cuối bài một khối KHÔNG đạt theo cách đọc mặc định
+  const cuoi = kiemTraCongXuatBan({ ...d, noiDungSeDang: `TIÊU ĐỀ\n\nĐoạn một.\n\nĐoạn hai.\n\n(${NHAN_AI})` })
+  assert.equal(cuoi.length, 1); assert.match(cuoi[0], /Điều 18 khoản 3 điểm b/)
+  assert.match(kiemTraCongXuatBan({ ...d, noiDungSeDang: 'Bài không có thông báo.' })[0], /Điều 11 khoản 3/)
+  assert.equal(loiNhanAi(`${NHAN_AI}\n\nNội dung`), null, 'thông báo đứng đầu, không tiêu đề')
+  assert.equal(loiNhanAi(`# Tiêu đề\n\n(Nội dung này được tạo ra hoặc chỉnh sửa\nbằng hệ thống trí tuệ nhân tạo.)\n\nThân`, NHAN_AI_MAC_DINH), null, 'câu bị ngắt dòng vẫn nhận ra')
+  assert.equal(loiNhanAi(`${'x'.repeat(301)} ${NHAN_AI}`), 'sai_vi_tri', 'cùng đoạn nhưng quá xa đầu bài')
+  assert.equal(loiNhanAi(`A\n\nB\n\n${NHAN_AI}`, NHAN_AI, 'bat_ky'), null, 'chế độ bat_ky (khi Pháp chế cho phép)')
+  assert.equal(loiNhanAi('Nội dung có sử dụng AI hỗ trợ.'), 'thieu', 'câu gần giống không được tính')
+  assert.equal(NHAN_AI_MAC_DINH, 'Nội dung này được tạo ra hoặc chỉnh sửa bằng hệ thống trí tuệ nhân tạo.')
+  // Codex vòng 5
+  assert.equal(loiNhanAi('('.repeat(5000) + NHAN_AI), 'sai_vi_tri', '#1: dấu ngoặc đệm không được bỏ vô hạn')
+  assert.equal(loiNhanAi(`# Tiêu đề\n\n<!--${NHAN_AI}-->\n\nThân`), 'bi_che', '#1: thông báo trong chú thích HTML không hiển thị')
+  assert.equal(loiNhanAi(`<!-- ghi chú -->\n\n${NHAN_AI}\n\nThân`), null, 'chú thích đã đóng trước thông báo: hợp lệ')
+  assert.equal(loiNhanAi(`Tiêu đề‮\n\n${NHAN_AI}`), 'bi_che', '#1: ký tự đổi hướng chữ đứng trước')
+  assert.equal(loiNhanAi(`A\n\nB\n\n<!--${NHAN_AI}-->`, NHAN_AI, 'bat_ky'), 'bi_che', 'chế độ bat_ky vẫn không nhận thông báo bị che')
+  assert.match(kiemTraCongXuatBan({ ...d, noiDungSeDang: `T\n\n<!--${NHAN_AI}-->` })[0], /Điều 18 khoản 3 điểm c/)
+  assert.match(cuoi[0], /Theo quy định xuất bản của hệ thống/, '#9: không viết như thể luật bắt buộc đúng vị trí')
+  for (const n of [298, 299, 300]) {
+    assert.equal(loiNhanAi(chuyenThe2('website', 'x'.repeat(n), 'Thân bài.', true).split(NGAN_CACH_CHUOI)[0]), null, `#2: tiêu đề ${n} ký tự trên Website`)
+    assert.equal(loiNhanAi(chuyenThe2('facebook', 'x'.repeat(n), 'Thân bài.', true)), null, `#2: tiêu đề ${n} ký tự trên Facebook`)
+  }
+  assert.equal(loiNhanAi(`T\n\n${NHAN_AI.normalize('NFD')}`), null, '#3: câu ở dạng NFD (chép từ trình soạn thảo)')
+  assert.equal(loiNhanAi(`T\n\n${NHAN_AI.replace(/ /g, ' ')}`), null, '#3: dấu cách không ngắt')
+  assert.equal(loiNhanAi(`T\n\n${NHAN_AI.replace('trí tuệ', 'trí​ tuệ')}`), 'thieu', 'ký tự zero-width chèn giữa câu: không nhận')
+  assert.equal(nhanAiTuCauHinh(undefined).nhan, NHAN_AI_MAC_DINH)
+  assert.equal(nhanAiTuCauHinh('   ').loi, null)
+  for (const x of ['​', 'Ngắn quá', 'x'.repeat(201), '1234567890 1234567890 12', 'Nội dung do AI tạo​ ra, xin lưu ý khi đọc.'])
+    assert.ok(nhanAiTuCauHinh(x).loi && nhanAiTuCauHinh(x).nhan === NHAN_AI_MAC_DINH, `#5: cấu hình không hợp lệ phải về mặc định: ${JSON.stringify(x).slice(0, 30)}`)
+  assert.deepEqual(nhanAiTuCauHinh('  Nội dung này   do hệ thống trí tuệ nhân tạo tạo ra. '), { nhan: 'Nội dung này do hệ thống trí tuệ nhân tạo tạo ra.', loi: null })
   assert.deepEqual(kiemTraCongXuatBan({ ...d, coTheGayNhamLan: false, noiDungSeDang: 'x' }), [])
   // Chỉ nhắc tới AI / trí tuệ nhân tạo không phải là thông báo chuẩn
   assert.ok(kiemTraCongXuatBan({ ...d, noiDungSeDang: 'Hội thảo về AI và trí tuệ nhân tạo trong xây dựng' }).length > 0)
@@ -172,4 +202,34 @@ test('nguồn gốc yêu cầu ghi: đúng host hoặc tên miền công khai sa
   assert.equal(nguonGocHopLe('https://qlhtkt.htkt.com.vn.evil.example', host), false)
   assert.equal(nguonGocHopLe('null', host), false)
   assert.equal(nguonGocHopLe('https://a.vn', []), false)
+})
+
+test('kiemTraUrlBaiDang: đúng miền kênh, chặn miền lạ / lừa @ / http / kênh sai', () => {
+  assert.equal(kiemTraUrlBaiDang('facebook', 'https://www.facebook.com/p/1'), 'https://www.facebook.com/p/1')
+  assert.equal(kiemTraUrlBaiDang('facebook', ' https://m.facebook.com/x '), 'https://m.facebook.com/x')
+  assert.equal(kiemTraUrlBaiDang('threads', 'https://www.threads.net/@a/post/1'), 'https://www.threads.net/@a/post/1')
+  assert.equal(kiemTraUrlBaiDang('website', 'https://sxd.example.vn/tin/1'), 'https://sxd.example.vn/tin/1')
+  for (const x of [
+    'https://evil.example.com/x', 'https://facebook.com.evil.com/x', 'https://evilfacebook.com/x',
+    'https://facebook.com@evil.com/x', 'https://user:pw@facebook.com/x', 'http://www.facebook.com/x', 'khong-phai-url', '',
+  ]) assert.throws(() => kiemTraUrlBaiDang('facebook', x), undefined, x)
+  assert.equal(kiemTraUrlBaiDang('facebook', 'HTTPS://WWW.FACEBOOK.COM/permalink.php?story_fbid=1&id=2'), 'https://www.facebook.com/permalink.php?story_fbid=1&id=2')
+  for (const x of ['https://www.facebook.com/p/1?access_token=abc', 'https://www.facebook.com/p/1?sig=xyz', 'https://www.facebook.com/p/1?api_key=1']) {
+    assert.throws(() => kiemTraUrlBaiDang('facebook', x), /xác thực/, x)
+  }
+  assert.throws(() => kiemTraUrlBaiDang('facebook', 'https://www.facebook.com/p/1#access_token=abc'), /xác thực/)
+  assert.throws(() => kiemTraUrlBaiDang('facebook', 'https://www.facebook.com/p/1?id=2&token=abc'), /xác thực/)
+  assert.equal(kiemTraUrlBaiDang('website', 'https://sxd.vn/tin?postcode=1&design=2&utm_source=fb'), 'https://sxd.vn/tin?postcode=1&design=2&utm_source=fb')
+  assert.throws(() => kiemTraUrlBaiDang('zalo', 'https://zalo.me/x'), /Kênh không hợp lệ/)
+})
+
+test('gộp lịch theo kênh: lần đăng lại đang chờ không biến bài một kênh thành "đăng một phần" (Codex vòng 5 #6)', async () => {
+  const { gopTheoKenh, tongHopXuatBan } = await import('./trang-thai')
+  const k = (channel: string, status: string) => ({ channel, status }) as { channel: string; status: 'PUBLISHED' }
+  assert.equal(tongHopXuatBan(gopTheoKenh([k('facebook', 'PUBLISHED'), k('facebook', 'SCHEDULED')])), 'DA_DANG')
+  assert.equal(tongHopXuatBan(gopTheoKenh([k('facebook', 'PUBLISHED'), k('facebook', 'PUBLISHED')])), 'DA_DANG')
+  assert.equal(tongHopXuatBan(gopTheoKenh([k('facebook', 'PUBLISHED'), k('facebook', 'UNKNOWN_OUTCOME')])), 'CAN_DOI_SOAT')
+  assert.equal(tongHopXuatBan(gopTheoKenh([k('facebook', 'PUBLISHED'), k('facebook', 'FAILED')])), 'DA_DANG')
+  assert.equal(tongHopXuatBan(gopTheoKenh([k('facebook', 'PUBLISHED'), k('linkedin', 'SCHEDULED')])), 'DANG_MOT_PHAN')
+  assert.deepEqual(gopTheoKenh([]), [])
 })

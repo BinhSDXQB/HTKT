@@ -46,7 +46,21 @@ export function duocChuyenLich(tu: TrangThaiLich, den: TrangThaiLich): boolean {
 export type TongHopXuatBan =
   | 'CHUA_DAT_LICH' | 'DA_DAT_LICH' | 'DANG_DANG' | 'DA_DANG' | 'DANG_MOT_PHAN' | 'CAN_DOI_SOAT' | 'LOI' | 'DA_HUY'
 
-/** Suy trạng thái tổng hợp của một bài từ trạng thái các lịch đăng (mỗi kênh độc lập). */
+/**
+ * Một kênh có thể có NHIỀU lịch (đăng lại): gộp về MỘT trạng thái đại diện cho kênh trước khi tổng hợp bài, để lần đăng lại
+ * đang chờ không biến bài một kênh đã đăng thành "đăng một phần". Ưu tiên: cần đối soát > đang đăng > đã đăng > đang chờ > lỗi.
+ */
+const UU_TIEN_KENH: TrangThaiLich[] = ['UNKNOWN_OUTCOME', 'PUBLISHING', 'PUBLISHED', 'SCHEDULED', 'RETRY_PENDING', 'FAILED', 'EXPIRED', 'CANCELLED']
+export function gopTheoKenh(lich: { channel: string; status: TrangThaiLich }[]): TrangThaiLich[] {
+  const theo = new Map<string, TrangThaiLich>()
+  for (const l of lich) {
+    const cu = theo.get(l.channel)
+    if (!cu || UU_TIEN_KENH.indexOf(l.status) < UU_TIEN_KENH.indexOf(cu)) theo.set(l.channel, l.status)
+  }
+  return [...theo.keys()].sort().map((k) => theo.get(k)!)
+}
+
+/** Suy trạng thái tổng hợp của một bài từ trạng thái ĐẠI DIỆN của từng kênh (xem gopTheoKenh). */
 export function tongHopXuatBan(lich: TrangThaiLich[]): TongHopXuatBan {
   const con = lich.filter((s) => s !== 'CANCELLED' && s !== 'EXPIRED')
   if (lich.length === 0) return 'CHUA_DAT_LICH'

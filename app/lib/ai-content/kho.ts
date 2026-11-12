@@ -8,11 +8,11 @@
  */
 import { createHash, randomUUID } from 'node:crypto'
 import {
-  bamNoiDung, chuanHoa, kiemTraCongXuatBan, kiemTraBienThe, chuyenTheTheoQuyTac, gioDiaPhuongSangUtc,
+  bamNoiDung, chuanHoa, kiemTraUrlBaiDang, kiemTraCongXuatBan, kiemTraBienThe, chuyenTheTheoQuyTac, gioDiaPhuongSangUtc,
   lyDoKhongDuocDuyet, duocSoan, laKenh, phanLoaiLoi, trangThaiSauLoi, thoiGianCho,
   PHAN_LOAI, MUI_GIO_MAC_DINH, type Kenh, type NguoiDungToiThieu, type NguonTrich,
 } from './nghiep-vu'
-import { duocChuyenNoiDung, type TrangThaiNoiDung, type TrangThaiLich } from './trang-thai'
+import { duocChuyenNoiDung, gopTheoKenh, type TrangThaiNoiDung, type TrangThaiLich } from './trang-thai'
 
 export type Db = {
   q<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<T[]>
@@ -161,9 +161,14 @@ async function ganNguon(d: Db, contentId: string, nguonIds: string[]) {
   if (nguonIds.length === 0) return
   const co = await d.q<{ id: string }>(
     `insert into ai_content_sources (content_id, tai_lieu_id, tieu_de_luc_gan)
-     select $1::uuid, t.id, t."tieuDe" from tai_lieu t where t.id = any($2::text[]) and t."deletedAt" is null returning tai_lieu_id as id`,
+     select $1::uuid, t.id, t."tieuDe" from tai_lieu t
+      where t.id = any($2::text[]) and t."deletedAt" is null and t."trangThai" = 'san_sang' returning tai_lieu_id as id`,
+    // Chỉ gắn tài liệu ĐÃ SẴN SÀNG. Ngoài lý do nghiệp vụ (bản đang nạp/chờ thay chưa phải văn bản của kho), đây là điều kiện
+    // chống deadlock: sync-vbpl (thayBanCu) khoá bản MỚI 'cho_thay' rồi mới khoá bản cũ; nếu bài được phép viện dẫn bản
+    // 'cho_thay' thì cổng (khoá chia sẻ theo thứ tự id) và sync có thể chờ vòng nhau. Không bài nào giữ khoá trên bản
+    // 'cho_thay' → sync chỉ còn tranh MỘT khoá với module → không có chu trình.
     [contentId, nguonIds])
-  if (co.length !== nguonIds.length) throw new LoiNghiepVu(400, 'Có tài liệu nguồn không tồn tại trong kho')
+  if (co.length !== nguonIds.length) throw new LoiNghiepVu(400, 'Có tài liệu nguồn không tồn tại trong kho hoặc chưa nạp xong')
 }
 
 export async function taoBai(db: Db, u: NguoiDungToiThieu, dauVao: DauVaoBai): Promise<{ id: string }> {
@@ -183,17 +188,24 @@ export async function taoBai(db: Db, u: NguoiDungToiThieu, dauVao: DauVaoBai): P
   })
 }
 
+/** Chống thao tác từ màn hình cũ: băm gói hiện hành (nội dung + biến thể + nguồn) phải đúng bản người dùng đang nhìn. Phải gọi dưới khoá bài. */
+async function kiemNen(d: Db, b: Bai, bamNen?: string) {
+  if (bamNen === undefined) return
+  if ((await bamHienTai(d, b)).bam !== bamNen) throw new LoiNghiepVu(409, 'Bài đã thay đổi kể từ lúc bạn mở. Tải lại trang để xem bản mới rồi thao tác tiếp.')
+}
+
 /**
  * Sửa bài: nội dung đổi → PHIÊN BẢN MỚI (biến thể kênh phải tạo lại). Dù đổi gì, bài luôn trở về DRAFT
  * và mọi lịch chưa đăng bị huỷ: phê duyệt cũ không còn giá trị cho nội dung mới (AT-06).
  */
-export async function suaBai(db: Db, u: NguoiDungToiThieu, idRaw: string, dauVao: DauVaoBai) {
+export async function suaBai(db: Db, u: NguoiDungToiThieu, idRaw: string, dauVao: DauVaoBai, bamNen?: string) {
   kiemQuyenSoan(u)
   const id = canUuid(idRaw, 'Mã bài')
   const i = chuanDauVao(dauVao)
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
     if (b.status === 'CANCELLED') throw new LoiNghiepVu(409, 'Bài đã huỷ, không sửa được')
+    await kiemNen(d, b, bamNen)
     const v = await layPhienBan(d, b.current_version_id)
     const bamMoi = bamNoiDung(i.tieuDe, i.noiDung)
     let versionId = v.id
@@ -225,7 +237,7 @@ export async function suaBai(db: Db, u: NguoiDungToiThieu, idRaw: string, dauVao
 }
 
 /** Lưu biến thể một kênh cho phiên bản hiện hành. Sửa biến thể sau khi gửi/đã duyệt → bài về DRAFT. */
-export async function luuBienThe(db: Db, u: NguoiDungToiThieu, idRaw: string, kenh: string, noiDungRaw: string) {
+export async function luuBienThe(db: Db, u: NguoiDungToiThieu, idRaw: string, kenh: string, noiDungRaw: string, phienBanNen?: string, bienTheNen?: string) {
   kiemQuyenSoan(u)
   const id = canUuid(idRaw, 'Mã bài')
   if (!laKenh(kenh)) throw new LoiNghiepVu(400, 'Kênh không hợp lệ')
@@ -234,6 +246,12 @@ export async function luuBienThe(db: Db, u: NguoiDungToiThieu, idRaw: string, ke
   if (loi.length) throw new LoiNghiepVu(400, 'Biến thể chưa hợp lệ', loi)
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
+    if (phienBanNen !== undefined && b.current_version_id !== phienBanNen) throw new LoiNghiepVu(409, 'Bài đã sang phiên bản khác kể từ lúc bạn mở. Tải lại trang rồi soạn lại bản kênh.')
+    if (bienTheNen !== undefined) {
+      // Cùng phiên bản nhưng người khác đã lưu biến thể này kể từ lúc mở → không ghi đè.
+      const [hien] = await d.q<{ body: string }>(`select body from ai_channel_variants where version_id = $1::uuid and channel = $2`, [b.current_version_id, kenh])
+      if (chuanHoa(hien?.body ?? '') !== chuanHoa(bienTheNen)) throw new LoiNghiepVu(409, 'Bản theo kênh này đã được người khác lưu kể từ lúc bạn mở. Tải lại trang rồi soạn tiếp.')
+    }
     return { id, kenh, ...(await luuBienTheTrong(d, b, u, kenh, noiDung)) }
   })
 }
@@ -263,7 +281,7 @@ async function luuBienTheTrong(d: Db, b: Bai, u: NguoiDungToiThieu, kenh: Kenh, 
 }
 
 /** Tạo biến thể theo quy tắc (không gọi AI) cho các kênh yêu cầu. */
-export async function taoBienTheTheoQuyTac(db: Db, u: NguoiDungToiThieu, idRaw: string, kenhs: string[]) {
+export async function taoBienTheTheoQuyTac(db: Db, u: NguoiDungToiThieu, idRaw: string, kenhs: string[], bamNen?: string) {
   kiemQuyenSoan(u)
   const id = canUuid(idRaw, 'Mã bài')
   const ds = [...new Set(kenhs)]
@@ -271,6 +289,7 @@ export async function taoBienTheTheoQuyTac(db: Db, u: NguoiDungToiThieu, idRaw: 
   // Đọc phiên bản và ghi biến thể trong CÙNG giao dịch đã khoá bài: không thể lấy thân bài cũ gắn vào phiên bản mới.
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
+    await kiemNen(d, b, bamNen)
     const v = await layPhienBan(d, b.current_version_id)
     for (const k of ds as Kenh[]) {
       const noiDung = chuanHoa(chuyenTheTheoQuyTac(k, v.title, v.body_md, b.ai_generated && b.may_mislead))
@@ -282,11 +301,12 @@ export async function taoBienTheTheoQuyTac(db: Db, u: NguoiDungToiThieu, idRaw: 
   })
 }
 
-export async function guiDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string) {
+export async function guiDuyet(db: Db, u: NguoiDungToiThieu, idRaw: string, bamNen?: string) {
   kiemQuyenSoan(u)
   const id = canUuid(idRaw, 'Mã bài')
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
+    await kiemNen(d, b, bamNen)
     if (!duocChuyenNoiDung(b.status, 'PENDING_REVIEW')) throw new LoiNghiepVu(409, `Không gửi duyệt được từ trạng thái ${b.status}`)
     const bienThe = await layBienThe(d, b.current_version_id)
     if (bienThe.length === 0) throw new LoiNghiepVu(400, 'Cần ít nhất một biến thể kênh trước khi gửi duyệt')
@@ -370,7 +390,11 @@ async function congTrongGiaoDich(d: Db, b: Bai, kenh: Kenh): Promise<{ loi: stri
   return { loi, pheDuyetId: pd?.id ?? null, bienThe: bt, versionId: v.id }
 }
 
-export type DauVaoLich = { kenh: string; ngay: string; gio: string; muiGio?: string; adapter?: string }
+export type DauVaoLich = {
+  kenh: string; ngay: string; gio: string; muiGio?: string; adapter?: string; bamNen?: string
+  /** Đăng lại bản ĐÃ ĐĂNG của phiên bản hiện hành trên kênh này (đăng thật bắt buộc kèm lý do, ghi nhật ký). */
+  dangLai?: boolean; lyDoDangLai?: string
+}
 
 export async function datLich(db: Db, u: NguoiDungToiThieu, idRaw: string, i: DauVaoLich, bayGio: Date = new Date()) {
   kiemQuyenSoan(u)
@@ -385,6 +409,7 @@ export async function datLich(db: Db, u: NguoiDungToiThieu, idRaw: string, i: Da
   if (luc.getTime() <= bayGio.getTime()) throw new LoiNghiepVu(400, 'Thời điểm đăng phải ở tương lai')
   return db.tx(async (d) => {
     const b = await khoaBai(d, id)
+    await kiemNen(d, b, i.bamNen)
     const c = await congTrongGiaoDich(d, b, kenh)
     if (c.loi.length) throw new LoiNghiepVu(409, 'Chưa đủ điều kiện đặt lịch xuất bản', c.loi)
     const khoa = createHash('sha256').update(`${c.versionId}|${kenh}`).digest('hex')
@@ -392,15 +417,28 @@ export async function datLich(db: Db, u: NguoiDungToiThieu, idRaw: string, i: Da
       `select id::text, status from ai_publication_schedules
         where version_id = $1::uuid and channel = $2
           and (adapter = 'dry_run') = ($3 = 'dry_run')   -- chạy thử không chiếm chỗ của lịch đăng thật, và ngược lại
-          and status in ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME','PUBLISHED')`, [c.versionId, kenh, adapter])
-    if (song.length) throw new LoiNghiepVu(409, `Kênh này đã có lịch (${song[0].status}) cho phiên bản hiện hành`)
+          and status in ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME','PUBLISHED')
+        order by created_at`, [c.versionId, kenh, adapter])
+    const dangCho = song.find((x) => x.status !== 'PUBLISHED')
+    if (dangCho) throw new LoiNghiepVu(409, `Kênh này đã có lịch (${dangCho.status}) cho phiên bản hiện hành`)
+    // Đã đăng rồi: không chặn cứng (bài bị gỡ nhầm, cần đăng nhắc lại là việc có thật) nhưng không được xảy ra do bấm nhầm.
+    // Đăng thật: phải nói rõ là ĐĂNG LẠI và ghi lý do. Chạy thử: không có bài thật nên chạy lại tự do.
+    const daDang = song.filter((x) => x.status === 'PUBLISHED')
+    const lyDoDangLai = (i.lyDoDangLai ?? '').trim()
+    if (daDang.length && adapter !== 'dry_run') {
+      if (!i.dangLai) throw new LoiNghiepVu(409, 'Kênh này đã đăng phiên bản hiện hành. Nếu cần đăng lại (bài bị gỡ, đăng nhắc lại), chọn "Đăng lại" và ghi lý do.')
+      if (lyDoDangLai.length < 10 || lyDoDangLai.length > 500) throw new LoiNghiepVu(400, 'Lý do đăng lại cần từ 10 đến 500 ký tự')
+    }
     const [{ id: lid }] = await d.q<{ id: string }>(
       `insert into ai_publication_schedules
          (content_id, version_id, variant_id, channel, adapter, scheduled_at_utc, timezone, approval_id, idempotency_key, created_by, body_snapshot)
        values ($1::uuid, $2::uuid, $3::uuid, $4, $5, $6::timestamptz, $7, $8::uuid, $9, $10, $11) returning id::text`,
       // body_snapshot: đúng văn bản đã duyệt cho kênh này — giữ lại vĩnh viễn dù biến thể về sau bị sửa.
       [id, c.versionId, c.bienThe!.id, kenh, adapter, luc.toISOString(), muiGio, c.pheDuyetId, `${khoa}:${randomUUID()}`, u.id, c.bienThe!.body])
-    await ghiNhatKy(d, randomUUID(), u.id, 'DAT_LICH', 'schedule', lid, { kenh, luc: luc.toISOString(), muiGio, adapter })
+    await ghiNhatKy(d, randomUUID(), u.id, 'DAT_LICH', 'schedule', lid, {
+      kenh, luc: luc.toISOString(), muiGio, adapter,
+      ...(daDang.length ? { dangLai: true, lanDangThu: daDang.length + 1, lichTruoc: daDang[daDang.length - 1].id, ...(adapter !== 'dry_run' ? { lyDo: lyDoDangLai } : {}) } : {}),
+    })
     return { id: lid, scheduledAtUtc: luc.toISOString() }
   })
 }
@@ -418,27 +456,24 @@ export async function huyLich(db: Db, u: NguoiDungToiThieu, lichIdRaw: string) {
   })
 }
 
-type Lich = { id: string; content_id: string; channel: Kenh; adapter: string; status: TrangThaiLich; retry_count: number; idempotency_key: string }
+type Lich = { id: string; content_id: string; version_id: string; body_snapshot: string | null; channel: Kenh; adapter: string; status: TrangThaiLich; retry_count: number; idempotency_key: string }
 
 async function khoaLich(d: Db, lichId: string): Promise<Lich> {
   const [l] = await d.q<Lich>(
-    `select id::text, content_id::text, channel, adapter, status, retry_count, idempotency_key
+    `select id::text, content_id::text, version_id::text, body_snapshot, channel, adapter, status, retry_count, idempotency_key
        from ai_publication_schedules where id = $1::uuid for update`, [lichId])
   if (!l) throw new LoiNghiepVu(404, 'Không tìm thấy lịch')
   return l
 }
 
-function canUrl(s: unknown): string {
-  const url = String(s ?? '').trim()
-  if (!/^https:\/\/[^\s]{4,500}$/i.test(url)) throw new LoiNghiepVu(400, 'Cần đường dẫn https của bài đã đăng')
-  return url
+function canUrl(kenh: string, s: unknown): string {
+  try { return kiemTraUrlBaiDang(kenh, s) } catch (e) { throw new LoiNghiepVu(400, (e as Error).message) }
 }
 
 /** Kênh đăng tay: người dùng đăng rồi xác nhận kèm đường dẫn. Cổng xuất bản vẫn được kiểm lại tại đây. */
 export async function xacNhanDangTay(db: Db, u: NguoiDungToiThieu, lichIdRaw: string, urlRaw: string) {
   kiemQuyenSoan(u)
   const lichId = canUuid(lichIdRaw, 'Mã lịch')
-  const url = canUrl(urlRaw)
   return db.tx(async (d) => {
     const [x] = await d.q<{ content_id: string }>(`select content_id::text from ai_publication_schedules where id = $1::uuid`, [lichId])
     if (!x) throw new LoiNghiepVu(404, 'Không tìm thấy lịch')
@@ -446,7 +481,10 @@ export async function xacNhanDangTay(db: Db, u: NguoiDungToiThieu, lichIdRaw: st
     const l = await khoaLich(d, lichId)
     if (l.adapter !== 'manual') throw new LoiNghiepVu(409, 'Lịch này không phải loại đăng tay')
     if (l.status !== 'SCHEDULED') throw new LoiNghiepVu(409, 'Lịch không ở trạng thái chờ đăng')
+    const url = canUrl(l.channel, urlRaw)
     const c = await congTrongGiaoDich(d, b, l.channel)
+    if (l.version_id !== c.versionId) c.loi.push('Lịch thuộc phiên bản cũ của bài.')
+    else if (c.bienThe && l.body_snapshot !== null && chuanHoa(l.body_snapshot) !== chuanHoa(c.bienThe.body)) c.loi.push('Văn bản kênh đã đổi sau khi đặt lịch.')
     if (c.loi.length) throw new LoiNghiepVu(409, 'Nội dung không còn đủ điều kiện xuất bản', c.loi)
     await d.q(
       `update ai_publication_schedules set status = 'PUBLISHED', published_at = now(), external_url = $2, updated_at = now()
@@ -461,10 +499,10 @@ export async function doiSoat(db: Db, u: NguoiDungToiThieu, lichIdRaw: string, k
   kiemQuyenSoan(u)
   const lichId = canUuid(lichIdRaw, 'Mã lịch')
   if (ketQua !== 'PUBLISHED' && ketQua !== 'FAILED') throw new LoiNghiepVu(400, 'Kết quả đối soát không hợp lệ')
-  const url = ketQua === 'PUBLISHED' ? canUrl(urlRaw) : null
   return db.tx(async (d) => {
     const l = await khoaLich(d, lichId)
     if (l.status !== 'UNKNOWN_OUTCOME') throw new LoiNghiepVu(409, 'Lịch không ở trạng thái cần đối soát')
+    const url = ketQua === 'PUBLISHED' ? canUrl(l.channel, urlRaw) : null
     await d.q(
       `update ai_publication_schedules set status = $2, external_url = $3,
               published_at = case when $2 = 'PUBLISHED' then now() else null end,
@@ -540,6 +578,10 @@ async function nhanMot(db: Db, workerId: string, boQua: string[]): Promise<{ vie
     if (!bai) return { boQua: ung.id }          // bài đang bị thao tác khác giữ → lần quét sau thử lại, giờ sang lịch kế
     const l = await khoaLich(d, ung.id)
     const c = await congTrongGiaoDich(d, bai, l.channel)
+    // Lịch gắn với MỘT phiên bản: sau khi bài sửa sang phiên bản khác, lịch cũ (vd. đang chờ thử lại) không được lấy nội dung mới.
+    if (l.version_id !== c.versionId) c.loi.push('Lịch thuộc phiên bản cũ của bài.')
+    // Cùng phiên bản nhưng biến thể đã bị sửa sau khi đặt lịch (lịch đang đăng không bị huỷ): văn bản gửi đi phải đúng bản đã duyệt cho lịch này.
+    else if (c.bienThe && l.body_snapshot !== null && chuanHoa(l.body_snapshot) !== chuanHoa(c.bienThe.body)) c.loi.push('Văn bản kênh đã đổi sau khi đặt lịch.')
     const cid = randomUUID()
     const maNhan = `${workerId}:${randomUUID()}`
     if (c.loi.length) {
@@ -591,12 +633,12 @@ export async function ghiKetQua(db: Db, maNhan: string, lichId: string, kq: KetQ
 
 // ── Đọc ───────────────────────────────────────────────────────────────────────
 export async function danhSachBai(db: Db, loc: { trangThai?: string; tu?: string } = {}) {
-  return db.q(
+  const hang = await db.q<{ lich: { channel: string; status: TrangThaiLich }[] } & Record<string, unknown>>(
     `select i.id::text, i.title, i.status, i.classification, i.ai_generated, ${iso('i.updated_at')}, u.name as nguoi_tao,
             v.version_no,
             -- chỉ lịch của PHIÊN BẢN HIỆN HÀNH và là lịch đăng thật: bản cũ đã đăng không làm bản mới trông như "đã đăng"
-            coalesce((select array_agg(s.status order by s.channel) from ai_publication_schedules s
-                       where s.content_id = i.id and s.version_id = i.current_version_id and s.adapter <> 'dry_run'), '{}') as lich
+            coalesce((select json_agg(json_build_object('channel', s.channel, 'status', s.status)) from ai_publication_schedules s
+                       where s.content_id = i.id and s.version_id = i.current_version_id and s.adapter <> 'dry_run'), '[]'::json) as lich
        from ai_content_items i
        join users u on u.id = i.created_by
        join ai_content_versions v on v.id = i.current_version_id
@@ -604,6 +646,8 @@ export async function danhSachBai(db: Db, loc: { trangThai?: string; tu?: string
         and ($1::text is null or i.status = $1)
         and ($2::text is null or i.title ilike '%' || $2 || '%')
       order by i.updated_at desc limit 200`, [loc.trangThai || null, loc.tu?.slice(0, 100) || null])
+  // Mỗi KÊNH một trạng thái đại diện: kênh đã đăng đang có lịch đăng lại vẫn là "đã đăng", không thành "đăng một phần".
+  return hang.map((h) => ({ ...h, lich: gopTheoKenh(h.lich) }))
 }
 
 export async function chiTietBai(db: Db, idRaw: string) {
@@ -625,8 +669,13 @@ export async function chiTietBai(db: Db, idRaw: string) {
   const lichSuPhienBan = await db.q(
     `select v.id::text, v.version_no, ${iso('v.created_at')}, u.name as nguoi from ai_content_versions v join users u on u.id = v.created_by
       where v.content_id = $1::uuid order by v.version_no desc limit 30`, [id])
+  // Kênh đã đăng phiên bản hiện hành — hỏi thẳng CSDL, không suy từ danh sách `lich` bị cắt 50 dòng (nhiều lần chạy thử
+  // có thể đẩy lịch đăng thật ra ngoài, làm giao diện không mời "Đăng lại" trong khi máy chủ đòi cờ dangLai).
+  const kenhDaDang = await db.q<{ channel: string; chay_thu: boolean }>(
+    `select distinct channel, (adapter = 'dry_run') as chay_thu from ai_publication_schedules
+      where content_id = $1::uuid and version_id = $2::uuid and status = 'PUBLISHED'`, [id, phienBan.id])
   const bam = bamPheDuyet(bai, phienBan, bienThe, nguon.map((n) => n.id))
-  return { bai, phienBan, bienThe, nguon, pheDuyet, lich, lichSuPhienBan, bamHienTai: bam }
+  return { bai, phienBan, bienThe, nguon, pheDuyet, lich, kenhDaDang, lichSuPhienBan, bamHienTai: bam }
 }
 
 export async function lichTrongKhoang(db: Db, tuIso: string, denIso: string) {
@@ -650,9 +699,9 @@ export async function thongKe(db: Db) {
        (select count(*)::int from ai_content_items where deleted_at is null and status = 'DRAFT') as ban_nhap,
        (select count(*)::int from ai_content_items where deleted_at is null and status = 'PENDING_REVIEW') as cho_duyet,
        (select count(*)::int from ai_content_items where deleted_at is null and status = 'APPROVED') as da_duyet,
-       (select count(*)::int from ai_publication_schedules where status in ('SCHEDULED','RETRY_PENDING')) as lich_cho,
-       (select count(*)::int from ai_publication_schedules where status = 'PUBLISHED') as da_dang,
-       (select count(*)::int from ai_publication_schedules where status = 'FAILED') as loi,
-       (select count(*)::int from ai_publication_schedules where status = 'UNKNOWN_OUTCOME') as can_doi_soat`)
+       (select count(*)::int from ai_publication_schedules where adapter <> 'dry_run' and status in ('SCHEDULED','RETRY_PENDING')) as lich_cho,
+       (select count(*)::int from ai_publication_schedules where adapter <> 'dry_run' and status = 'PUBLISHED') as da_dang,
+       (select count(*)::int from ai_publication_schedules where adapter <> 'dry_run' and status = 'FAILED') as loi,
+       (select count(*)::int from ai_publication_schedules where adapter <> 'dry_run' and status = 'UNKNOWN_OUTCOME') as can_doi_soat`)
   return r
 }

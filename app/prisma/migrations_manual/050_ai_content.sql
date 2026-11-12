@@ -141,9 +141,12 @@ CREATE INDEX IF NOT EXISTS ix_ai_pub_due ON ai_publication_schedules (scheduled_
   WHERE status IN ('SCHEDULED','RETRY_PENDING');
 CREATE INDEX IF NOT EXISTS ix_ai_pub_content ON ai_publication_schedules (content_id);
 -- Mỗi (phiên bản, kênh) chỉ MỘT lịch còn sống — chống đặt trùng/đăng trùng.
+-- Lịch ĐÃ ĐĂNG không tính là "còn sống": đăng lại cùng bản (bài bị gỡ nhầm, đăng nhắc lại) được phép, nhưng chỉ qua
+-- datLich với cờ dangLai + lý do ghi nhật ký; việc chặn "đã đăng mà không nói rõ là đăng lại" nằm ở tầng ứng dụng
+-- (trong giao dịch đã khoá hàng bài viết nên không chạy đua được).
 -- Chạy thử (dry_run) và đăng thật tính riêng: thử quy trình xong vẫn đặt được lịch đăng thật cho cùng bản.
 CREATE UNIQUE INDEX IF NOT EXISTS ux_ai_pub_song ON ai_publication_schedules (version_id, channel, (adapter = 'dry_run'))
-  WHERE status IN ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME','PUBLISHED');
+  WHERE status IN ('SCHEDULED','PUBLISHING','RETRY_PENDING','UNKNOWN_OUTCOME');
 
 CREATE TABLE IF NOT EXISTS ai_audit_events (
   id              BIGSERIAL PRIMARY KEY,

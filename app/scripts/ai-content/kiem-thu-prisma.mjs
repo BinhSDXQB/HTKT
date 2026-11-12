@@ -22,7 +22,7 @@ for (const [id, ten] of [['test-p1', 'Người P1'], ['test-p2', 'Người P2']]
   await pool.query(`insert into roles (id, name, "displayName") values ('test-role', 'test-role', 'Thử') on conflict do nothing`)
   await pool.query(`insert into users (id, email, name, password, "roleId", "updatedAt") values ($1, $2, $3, 'x', 'test-role', now()) on conflict (id) do nothing`, [id, id + '@test.invalid', ten])
 }
-await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "updatedAt") values ('test-pck', 'Nguồn công khai (Prisma)', 'CONG_KHAI', 'con_hieu_luc', now()) on conflict do nothing`)
+await pool.query(`insert into tai_lieu (id, "tieuDe", "phamVi", "tinhTrangHieuLuc", "trangThai", "updatedAt") values ('test-pck', 'Nguồn công khai (Prisma)', 'CONG_KHAI', 'con_hieu_luc', 'san_sang', now()) on conflict do nothing`)
 const A = { id: 'test-p1', laAdmin: false, laVanPhong: true, laLanhDao: false }
 const B = { id: 'test-p2', laAdmin: false, laVanPhong: false, laLanhDao: true }
 
@@ -86,7 +86,7 @@ await ca('danh sách, thống kê, nhật ký, thu hồi, đăng tay, đối so�
   assert.equal(typeof (await kho.thongKe(db)).tong_bai, 'number')
   assert.ok((await kho.nhatKy(db, 5)).length === 5)
   const l2 = await kho.datLich(db, A, id, { kenh: 'facebook', ngay, gio: '09:00' })
-  await kho.xacNhanDangTay(db, A, l2.id, 'https://example.invalid/prisma')
+  await kho.xacNhanDangTay(db, A, l2.id, 'https://www.facebook.com/prisma')
   assert.equal((await kho.thuHoiDuyet(db, B, id, 'thử')).lichBiHuy, 0)
   await assert.rejects(kho.datLich(db, A, id, { kenh: 'facebook', ngay, gio: '10:00', adapter: 'dry_run' }), (e) => e.ma === 409)
 })
