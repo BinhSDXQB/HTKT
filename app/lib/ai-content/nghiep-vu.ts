@@ -170,10 +170,10 @@ export function chiaDoan(s: string, gioiHan: number): string[] {
  * Chuyển thể THEO QUY TẮC (không gọi AI): bản nền an toàn, chạy được khi chưa cấu hình dịch vụ AI.
  * Người soạn chỉnh tay hoặc dùng AI viết lại sau; mọi bản đều phải qua duyệt.
  */
-export function chuyenTheTheoQuyTac(kenh: Kenh, tieuDe: string, noiDung: string, themNhanAi: boolean): string {
+export function chuyenTheTheoQuyTac(kenh: Kenh, tieuDe: string, noiDung: string, themNhanAi: boolean, cauNhan: string = NHAN_AI): string {
   const than = chuanHoa(noiDung)
   // Thông báo AI đặt NGAY SAU tiêu đề: người đọc thấy trước khi đọc nội dung, và luôn nằm ở bài đầu của chuỗi.
-  const nhan = themNhanAi ? `(${NHAN_AI})\n\n` : ''
+  const nhan = themNhanAi ? `(${cauNhan})\n\n` : ''
   if (kenh === 'website') return `# ${chuanHoa(tieuDe)}\n\n${nhan}${than}`
   const phang = boMarkdown(than)
   if (kenh === 'threads') {

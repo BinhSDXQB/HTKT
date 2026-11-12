@@ -44,4 +44,4 @@ Hành động trên bài (`POST /noi-dung/{id}`):
 
 GET chi tiết bài trả thêm `kenhDaDang: [{channel, chay_thu}]` (kênh đã đăng phiên bản hiện hành, lấy thẳng từ CSDL) và `viTriNhanAi`. Danh sách bài trả `lich` là MỘT trạng thái đại diện cho mỗi kênh (cần đối soát > đang đăng > đã đăng > đang chờ > lỗi).
 
-Cấu hình thông báo AI: `AI_CONTENT_NHAN_AI` (20–200 ký tự, có chữ, không ký tự ẩn; sai → dùng câu mặc định và ghi lỗi ra log) và `AI_CONTENT_VI_TRI_NHAN` (`dau` \| `bat_ky`). Đổi hai khoá này phải khởi động lại cả web lẫn worker. Bài đã duyệt/đã đặt lịch theo câu cũ sẽ bị cổng chặn: sửa thông báo trong bản theo kênh, duyệt lại, đặt lịch lại.
+Cấu hình thông báo AI: `AI_CONTENT_NHAN_AI` (20–180 ký tự, có chữ, không ký tự ẩn; sai → dùng câu mặc định và ghi lỗi ra log) và `AI_CONTENT_VI_TRI_NHAN` (`dau` \| `bat_ky`). Đổi hai khoá này phải khởi động lại cả web lẫn worker. Bài đã duyệt/đã đặt lịch theo câu cũ sẽ bị cổng chặn: sửa thông báo trong bản theo kênh, duyệt lại, đặt lịch lại.

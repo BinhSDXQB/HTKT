@@ -56,14 +56,15 @@ function coKyTuTrong(s: string): boolean {
 }
 
 /**
- * Câu cấu hình hợp lệ: 20–200 ký tự (đủ nằm trọn trong bài đầu của mọi kênh), có chữ, không ký tự ẩn, không chứa dấu ngăn
+ * Câu cấu hình hợp lệ: 20–180 ký tự (tiêu đề tối đa 300 + câu 180 vẫn nằm trọn trong bài ĐẦU của chuỗi Threads 500 ký tự), có chữ, không ký tự ẩn, không chứa dấu ngăn
  * chuỗi. Không hợp lệ → dùng câu mặc định (chặt hơn), không âm thầm chấp nhận một "thông báo" vô hình.
  */
+export const NHAN_AI_DAI_TOI_DA = 180
 export function nhanAiTuCauHinh(tho: string | undefined): { nhan: string; loi: string | null } {
   const s = chuanNhan(tho ?? '').replace(/\s+/g, ' ').trim()
   if (!s) return { nhan: NHAN_AI_MAC_DINH, loi: null }
   const loi = KY_TU_AN.test(tho ?? '') || coKyTuTrong(tho ?? '') ? 'chứa ký tự ẩn/điều khiển'
-    : s.length < 20 || s.length > 200 ? 'phải dài 20–200 ký tự'
+    : s.length < 20 || s.length > NHAN_AI_DAI_TOI_DA ? `phải dài 20–${NHAN_AI_DAI_TOI_DA} ký tự`
       : !/\p{L}{2,}/u.test(s) ? 'không có chữ'
         : s.includes('———') ? 'chứa dấu ngăn chuỗi bài' : null
   return loi ? { nhan: NHAN_AI_MAC_DINH, loi } : { nhan: s, loi: null }

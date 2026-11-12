@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   bamNoiDung, gioDiaPhuongSangUtc, kiemTraCongXuatBan, chuyenTheTheoQuyTac, kiemTraBienThe, chiaDoan,
-  thoiGianCho, phanLoaiLoi, trangThaiSauLoi, aiContentBat, lyDoKhongDuocDuyet, duocSoan, coNhanAi, loiNhanAi, NHAN_AI_MAC_DINH, nhanAiTuCauHinh, chuyenTheTheoQuyTac as chuyenThe2,
+  thoiGianCho, phanLoaiLoi, trangThaiSauLoi, aiContentBat, lyDoKhongDuocDuyet, duocSoan, coNhanAi, loiNhanAi, NHAN_AI_MAC_DINH, NHAN_AI_DAI_TOI_DA, nhanAiTuCauHinh, chuyenTheTheoQuyTac as chuyenThe2,
   NGAN_CACH_CHUOI, kiemTraUrlBaiDang, SO_LAN_THU_TOI_DA, NHAN_AI, nguonGocHopLe, type DauVaoCong,
 } from './nghiep-vu'
 import { duocChuyenNoiDung, duocChuyenLich, tongHopXuatBan } from './trang-thai'
@@ -95,6 +95,15 @@ test('cổng xuất bản: nội dung AI có thể gây nhầm lẫn phải có 
   for (const n of [298, 299, 300]) {
     assert.equal(loiNhanAi(chuyenThe2('website', 'x'.repeat(n), 'Thân bài.', true).split(NGAN_CACH_CHUOI)[0]), null, `#2: tiêu đề ${n} ký tự trên Website`)
     assert.equal(loiNhanAi(chuyenThe2('facebook', 'x'.repeat(n), 'Thân bài.', true)), null, `#2: tiêu đề ${n} ký tự trên Facebook`)
+  }
+  // Codex vòng 6 #5: tiêu đề dài nhất + câu cấu hình dài nhất vẫn nằm nguyên trong bài ĐẦU của chuỗi Threads.
+  const cauDai = ('Nội dung do hệ thống trí tuệ nhân tạo tạo ra. ' + 'y'.repeat(200)).slice(0, NHAN_AI_DAI_TOI_DA)
+  assert.equal(nhanAiTuCauHinh(cauDai).loi, null)
+  assert.ok(nhanAiTuCauHinh(cauDai + 'y').loi, 'dài hơn trần thì từ chối')
+  for (const than of ['Thân bài ngắn.', 'Câu một. '.repeat(120), 'z'.repeat(1500)]) {
+    const dau = chuyenThe2('threads', 'x'.repeat(300), than, true, cauDai).split(NGAN_CACH_CHUOI)[0]
+    assert.equal(loiNhanAi(dau, cauDai), null, 'Threads: câu thông báo không bị cắt đôi')
+    assert.ok(dau.length <= 500)
   }
   assert.equal(loiNhanAi(`T\n\n${NHAN_AI.normalize('NFD')}`), null, '#3: câu ở dạng NFD (chép từ trình soạn thảo)')
   assert.equal(loiNhanAi(`T\n\n${NHAN_AI.replace(/ /g, ' ')}`), null, '#3: dấu cách không ngắt')
