@@ -134,8 +134,39 @@ Chiều ngược lại: phần lớn trường kỹ thuật chi tiết của HTK
 
 Thứ tự hợp lý: 7 trước (không đổi CSDL, cho ngay số liệu báo cáo), rồi 3, rồi 1–2; các bảng mới 5–6 chỉ làm khi Sở xác định sẽ nhập các số liệu đó ở HTKT thay vì nhập thẳng trên hệ thống của Bộ.
 
-## 11. Chưa kiểm được
-- Chưa đọc mục IV (nội dung danh mục DM01–DM20) nên chưa đối chiếu được giá trị danh mục với các giá trị liệt kê trong HTKT.
+## 11. Dữ liệu thật trong CSDL (bổ sung 12/11/2026 tối — truy vấn chỉ đọc)
+
+| Bảng | Số dòng |
+|---|---|
+| `nha_may_xu_ly_nuoc_thai`, `tram_bom`, `cong_thoat_nuoc`, `ho_ga`, `ong_cap_nuoc`, `van_cap_nuoc`, `tuyen_mang_luoi`, `doan_tuyen_cong`, `doan_tuyen_ong` | **0** (cả 9 bảng) |
+| `htkt_doi_tuong` | 0 (bảng đã tồn tại) |
+| `report_cap_nuoc` | 0 |
+| `report_thoat_nuoc` | **780** |
+
+**Hệ quả:** các bảng tài sản ở mục 2–6 là khung trống. Nguồn dữ liệu cấp thoát nước duy nhất hiện có là biểu mẫu cấp xã `report_thoat_nuoc`. Ánh xạ ở mục 2–6 là ánh xạ **thiết kế**, chưa có dữ liệu để xuất.
+
+Chất lượng `report_thoat_nuoc` (780 dòng, năm 2025, tất cả `DA_DUYET`):
+- 23/78 xã, phường có dữ liệu; tổng `chieuDaiM` = 341,1 km; 714 dòng có chiều dài, 540 có kích thước cống, 50 có năm sử dụng; **0 dòng có toạ độ**, 0 dòng liên kết `doiTuongId`.
+- Cột `loaiNuoc` **lẫn dữ liệu sai cột**: ngoài "Nước mưa" (150 dòng, 129,1 km), "Nước mưa và nước thải" (161 dòng, 83,6 km), "Nước thải" (12 dòng, 10,7 km) còn có 106 dòng trống, mã viết tắt `NM` (70), `NT` (50), ký tự `x` (31), các số thập phân như `0.2`, `0.27`, `0.85` (nhiều dòng — dạng kích thước cống) và giá trị của **biểu cấp nước** như "Giếng khoan" (19), "Nhà máy nước Khe Sanh" (17), "Giếng khoan, giếng đào" (7).
+- Suy luận (I): một số tệp Excel của xã bị lệch cột khi nhập, và một phần dữ liệu biểu cấp nước đã được ghi vào bảng thoát nước (trong khi `report_cap_nuoc` trống). Các dòng `NM`/`NT` có tổng chiều dài 0 km — có thể chiều dài nằm ở cột khác.
+- Chưa thể cộng tổng theo loại để báo cáo: chỉ 323/780 dòng có `loaiNuoc` đọc được.
+
+Việc phải làm trước mọi việc ở mục 10 (P): rà lại 780 dòng theo từng xã, xác định dòng lệch cột và dòng thuộc biểu cấp nước, sửa bằng script có sao lưu (cấp M/L, ghi CSDL thật → cần duyệt riêng, áp skill `nhap-excel`).
+
+## 12. Đối chiếu danh mục (mục IV QĐ 1852 — đã đọc)
+
+| Danh mục từ điển | Giá trị từ điển | Giá trị HTKT | Nhận xét |
+|---|---|---|---|
+| DM03 Trạng thái hoạt động | 01 Đang hoạt động/vận hành · 02 Dự phòng · 03 Tạm dừng · 04 Sửa chữa, nâng cấp · 05 Đang đầu tư · 06 Ngừng hoạt động · 07 Chuyển giao | `TrangThaiHoatDong`: DANG_SU_DUNG, DUNG_TAM, SUA_CHUA, NGUNG, THAO_DO (`schema.prisma:321`) | Ánh xạ được 4/5: DANG_SU_DUNG→01, DUNG_TAM→03, SUA_CHUA→04, NGUNG→06; THAO_DO không có mục tương ứng (gần nhất 06); HTKT thiếu 02, 05, 07 |
+| DM08 Công nghệ xử lý nước thải | 01 Cơ học · 02 Hóa lý · 03 Sinh học · 04 Màng · 05 Hồ sinh học · 06 Đất ngập nước · 07 Kết hợp · 99 Khác | `congNghe` chữ tự do (ví dụ A2O, MBR, MBBR) | Từ điển phân **nhóm** công nghệ: A2O, MBBR → 03; MBR → 04. Nên giữ tên cụ thể và thêm cột nhóm |
+| DM09 Loại công trình cấp nước | 01 Nhà máy nước · 02 Công trình thu nước · 03 Trạm bơm nước thô · 04 Trạm bơm tăng áp · 05 Bể chứa · 06 Đài nước · 07 Điểm/trạm giám sát | `TramBom.loai = CAP_NUOC` | HTKT không phân biệt bơm nước thô và bơm tăng áp; không có bảng cho 01, 02, 05, 06, 07 |
+| DM10 Loại công trình thoát nước | 01 Nhà máy/trạm XLNT tập trung · 02 XLNT phi tập trung · 03 Trạm bơm nước thải · 04 Trạm bơm thoát nước mưa · 05 Công trình trữ, điều hoà nước mưa · 06 Điểm xả · 07 Cơ sở xử lý bùn | `NhaMayXuLyNuocThai` → 01; `TramBom.loai`: NUOC_THAI → 03, THOAT_NUOC → 04 | Khớp 3/7; không có bảng cho 02, 05, 06, 07 |
+| DM19 Loại hệ thống thoát nước | 01 Chung · 02 Riêng · 03 Nửa riêng · 99 Khác | `loaiNuoc`: MUA / THAI / CHUNG (bảng tài sản); chữ tự do ở biểu cấp xã | **Khác khái niệm**: HTKT phân loại theo loại nước trong cống; từ điển phân loại theo kiểu hệ thống. "Nước mưa và nước thải" ≈ 01 Chung; "Nước mưa" hoặc "Nước thải" riêng rẽ ≈ 02 Riêng — chỉ là suy luận, cần người nghiệp vụ xác nhận |
+| DM14 Trạng thái chất lượng dữ liệu | 01 Khởi tạo · 02 Đang cập nhật · 03 Chờ rà soát · 04 Cần rà soát, chỉnh sửa · 05 Đáp ứng yêu cầu · 06 Hết hiệu lực · 07 Lưu lịch sử | `ReportStatus`: NHAP, CHO_DUYET, DA_DUYET, TRA_LAI (`schema.prisma:1659`) | Ánh xạ được: NHAP→01/02, CHO_DUYET→03, TRA_LAI→04, DA_DUYET→05; thiếu 06, 07 |
+| DM01, DM13 | Dùng danh mục do cơ quan có thẩm quyền công bố; không tự gán mã | `AdministrativeUnit` | Cần kiểm mã xã trong HTKT có trùng mã chính thức không (U) |
+| DM02, DM04–DM07, DM11, DM12, DM15–DM18, DM20 | (đã đọc) | Không có trường tương ứng | Dùng khi làm các bảng mới ở mục 10 |
+
+## 13. Chưa kiểm được
 - Chưa đọc Phụ lục I–III của TT 69/2026 để xác nhận mã trường CN-…, TN-… (mới lấy theo cột "Pháp lý" của từ điển).
-- Chưa truy vấn CSDL thật: không biết các bảng này có bao nhiêu bản ghi, tỷ lệ trường bỏ trống.
+- Chưa mở từng dòng `report_thoat_nuoc` để xác nhận nguyên nhân lệch cột (mục 11 mới là thống kê theo nhóm).
 - Từ vựng kế thừa XDDT và CDE mới có tên trường và kiểu, chưa có định nghĩa đầy đủ (nằm ở QĐ 945/QĐ-BXD, không có trong kho).
