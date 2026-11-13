@@ -29,13 +29,34 @@ Trạng thái: PROPOSED. Chưa migration nào được viết hay chạy. Mỗi 
 
 Thứ tự đề xuất: E0 → E1 → E2 → E4 → E6 → E3 → E7 → E8 → E9. E5 và E10 chờ quyết định.
 
+## E6 — điều chỉnh sau khi đọc mã (13/11/2026): TÁI SỬ DỤNG, không viết script nạp mới
+
+Mã nguồn đã có sẵn chức năng nạp hub: `napTuBieuMau(maXa, nam)` tại `app/app/actions/htkt-doi-tuong.ts:253` (VERIFIED, đã đọc). Hàm này:
+
+- kiểm quyền ghi trên xã (`quyenTrenXa`), khoá theo xã để hai người không nạp trùng, chạy trong một transaction;
+- nạp theo thứ tự đường → chiếu sáng → thoát nước → cây xanh → công viên → cấp nước → bãi đỗ xe, chỉ lấy dòng `doiTuongId` còn trống, nên chạy lại không sinh trùng;
+- gộp các dòng cùng (lĩnh vực, tên, điểm đầu, điểm cuối) đã chuẩn hoá về một đối tượng;
+- tự phân loại thoát nước bằng `phanLoaiThoatNuoc`; dòng không rõ loại thì bỏ qua và trả về trong danh sách `boQua`;
+- gắn `street_id` cho phường khi tên trùng duy nhất, gắn "nằm trên tuyến" theo tên đường.
+
+Vì vậy E6 không cần migration hay script riêng. Việc còn lại là dữ liệu và vận hành:
+
+| Việc | Ai làm | Ghi chú |
+|---|---|---|
+| Sửa 4 dòng `report_duong` dài từ 20 km trở lên trước khi nạp | cán bộ phụ trách xã, qua giao diện | hàm nạp nhân km × 1000 không kiểm, nên 260 km sẽ thành 260.000 m trong hub |
+| Xem 10 nhóm trùng của `report_duong` | cán bộ phụ trách xã | hàm nạp sẽ gộp mỗi nhóm thành MỘT đối tượng; 8 nhóm có thông số khác nhau, nếu là các đoạn khác nhau thì phải sửa tên hoặc điểm đầu/cuối cho phân biệt trước khi nạp |
+| Làm sạch `report_thoat_nuoc.loaiNuoc` | cán bộ phụ trách xã hoặc nhập lại tệp | 227 dòng lệch cột (146 là số, 46 tên nguồn nước, 35 khác) và 106 dòng trống sẽ bị bỏ qua; nặng nhất: Phường Nam Đông Hà 145/145, Xã Lao Bảo 33/33, Phường Đồng Hới 61 trống |
+| Bấm "Nạp từ biểu mẫu" cho từng xã, năm 2025 | người có quyền ghi trên xã | 21–23 xã có dữ liệu |
+
+Thử trên bản sao: NOT_RUN. Hàm là server action cần phiên đăng nhập, không gọi trực tiếp bằng SQL được; muốn thử phải chạy ứng dụng trỏ vào bản sao, việc này cần người dùng duyệt.
+
 ## Phác thảo cấu trúc mới
 
 Chỉ là phác thảo để thảo luận, chưa phải migration.
 
 **E2 — `doi_soat_hang_doi`**: `id`, `loai` (trùng lặp / xung đột phiên bản / khớp nghi ngờ), `bang_nguon`, `id_nguon`, `bang_dich`, `id_dich`, `du_lieu_de_xuat` jsonb, `du_lieu_hien_tai` jsonb, `quy_tac`, `trang_thai` (cho_xu_ly / chap_nhan / tu_choi), `nguoi_xu_ly_id`, `ghi_chu`, `created_at`, `xu_ly_luc`. CHECK trên `loai` và `trang_thai`.
 
-**E3 — `version`**: tăng 1 mỗi lần cập nhật, do mã ứng dụng tăng trong cùng câu `UPDATE ... WHERE id = $1 AND version = $2`. Không dùng trigger để tránh chồng lên `trg_htkt_truoc_ghi` khi chưa đọc nội dung trigger đó.
+**E3 — `version`**: tăng 1 mỗi lần cập nhật, do mã ứng dụng tăng trong cùng câu `UPDATE ... WHERE id = $1 AND version = $2`. `trg_htkt_truoc_ghi` đã được đọc (13/11/2026): nó tự đặt `updated_at` và tính lại các cột hình học, nên với `htkt_doi_tuong` có thể cân nhắc tăng `version` ngay trong hàm trigger này; hai bảng còn lại không có trigger nên vẫn phải tăng ở mã ứng dụng. Chọn một cách cho cả ba bảng khi soạn E3.
 
 **E8 — registry trường động**: `truong_dinh_nghia` (`id`, `pham_vi` = bảng hoặc lĩnh vực, `ma_truong`, `nhan`, `kieu`, `bat_buoc`, `quy_tac_kiem_tra` jsonb, `danh_muc_id`, `phien_ban`, `trang_thai` = dang_dung / ngung_dung, `hieu_luc_tu`, `hieu_luc_den`). Giá trị vẫn lưu ở các cột JSONB sẵn có. Ngừng dùng một trường chỉ đổi `trang_thai`, không xoá khoá trong JSONB.
 
@@ -52,7 +73,8 @@ Registry chỉ quản lý trường trong JSONB. Thêm cột vật lý vẫn đi
 
 | Rủi ro | Mức | Giảm thiểu |
 |---|---|---|
-| Trigger `trg_report_*_lien_ket` có hành vi chưa biết khi gán `doiTuongId` hàng loạt | HIGH | đọc hàm, thử trên bản sao (E6) |
+| Trigger `trg_report_*_lien_ket` khi gán `doiTuongId` hàng loạt | LOW (đã đọc hàm 13/11/2026: chỉ kiểm tra cùng xã và đúng lĩnh vực, không sửa dữ liệu) | vẫn thử trên bản sao (E6) |
+| `report_thoat_nuoc.loaiNuoc` lẫn dữ liệu sai cột (97 giá trị, 146 dòng là số) nên không phân loại mưa / thải / chung được | HIGH cho E6 | làm sạch và phân loại qua hàng đợi đối soát trước khi nạp hub |
 | Ghi nhầm dữ liệu nhân sự ở E4 | HIGH | sao lưu bảng, chạy theo danh sách đã duyệt, không chạy theo điều kiện chung |
 | Dev và production chung máy, RAM 6 GB | MEDIUM | không build, không `tsc` toàn dự án; bản sao CSDL bỏ `tai_lieu_chunk` |
 | Mã cũ không tăng `version` làm lệch kiểm tra xung đột | MEDIUM | đợt đầu chỉ áp cho 3 bảng, sửa hết đường ghi của 3 bảng đó cùng lúc |

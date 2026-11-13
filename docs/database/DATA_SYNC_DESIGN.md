@@ -75,4 +75,5 @@ sequenceDiagram
 | Dữ liệu trên thiết bị mất không được mã hoá | HIGH |
 | Đường ghi cũ trên web không tăng `version`, làm sai kiểm tra xung đột | HIGH |
 | Lưu lượng đồng bộ trên VPS 6 GB chạy chung production | MEDIUM |
-| Trigger trên `htkt_doi_tuong` thay đổi dữ liệu sau khi ghi, làm tablet lệch với máy chủ | MEDIUM, UNKNOWN cho đến khi đọc trigger |
+| Trigger `trg_htkt_truoc_ghi` trên `htkt_doi_tuong` sửa dữ liệu khi ghi (đã đọc 13/11/2026): cấp `ma_doi_tuong`, chuẩn hoá `ten` và `sh_chu_cai`, tính `chieu_dai_gis_m`, `dien_tich_gis_m2`, `tam_lat`, `tam_lng`, nối `lich_su`, đặt `updated_at` | MEDIUM: máy chủ phải trả lại bản ghi sau khi ghi để tablet thay bản cục bộ, không giả định dữ liệu gửi lên là dữ liệu được lưu |
+| Trigger từ chối bản ghi (hình học ngoài khung tỉnh, sai kiểu theo lĩnh vực, số hiệu ngoài dải của xã) | MEDIUM: thao tác bị từ chối phải về tablet kèm thông báo của trigger, trạng thái "lỗi", không vào hàng đợi đối soát |

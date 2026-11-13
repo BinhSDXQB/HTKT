@@ -51,7 +51,9 @@ Quy tắc khớp `report_duong` → `streets`:
 
 ## M3. Nạp hub `htkt_doi_tuong` từ `report_*`
 
-- Khoá định danh: `ma_doi_tuong`. Hàm `fn_htkt_goi_y_so_hieu` và trigger `trg_htkt_truoc_ghi` đã có; phải đọc nội dung trước khi viết quy tắc sinh mã (hiện UNKNOWN).
+- Khoá định danh: `ma_doi_tuong`, do trigger `trg_htkt_truoc_ghi` tự cấp dạng `<mã xã>-<LV>-<NNNN>` khi thêm mới và cấm sửa về sau (đã đọc hàm 13/11/2026, VERIFIED). Script nạp không tự sinh mã.
+- Lĩnh vực hợp lệ: `DUONG`, `CHIEU_SANG`, `CAY_XANH`, `CONG_VIEN`, `THOAT_NUOC_MUA`, `THOAT_NUOC_THAI`, `THOAT_NUOC_CHUNG`, `CAP_NUOC`, `BAI_DO_XE`.
+- `report_thoat_nuoc` phải được phân loại vào một trong ba lĩnh vực thoát nước trước khi nạp. Cột `loaiNuoc` hiện có 97 giá trị, lẫn dữ liệu sai cột; chỉ các giá trị rõ nghĩa (`Nước mưa`, `NM`, `Nước thải`, `NT`, `Nước mưa và nước thải`…) phân loại tự động được, phần còn lại vào hàng đợi đối soát.
 - `ma_xa` lấy từ `administrative_units.code` của `wardId`.
 - Chỉ nạp dòng `DA_DUYET`.
 - Sau khi nạp, gán `report_*.doiTuongId`. Trigger `trg_report_*_lien_ket` sẽ chạy; phải thử trên bản sao trước.
@@ -65,7 +67,11 @@ Quy tắc khớp `report_duong` → `streets`:
 
 ## M5. Nghiệp vụ thoát nước của Trung tâm Bảo trì
 
-376 dòng thiếu `wardId`. Hai lĩnh vực còn lại có `diaBan` và `wardId` đầy đủ, lĩnh vực này cả hai đều trống. Chỉ gán được nếu `customFields` có tên tuyến hoặc địa bàn; chưa kiểm (UNKNOWN). Nếu không có căn cứ thì để trống.
+376 dòng thiếu `wardId`. Hai lĩnh vực còn lại có `diaBan` và `wardId` đầy đủ, lĩnh vực này cả hai đều trống.
+
+Đã kiểm ở bước E0 (VERIFIED): `customFields` có khoá `toaDoLat`, `toaDoLng`, `viTri` nhưng toạ độ trống ở cả 376 bản ghi, nên không gán xã theo toạ độ được. `viTri` có nội dung ở 155 bản ghi; 57 bản ghi có `viTri` trùng đúng tên một tuyến trong `streets` và tuyến đó chỉ thuộc một xã.
+
+Quy tắc: 57 bản ghi đó là KHỚP NGHI NGỜ (tên tuyến trùng chưa chắc cùng tuyến), đưa vào hàng đợi đối soát. 319 bản ghi còn lại không có căn cứ, để trống và chờ Trung tâm Bảo trì bổ sung.
 
 ## M6. Nhà thầu, chủ sở hữu công trình
 

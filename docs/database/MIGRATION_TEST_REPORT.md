@@ -89,12 +89,38 @@ Môi trường: CSDL `ql_htkt_thu051` trên cùng máy chủ PostgreSQL 16.14, n
 
 Chưa thử: hành vi khoá khi ứng dụng đang ghi `can_bo` đồng thời (bản sao không có tải); chạy trên dữ liệu thật chưa khử (giá trị nhạy cảm không tham gia logic migration).
 
+## Kết quả thử 052 (index khoá ngoại) và 053 (hàng đợi đối soát) — 13/11/2026
+
+Tệp: `docs/database/nhap/052_index_khoa_ngoai_con_thieu{,_rollback}.NHAP.sql`, `053_doi_soat_hang_doi{,_rollback}.NHAP.sql` (bản v2). Chạy trên bản sao `ql_htkt_thu051` theo đúng cách của dự án (`client.query(nguyên tệp)`). **Chưa áp vào CSDL thật.**
+
+Phản biện Codex 1 vòng (cấp M), 12 phát hiện, tự kiểm chứng bằng cách đọc lại SQL:
+
+| # | Phát hiện | Mức | Kiểm chứng | Xử lý trong v2 |
+|---|---|---|---|---|
+| 1 | Rollback 053 kiểm rỗng rồi mới xoá bảng, phiên khác chèn kịp sẽ mất dòng | HIGH | đúng | khoá ACCESS EXCLUSIVE trước khi kiểm |
+| 2 | Xoá cứng user/đơn vị được dòng đã xử lý tham chiếu sẽ lỗi vì trigger chặn UPDATE do SET NULL sinh ra | HIGH | đúng | trigger cho riêng 4 khoá ngoại về NULL; đã thử |
+| 3 | Không buộc có người xử lý; chèn thẳng trạng thái đã xử lý được | HIGH | đúng | dòng mới buộc `CHO_XU_LY`; chuyển trạng thái buộc có `nguoi_xu_ly_id` |
+| 4 | Không chặn DELETE/TRUNCATE | HIGH | đúng | trigger chặn xoá dòng đã xử lý và chặn TRUNCATE |
+| 5 | `to_regclass` nhận cả tên index; không kiểm bản ghi nguồn tồn tại | MEDIUM | đúng | chỉ nhận bảng thường trong `public`; kiểm bản ghi tồn tại để tầng ứng dụng làm (bảng đa hình) |
+| 6 | Chuỗi rỗng, JSONB không phải object lọt qua | MEDIUM | đúng | thêm CHECK; xung đột phiên bản buộc đủ hai phía dữ liệu |
+| 7 | Thao tác tablet gửi lặp sau khi dòng đã đóng tạo được dòng mới | HIGH (suy luận) | đúng | cột `khoa_chong_lap` duy nhất trên mọi trạng thái |
+| 8 | Người duyệt có thể duyệt nhầm bản đã bị script đổi; dữ liệu chính đổi sau khi chụp | HIGH (suy luận) | đúng, nhưng chỉ sửa được một phần ở CSDL | thêm `phien_ban` (tự tăng) và `phien_ban_nguon`; việc so phiên bản và ghi cùng giao dịch là yêu cầu cho tầng ứng dụng |
+| 9 | `IF NOT EXISTS` khi chạy lại bỏ qua đối tượng sai định nghĩa | HIGH | đúng | migration một lần: bảng đã có thì từ chối |
+| 10 | Tự kiểm 052 chấp nhận index một phần, đếm nhầm cột INCLUDE | MEDIUM | đúng | kiểm đích danh 4 index: btree, hợp lệ, một cột khoá, không một phần, không biểu thức |
+| 11 | Rollback 052 có thể gỡ index không do 052 tạo | MEDIUM | đúng | 052 từ chối nếu tên đã tồn tại; đã thử |
+| 12 | `lock_timeout` tính từng lần chờ | MEDIUM | đúng nhưng ảnh hưởng nhỏ (bảng 0–174 dòng) | thêm `statement_timeout` 30 giây |
+
+Kết quả thử v2: 37/37 tình huống đạt. Gồm: áp, áp lần hai bị từ chối, hoàn tác trả đúng số bảng / index / ràng buộc / trigger / hàm ban đầu (145 / 555 / 491 / 8 / 6), 052 từ chối khi tên index đã bị dùng, và 25 tình huống hành vi của hàng đợi (trùng dòng chờ, trạng thái, người xử lý, bất biến của dòng đã xử lý, chống gửi lặp, DELETE, TRUNCATE, rollback khi còn dữ liệu). Số dòng `can_bo`, `users`, `phan_cong`, `report_duong` trên bản sao không đổi.
+
+Chưa thử: hành vi khoá dưới tải thật; xoá cứng một `users` thật để kích hoạt ON DELETE SET NULL (đã thử bằng UPDATE tương đương); bản v2 chưa qua Codex vòng 2.
+
 ## Nhật ký kết quả
 
 | Migration | Ngày | Nơi chạy | Kết quả | Ghi chú |
 |---|---|---|---|---|
 | 051 (nháp v2, chạy bằng psql) | 13/11/2026 | bản sao `ql_htkt_thu051` | ĐẠT 13/13 tình huống | — |
 | 051 (bản cuối, bỏ lệnh `\set` của psql) | 13/11/2026 | bản sao, qua `client.query(nguyên tệp)` như `apply-migration.mjs` | ĐẠT: áp, áp lần hai bị từ chối, hoàn tác trùng mã băm ban đầu, hoàn tác lần hai bị từ chối | lý do sửa: công cụ của dự án không chạy qua psql |
+| 052, 053 (nháp v2) | 13/11/2026 | bản sao `ql_htkt_thu051` | ĐẠT 37/37 tình huống | chưa áp vào CSDL thật, chờ duyệt |
 | 051 (bản cuối) | 13/11/2026 17:0x | **CSDL thật `ql_htkt`** | ĐÃ ÁP, thoát 0 | người dùng duyệt "Áp vào CSDL thật"; sao lưu trước: `C:\Backup_QLHTKT\premig051-20261113-165910.dump` (183 MB, 147 bảng) |
 
 ### Kiểm tra sau khi áp vào CSDL thật (13/11/2026)
