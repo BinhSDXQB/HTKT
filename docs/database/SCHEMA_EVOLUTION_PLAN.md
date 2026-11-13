@@ -16,7 +16,7 @@ Trạng thái: PROPOSED. Chưa migration nào được viết hay chạy. Mỗi 
 | Bước | Nội dung | Cấp | Phụ thuộc | Hoàn tác |
 |---|---|---|---|---|
 | E0 | Báo cáo đối soát chỉ-đọc theo từng bản ghi cho M1–M5 (`DATA_MAPPING_RULES.md`) | LOW | — | không cần |
-| E1 | Index cho 4 khoá ngoại thiếu | M | — | `DROP INDEX` |
+| E1 | Index cho 4 khoá ngoại thiếu. **ĐÃ ÁP 13/11/2026** (mig 052) | M | — | `DROP INDEX` |
 | E2 | Bảng hàng đợi đối soát `doi_soat_hang_doi` | M | — | `DROP TABLE` (bảng mới, chưa ai phụ thuộc) |
 | E3 | Cột `version integer NOT NULL DEFAULT 1` trên các bảng sẽ đồng bộ tablet; đợt đầu: `htkt_doi_tuong`, `nghiep_vu_ban_ghi`, `cong_viec` | L | E2 | `DROP COLUMN` |
 | E4 | Đồng bộ `phan_cong` với `can_bo` theo M1. **ĐÃ ÁP 13/11/2026** (mig 051: sửa 14, tạo 43; còn 18 cán bộ thiếu chức danh chờ Văn phòng Sở) | L (ghi dữ liệu nhân sự) | E0, duyệt M1 | `051_dong_bo_phan_cong_tu_can_bo_rollback.sql` (theo bảng nhật ký `phan_cong_mig051_log`) |

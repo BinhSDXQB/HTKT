@@ -120,7 +120,8 @@ Chưa thử: hành vi khoá dưới tải thật; xoá cứng một `users` th�
 |---|---|---|---|---|
 | 051 (nháp v2, chạy bằng psql) | 13/11/2026 | bản sao `ql_htkt_thu051` | ĐẠT 13/13 tình huống | — |
 | 051 (bản cuối, bỏ lệnh `\set` của psql) | 13/11/2026 | bản sao, qua `client.query(nguyên tệp)` như `apply-migration.mjs` | ĐẠT: áp, áp lần hai bị từ chối, hoàn tác trùng mã băm ban đầu, hoàn tác lần hai bị từ chối | lý do sửa: công cụ của dự án không chạy qua psql |
-| 052, 053 (nháp v2) | 13/11/2026 | bản sao `ql_htkt_thu051` | ĐẠT 37/37 tình huống | chưa áp vào CSDL thật, chờ duyệt |
+| 052, 053 (nháp v2) | 13/11/2026 | bản sao `ql_htkt_thu051` | ĐẠT 37/37 tình huống | 053 chưa áp vào CSDL thật, chờ duyệt |
+| 052 | 13/11/2026 22:1x | **CSDL thật `ql_htkt`** | ĐÃ ÁP, thoát 0 | người dùng duyệt "Áp 052"; sao lưu trước: `C:\Backup_QLHTKT\premig052-20261113-221607.dump` (183 MB, 148 bảng). Sau áp: index `public` 553 → 557; 4 index đúng định nghĩa; 0 khoá ngoại `public` còn thiếu index; số dòng 3 bảng không đổi (0 / 0 / 174); 0 phiên treo; health 200; đã ghi sổ `applied_migrations.txt` |
 | 051 (bản cuối) | 13/11/2026 17:0x | **CSDL thật `ql_htkt`** | ĐÃ ÁP, thoát 0 | người dùng duyệt "Áp vào CSDL thật"; sao lưu trước: `C:\Backup_QLHTKT\premig051-20261113-165910.dump` (183 MB, 147 bảng) |
 
 ### Kiểm tra sau khi áp vào CSDL thật (13/11/2026)

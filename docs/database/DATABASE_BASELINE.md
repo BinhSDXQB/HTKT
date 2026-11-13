@@ -25,6 +25,8 @@ Bộ tài liệu cùng thư mục: `EXISTING_DATA_INVENTORY.md`, `ENTITY_RELATIO
 
 - 13/11/2026, mig 051: `phan_cong` 103 → 146 dòng; thêm bảng `phan_cong_mig051_log` (57 dòng, nhật ký trước/sau để hoàn tác). Bảng nhật ký này không có model Prisma, chủ ý. Chi tiết: `MIGRATION_TEST_REPORT.md`.
 
+- 13/11/2026, mig 052: thêm 4 index cho khoá ngoại của `cchn_ho_so`, `cchn_lich_su`, `thanh_tich_con`; không còn khoá ngoại nào trong `public` thiếu index.
+
 ## Migration
 
 - Thư mục: `app/prisma/migrations_manual/NNN_*.sql`, từ 037 trở đi có kèm `_rollback.sql`.

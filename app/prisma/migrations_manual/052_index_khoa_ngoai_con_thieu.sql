@@ -1,7 +1,4 @@
 -- ============================================================================
--- BẢN NHÁP v2 — CHƯA DUYỆT, CHƯA ÁP VÀO CSDL THẬT. Không đặt vào
--- app/prisma/migrations_manual cho đến khi được duyệt.
---
 -- Migration 052 — Index cho 4 khoá ngoại còn thiếu (bước E1)
 --
 -- Vì sao: 4 khoá ngoại dưới đây có ON DELETE SET NULL nhưng cột nguồn không có
@@ -20,7 +17,8 @@
 --
 -- Migration MỘT LẦN: nếu một trong 4 tên index đã tồn tại thì từ chối, để tệp
 -- hoàn tác không bao giờ gỡ nhầm index do việc khác tạo. Chỉ thêm, không đổi dữ liệu.
--- Hoàn tác: 052_index_khoa_ngoai_con_thieu_rollback.NHAP.sql
+-- Hoàn tác: 052_index_khoa_ngoai_con_thieu_rollback.sql
+-- Đã thử trên bản sao ngày 13/11/2026: docs/database/MIGRATION_TEST_REPORT.md
 -- ============================================================================
 
 BEGIN;

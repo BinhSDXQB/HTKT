@@ -38,6 +38,7 @@ Không ghi CCCD, lương, họ tên cán bộ vào bất kỳ tệp nào trong r
 | Khảo sát | 9 tài liệu trong `docs/database/` | 13/11/2026 | commit trên `ai-content-m1` |
 | E0 | Báo cáo đối soát theo từng bản ghi | 13/11/2026 | `DOI_SOAT_E0_2026-11-13.md` |
 | E4 | Mig 051 đồng bộ `phan_cong` theo `can_bo`: đã thử trên bản sao và ĐÃ ÁP vào CSDL thật (người dùng duyệt) | 13/11/2026 | `MIGRATION_TEST_REPORT.md` |
+| E1 | Mig 052 index cho 4 khoá ngoại: ĐÃ ÁP vào CSDL thật (người dùng duyệt). Tệp đã chuyển sang `app/prisma/migrations_manual/052_*.sql` | 13/11/2026 | `MIGRATION_TEST_REPORT.md` |
 
 ## Việc tiếp theo (làm theo thứ tự; mỗi phiên làm được bao nhiêu thì làm)
 
@@ -60,8 +61,7 @@ Khi cả bảng trên đã "xong" hoặc "chờ duyệt": ghi một dòng "HẾT
 
 | Việc | Mức | Ghi chú |
 |---|---|---|
-| Áp migration 052 (4 index) vào CSDL thật | HIGH | nháp v2 đã thử trên bản sao; khi duyệt: sao lưu, chuyển tệp vào `migrations_manual` bỏ đuôi `.NHAP`, áp bằng `apply-migration.mjs`, ghi sổ |
-| Áp migration 053 (bảng `doi_soat_hang_doi`) vào CSDL thật | HIGH | như trên; chưa có mã nào dùng nên có thể chờ đến khi làm E7/E9 |
+| Áp migration 053 (bảng `doi_soat_hang_doi`) vào CSDL thật | HIGH | nháp v2 đã thử trên bản sao; khi duyệt: sao lưu, chuyển tệp vào `migrations_manual` bỏ đuôi `.NHAP`, áp bằng `apply-migration.mjs`, ghi sổ. Chưa có mã nào dùng nên có thể chờ đến khi làm E7/E9 |
 | E6: làm sạch dữ liệu báo cáo rồi bấm "Nạp từ biểu mẫu" theo xã | — | việc của cán bộ phụ trách xã; xem mục E6 trong `SCHEMA_EVOLUTION_PLAN.md` |
 | Thử `napTuBieuMau` trên bản sao | HIGH | cần chạy ứng dụng trỏ vào bản sao |
 | `git push --force-with-lease origin ai-content-m1` | CRITICAL | Remote đang ở commit cũ `8b4d391` còn họ tên cán bộ trong báo cáo E0; bản cục bộ đã gỡ |

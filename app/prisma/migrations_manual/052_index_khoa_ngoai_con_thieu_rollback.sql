@@ -1,4 +1,4 @@
--- BẢN NHÁP v2. Hoàn nguyên migration 052: gỡ 4 index đã thêm. Không đổi dữ liệu.
+-- Hoàn nguyên migration 052: gỡ 4 index đã thêm. Không đổi dữ liệu.
 -- An toàn vì migration 052 từ chối chạy nếu 4 tên này đã tồn tại từ trước, nên
 -- index mang các tên này chỉ có thể do 052 tạo.
 -- DROP INDEX giữ khoá ACCESS EXCLUSIVE trên bảng trong tích tắc (bảng nhỏ).
