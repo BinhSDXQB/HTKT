@@ -28,8 +28,9 @@ export const TRANG_THAI_DANH_GIA_LABEL: Record<TrangThaiDanhGia, string> = {
 export type VaiTroDanhGia = 'CHINH_CHU' | 'NGUOI_NHAN_XET' | 'THU_KY_TONG_HOP' | 'CAP_PHE_DUYET'
 
 /** Bước tiếp theo hợp lệ + vai trò được làm. Không cho nhảy cóc. */
-const BUOC_TIEP: Record<TrangThaiDanhGia, { den: TrangThaiDanhGia; vaiTro: VaiTroDanhGia } | null> = {
-  DU_THAO: { den: 'TU_DANH_GIA', vaiTro: 'THU_KY_TONG_HOP' },
+const BUOC_TIEP: Record<TrangThaiDanhGia, { den: TrangThaiDanhGia; vaiTro: VaiTroDanhGia | VaiTroDanhGia[] } | null> = {
+  // Cá nhân tự mở bước tự đánh giá của mình (theo lịch của Sở) hoặc thư ký mở hàng loạt
+  DU_THAO: { den: 'TU_DANH_GIA', vaiTro: ['THU_KY_TONG_HOP', 'CHINH_CHU'] },
   TU_DANH_GIA: { den: 'GUI_NHAN_XET', vaiTro: 'CHINH_CHU' },
   GUI_NHAN_XET: { den: 'TONG_HOP', vaiTro: 'NGUOI_NHAN_XET' },
   TONG_HOP: { den: 'HOP_DANH_GIA', vaiTro: 'THU_KY_TONG_HOP' },
@@ -64,7 +65,8 @@ export function chuyenTrangThai(args: {
 }): KetQuaChuyen {
   const buoc = BUOC_TIEP[args.tu]
   if (!buoc) return { ok: false, loi: 'Hồ sơ đã lưu, không còn bước tiếp theo.' }
-  if (buoc.vaiTro !== args.vaiTro) {
+  const duocLam = Array.isArray(buoc.vaiTro) ? buoc.vaiTro.includes(args.vaiTro) : buoc.vaiTro === args.vaiTro
+  if (!duocLam) {
     return { ok: false, loi: `Bước "${TRANG_THAI_DANH_GIA_LABEL[args.tu]}" → "${TRANG_THAI_DANH_GIA_LABEL[buoc.den]}" không thuộc vai trò của bạn.` }
   }
   const dk = args.dieuKien ?? {}

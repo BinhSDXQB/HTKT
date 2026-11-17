@@ -91,8 +91,7 @@ try {
   const key = 'PHONG_HTKT/CHUYEN_VIEN'
   let h = hs[key]
   const buoc = async (u: CurrentUser, muc?: string) => { const r = await chuyenBuoc(u, h.id, muc); if (r.ok) h = r.hoSo; return r }
-  ok(!(await buoc(chinhChu(cv))).ok, 'chính chủ không được tự đẩy từ Dự thảo')
-  ok((await buoc(thuKy)).ok && h.trangThai === 'TU_DANH_GIA', 'thư ký mở bước Tự đánh giá')
+  ok((await buoc(chinhChu(cv))).ok && h.trangThai === 'TU_DANH_GIA', 'chính chủ tự mở bước Tự đánh giá của mình')
   ok(!(await buoc(chinhChu(cv))).ok, 'chưa tự đánh giá thì chưa gửi được')
   const sua0 = await luuNoiDung(thuKy, h.id, { tuDanhGia: 'giả mạo' })
   ok(!sua0.ok, 'thư ký không sửa hộ tự đánh giá')

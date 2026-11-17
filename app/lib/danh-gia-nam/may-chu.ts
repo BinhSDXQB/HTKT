@@ -475,3 +475,9 @@ export async function duLieuXuatTrong(user: CurrentUser, canBoId: string, nam: n
   }
   return { ok: true, cb, mau, du, tenNhiemVu: du0.congViec.map((c) => c.tieuDe) }
 }
+
+/** Hồ sơ cán bộ + phòng của CHÍNH người đăng nhập (theo hồ sơ, không theo tài khoản) — lối vào "Đánh giá của tôi", phòng mặc định của tổng hợp. */
+export async function hoSoCuaToi(user: CurrentUser): Promise<{ canBoId: string; toChucId: string | null } | null> {
+  const cb = await db.canBo.findFirst({ where: { userId: user.id }, select: { id: true, toChucId: true } })
+  return cb ? { canBoId: cb.id, toChucId: cb.toChucId } : null
+}

@@ -11,6 +11,8 @@ import { tongHopPhong, duThaoNhanXetTapThe } from './tong-hop-phong.ts'
 test('quy trình: đi đúng thứ tự, không nhảy cóc, không tự phê duyệt', () => {
   assert.deepEqual(chuyenTrangThai({ tu: 'DU_THAO', vaiTro: 'THU_KY_TONG_HOP', nguoiThaoTacId: 'tk' }), { ok: true, den: 'TU_DANH_GIA' })
   assert.equal(chuyenTrangThai({ tu: 'DU_THAO', vaiTro: 'CAP_PHE_DUYET', nguoiThaoTacId: 'x' }).ok, false)
+  // chính chủ tự mở bước tự đánh giá của mình
+  assert.deepEqual(chuyenTrangThai({ tu: 'DU_THAO', vaiTro: 'CHINH_CHU', nguoiThaoTacId: 'a', chinhChuId: 'a' }), { ok: true, den: 'TU_DANH_GIA' })
   assert.equal(chuyenTrangThai({ tu: 'TU_DANH_GIA', vaiTro: 'CHINH_CHU', nguoiThaoTacId: 'a', dieuKien: {} }).ok, false)
   assert.equal(chuyenTrangThai({ tu: 'TRINH_PHE_DUYET', vaiTro: 'CAP_PHE_DUYET', nguoiThaoTacId: 'a', chinhChuId: 'a' }).ok, false)
   assert.deepEqual(chuyenTrangThai({ tu: 'TRINH_PHE_DUYET', vaiTro: 'CAP_PHE_DUYET', nguoiThaoTacId: 'gd', chinhChuId: 'a' }), { ok: true, den: 'DA_PHE_DUYET' })

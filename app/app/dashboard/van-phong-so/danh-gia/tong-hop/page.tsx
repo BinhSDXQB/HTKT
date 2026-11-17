@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { getSoDonViOptions } from '@/lib/office-scope'
-import { chuanNam, kiemTraBang, tongHopTheoPhong, duocXemTongHopPhong } from '@/lib/danh-gia-nam/may-chu'
+import { chuanNam, kiemTraBang, tongHopTheoPhong, duocXemTongHopPhong, hoSoCuaToi } from '@/lib/danh-gia-nam/may-chu'
 import { TRANG_THAI_DANH_GIA, TRANG_THAI_DANH_GIA_LABEL } from '@/lib/danh-gia-nam/trang-thai'
 import { MUC_XEP_LOAI_LABEL } from '@/lib/office-labels'
 
@@ -14,7 +14,8 @@ export default async function TongHopDanhGiaPhong({ searchParams }: { searchPara
   const sp = await searchParams
   const user = await requireAuth()
   const nam = chuanNam(sp.nam) ?? 2026
-  const phongId = sp.phong || user.toChucId || ''
+  // Phòng mặc định theo HỒ SƠ CÁN BỘ của người xem (tài khoản có thể lệch hồ sơ)
+  const phongId = sp.phong || (await hoSoCuaToi(user))?.toChucId || user.toChucId || ''
   if (!phongId || !(await duocXemTongHopPhong(user, phongId))) redirect('/forbidden')
   if (!(await kiemTraBang())) return <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">Chưa áp migration 058; chức năng chưa sẵn sàng.</div>
   const d = await tongHopTheoPhong(phongId, nam)

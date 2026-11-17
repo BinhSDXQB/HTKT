@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { requireAuth } from '@/lib/auth'
+import { requireAuth, canAccessOffice } from '@/lib/auth'
 import {
   chuanNam, kiemTraBang, layCanBo, layHoSo, moHoSo, nguCanhQuyen, layDuKien, chayKiemTra,
 } from '@/lib/danh-gia-nam/may-chu'
@@ -35,7 +35,9 @@ export default async function DanhGiaNamPage({
   const khung = (noiDung: React.ReactNode) => (
     <div className="space-y-5 max-w-5xl">
       <div className="text-sm text-slate-500">
-        <Link href={`/dashboard/van-phong-so/ho-so/${id}`} className="hover:underline">Hồ sơ cán bộ</Link> › Đánh giá cuối năm {nam}
+        {canAccessOffice(user)
+          ? <Link href={`/dashboard/van-phong-so/ho-so/${id}`} className="hover:underline">Hồ sơ cán bộ</Link>
+          : <Link href="/dashboard" className="hover:underline">Tổng quan</Link>} › Đánh giá cuối năm {nam}
       </div>
       <h1 className="text-xl font-bold text-slate-900">Đánh giá cuối năm {nam} — {cb.hoTen}</h1>
       <p className="text-sm text-slate-500">{cb.chucVu ?? '—'} · {cb.tenPhong ?? '—'}{cb.viTri ? ` · Vị trí việc làm: ${cb.viTri}` : ''}</p>
