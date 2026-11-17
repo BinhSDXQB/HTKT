@@ -71,4 +71,5 @@ Bẫy đã gặp và cách tránh. Thêm mới ở cuối: ngày · bẫy · cá
 58. **Thêm đường quy trình mới mà không chặn đường ghi cũ thì quy trình vô nghĩa**: `addEvaluationAction` cũ vẫn upsert thẳng mức xếp loại. Khi thay cơ chế, rà mọi nơi ghi cùng bảng đích.
 59. **Chính chủ không được cộng dồn vai trò**: Trưởng phòng/lãnh đạo Sở/thư ký là chính chủ hồ sơ thì chỉ có vai trò chính chủ; kịch bản nghiệm thu bắt được khi cho Trưởng phòng tự trả hồ sơ của mình.
 60. **Kịch bản nghiệm thu trên bản sao dùng `jiti` + `JITI_ALIAS` (`@/` và `server-only`) + `DATABASE_URL` trỏ bản sao, người dùng giả**: nạp được tầng máy chủ thật không cần chạy Next; script từ chối chạy nếu tên CSDL không chứa "thu". Hook chặn lệnh Bash chứa DROP kể cả trong nội dung tệp nên tạo tệp SQL bằng Write/Edit.
-
+61. **Khi quyền suy từ đơn vị của tài khoản, mọi đường "đồng bộ đơn vị" là đường cấp quyền** (17/11/2026, luân chuyển cán bộ): `isLeadership` = phòng LANH_DAO_SO, nên cho người quản lý hồ sơ tự chuyển đơn vị là tự cấp quyền lãnh đạo Sở. Đơn vị mang quyền đặc biệt phải có kiểm tra thẩm quyền riêng; tắt cờ lãnh đạo không đủ.
+62. **Không `Promise.all` nhiều truy vấn trên cùng `tx` của Prisma + pg**: pg báo DeprecationWarning (sẽ lỗi ở pg 9) vì một kết nối nhận nhiều truy vấn cùng lúc; chạy tuần tự.

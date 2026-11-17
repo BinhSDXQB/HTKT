@@ -183,6 +183,20 @@ export function CanBoProfileForm({ defaults, toChucOptions, chucDanhOptions }: {
             {chucDanhOptions.map((o) => <option key={o.id} value={o.id}>{o.ten}</option>)}
           </select>
         </Field>
+        {defaults.id && (
+          <>
+            <Field label="Ngày hiệu lực luân chuyển (khi đổi đơn vị/chức danh)">
+              <Input name="ngayHieuLucLuanChuyen" type="date" className="h-9" />
+            </Field>
+            <Field label="Số quyết định luân chuyển">
+              <Input name="soQuyetDinhLuanChuyen" className="h-9" placeholder="VD: 123/QĐ-SXD" />
+            </Field>
+            <p className="text-xs text-slate-500 sm:col-span-2">
+              Đổi đơn vị ở đây thì tài khoản đăng nhập tự chuyển sang phòng mới (menu theo phòng mới), cờ lãnh đạo phòng cũ được tắt,
+              phân công chính và quá trình công tác được ghi lại. Để trống ngày hiệu lực thì lấy ngày hôm nay.
+            </p>
+          </>
+        )}
         <Field label="Chức vụ (ghi như hồ sơ)">
           <Input name="chucVu" defaultValue={defaults.chucVu} className="h-9" />
         </Field>

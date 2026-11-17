@@ -27,6 +27,12 @@ Cập nhật: 2026-11-17. Mỗi việc: ID · mục tiêu · trạng thái · ti
 | DG-06 | Nhận xét bằng AI ngoài | Chưa làm (bản hiện tại tự soạn từ dữ liệu, không gửi ra ngoài); gửi dữ liệu nhân sự sang AI ngoài cần người dùng duyệt riêng | Duyệt trước khi làm |
 | DG-07 | Tồn đọng từ Codex vòng 1 (24 phát hiện; 2 BLOCKER, 5 HIGH, 17 MEDIUM/LOW đã vá) | Chưa vòng 2. Còn mở: đào tạo gắn theo họ tên (cần trường chọn cán bộ), nhận xét sửa tay mất khẳng định tự động nên không còn bị kiểm tra "ghi đã xong", chatbot còn trả tuổi Đảng (`api/chatbot/route.ts`), người chuyển vị trí chưa có ca thật | Rà vòng 2 |
 
+## Luân chuyển cán bộ tự đồng bộ tài khoản (17/11/2026, chưa commit)
+| ID | Mục tiêu | Trạng thái | Nghiệm thu |
+|---|---|---|---|
+| LC-01 | Văn phòng sửa đơn vị/chức danh ở HỒ SƠ CÁN BỘ → cùng giao dịch: tài khoản theo phòng mới (menu theo phòng mới), tắt cờ lãnh đạo (đổi phòng, hạ chức danh, thôi công tác), đóng/mở phân công chính, ghi quá trình công tác; lưu lại hồ sơ cũng sửa tài khoản/phân công đang lệch | Mã xong: `lib/luan-chuyen.ts`, `lib/luan-chuyen-db.ts`, `actions/can-bo.ts`, `actions/users.ts` (tài khoản gắn hồ sơ: phòng theo hồ sơ; đổi phòng bất kỳ tài khoản → tắt cờ), mục Cảnh báo "lệch phòng". 7 test + `scripts/smoke-luan-chuyen.ts` 14/14 trên bản sao (giao dịch tự huỷ). Codex vòng 1: 14 phát hiện (1 BLOCKER tự leo thang lên Lãnh đạo Sở) đã vá phần BLOCKER/HIGH | Chưa triển khai, chưa xem trên trình duyệt |
+| LC-02 | Còn mở sau Codex | CHƯA LÀM: (a) script nhập/thiết lập còn ghi thẳng `users.toChucId`/cờ (`prisma/import-qlns-2026.ts`, `scripts/setup-trung-tam-bao-tri*.mjs`, `scripts/tao-tai-khoan-dvsn.mjs` gắn tài khoản có sẵn không đồng bộ); (b) chưa hỗ trợ luân chuyển có hiệu lực tương lai (đang từ chối); (c) đua tranh giữa trang Người dùng / bật cờ lãnh đạo và luân chuyển chưa khoá phiên bản; (d) thôi công tác chưa tự khoá tài khoản (chỉ tắt cờ + đóng phân công, cảnh báo liệt kê) | Rà vòng 2 |
+
 ## Việc nghiệp vụ còn treo (trích từ bộ nhớ, chưa kiểm lại)
 - 2 người thiếu CCCD chưa tạo hồ sơ nâng lương 9/2026; 4 tài khoản kẹt số CCCD.
 - 2 Lê Anh Tuấn chờ xác nhận; bảng lương tháng chưa được Codex rà.

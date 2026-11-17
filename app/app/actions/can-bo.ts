@@ -4,9 +4,11 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { db } from '@/lib/db'
-import { requireOfficeAccess, canManageCanBo } from '@/lib/auth'
+import { requireOfficeAccess, canManageCanBo, isLeadership, isOfficeLeader } from '@/lib/auth'
 import { MODULES } from '@/lib/permissions'
 import { logAction } from '@/lib/audit'
+import { apDungLuanChuyen, taoPhanCongBanDau, LoiLuanChuyen } from '@/lib/luan-chuyen-db'
+import { ngayHieuLuc, homNayVN } from '@/lib/luan-chuyen'
 import { convertQueQuan } from '@/lib/que-quan'
 import { tinhNgayNghiHuu, TRUONG_HOP_LUI, hanLuiToiDa, type MaTruongHopLui } from '@/lib/nghi-huu'
 import { chuanHoaPhanTramVuotKhung } from '@/lib/luong'
@@ -38,6 +40,8 @@ const ProfileSchema = z.object({
   namDaoTaoCapPhong: opt, namDaoTaoCapSo: opt, qpAn: opt, namDaoTaoQPAN: opt,
   soTheDang: opt, ngayKetNapDang: opt, ngayVaoDangChinhThuc: opt, chiBo: opt,
   trangThai: opt, ghiChu: opt,
+  // Luân chuyển (chỉ dùng khi đổi đơn vị/chức danh của hồ sơ đã có)
+  ngayHieuLucLuanChuyen: opt, soQuyetDinhLuanChuyen: opt,
 })
 
 function s(v?: string): string | null {
@@ -182,10 +186,11 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
   data.phongBan = toChuc.ten
 
   let id = s(f.canBoId)
+  let thongBaoLc = ''
   if (id) {
     const old = await db.canBo.findUnique({
       where: { id },
-      select: { cccd: true, userId: true, hoTen: true, ngayNghiHuuLui: true, truongHopLui: true, vanBanLuiNghiHuu: true },
+      select: { cccd: true, userId: true, hoTen: true, ngayNghiHuuLui: true, truongHopLui: true, vanBanLuiNghiHuu: true, toChucId: true, chucDanhId: true },
     })
     if (!old) return { error: 'Không tìm thấy hồ sơ cán bộ.' }
     const newCccd = cccd ?? old.cccd
@@ -193,7 +198,39 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
       const trung = await db.canBo.findUnique({ where: { cccd: newCccd } })
       if (trung) return { fieldErrors: { cccd: [`CCCD đã thuộc về ${trung.hoTen}`] } }
     }
-    await db.canBo.update({ where: { id }, data: { ...data, cccd: newCccd } })
+    // Cập nhật hồ sơ + LUÂN CHUYỂN trong một giao dịch: đổi đơn vị/chức danh thì tài khoản đăng nhập, cờ lãnh đạo phòng,
+    // phân công chính và quá trình công tác đi theo (lib/luan-chuyen-db.ts). Hồ sơ cán bộ là nơi duy nhất cập nhật đơn vị.
+    const canBoId = id
+    const ngayHL = ngayHieuLuc(f.ngayHieuLucLuanChuyen)
+    if (!ngayHL) return { fieldErrors: { ngayHieuLucLuanChuyen: ['Ngày hiệu lực không hợp lệ'] } }
+    let lc
+    try {
+      lc = await db.$transaction(async (tx) => {
+        // Khoá dòng hồ sơ và đọc đơn vị/chức danh CŨ ngay trong giao dịch (hai lần lưu đồng thời không ghi trùng luân chuyển)
+        const cu = (await tx.$queryRaw<{ toChucId: string | null; chucDanhId: string | null }[]>`select "toChucId", "chucDanhId" from can_bo where id = ${canBoId} for update`)[0]
+        const doi = cu && (cu.toChucId !== f.toChucId || (cu.chucDanhId ?? null) !== (data.chucDanhId ?? null))
+        // Không tự chuyển đơn vị/chức danh của CHÍNH MÌNH (trừ quản trị viên) — tránh tự cấp quyền
+        if (doi && old.userId === user.id && user.role.name !== 'admin') throw new LoiLuanChuyen('Không được tự đổi đơn vị hoặc chức danh trong hồ sơ của chính mình; nhờ người có thẩm quyền khác thực hiện.')
+        await tx.canBo.update({ where: { id: canBoId }, data: { ...data, cccd: newCccd } })
+        return apDungLuanChuyen(tx, {
+          canBoId, userId: old.userId,
+          toChucIdCu: cu?.toChucId ?? null, toChucIdMoi: f.toChucId,
+          chucDanhIdCu: cu?.chucDanhId ?? null, chucDanhIdMoi: data.chucDanhId ?? null,
+          trangThaiMoi: data.trangThai, ngayHieuLuc: ngayHL, homNay: homNayVN(), soQuyetDinh: s(f.soQuyetDinhLuanChuyen),
+          nguoiThaoTacId: user.id, nguoiThaoTacLaLanhDaoSo: isLeadership(user), nguoiThaoTacLaLanhDaoVP: isOfficeLeader(user),
+        })
+      })
+    } catch (e) {
+      if (e instanceof LoiLuanChuyen) return { error: e.message }
+      throw e
+    }
+    thongBaoLc = [...lc.canhBao, ...lc.ghiChu].join(' ')
+    if (lc.keHoach.capNhatTaiKhoan || lc.keHoach.tatCoLanhDao || lc.keHoach.doiPhanCong || lc.keHoach.ghiQuaTrinh || lc.canhBao.length) {
+      await logAction({
+        userId: user.id, action: 'LUAN_CHUYEN', module: MODULES.OFFICE, targetId: canBoId, targetType: 'CanBo',
+        detail: `${data.hoTen}: ${lc.moTa || 'đồng bộ tài khoản/phân công theo hồ sơ'}. ${[...lc.ghiChu, ...lc.canhBao].join(' ')}`,
+      })
+    }
     // Tài khoản đăng nhập dùng CCCD làm email → đồng bộ khi đổi
     if (newCccd !== old.cccd && old.userId) {
       const u = await db.user.findUnique({ where: { id: old.userId }, select: { email: true } })
@@ -226,7 +263,11 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
     if (!cccd) return { fieldErrors: { cccd: ['Nhập số CCCD (12 số) khi tạo hồ sơ mới'] } }
     const trung = await db.canBo.findUnique({ where: { cccd } })
     if (trung) return { fieldErrors: { cccd: [`CCCD đã thuộc về ${trung.hoTen}`] } }
-    const moi = await db.canBo.create({ data: { ...data, cccd } })
+    const moi = await db.$transaction(async (tx) => {
+      const m = await tx.canBo.create({ data: { ...data, cccd } })
+      await taoPhanCongBanDau(tx, m.id, f.toChucId, data.chucDanhId ?? null)
+      return m
+    })
     id = moi.id
     await logAction({
       userId: user.id, action: 'CREATE', module: MODULES.OFFICE,
@@ -236,7 +277,7 @@ export async function saveCanBoProfileAction(prev: OfficeFormState, formData: Fo
 
   revalidatePath('/dashboard/van-phong-so/ho-so')
   revalidatePath(`/dashboard/van-phong-so/ho-so/${id}`)
-  redirect(`/dashboard/van-phong-so/ho-so/${id}`)
+  redirect(`/dashboard/van-phong-so/ho-so/${id}${thongBaoLc ? `?lc=${encodeURIComponent(thongBaoLc)}` : ''}`)
 }
 
 export async function deleteCanBoAction(prev: OfficeFormState, formData: FormData): Promise<OfficeFormState> {

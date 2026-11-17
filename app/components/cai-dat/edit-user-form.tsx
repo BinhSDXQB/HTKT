@@ -20,8 +20,8 @@ type User = {
 }
 
 export function EditUserForm({
-  user, roles, toChucs, isAdmin = false,
-}: { user: User; roles: Role[]; toChucs: ToChucChon[]; isAdmin?: boolean }) {
+  user, roles, toChucs, isAdmin = false, hoSo = null,
+}: { user: User; roles: Role[]; toChucs: ToChucChon[]; isAdmin?: boolean; hoSo?: { id: string; hoTen: string; tenPhong: string | null } | null }) {
   const [state, formAction, isPending] = useActionState(updateUserAction, null)
 
   if (!isAdmin) {
@@ -74,7 +74,18 @@ export function EditUserForm({
           </div>
         </div>
 
-        <ToChucSelect danhSach={toChucs} defaultValue={user.toChucId ?? null} />
+        {hoSo ? (
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium text-slate-700">Phòng / đơn vị</Label>
+            <div className="h-9 px-3 flex items-center text-sm border rounded-lg bg-slate-50 text-slate-700">{hoSo.tenPhong ?? '(hồ sơ chưa có đơn vị)'}</div>
+            <p className="text-xs text-slate-500">
+              Tài khoản gắn hồ sơ cán bộ <a className="text-blue-700 hover:underline" href={`/dashboard/van-phong-so/ho-so/${hoSo.id}/sua`}>{hoSo.hoTen}</a>:
+              phòng theo hồ sơ. Muốn chuyển phòng thì Văn phòng Sở sửa đơn vị trong hồ sơ cán bộ; tài khoản tự đi theo.
+            </p>
+          </div>
+        ) : (
+          <ToChucSelect danhSach={toChucs} defaultValue={user.toChucId ?? null} />
+        )}
 
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-slate-700">Mật khẩu (để trống nếu không đổi)</Label>

@@ -59,8 +59,9 @@ const TRANG_THAI_LABEL: Record<string, string> = {
   CHUYEN_CONG_TAC: 'Chuyển công tác', NGHI_VIEC: 'Nghỉ việc',
 }
 
-export default async function HoSoDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function HoSoDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ lc?: string }> }) {
   const { id } = await params
+  const thongBaoLc = (await searchParams).lc
   const user = await requireOfficeAccess()
   const canSee = canViewOfficeSensitive(user)
   const canRewardDoc = isOfficeLeader(user) || hasPermission(user.permissions, MODULES.OFFICE, 'reward_manage')
@@ -182,6 +183,7 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
+      {thongBaoLc && <div className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">Luân chuyển: {thongBaoLc}</div>}
       <nav className="flex items-center gap-1.5 text-sm text-slate-500 flex-wrap">
         <Link href="/dashboard/van-phong-so" className="hover:text-indigo-700 flex items-center gap-1">
           <Briefcase className="w-3.5 h-3.5" />Văn phòng Sở

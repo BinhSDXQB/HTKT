@@ -18,6 +18,8 @@ export default async function UserEditPage({ params }: { params: Promise<{ id: s
 
   if (!userData) notFound()
 
+  // Tài khoản gắn hồ sơ cán bộ: phòng lấy theo hồ sơ (Văn phòng Sở cập nhật ở hồ sơ, tài khoản tự đi theo)
+  const hoSo = await db.canBo.findFirst({ where: { userId: id }, select: { id: true, hoTen: true, toChuc: { select: { ten: true } } } })
   const roles = await db.role.findMany({ orderBy: { name: 'asc' } })
   // Chi lay don vi cap 2 dang hoat dong: Lanh dao So / Van phong / Phong chuyen mon /
   // Don vi truc thuoc (trung tam, ban, vien, truong).
@@ -36,7 +38,7 @@ export default async function UserEditPage({ params }: { params: Promise<{ id: s
         <ChevronRight className="w-3.5 h-3.5" /><span className="text-slate-700 font-medium">Sửa</span>
       </nav>
       <div><h1 className="text-xl font-bold text-slate-800">Sửa người dùng</h1></div>
-      <EditUserForm user={userData} roles={roles} toChucs={toChucs} isAdmin={isAdmin} />
+      <EditUserForm user={userData} roles={roles} toChucs={toChucs} isAdmin={isAdmin} hoSo={hoSo ? { id: hoSo.id, hoTen: hoSo.hoTen, tenPhong: hoSo.toChuc?.ten ?? null } : null} />
     </div>
   )
 }

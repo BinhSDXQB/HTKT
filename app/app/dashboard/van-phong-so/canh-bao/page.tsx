@@ -102,6 +102,16 @@ export default async function CanhBaoPage() {
     .filter((x) => x.lyDo !== '')
   const chuaCoTaiKhoan = list.filter((cb) => !cb.userId)
 
+  // Tài khoản đăng nhập lệch phòng với hồ sơ cán bộ: menu và quyền dựng theo tài khoản, nên người này đang thấy
+  // chức năng của phòng khác. Sửa: Văn phòng lưu lại hồ sơ (hoặc quản trị lưu lại tài khoản) → tự đồng bộ theo hồ sơ.
+  // Phạm vi: MỌI hồ sơ có tài khoản đang hoạt động (kể cả đã nghỉ, thiếu đơn vị, ngoài cây Sở), không chỉ danh sách trên
+  const lienKet = await db.canBo.findMany({
+    where: { userId: { not: null }, user: { isActive: true } },
+    select: { id: true, hoTen: true, trangThai: true, toChucId: true, toChuc: { select: { ten: true } }, user: { select: { toChucId: true, toChuc: { select: { ten: true } } } } },
+    orderBy: { hoTen: 'asc' },
+  })
+  const lechPhong = lienKet.filter((cb) => cb.user?.toChucId !== cb.toChucId || !['DANG_CONG_TAC', 'HOP_DONG'].includes(cb.trangThai))
+
   // Chỉ đếm theo phòng, không chỉ ra người dôi dư (xem lib/cap-pho-phong.ts).
   const capPho = doiChieuCapPhoPhong(list.map((cb) => ({
     toChucMa: cb.toChuc?.ma,
@@ -455,6 +465,26 @@ export default async function CanhBaoPage() {
                 </div>
               )
             })}
+          </div>
+        )}
+      </section>
+
+      <section id="lech-phong" className="rounded-xl border bg-white p-5 space-y-3 scroll-mt-4">
+        <SectionHead icon={UserX} color="text-amber-600" title="Tài khoản đăng nhập lệch phòng với hồ sơ cán bộ hoặc còn hoạt động khi đã thôi công tác" count={lechPhong.length}
+          desc="Menu và quyền vào phòng dựng theo tài khoản, nên người này đang thấy chức năng của phòng ghi trong tài khoản. Mở hồ sơ, kiểm tra đúng đơn vị rồi bấm Lưu: tài khoản tự chuyển theo hồ sơ." />
+        {lechPhong.length === 0 ? (
+          <Empty text="Mọi tài khoản đang hoạt động gắn hồ sơ cán bộ đều đúng phòng và còn công tác." />
+        ) : (
+          <div className="space-y-1.5">
+            {lechPhong.map((cb) => (
+              <div key={cb.id} className="flex items-center justify-between gap-2 flex-wrap rounded-lg border border-slate-200 px-3 py-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Link href={`/dashboard/van-phong-so/ho-so/${cb.id}`} className="font-semibold text-slate-900 hover:text-indigo-700">{cb.hoTen}</Link>
+                  <span className="text-xs text-slate-500">Hồ sơ: {cb.toChuc?.ten ?? '—'} · Tài khoản: {cb.user?.toChuc?.ten ?? '(chưa có phòng)'}{!['DANG_CONG_TAC', 'HOP_DONG'].includes(cb.trangThai) ? ` · Đã thôi công tác (${cb.trangThai}) nhưng tài khoản còn hoạt động` : ''}</span>
+                </div>
+                <Link href={`/dashboard/van-phong-so/ho-so/${cb.id}/sua`} className="text-xs font-semibold text-indigo-700 hover:underline">Kiểm tra hồ sơ →</Link>
+              </div>
+            ))}
           </div>
         )}
       </section>
