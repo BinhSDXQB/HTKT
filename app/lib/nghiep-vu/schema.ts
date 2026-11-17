@@ -753,6 +753,11 @@ export const NGHIEP_VU_SCHEMAS: Record<string, NvSchema> = {
       { key: 'kinhPhi', label: 'Kinh phí (triệu đồng)', type: 'number' },
       { key: 'nguonKinhPhi', label: 'Nguồn kinh phí', type: 'select', options: ['Ngân sách', 'Đơn vị', 'Học viên tự túc', 'Khác'] },
       { key: 'ketQua', label: 'Kết quả', type: 'select', options: ['Đang học', 'Hoàn thành', 'Chưa đạt', 'Bỏ dở'] },
+      // Bổ sung PATCH V7.1.1 (phục vụ tổng hợp đánh giá cuối năm; khoá Đang học không tính hoàn thành)
+      { key: 'thoiLuongGio', label: 'Thời lượng (giờ)', type: 'number' },
+      { key: 'coChungChi', label: 'Chứng chỉ / chứng nhận', type: 'select', options: ['Có', 'Chưa có'] },
+      { key: 'daUngDung', label: 'Đã ứng dụng vào nhiệm vụ', type: 'select', options: ['Có', 'Chưa'] },
+      { key: 'minhChungDaoTao', label: 'Minh chứng (số chứng chỉ, quyết định cử đi)', type: 'text' },
     ],
     tableFields: ['loaiHinh', 'coSoDaoTao', 'ketQua'],
   },
