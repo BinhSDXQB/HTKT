@@ -6,7 +6,7 @@ import { db } from '@/lib/db'
 import type { CurrentUser } from '@/lib/auth'
 import { buildMauCaNhan, buildMau03, buildMau04 } from '@/lib/danh-gia-nam/xuat-mau'
 import {
-  taoHoSo, chuyenBuoc, luuNoiDung, soanTuDong, chayKiemTra, moHoSo, layCanBo, tongHopTheoPhong, traVeBuocTruoc, layHoSoTheoId, layDuKien, duLieuXuatCaNhan,
+  taoHoSo, chuyenBuoc, luuNoiDung, soanTuDong, chayKiemTra, moHoSo, layCanBo, tongHopTheoPhong, traVeBuocTruoc, layHoSoTheoId, layDuKien, duLieuXuatCaNhan, duLieuXuatTrong,
   type HoSoDanhGia,
 } from '@/lib/danh-gia-nam/may-chu'
 
@@ -155,6 +155,10 @@ try {
     ok(xu.du.mucPheDuyet === 'HOAN_THANH_TOT_NHIEM_VU' && xu.du.nhanXet?.ket_qua_nhiem_vu !== undefined, 'dữ liệu xuất mang mức đã phê duyệt và nhận xét thật')
   }
   ok(!(await duLieuXuatCaNhan(nguoi('la'), h.id)).ok, 'người ngoài thẩm quyền không xuất được')
+  const tr1 = await duLieuXuatTrong(thuKy, cv.cb.id, NAM); const tr2 = await duLieuXuatTrong(thuKy, ca['PHONG_HTKT/TRUONG_PHONG'].cb.id, NAM)
+  ok(tr1.ok && tr1.mau === '2C' && tr2.ok && tr2.mau === '2B', 'mẫu áp dụng hiện sẵn trước khi lập hồ sơ: chuyên viên 2C, Trưởng phòng 2B')
+  ok(tr1.ok && (await buildMauCaNhan(tr1.mau, tr1.du)).length > 5000, 'tải được bản trống từ dữ liệu hành chính')
+  ok(!(await duLieuXuatTrong(nguoi('la'), cv.cb.id, NAM)).ok, 'người ngoài thẩm quyền không tải được bản trống')
 
   // ── Phê duyệt kép đồng thời: chỉ MỘT người thắng, mức chính thức không bị người thua ghi đè ──
   const pq = ca['PHONG_QL_VT/PHO_TRUONG_PHONG']; let p2 = hs['PHONG_QL_VT/PHO_TRUONG_PHONG']
@@ -184,6 +188,19 @@ try {
   ok(!(await traVeBuocTruoc(giamDoc, t.id, '  ')).ok, 'trả về phải có lý do')
   const tv = await traVeBuocTruoc(giamDoc, t.id, 'Bổ sung tự đánh giá')
   ok(tv.ok && tv.hoSo.trangThai === 'TU_DANH_GIA', 'trả về bước trước kèm lý do')
+
+  // ── Tài khoản/cờ lệch hồ sơ (ca Trần Văn Bình): quyền theo HỒ SƠ CÁN BỘ, không theo tài khoản ──
+  const tpQ = ca['PHONG_QL_VT/TRUONG_PHONG']
+  const lech = nguoi(tpQ.cb.userId!, { toChucId: phongs.find((p) => p.ma === 'PHONG_HTKT')!.id, truongPhong: false }) // tài khoản ghi HTKT, không bật cờ
+  const mA = await moHoSo(lech, hs['PHONG_QL_VT/PHO_TRUONG_PHONG'].id)
+  ok(mA?.tuChoi === false, 'Trưởng phòng QLVT (tài khoản ghi HTKT, không cờ) vẫn xem/nhận xét được hồ sơ cấp dưới phòng QLVT theo hồ sơ cán bộ')
+  const mB = await moHoSo(lech, h.id)
+  ok(mB?.tuChoi === true, 'cùng người đó KHÔNG xem được hồ sơ của chuyên viên phòng HTKT dù tài khoản ghi HTKT')
+  const ptpQ = ca['PHONG_QL_VT/PHO_TRUONG_PHONG']
+  const phoLech = nguoi(ptpQ.cb.userId!, { toChucId: phongs.find((p) => p.ma === 'PHONG_HTKT')!.id, truongPhong: true }) // cờ bật, tài khoản sai phòng
+  ok((await moHoSo(phoLech, h.id))?.tuChoi === true, 'Phó phòng QLVT có cờ bật + tài khoản ghi HTKT vẫn không xem được hồ sơ phòng HTKT')
+  const { duocXemTongHopPhong } = await import('@/lib/danh-gia-nam/may-chu')
+  ok(!(await duocXemTongHopPhong(phoLech, phongs.find((p) => p.ma === 'PHONG_HTKT')!.id)) && (await duocXemTongHopPhong(phoLech, phongs.find((p) => p.ma === 'PHONG_QL_VT')!.id)), 'dashboard phòng: theo hồ sơ cán bộ (QLVT được, HTKT không)')
 
   // ── Hồ sơ kiểm điểm Đảng: tách quyền ──
   const tpHt = ca['PHONG_HTKT/TRUONG_PHONG']

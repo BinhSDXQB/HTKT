@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth'
 import { logAction } from '@/lib/audit'
 import { MODULES } from '@/lib/permissions'
-import { chuanNam, duLieuXuatCaNhan, kiemTraBang, tongHopTheoPhong, duocXemTongHopPhong } from '@/lib/danh-gia-nam/may-chu'
+import { chuanNam, duLieuXuatCaNhan, duLieuXuatTrong, kiemTraBang, tongHopTheoPhong, duocXemTongHopPhong } from '@/lib/danh-gia-nam/may-chu'
 import { buildMauCaNhan, buildMau03, buildMau01, buildMau04 } from '@/lib/danh-gia-nam/xuat-mau'
 
 // Xuất biểu mẫu đánh giá cuối năm: ?reviewId=&mau=2A|2B|2C|03|04  hoặc  ?phong=<toChucId>&nam=&mau=01
@@ -25,12 +25,29 @@ export async function GET(req: NextRequest) {
 
   if (mau === '01') {
     const phong = q.get('phong') ?? ''; const nam = chuanNam(q.get('nam')) ?? 2026
-    if (!phong || !duocXemTongHopPhong(user, phong)) return NextResponse.json({ error: 'Không có quyền' }, { status: 403 })
+    if (!phong || !(await duocXemTongHopPhong(user, phong))) return NextResponse.json({ error: 'Không có quyền' }, { status: 403 })
     const d = await tongHopTheoPhong(phong, nam)
     if (!d) return NextResponse.json({ error: 'Không tìm thấy đơn vị' }, { status: 404 })
     const buf = await buildMau01({ tenCoQuan: 'Sở Xây dựng Quảng Trị', tenDonVi: 'Sở Xây dựng Quảng Trị', nam, tenTapThe: d.tenPhong, duThaoNhanXet: d.duThao.filter((l) => !l.startsWith('Mức xếp loại tập thể')) })
     await logAction({ userId: user.id, action: 'EXPORT', module: MODULES.OFFICE, targetId: phong, targetType: 'office_year_dept_reviews', detail: `Xuất Mẫu 01 năm ${nam}` })
     return tep(buf, `Mau01_${khongDau(d.tenPhong)}_${nam}.docx`, DOCX)
+  }
+
+  // Bản trống (chưa có hồ sơ): ?canBoId=&nam=&mau=  — chỉ thông tin hành chính, không có điểm/nhận xét
+  if (!q.get('reviewId') && q.get('canBoId')) {
+    const nam = chuanNam(q.get('nam')) ?? 2026
+    const t = await duLieuXuatTrong(user, q.get('canBoId')!, nam)
+    if (!t.ok) return NextResponse.json({ error: t.loi }, { status: t.ma })
+    const b = `${khongDau(t.cb.hoTen)}_${nam}_trong`
+    let o: NextResponse
+    if (mau === '2A' || mau === '2B' || mau === '2C') {
+      if (mau !== t.mau) return NextResponse.json({ error: `Mẫu ${mau} không đúng đối tượng; cán bộ này áp dụng Mẫu ${t.mau}.` }, { status: 400 })
+      o = tep(await buildMauCaNhan(mau, t.du), `Mau${mau}_${b}.docx`, DOCX)
+    } else if (mau === '03') o = tep(await buildMau03(t.du), `Mau03_${b}.docx`, DOCX)
+    else if (mau === '04') o = tep(await buildMau04(nam, t.cb.hoTen, t.tenNhiemVu.map((x) => ({ nhiemVu: x }))), `Mau04_${b}.xlsx`, XLSX)
+    else return NextResponse.json({ error: 'Mẫu chưa được hỗ trợ.' }, { status: 400 })
+    await logAction({ userId: user.id, action: 'EXPORT', module: MODULES.OFFICE, targetId: t.cb.id, targetType: 'can_bo', detail: `Xuất Mẫu ${mau} bản trống năm ${nam}` })
+    return o
   }
 
   const r = await duLieuXuatCaNhan(user, q.get('reviewId') ?? '')

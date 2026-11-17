@@ -64,13 +64,26 @@ export async function layCanBo(canBoId: string): Promise<CanBoNgan | null> {
   return { id: cb.id, hoTen: cb.hoTen, userId: cb.userId, toChucId: cb.toChucId, laLanhDao: cb.chucDanh?.isLanhDao ?? false, capQuanLy: cb.chucDanh?.capQuanLy ?? null, viTri: cb.viTriViecLam, chucVu: cb.chucVu, tenPhong: cb.toChuc?.ten ?? null }
 }
 
-export function nguCanhQuyen(user: CurrentUser, cb: Pick<CanBoNgan, 'userId' | 'toChucId'>): NguCanhQuyen {
+/**
+ * Chức vụ của NGƯỜI THAO TÁC lấy từ HỒ SƠ CÁN BỘ của chính họ (phòng + chức danh), không từ tài khoản
+ * (users.toChucId) hay cờ isDepartmentLeader bật tay: hai thứ đó có thể lệch/ thiếu so với hồ sơ.
+ * Trưởng phòng/Chánh VP (capQuanLy = 3) nhận xét được người cấp dưới CÙNG phòng; Phó phòng (4) chỉ được xem tổng hợp phòng.
+ */
+async function chucVuNguoiThaoTac(user: CurrentUser): Promise<{ toChucId: string | null; cap: number | null }> {
+  const cb = await db.canBo.findFirst({ where: { userId: user.id, trangThai: 'DANG_CONG_TAC' }, select: { toChucId: true, chucDanh: { select: { isLanhDao: true, capQuanLy: true } } } })
+  if (!cb || !cb.chucDanh?.isLanhDao) return { toChucId: cb?.toChucId ?? null, cap: null }
+  return { toChucId: cb.toChucId, cap: cb.chucDanh.capQuanLy }
+}
+
+export async function nguCanhQuyen(user: CurrentUser, cb: Pick<CanBoNgan, 'userId' | 'toChucId'> & { capQuanLy?: number | null }): Promise<NguCanhQuyen> {
   const co = (a: string) => hasPermission(user.permissions, MODULES.OFFICE, a)
+  const v = await chucVuNguoiThaoTac(user)
+  const capDuoi = cb.capQuanLy === undefined || cb.capQuanLy === null || cb.capQuanLy > 3
   return {
     laChinhChu: !!cb.userId && cb.userId === user.id,
     laLanhDaoSo: isLeadership(user),
     laLanhDaoVanPhong: isOfficeLeader(user),
-    laLanhDaoCungPhong: user.isDepartmentLeader && !!user.toChucId && user.toChucId === cb.toChucId,
+    laLanhDaoCungPhong: v.cap === 3 && !!v.toChucId && v.toChucId === cb.toChucId && capDuoi,
     coQuyenQuanLyDanhGia: co('annual_evaluation_manage'),
     coQuyenPheDuyet: co('annual_evaluation_approve'),
     coQuyenXemDang: canViewThongTinDang(user, false),
@@ -116,7 +129,7 @@ export type KetQuaThaoTac = { ok: true; hoSo: HoSoDanhGia } | { ok: false; loi: 
 export async function taoHoSo(user: CurrentUser, canBoId: string, nam: number, loai: LoaiHoSo): Promise<KetQuaThaoTac> {
   const cb = await layCanBo(canBoId)
   if (!cb) return { ok: false, loi: 'Không tìm thấy cán bộ.' }
-  const ctx = nguCanhQuyen(user, cb)
+  const ctx = await nguCanhQuyen(user, cb)
   const vt = xacDinhVaiTro(loai, ctx)
   if (!vt.includes('THU_KY_TONG_HOP') && !vt.includes('CHINH_CHU')) return { ok: false, loi: 'Bạn không có quyền lập hồ sơ đánh giá cho cán bộ này.' }
   const mau = loai === 'CBCCVC' ? chonMauCaNhan({ laNguoiDungDau: cb.capQuanLy === 1, laLanhDaoQuanLy: cb.laLanhDao }) : null
@@ -131,7 +144,7 @@ async function nap(user: CurrentUser, reviewId: string) {
   const cb = await layCanBo(hs.canBoId)
   if (!cb) return null
   // Quyền theo PHÒNG TẠI THỜI ĐIỂM ĐÁNH GIÁ (toChucId lưu trên hồ sơ), không theo phòng hiện tại của cán bộ
-  const ctx = nguCanhQuyen(user, { userId: cb.userId, toChucId: hs.toChucId ?? cb.toChucId })
+  const ctx = await nguCanhQuyen(user, { userId: cb.userId, toChucId: hs.toChucId ?? cb.toChucId, capQuanLy: cb.capQuanLy })
   const vaiTro = xacDinhVaiTro(hs.loaiHoSo, ctx)
   return { hs, cb, ctx, vaiTro, xem: duocXemHoSo(hs.loaiHoSo, ctx) }
 }
@@ -381,9 +394,11 @@ export async function traVeBuocTruoc(user: CurrentUser, reviewId: string, lyDo: 
 // ── Dashboard phòng ─────────────────────────────────────────────────────────
 export type DuLieuPhong = { tenPhong: string; tong: TongHopPhong; duThao: string[]; nhanSu: (HoSoTongHop & { chucVu: string | null; soKhoa: number })[] }
 
-export function duocXemTongHopPhong(user: CurrentUser, toChucId: string): boolean {
-  return isLeadership(user) || isOfficeLeader(user) || hasPermission(user.permissions, MODULES.OFFICE, 'annual_evaluation_manage') ||
-    (user.isDepartmentLeader && user.toChucId === toChucId)
+export async function duocXemTongHopPhong(user: CurrentUser, toChucId: string): Promise<boolean> {
+  if (isLeadership(user) || isOfficeLeader(user) || hasPermission(user.permissions, MODULES.OFFICE, 'annual_evaluation_manage')) return true
+  // Trưởng/Phó phòng theo HỒ SƠ CÁN BỘ của chính phòng đó (không theo tài khoản hay cờ bật tay)
+  const v = await chucVuNguoiThaoTac(user)
+  return (v.cap === 3 || v.cap === 4) && v.toChucId === toChucId
 }
 
 export async function tongHopTheoPhong(toChucId: string, nam: number): Promise<DuLieuPhong | null> {
@@ -440,4 +455,23 @@ export async function duLieuXuatCaNhan(user: CurrentUser, reviewId: string): Pro
     nhanXetLanhDao: n.hs.nhanXetLanhDao, mucPheDuyet: n.hs.mucPheDuyet, diemQuy: n.hs.diemQuy,
   }
   return { ok: true, hs: n.hs, cb: n.cb, du, tenNhiemVu: du0.congViec.map((c) => c.tieuDe) }
+}
+
+/** Mẫu áp dụng cho một cán bộ + dữ liệu để xuất BẢN TRỐNG (chưa có hồ sơ): chỉ họ tên, ngày sinh, chức vụ, vị trí, đơn vị. */
+export async function duLieuXuatTrong(user: CurrentUser, canBoId: string, nam: number): Promise<
+  { ok: true; cb: CanBoNgan; mau: '2A' | '2B' | '2C'; du: DuLieuCaNhan; tenNhiemVu: string[] } | { ok: false; loi: string; ma: number }
+> {
+  const cb = await layCanBo(canBoId)
+  if (!cb) return { ok: false, loi: 'Không tìm thấy cán bộ.', ma: 404 }
+  if (!duocXemHoSo('CBCCVC', await nguCanhQuyen(user, cb))) return { ok: false, loi: 'Không có quyền.', ma: 403 }
+  const row = await db.canBo.findUnique({ where: { id: canBoId }, select: { ngaySinh: true } })
+  const ngay = row?.ngaySinh ? new Date(row.ngaySinh) : null
+  const mau = chonMauCaNhan({ laNguoiDungDau: cb.capQuanLy === 1, laLanhDaoQuanLy: cb.laLanhDao })
+  const du0 = await layDuKien(cb, nam)
+  const du: DuLieuCaNhan = {
+    tenCoQuan: 'Sở Xây dựng Quảng Trị', tenDonVi: cb.tenPhong ?? '', nam, hoTen: cb.hoTen,
+    ngaySinh: ngay ? `${String(ngay.getUTCDate()).padStart(2, '0')}/${String(ngay.getUTCMonth() + 1).padStart(2, '0')}/${ngay.getUTCFullYear()}` : null,
+    chucVuChinhQuyen: cb.chucVu, viTriViecLam: cb.viTri, donViCongTac: cb.tenPhong ?? '',
+  }
+  return { ok: true, cb, mau, du, tenNhiemVu: du0.congViec.map((c) => c.tieuDe) }
 }

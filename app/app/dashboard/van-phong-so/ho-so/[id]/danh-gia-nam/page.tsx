@@ -8,7 +8,7 @@ import { xacDinhVaiTro, duocSuaPhan, duocXemHoSo, type LoaiHoSo } from '@/lib/da
 import { TRANG_THAI_DANH_GIA, TRANG_THAI_DANH_GIA_LABEL } from '@/lib/danh-gia-nam/trang-thai'
 import { TIEU_CHI_CHUNG, mucToiDaTheoDiem } from '@/lib/danh-gia-nam/tieu-chi'
 import { MUC_NHAN_XET, laDoanThieuDuLieu } from '@/lib/danh-gia-nam/nhan-xet'
-import { timMau } from '@/lib/danh-gia-nam/mau-bieu'
+import { timMau, chonMauCaNhan } from '@/lib/danh-gia-nam/mau-bieu'
 import { MUC_XEP_LOAI_OPTIONS, MUC_XEP_LOAI_LABEL } from '@/lib/office-labels'
 import {
   taoHoSoAction, luuAction, suaDoanAction, soanTuDongAction, chuyenBuocAction, traVeAction,
@@ -31,7 +31,7 @@ export default async function DanhGiaNamPage({
   const cb = await layCanBo(id)
   if (!cb) notFound()
   const co = await kiemTraBang()
-  const ctx = nguCanhQuyen(user, cb)
+  const ctx = await nguCanhQuyen(user, cb)
   const khung = (noiDung: React.ReactNode) => (
     <div className="space-y-5 max-w-5xl">
       <div className="text-sm text-slate-500">
@@ -74,9 +74,21 @@ export default async function DanhGiaNamPage({
 
   if (!h) {
     const duocLap = vaiTro.includes('THU_KY_TONG_HOP') || vaiTro.includes('CHINH_CHU')
+    const mauDuKien = loai === 'CBCCVC' ? chonMauCaNhan({ laNguoiDungDau: cb.capQuanLy === 1, laLanhDaoQuanLy: cb.laLanhDao }) : null
     return khung(<>{tab}{thongBao}
       <div className="rounded-xl border bg-white p-5 space-y-3">
         <p className="text-sm text-slate-600">Chưa có hồ sơ {loai === 'CBCCVC' ? 'đánh giá' : 'kiểm điểm đảng viên'} năm {nam}.</p>
+        {mauDuKien && (
+          <div className="space-y-2">
+            <p className="text-sm text-slate-700">Biểu mẫu áp dụng cho {cb.hoTen}: <b>Mẫu {mauDuKien}</b> — {timMau(mauDuKien, 'SNV_CV6862')?.ten}. Phiếu xếp loại: Mẫu 03. Theo dõi KPI: Mẫu 04.</p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              {[mauDuKien, '03', '04'].map((m) => (
+                <a key={m} href={`/api/office/danh-gia-nam/xuat?canBoId=${id}&nam=${nam}&mau=${m}`} className="px-2.5 py-1 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Tải Mẫu {m} bản trống ({m === '04' ? 'Excel' : 'Word'})</a>
+              ))}
+            </div>
+            <p className="text-xs text-slate-500">Bản trống chỉ có thông tin hành chính; lập hồ sơ để điền tự đánh giá, điểm và nhận xét.</p>
+          </div>
+        )}
         {duocLap ? (
           <form action={taoHoSoAction}>
             <input type="hidden" name="canBoId" value={id} /><input type="hidden" name="nam" value={nam} /><input type="hidden" name="loai" value={loai} />
