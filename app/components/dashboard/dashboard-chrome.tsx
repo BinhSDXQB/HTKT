@@ -14,10 +14,11 @@ type Props = {
   canOffice?: boolean
   canHtkt?: boolean
   canCongViec?: boolean
+  canAi?: boolean
   toChucMa?: string | null
 }
 
-export function DashboardChrome({ roleName, email, userName, userEmail, roleDisplayName, mustChangePassword, canOffice, canHtkt, canCongViec, toChucMa }: Props) {
+export function DashboardChrome({ roleName, email, userName, userEmail, roleDisplayName, mustChangePassword, canOffice, canHtkt, canCongViec, canAi, toChucMa }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
@@ -28,6 +29,7 @@ export function DashboardChrome({ roleName, email, userName, userEmail, roleDisp
         canOffice={canOffice}
         canHtkt={canHtkt}
         canCongViec={canCongViec}
+        canAi={canAi}
         toChucMa={toChucMa}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}

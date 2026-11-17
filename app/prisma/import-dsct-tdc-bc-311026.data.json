@@ -1,0 +1,523 @@
+[
+ {
+  "tt": 1,
+  "ten": "Tái định cư phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc Nam xã Quảng Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Quảng Trạch",
+  "ha": 7.86,
+  "ty": 136.0,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "Khởi công ngày 19/8/2025 (Đã hoàn thành 100% KL thi công)",
+  "pl": 1
+ },
+ {
+  "tt": 2,
+  "ten": "Tái định cư phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam phường Ba Đồn, tỉnh Quảng Trị",
+  "cdt": "UBND phường Ba Đồn",
+  "ha": 17.5,
+  "ty": 307.0,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "Khởi công ngày 19/8/2025 (đang thi công đạt 40% KL)",
+  "pl": 1
+ },
+ {
+  "tt": 3,
+  "ten": "Khu vực 1 tái định cư phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam phường Đồng Sơn, tỉnh Quảng Trị",
+  "cdt": "UBND phường Đồng Sơn",
+  "ha": 13.5,
+  "ty": 230.0,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "Khởi công ngày 19/8/2025 (đang thi công đạt 57% KL)",
+  "pl": 1
+ },
+ {
+  "tt": 4,
+  "ten": "Khu tái định cư phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam tại xã Phú Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Phú Trạch",
+  "ha": 5.99,
+  "ty": 91.9,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "QĐ số 4064/QĐ-UBND ngày 25/9/2026",
+  "pl": 1
+ },
+ {
+  "tt": 5,
+  "ten": "Tái định cư thôn Vĩnh Lộc xã Nam Gianh (khu vực 1) phục vụ GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Nam Gianh, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Gianh",
+  "ha": 1.87,
+  "ty": 35.0,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "QĐ số 4436/QĐ-UBND ngày 15/10/2026",
+  "pl": 1
+ },
+ {
+  "tt": 6,
+  "ten": "Khu tái định cư khu vực thôn Hổ, xã Hoàn Lão (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Hoàn Lão",
+  "ha": 2.16,
+  "ty": 30.73,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "QĐ số 4059/QĐ-UBND ngày 25/9/2026",
+  "pl": 1
+ },
+ {
+  "tt": 7,
+  "ten": "Khu tái định cư phục vụ công tác giải phóng mặt bằng dự án Đường sắt tốc độ cao trên trục Bắc - nam, thôn Cam Vũ 3, xã Hiếu Giang, tỉnh Quảng Trị",
+  "cdt": "UBND xã Hiếu Giang",
+  "ha": 10.85,
+  "ty": 136.92,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đã phê duyệt",
+  "ghiChu": "QĐ số 4399/QĐ-UBND ngày 13/10/2026",
+  "pl": 1
+ },
+ {
+  "tt": 8,
+  "ten": "Khu tái định cư số 1 phục vụ GPMB dự án đường sắt tốc độ cao trên trục Bắc - Nam xã Bố Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Bố Trạch",
+  "ha": 4.28,
+  "ty": 37.09,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 9689/TTr-SXD ngày 30/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 9,
+  "ten": "TĐC thôn Tân Phước phục vụ GPMB dự án Đường sắt TĐC trên trục Bắc - Nam phường Quảng Trị, tỉnh Quảng Trị",
+  "cdt": "UBND phường Quảng Trị",
+  "ha": 3.22,
+  "ty": 42.0,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "",
+  "ghiChu": "Đang lập và trình lại theo Luật Xây dựng 2025",
+  "pl": 1
+ },
+ {
+  "tt": 10,
+  "ten": "TĐC thôn Như Lệ phục vụ GPMB dự án Đường sắt TĐC trên trục Bắc - Nam phường Quảng Trị, tỉnh Quảng Trị",
+  "cdt": "UBND phường Quảng Trị",
+  "ha": 16.02,
+  "ty": 243.95,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 9580/TTr-SXD ngày 28/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 11,
+  "ten": "Khu tái định cư thôn Tân Sơn phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Nam Hải Lăng, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Hải Lăng",
+  "ha": 0.8,
+  "ty": 11.38,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 8754/TTr-SXD ngày 07/10/2026 và Công văn số 9226/SXD ngày 20/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 12,
+  "ten": "Khu tái định cư thôn Tân Phong phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Nam Hải Lăng, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Hải Lăng",
+  "ha": 1.0,
+  "ty": 12.59,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 8755/TTr-SXD ngày 07/10/2026 và Công văn 9227/SXD ngày 20/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 13,
+  "ten": "Dự án Khu tái định cư thôn Thiện Thành phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam qua địa bàn xã Cồn Tiên",
+  "cdt": "UBND xã Cồn Tiên",
+  "ha": 1.68,
+  "ty": 15.58,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 9155/TTr-SXD ngày 19/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 14,
+  "ten": "Khu tái định cư phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam qua địa phận xã Trung Thuần, tỉnh Quảng Trị",
+  "cdt": "UBND xã Trung Thuần",
+  "ha": 8.1,
+  "ty": 127.6,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 9270/TTr-SXD ngày 21/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 15,
+  "ten": "Xây dựng khu tái định cư thôn Cồn Nâm thuộc Dự án GPMB Dự án đường sắt tốc độ cao trên trục Bắc – Nam trên địa bàn xã Nam Gianh, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Gianh",
+  "ha": 4.31,
+  "ty": 91.6,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang rà soát lại hồ sơ",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 8445/TTr-SXD ngày 30/9/2026); rà soát quy mô theo Công văn 905/VP ngày 14/10/2026",
+  "pl": 1
+ },
+ {
+  "tt": 16,
+  "ten": "Xây dựng hạ tầng kỹ thuật khu tái định cư thôn Vĩnh Tuy 3, xã Quảng Ninh",
+  "cdt": "UBND xã Quảng Ninh",
+  "ha": 4.17,
+  "ty": 52.85,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 9570/TTr-SXD ngày 28/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 17,
+  "ten": "Xây dựng hạ tầng kỹ thuật khu tái định cư thôn Trúc Ly, xã Quảng Ninh (phục vụ GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam đoạn qua địa phận tỉnh Quảng Trị)",
+  "cdt": "UBND xã Quảng Ninh",
+  "ha": 24.84,
+  "ty": 427.48,
+  "thamDinh": "Đã hoàn thành thẩm định",
+  "pheDuyet": "Đang phê duyệt",
+  "ghiChu": "Trình UBND tỉnh (Tờ trình 9383/TTr-SXD ngày 23/10/2026)",
+  "pl": 1
+ },
+ {
+  "tt": 1,
+  "ten": "Khu TĐC đường Trần Huy Liệu phục vụ GPMB dự án đường sắt TĐC trên trục Bắc - Nam đoạn qua địa bàn phường Đông Hà, tỉnh Quảng Trị",
+  "cdt": "UBND phường Đông Hà",
+  "ha": 5.76,
+  "ty": 95.0,
+  "vanBanTrinh": "Tờ trình số 5619/TTr-UBND ngày 15/10/2026 của UBND phường",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 2,
+  "ten": "Khu tái định cư thôn 1 phục vụ công tác GPMB dự án đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Bến Quan, tỉnh Quảng Trị",
+  "cdt": "UBND xã Bến Quan",
+  "ha": 1.65,
+  "ty": 24.95,
+  "vanBanTrinh": "Tờ trình số 2387/TTr-UBND ngày 20/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 3,
+  "ten": "Khu tái định cư thôn 5 phục vụ công tác GPMB dự án đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Bến Quan, tỉnh Quảng Trị",
+  "cdt": "UBND xã Bến Quan",
+  "ha": 1.92,
+  "ty": 32.35,
+  "vanBanTrinh": "Tờ trình số 2388/TTr-UBND ngày 20/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 4,
+  "ten": "Khu tái định cư thôn Sao Sa, xã Nam Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Trạch",
+  "ha": 3.56,
+  "ty": 49.7,
+  "vanBanTrinh": "Tờ trình số 2766/TTr-UBND ngày 26/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 5,
+  "ten": "Xây dựng khu TĐC Thượng Phước phục vụ công tác GPMB Dự án Đường sắt TĐC trên trục Bắc - Nam, đoạn đi qua địa phận xã Triệu Phong",
+  "cdt": "UBND xã Triệu Phong",
+  "ha": 1.5,
+  "ty": 16.56,
+  "vanBanTrinh": "Công văn số 1532/UBND ngày 23/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 6,
+  "ten": "Khu tái định cư thôn Tây Chánh phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Nam Hải Lăng, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Hải Lăng",
+  "ha": 4.95,
+  "ty": 99.24,
+  "vanBanTrinh": "Công văn số 1065/UBND-KT ngày 29/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 7,
+  "ten": "Khu tái định cư thôn Mỹ Chánh phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Nam Hải Lăng, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Hải Lăng",
+  "ha": 4.54,
+  "ty": 73.15,
+  "vanBanTrinh": "Báo cáo số 310/UBND-KT ngày 26/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 8,
+  "ten": "Khu tái định cư thôn 2 Mỹ Trạch, xã Bắc Trạch (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Bắc Trạch",
+  "ha": 4.33,
+  "ty": 44.23,
+  "vanBanTrinh": "Công văn số 1999/UBND ngày 29/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 9,
+  "ten": "Tái định cư phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam, thôn Vĩnh Phú, xã Nam Gianh, tỉnh Quảng Trị",
+  "cdt": "UBND xã Nam Gianh",
+  "ha": 17.9,
+  "ty": 336.0,
+  "vanBanTrinh": "Công văn số 1611/UBND ngày 28/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 10,
+  "ten": "Khu tái định cư Quảng Xá, xã Ninh Châu (phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam đoạn qua địa phận tỉnh Quảng Trị)",
+  "cdt": "UBND xã Ninh Châu",
+  "ha": 5.24,
+  "ty": 92.0,
+  "vanBanTrinh": "Tờ trình số 280/TTr-UBND ngày 30/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 11,
+  "ten": "Khu tái định cư khu vực thôn Dài, xã Hoàn Lão (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Hoàn Lão",
+  "ha": 3.35,
+  "ty": 48.5,
+  "vanBanTrinh": "Công văn số 3947/UBND ngày 28/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 12,
+  "ten": "Khu TĐC thôn Phú Ốc, xã Cồn Tiên",
+  "cdt": "UBND xã Cồn Tiên",
+  "ha": 6.14,
+  "ty": 67.09,
+  "vanBanTrinh": "Tờ trình số 2504/TTr-UBND ngày 02/10/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 13,
+  "ten": "Khu tái định cư phục vụ công tác giải phóng mặt bằng dự án Đường sắt tốc độ cao trên trục Bắc - Nam, thôn Thiện Chánh - Thọ Xuân, xã Hiếu Giang",
+  "cdt": "UBND xã Hiếu Giang",
+  "ha": 3.62,
+  "ty": 44.58,
+  "vanBanTrinh": "Công văn số 1431/UBND ngày 29/9/2026 của UBND xã",
+  "ghiChu": "",
+  "pl": 2
+ },
+ {
+  "tt": 1,
+  "ten": "Khu tái định cư phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam qua địa phận xã Tân Gianh, tỉnh Quảng Trị",
+  "cdt": "UBND xã Tân Gianh",
+  "ha": 22.99,
+  "ty": 360.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 2,
+  "ten": "Khu tái định cư khu vực thôn Đông Sơn, xã Đông Trạch (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Đông Trạch",
+  "ha": 2.1,
+  "ty": 19.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 3,
+  "ten": "Khu tái định cư khu vực thôn Tân Lộc, xã Đông Trạch (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Đông Trạch",
+  "ha": 3.3,
+  "ty": 45.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 4,
+  "ten": "Khu vực 2 tái định cư phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam phường Đồng Sơn, tỉnh Quảng Trị",
+  "cdt": "UBND phường Đồng Sơn",
+  "ha": 8.84,
+  "ty": 140.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 5,
+  "ten": "Khu vực 3 tái định cư phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam phường Đồng Sơn, tỉnh Quảng Trị",
+  "cdt": "UBND phường Đồng Sơn",
+  "ha": 7.53,
+  "ty": 138.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 6,
+  "ten": "Khu tái định cư khu vực thôn Phương Hạ, xã Hoàn Lão (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Hoàn Lão",
+  "ha": 1.59,
+  "ty": 23.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 7,
+  "ten": "Tái định cư thôn Vĩnh Lộc xã Nam Gianh (khu vực 2) phục vụ GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam trên địa bàn xã Nam Gianh",
+  "cdt": "UBND xã Nam Gianh",
+  "ha": 3.1,
+  "ty": 76.12,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 8,
+  "ten": "Khu tái định cư Nguyệt Áng, xã Ninh Châu (phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam đoạn qua địa phận tỉnh Quảng Trị)",
+  "cdt": "UBND xã Ninh Châu",
+  "ha": 6.5,
+  "ty": 93.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 9,
+  "ten": "Khu tái định cư Hiển Lộc - Hiển Vinh, xã Ninh Châu (phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam đoạn qua địa phận tỉnh Quảng Trị)",
+  "cdt": "UBND xã Ninh Châu",
+  "ha": 4.03,
+  "ty": 65.17,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 10,
+  "ten": "Khu tái định cư Phú Vinh, xã Ninh Châu (phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam đoạn qua địa phận tỉnh Quảng Trị)",
+  "cdt": "UBND xã Ninh Châu",
+  "ha": 9.5,
+  "ty": 124.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 11,
+  "ten": "Khu tái định cư Hòa Bình, xã Ninh Châu (phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam đoạn qua địa phận tỉnh Quảng Trị)",
+  "cdt": "UBND xã Ninh Châu",
+  "ha": 6.2,
+  "ty": 92.33,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 12,
+  "ten": "Tái định cư Sơn Tùng phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam, xã Hòa Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Hòa Trạch",
+  "ha": 8.35,
+  "ty": 108.3,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 13,
+  "ten": "Tái định cư Hòa Lạc phục vụ GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam, xã Hòa Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Hòa Trạch",
+  "ha": 1.66,
+  "ty": 38.7,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 14,
+  "ten": "Khu vực tái định cư Châu Xá phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam qua địa bàn xã Trường Phú, tỉnh Quảng Trị",
+  "cdt": "UBND xã Trường Phú",
+  "ha": 4.69,
+  "ty": 72.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 15,
+  "ten": "Khu tái định cư Văn Minh phục vụ công tác GPMB Dự án đường sắt tốc độ cao trên trục Bắc - Nam qua địa bàn xã Trường Phú, tỉnh Quảng Trị",
+  "cdt": "UBND xã Trường Phú",
+  "ha": 3.24,
+  "ty": 46.0,
+  "thamDinh": "Đã trả hồ sơ",
+  "ghiChu": "CĐT đang rà soát, cập nhật, điều chỉnh bổ sung",
+  "pl": 3
+ },
+ {
+  "tt": 1,
+  "ten": "Khu TĐC số 2 phục vụ GPMB dự án đường sắt TĐC trên trục Bắc - Nam xã Bố Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Bố Trạch",
+  "ha": 4.2,
+  "ty": 30.0,
+  "ghiChu": "Chưa trình hồ sơ để thẩm định",
+  "pl": 5
+ },
+ {
+  "tt": 2,
+  "ten": "Khu TĐC số 3 phục vụ GPMB dự án đường sắt TĐC trên trục Bắc - Nam xã Bố Trạch, tỉnh Quảng Trị",
+  "cdt": "UBND xã Bố Trạch",
+  "ha": 2.7,
+  "ty": 25.0,
+  "ghiChu": "Chưa trình hồ sơ để thẩm định",
+  "pl": 5
+ },
+ {
+  "tt": 3,
+  "ten": "Khu tái định cư khu vực thôn Chùa Sỏi, xã Hoàn Lão (phục vụ công tác GPMB dự án Đường sắt tốc độ cao trên trục Bắc - Nam)",
+  "cdt": "UBND xã Hoàn Lão",
+  "ha": 1.91,
+  "ty": 26.5,
+  "ghiChu": "Chưa trình hồ sơ để thẩm định",
+  "pl": 5
+ },
+ {
+  "tt": 4,
+  "ten": "Khu TĐC thôn An Hướng, xã Cồn Tiên",
+  "cdt": "UBND xã Cồn Tiên",
+  "ha": 4.1,
+  "ty": 35.0,
+  "ghiChu": "Chưa trình hồ sơ để thẩm định",
+  "pl": 5
+ },
+ {
+  "tt": 5,
+  "ten": "Xây dựng HTKT khu TĐC thôn Lệ Kỳ 1, xã Quảng Ninh",
+  "cdt": "UBND xã Quảng Ninh",
+  "ha": 4.0,
+  "ty": 60.0,
+  "ghiChu": "Chưa trình hồ sơ để thẩm định",
+  "pl": 5
+ },
+ {
+  "tt": 6,
+  "ten": "Khu TĐC thôn Thái Xá",
+  "cdt": "UBND xã Trường Phú",
+  "ha": 3.12,
+  "ty": 35.5,
+  "ghiChu": "Chưa trình hồ sơ để thẩm định",
+  "pl": 5
+ }
+]

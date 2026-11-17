@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentTaskHandoff",
+  "description": "Hợp đồng bàn giao giữa các vai trò A0..A3/OPS/HUMAN. Nguồn gốc: master_prompt_v2; status siết thành enum theo máy trạng thái trong docs/ai/WORKFLOW.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "owner", "status", "goal", "scope", "acceptance_criteria", "risk_level", "approval_required", "updated_at"],
+  "properties": {
+    "task_id": { "type": "string", "minLength": 1 },
+    "parent_id": { "type": ["string", "null"] },
+    "owner": { "enum": ["A0", "A1", "A2", "A3", "HUMAN", "OPS"] },
+    "status": {
+      "enum": ["NEW", "TRIAGED", "AUDITED", "PLANNED", "APPROVED_FOR_BUILD", "IMPLEMENTING", "IN_REVIEW", "TESTING",
+               "READY_FOR_RELEASE", "APPROVED_FOR_RELEASE", "DEPLOYING", "VERIFYING", "DONE",
+               "BLOCKED", "NEEDS_HUMAN", "FAILED", "ROLLING_BACK", "CANCELLED"]
+    },
+    "goal": { "type": "string", "minLength": 1 },
+    "scope": {
+      "type": "object",
+      "required": ["allowed_paths", "forbidden_paths"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed_paths": { "type": "array", "items": { "type": "string" } },
+        "forbidden_paths": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "inputs": { "type": "array", "items": { "type": "object" } },
+    "deliverables": { "type": "array", "items": { "type": "string" } },
+    "acceptance_criteria": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "risk_level": { "enum": ["low", "medium", "high", "critical"] },
+    "approval_required": { "type": "boolean" },
+    "cost": { "type": "object" },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "next_action": { "type": "string" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

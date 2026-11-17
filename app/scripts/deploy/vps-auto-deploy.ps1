@@ -70,8 +70,14 @@ $env:GIT_CONFIG_COUNT = '2'
 $env:GIT_CONFIG_KEY_0 = 'safe.directory';   $env:GIT_CONFIG_VALUE_0 = '*'
 $env:GIT_CONFIG_KEY_1 = 'http.extraHeader'; $env:GIT_CONFIG_VALUE_1 = "Authorization: Basic $BasicAuth"
 $env:GIT_TERMINAL_PROMPT = '0'
+# PowerShell 5.1 + 'Stop': moi dong stderr cua lenh ngoai (vd "From https://..." cua git fetch) thanh loi chet nguoi
+# khi co 2>&1. Chay lenh ngoai trong pham vi 'Continue' va chi dua vao $LASTEXITCODE.
+function Invoke-Native([scriptblock]$sb) {
+  $ErrorActionPreference = 'Continue'
+  & $sb 2>&1
+}
 function Invoke-Git([string[]]$a) {
-  $out = & $Git -C $Root @a 2>&1
+  $out = Invoke-Native { & $Git -C $Root @a }
   if ($LASTEXITCODE -ne 0) { throw "git $($a -join ' ') that bai: $($out -join ' ')" }
   return $out
 }
@@ -119,7 +125,8 @@ try {
   Remove-Item $zip -Force
   if (-not (Test-Path "$staging\BUILD_ID")) { Stop-Deploy 'artifact thieu BUILD_ID' }
   $buildSha = if (Test-Path "$staging\DEPLOY_SHA") { (Get-Content "$staging\DEPLOY_SHA" -Raw).Trim() } else { '' }
-  if ($buildSha -and $buildSha -ne $sha) { Stop-Deploy "artifact thuoc commit khac ($buildSha)" }
+  if (-not $buildSha) { Stop-Deploy 'artifact thieu DEPLOY_SHA - khong xac minh duoc ban build' }
+  if ($buildSha -ne $sha) { Stop-Deploy "artifact thuoc commit khac ($buildSha)" }
   Write-Log 'Da tai va giai nen ban build vao .next-staging'
   if ($DryRun) { Write-Log 'DryRun: dung truoc khi dong vao git/CSDL/web'; exit 0 }
 
@@ -132,7 +139,9 @@ try {
   if ($cur -ne $Branch) { Invoke-Git @('checkout', $Branch) | Out-Null }
   Invoke-Git @('merge', '--ff-only', $sha) | Out-Null
   $changed = @(Invoke-Git @('diff', '--name-only', $oldHead, $sha))
-  Write-Log ("Da dong bo ma nguon {0} -> {1} ({2} tep doi)" -f $oldHead.Substring(0, 7), $sha7, $changed.Count)
+  $newHead = (Invoke-Git @('rev-parse', 'HEAD')).Trim()
+  Write-Log ("Da dong bo ma nguon {0} -> {1} ({2} tep doi; HEAD hien tai {3})" -f $oldHead.Substring(0, 7), $sha7, $changed.Count, $newHead.Substring(0, 7))
+  if ($newHead -ne $sha) { Write-Log "Luu y: HEAD ($($newHead.Substring(0, 7))) khac commit build ($sha7) - HEAD di truoc build, ff-only khong lui" }
 
   # 4. Migration moi
   $ledger = "$Cfg\applied_migrations.txt"
@@ -145,11 +154,11 @@ try {
     $dbUrl = if ($appEnv['DIRECT_DATABASE_URL']) { $appEnv['DIRECT_DATABASE_URL'] } else { $appEnv['DATABASE_URL'] }
     New-Item -ItemType Directory -Force 'C:\Backup_QLHTKT' | Out-Null
     $bk = "C:\Backup_QLHTKT\predeploy-$sha7-$(Get-Date -Format 'yyyyMMdd-HHmmss').dump"
-    & $PgDump --format=custom --file=$bk "--dbname=$dbUrl" 2>&1 | Out-Null
+    Invoke-Native { & $PgDump --format=custom --file=$bk "--dbname=$dbUrl" } | Out-Null
     if ($LASTEXITCODE -ne 0) { Stop-Deploy 'pg_dump sao luu truoc migration that bai' }
     Write-Log "Da sao luu CSDL: $bk"
     foreach ($f in $pending) {
-      $o = & $Node "$App\scripts\deploy\apply-migration.mjs" $f.FullName 2>&1
+      $o = Invoke-Native { & $Node "$App\scripts\deploy\apply-migration.mjs" $f.FullName }
       if ($LASTEXITCODE -ne 0) { Stop-Deploy "migration $($f.Name) loi: $o (ban sao luu: $bk)" }
       Add-Content $ledger $f.Name
       Write-Log "Da ap migration $($f.Name)"
@@ -163,7 +172,7 @@ try {
   if ($lockHash -ne $daCai) {
     Write-Log 'package-lock.json khac lan cai truoc -> npm install'
     Push-Location $App
-    try { & $Npm install --no-audit --no-fund 2>&1 | Out-Null; if ($LASTEXITCODE -ne 0) { Stop-Deploy 'npm install that bai' } } finally { Pop-Location }
+    try { Invoke-Native { & $Npm install --no-audit --no-fund } | Out-Null; if ($LASTEXITCODE -ne 0) { Stop-Deploy 'npm install that bai' } } finally { Pop-Location }
     Set-Content $lockHashFile $lockHash
   }
 
@@ -182,7 +191,7 @@ try {
     Stop-Deploy 'khong dua duoc .next-staging vao .next - da tra lai ban cu'
   }
   $mocHoanDoi = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
-  $pm2Out = & $Pm2 reload ql-htkt --update-env 2>&1
+  $pm2Out = Invoke-Native { & $Pm2 reload ql-htkt --update-env }
   $ok = ($LASTEXITCODE -eq 0)
   if (-not $ok) { Write-Log "pm2 reload loi: $($pm2Out -join ' ')" }
   for ($i = 0; $i -lt 8 -and $ok; $i++) {
@@ -191,20 +200,36 @@ try {
     try {
       $h = Invoke-RestMethod -Uri 'http://localhost:3001/api/health' -TimeoutSec 15
       # Ca 2 tien trinh ql-htkt phai khoi dong lai SAU luc hoan doi (khong phai tien trinh cu tra loi)
-      $procs = @((& $Pm2 jlist 2>$null | Out-String | ConvertFrom-Json) | Where-Object { $_.name -eq 'ql-htkt' })
-      $moi = @($procs | Where-Object { $_.pm2_env.status -eq 'online' -and $_.pm2_env.pm_uptime -ge $mocHoanDoi })
+      # ConvertFrom-Json (PS 5.1) bo tay khi JSON co 2 khoa chi khac hoa/thuong (username/USERNAME trong env pm2) -> dung JavaScriptSerializer
+      Add-Type -AssemblyName System.Web.Extensions
+      $ser = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+      $ser.MaxJsonLength = [int]::MaxValue
+      # chi doc stdout (stderr cua pm2 la ErrorRecord) de canh bao khong lam hong JSON / khong nem loi
+      $jl = @(Invoke-Native { & $Pm2 jlist } | Where-Object { $_ -isnot [System.Management.Automation.ErrorRecord] })
+      $procs = @($ser.DeserializeObject(($jl | Out-String)) | Where-Object { $_['name'] -eq 'ql-htkt' })
+      $moi = @($procs | Where-Object { $_['pm2_env']['status'] -eq 'online' -and $_['pm2_env']['pm_uptime'] -ge $mocHoanDoi })
       $okLan = ($h.status -eq 'ok') -and $procs.Count -gt 0 -and ($moi.Count -eq $procs.Count)
-    } catch { $okLan = $false }
+      if (-not $okLan) { Write-Log ("Kiem tra lan {0}: health={1} tien trinh={2} moi={3}" -f ($i + 1), $h.status, $procs.Count, $moi.Count) }
+    } catch { $okLan = $false; Write-Log ("Kiem tra lan {0} loi: {1}" -f ($i + 1), $_.Exception.Message) }
     if ($okLan) { break }
     if ($i -eq 7) { $ok = $false }
   }
   if (-not $ok) {
     Write-Log 'Kiem tra /api/health hoac pm2 THAT BAI -> quay ve ban cu'
     if (Test-Path "$App\.next-failed") { Remove-Item "$App\.next-failed" -Recurse -Force -Confirm:$false }
-    Rename-Retry $live '.next-failed' | Out-Null
-    if (Test-Path $old) { Rename-Retry $old '.next' | Out-Null }
-    & $Pm2 reload ql-htkt --update-env 2>&1 | Out-Null
-    Stop-Deploy 'web khong len sau khi hoan doi - da quay ve ban build cu (ma nguon da o commit moi, can kiem tra)'
+    $r1 = Rename-Retry $live '.next-failed'
+    $r2 = if (Test-Path $old) { Rename-Retry $old '.next' } else { $false }
+    Invoke-Native { & $Pm2 reload ql-htkt --update-env } | Out-Null
+    $rbOk = $false
+    for ($j = 0; $j -lt 5 -and -not $rbOk; $j++) {
+      Start-Sleep -Seconds 6
+      try { $rbOk = ((Invoke-RestMethod -Uri 'http://localhost:3001/api/health' -TimeoutSec 15).status -eq 'ok') } catch { $rbOk = $false }
+    }
+    if ($r1 -and $r2 -and $rbOk) {
+      Stop-Deploy 'web khong len sau khi hoan doi - da quay ve ban build cu va xac nhan chay lai (ma nguon da o commit moi, can kiem tra)'
+    }
+    Stop-Deploy "ROLLBACK KHONG XAC NHAN (doi ten: $r1/$r2, health: $rbOk) - CAN XU LY TAY NGAY"
+
   }
   if (Test-Path $old) { Remove-Item $old -Recurse -Force -Confirm:$false }
   Set-Content "$Cfg\deployed_sha.txt" $sha

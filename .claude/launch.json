@@ -5,6 +5,14 @@
       "name": "qlhtkt-dev-preview",
       "port": 3099,
       "url": "http://localhost:3099"
+    },
+    {
+      "name": "ai-content-dev-thu",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "app/scripts/ai-content/dev-thu.mjs"
+      ],
+      "port": 3098
     }
   ]
 }

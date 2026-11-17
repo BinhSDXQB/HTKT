@@ -13,17 +13,32 @@
 // và sẽ được nạp lại ở lần đồng bộ kế tiếp.
 import 'dotenv/config'
 import pg from 'pg'
+import { layKhoaChayDon } from '../prisma/sync-vbpl-core.mjs'
 
 const XOA = process.argv.includes('--xoa')
+// Bản ghi 'dang_xu_ly' mới tạo có thể là tài liệu ĐANG nhúng (đồng bộ, import, hoặc tải lên qua giao diện —
+// đường tải lên không lấy khoá). Chỉ xoá bản ghi đã tồn tại quá ngưỡng này.
+const PHUT_TOI_THIEU = 60
 const c = new pg.Client({ connectionString: process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL })
 await c.connect()
 
-const { rows } = await c.query(
+// --xoa dùng CHUNG khoá với sync-vbpl/import-vbpl, lấy TRƯỚC khi đọc danh sách và giữ tới khi xoá xong:
+// chạy chồng thì sẽ xoá bản ghi tiến trình kia đang nhúng dở (hoặc vừa nạp xong sau lúc SELECT).
+if (XOA && !(await layKhoaChayDon(c))) {
+  console.log('⏸️  Đang có tiến trình đồng bộ/nạp VBPL chạy → chưa xoá. Chạy lại sau.')
+  await c.end()
+  process.exit(1)
+}
+
+const { rows: tatCa } = await c.query(
   `SELECT id, "tieuDe", nguon, "trangThai", "soChunk", "soKyTu", "createdAt"
      FROM tai_lieu
     WHERE "deletedAt" IS NULL AND ("soChunk" = 0 OR "trangThai" <> 'san_sang')
     ORDER BY "createdAt"`
 )
+const moi = tatCa.filter((r) => Date.now() - new Date(r.createdAt).getTime() < PHUT_TOI_THIEU * 60_000)
+const rows = XOA ? tatCa.filter((r) => !moi.includes(r)) : tatCa
+if (XOA && moi.length) console.log(`⏭️  Bỏ qua ${moi.length} bản ghi tạo chưa đủ ${PHUT_TOI_THIEU} phút (có thể đang nhúng).`)
 
 if (!rows.length) {
   console.log('✅ Kho tài liệu không có bản ghi 0 đoạn.')
