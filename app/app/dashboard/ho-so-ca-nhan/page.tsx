@@ -7,7 +7,11 @@ import {
   trangThaiNghiPhepBadgeClass,
 } from '@/lib/office-labels'
 import { huongLuongNgachBac, fmtVND, fmtSo } from '@/lib/luong'
-import { UserCircle2, Wallet, Award, CalendarDays, TrendingUp, IdCard } from 'lucide-react'
+import { UserCircle2, Wallet, Award, CalendarDays, TrendingUp, IdCard, ClipboardCheck } from 'lucide-react'
+import Link from 'next/link'
+import { kiemTraBang } from '@/lib/danh-gia-nam/may-chu'
+import { chonMauCaNhan } from '@/lib/danh-gia-nam/mau-bieu'
+import { TRANG_THAI_DANH_GIA_LABEL, type TrangThaiDanhGia } from '@/lib/danh-gia-nam/trang-thai'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,7 +26,7 @@ export default async function HoSoCaNhanPage() {
     where: { userId: user.id },
     include: {
       toChuc: { select: { ten: true } },
-      chucDanh: { select: { ten: true } },
+      chucDanh: { select: { ten: true, capQuanLy: true, isLanhDao: true } },
       rewardRecords: { include: { rewardTitle: true }, orderBy: [{ nam: 'desc' }, { ngayQuyetDinh: 'desc' }] },
       annualEvaluations: { orderBy: [{ nam: 'desc' }] },
       leaveRequests: { orderBy: [{ tuNgay: 'desc' }] },
@@ -44,6 +48,20 @@ export default async function HoSoCaNhanPage() {
       </div>
     )
   }
+
+  // Đánh giá cuối năm 2026: lối vào hồ sơ đánh giá + các mẫu áp dụng cho chính người này
+  const NAM_DG = 2026
+  const coBang = await kiemTraBang().catch(() => false)
+  const hsDg = coBang
+    ? (await db.$queryRaw<{ trangThai: TrangThaiDanhGia; tongDiem: number | null; mucPheDuyet: string | null }[]>`select "trangThai", "tongDiem"::float8 "tongDiem", "mucPheDuyet" from office_year_reviews where "canBoId" = ${canBo.id} and nam = ${NAM_DG} and "loaiHoSo" = 'CBCCVC'`)[0] ?? null
+    : null
+  const mauCaNhan = chonMauCaNhan({ laNguoiDungDau: canBo.chucDanh?.capQuanLy === 1, laLanhDaoQuanLy: !!canBo.chucDanh?.isLanhDao })
+  const goc = `/dashboard/van-phong-so/ho-so/${canBo.id}/danh-gia-nam`
+  const mauDg: { ma: string; ten: string }[] = [
+    { ma: mauCaNhan, ten: `Mẫu ${mauCaNhan} — Bản kiểm điểm, tự đánh giá, xếp loại cá nhân` },
+    { ma: '03', ten: 'Mẫu 03 — Phiếu xếp loại chất lượng' },
+    { ma: '04', ten: 'Mẫu 04 — Bảng theo dõi, chấm điểm KPI' },
+  ]
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
@@ -138,6 +156,43 @@ export default async function HoSoCaNhanPage() {
             )}
           </tbody>
         </table>
+      </section>
+
+      {/* Đánh giá, nhận xét cuối năm */}
+      <section className="rounded-xl border border-indigo-200 bg-white overflow-hidden">
+        <div className="flex items-center gap-2 px-5 py-3 border-b bg-indigo-50">
+          <ClipboardCheck className="w-4 h-4 text-indigo-600" />
+          <h2 className="font-semibold text-slate-800">Đánh giá, nhận xét cuối năm {NAM_DG}</h2>
+        </div>
+        <div className="p-5 space-y-3 text-sm">
+          {!coBang ? (
+            <p className="text-slate-500">Chức năng đánh giá cuối năm đang được triển khai; chưa mở cho nhập liệu.</p>
+          ) : (
+            <>
+              <div className="flex flex-wrap items-center gap-3">
+                <span>Hồ sơ của tôi: {hsDg ? <b>{TRANG_THAI_DANH_GIA_LABEL[hsDg.trangThai]}</b> : <span className="text-amber-700">chưa lập</span>}
+                  {hsDg?.tongDiem != null && <> · Tổng điểm {fmtSo(hsDg.tongDiem)}</>}
+                  {hsDg?.mucPheDuyet && <> · Kết quả: <b>{MUC_XEP_LOAI_LABEL[hsDg.mucPheDuyet as keyof typeof MUC_XEP_LOAI_LABEL] ?? hsDg.mucPheDuyet}</b></>}</span>
+                <Link href={`${goc}?nam=${NAM_DG}`} className="ml-auto px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700">{hsDg ? 'Mở hồ sơ đánh giá' : 'Lập / xem hồ sơ đánh giá'}</Link>
+              </div>
+              <div>
+                <div className="font-medium text-slate-700 mb-1">Biểu mẫu áp dụng cho tôi</div>
+                <ul className="divide-y rounded-lg border">
+                  {mauDg.map((m) => (
+                    <li key={m.ma} className="flex flex-wrap items-center gap-2 px-3 py-2">
+                      <span className="text-slate-800">{m.ten}</span>
+                      <span className="ml-auto flex gap-2">
+                        {hsDg && <Link href={`${goc}/mau/${m.ma}?nam=${NAM_DG}`} className="text-xs px-2.5 py-1 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-50">Nhập theo mẫu</Link>}
+                        <a href={`/api/office/danh-gia-nam/xuat?canBoId=${canBo.id}&nam=${NAM_DG}&mau=${m.ma}`} className="text-xs px-2.5 py-1 rounded-lg border text-slate-700 hover:bg-slate-50">Tải bản trống</a>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                {!hsDg && <p className="text-xs text-slate-500 mt-1">Lập hồ sơ đánh giá trước thì mới nhập được theo mẫu; bản trống tải về được ngay.</p>}
+              </div>
+            </>
+          )}
+        </div>
       </section>
 
       {/* Xếp loại hằng năm */}
