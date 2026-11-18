@@ -18,6 +18,8 @@ import { soanNhanXet, MUC_NHAN_XET, laDoanThieuDuLieu, type DoDai, type DuKienNh
 import { kiemTraHoSo, kiemTraThanhTichTrung, type DauVaoKiemTra, type DoanNhanXet, type VanDe } from './kiem-tra'
 import { tongHopPhong, duThaoNhanXetTapThe, type HoSoTongHop, type TongHopPhong } from './tong-hop-phong'
 import type { DuLieuCaNhan } from './xuat-mau'
+import { kpiTuMau04, demQuyMau03, coNhanXetTapThe, type BieuMauCaNhan } from './bieu-mau-du-lieu'
+import { kiemTraTrinh } from './bien-ban-db'
 
 export const LINH_VUC_DAO_TAO = 'van-phong-so/dao-tao-boi-duong'
 const MUC_HOP_LE: readonly string[] = ['HOAN_THANH_XUAT_SAC_NHIEM_VU', 'HOAN_THANH_TOT_NHIEM_VU', 'HOAN_THANH_NHIEM_VU', 'KHONG_HOAN_THANH_NHIEM_VU']
@@ -41,13 +43,16 @@ export type HoSoDanhGia = {
   nhanXet: DoanLuu[]; nhanXetLanhDao: string | null
   mucDeXuat: MucXepLoaiMa | null; mucPheDuyet: MucXepLoaiMa | null
   pheDuyetById: string | null; pheDuyetAt: Date | null; soQuyetDinh: string | null
+  bieuMau: BieuMauCaNhan
 }
 
-type CanBoNgan = { id: string; hoTen: string; userId: string | null; toChucId: string | null; laLanhDao: boolean; capQuanLy: number | null; viTri: string | null; chucVu: string | null; tenPhong: string | null }
+export type CanBoNgan = { id: string; hoTen: string; userId: string | null; toChucId: string | null; laLanhDao: boolean; capQuanLy: number | null; viTri: string | null; chucVu: string | null; tenPhong: string | null }
 
 /** Điều kiện xếp loại lấy từ khoá đặc biệt trong diemQuy: top20 (1/0), soQuyXuatSac, soQuyKHT. */
-export function dieuKienTuDiemQuy(q: Record<string, number | null>): DieuKienXepLoai {
-  return { trongTop20: q.top20 === 1, soQuyXuatSac: q.soQuyXuatSac ?? 0, soQuyKhongHoanThanh: q.soQuyKHT ?? 0 }
+export function dieuKienTuDiemQuy(q: Record<string, number | null>, bieuMau?: BieuMauCaNhan | null): DieuKienXepLoai {
+  // Mẫu 03 đã ghi mức từng quý thì số quý lấy theo Mẫu 03 (một nguồn), không theo ô đếm tay
+  const m3 = demQuyMau03(bieuMau)
+  return { trongTop20: q.top20 === 1, soQuyXuatSac: m3 ? m3.xs : (q.soQuyXuatSac ?? 0), soQuyKhongHoanThanh: m3 ? m3.kht : (q.soQuyKHT ?? 0) }
 }
 
 export async function kiemTraBang(): Promise<boolean> {
@@ -69,7 +74,7 @@ export async function layCanBo(canBoId: string): Promise<CanBoNgan | null> {
  * (users.toChucId) hay cờ isDepartmentLeader bật tay: hai thứ đó có thể lệch/ thiếu so với hồ sơ.
  * Trưởng phòng/Chánh VP (capQuanLy = 3) nhận xét được người cấp dưới CÙNG phòng; Phó phòng (4) chỉ được xem tổng hợp phòng.
  */
-async function chucVuNguoiThaoTac(user: CurrentUser): Promise<{ toChucId: string | null; cap: number | null }> {
+export async function chucVuNguoiThaoTac(user: CurrentUser): Promise<{ toChucId: string | null; cap: number | null }> {
   const cb = await db.canBo.findFirst({ where: { userId: user.id, trangThai: 'DANG_CONG_TAC' }, select: { toChucId: true, chucDanh: { select: { isLanhDao: true, capQuanLy: true } } } })
   if (!cb || !cb.chucDanh?.isLanhDao) return { toChucId: cb?.toChucId ?? null, cap: null }
   return { toChucId: cb.toChucId, cap: cb.chucDanh.capQuanLy }
@@ -106,6 +111,7 @@ function chuyenHang(r: Record<string, unknown>): HoSoDanhGia {
     diemKpiTong: so(r.diemKpiTong), tongDiem: so(r.tongDiem), nhanXet: sapDoan((r.nhanXet as DoanLuu[]) ?? []), nhanXetLanhDao: (r.nhanXetLanhDao as string) ?? null,
     mucDeXuat: (r.mucDeXuat as MucXepLoaiMa) ?? null, mucPheDuyet: (r.mucPheDuyet as MucXepLoaiMa) ?? null,
     pheDuyetById: (r.pheDuyetById as string) ?? null, pheDuyetAt: (r.pheDuyetAt as Date) ?? null, soQuyetDinh: (r.soQuyetDinh as string) ?? null,
+    bieuMau: (r.bieuMau as BieuMauCaNhan) ?? {},
   }
 }
 
@@ -138,7 +144,7 @@ export async function taoHoSo(user: CurrentUser, canBoId: string, nam: number, l
   return hs ? { ok: true, hoSo: hs } : { ok: false, loi: 'Không tạo được hồ sơ.' }
 }
 
-async function nap(user: CurrentUser, reviewId: string) {
+export async function nap(user: CurrentUser, reviewId: string) {
   const hs = await layHoSoTheoId(reviewId)
   if (!hs) return null
   const cb = await layCanBo(hs.canBoId)
@@ -188,7 +194,11 @@ export async function luuNoiDung(user: CurrentUser, reviewId: string, b: BanSua)
     const diemChung = b.diemChung ?? hs.diemChung
     const kt = kiemTraDiemChung(diemChung)
     if (kt.loi.length) return { ok: false, loi: kt.loi.join('; ') }
-    const kpi = b.diemKpiTong === undefined ? hs.diemKpiTong : b.diemKpiTong
+    const kpiM04 = kpiTuMau04(hs.bieuMau.m04).tong
+    if (kpiM04 !== null && b.diemKpiTong !== undefined && b.diemKpiTong !== null && Math.abs(b.diemKpiTong - kpiM04) > 0.001) {
+      return { ok: false, loi: `Điểm KPI đang tính tự động từ bảng Mẫu 04 (${kpiM04}); sửa bảng Mẫu 04 thay vì nhập tay.` }
+    }
+    const kpi = kpiM04 !== null ? kpiM04 : (b.diemKpiTong === undefined ? hs.diemKpiTong : b.diemKpiTong)
     if (kpi !== null && (kpi < 0 || kpi > 100)) return { ok: false, loi: 'Điểm KPI tổng phải từ 0 đến 100.' }
     const tong = kpi === null ? null : tongDiemNam(kt.tong, kpi)
     const so = await db.$executeRaw`update office_year_reviews set "diemChung"=${JSON.stringify(diemChung)}::jsonb,"diemQuy"=${JSON.stringify(b.diemQuy ?? hs.diemQuy)}::jsonb,"diemKpiTong"=${kpi},"tongDiem"=${tong},"updatedAt"=now() where id=${hs.id} and "trangThai" in ('DU_THAO','TU_DANH_GIA','GUI_NHAN_XET','TONG_HOP','HOP_DANH_GIA')`
@@ -284,7 +294,7 @@ export async function soanTuDong(user: CurrentUser, reviewId: string, doDai: DoD
   if (!duocSuaPhan('nhanXet', n.hs.trangThai, n.vaiTro)) return { ok: false, loi: 'Bạn không được sửa nhận xét ở bước này.' }
   const du = await layDuKien(n.cb, n.hs.nam)
   du.tongDiem = n.hs.tongDiem
-  du.dieuKienXepLoai = dieuKienTuDiemQuy(n.hs.diemQuy)
+  du.dieuKienXepLoai = dieuKienTuDiemQuy(n.hs.diemQuy, n.hs.bieuMau)
   const moi = soanNhanXet(du, doDai)
   // Đọc lại ngay trước khi gộp để không đè đoạn vừa được sửa tay sau lúc nạp dữ liệu
   const hienTai = (await layHoSoTheoId(n.hs.id))!
@@ -307,8 +317,8 @@ export async function chayKiemTra(hs: HoSoDanhGia, cb: CanBoNgan): Promise<VanDe
     canBo: { id: cb.id, hoTen: cb.hoTen, laNguoiDungDau: cb.capQuanLy === 1, laLanhDaoQuanLy: cb.laLanhDao },
     mauApDung: hs.mauApDung ?? undefined,
     nhanXet: hs.nhanXet, congViec: du.congViec, khoaHoc: du.khoaHoc,
-    diemChung: hs.diemChung, diemKpiTong: hs.diemKpiTong, tongDiemNhap: hs.tongDiem, mucDeXuat: hs.mucDeXuat,
-    dieuKienXepLoai: dieuKienTuDiemQuy(hs.diemQuy),
+    diemChung: hs.diemChung, diemKpiTong: hs.diemKpiTong, tongDiemNhap: hs.tongDiem, mucDeXuat: hs.mucDeXuat, mucTapTheDeXuat: hs.bieuMau.hopTapThe?.mucTapTheDeXuat ?? null,
+    dieuKienXepLoai: dieuKienTuDiemQuy(hs.diemQuy, hs.bieuMau),
     kyTruoc: { nam: hs.nam - 1, mucXepLoai: (truoc?.mucXepLoai as MucXepLoaiMa) ?? null, soHanChe: klTruoc },
     truyCap: tc.map((t) => ({ nguoiXemId: t.userId ?? '?', laChinhChu: false, coQuyenXem: false, loaiHoSo: hs.loaiHoSo, luc: t.luc.toISOString() })),
   }
@@ -327,7 +337,8 @@ export async function chuyenBuoc(user: CurrentUser, reviewId: string, mucPheDuye
   const n = await nap(user, reviewId)
   if (!n || !n.xem) return { ok: false, loi: 'Không có hồ sơ hoặc không có quyền.' }
   const { hs, cb, vaiTro } = n
-  const dk = { coTuDanhGia: !!hs.tuDanhGia.noiDung?.trim(), coNhanXetLanhDao: !!hs.nhanXetLanhDao?.trim(), coMucDeXuat: !!hs.mucDeXuat }
+  const coPhanA = Object.values(hs.bieuMau.phanA ?? {}).some((v) => v.trim())
+  const dk = { coTuDanhGia: !!hs.tuDanhGia.noiDung?.trim() || coPhanA, coNhanXetLanhDao: !!hs.nhanXetLanhDao?.trim(), coMucDeXuat: !!hs.mucDeXuat }
   let kq: ReturnType<typeof chuyenTrangThai> | null = null
   let loi0: string | null = null
   for (const vt of vaiTro) {
@@ -337,7 +348,15 @@ export async function chuyenBuoc(user: CurrentUser, reviewId: string, mucPheDuye
   }
   if (!kq || !kq.ok) return { ok: false, loi: loi0 ?? 'Bạn không có vai trò để chuyển bước này.' }
   const den = kq.den
+  let phienBanBb: string | null = null
   if (den === 'TRINH_PHE_DUYET' && hs.loaiHoSo === 'CBCCVC') {
+    if (!coNhanXetTapThe(hs.bieuMau)) return { ok: false, loi: 'Chưa có nhận xét của tập thể phòng (họp đánh giá). Cùng điểm vẫn phải có nhận xét của tập thể trước khi trình phê duyệt.' }
+    // Biên bản cuộc họp của phòng phải đủ thành phần (Điều 21 NĐ 335/2025; Điều 15 NĐ 233/2026), đã CHỐT, có ý kiến về người này
+    const tb = await kiemTraTrinh(hs.toChucId, hs.nam, hs.canBoId)
+    if (tb.loi.length) return { ok: false, loi: `Biên bản họp đánh giá của đơn vị chưa hợp lệ: ${tb.loi.slice(0, 3).map((v) => v.thongDiep).join(' | ')}` }
+    phienBanBb = tb.phienBan
+    const kpiM04 = kpiTuMau04(hs.bieuMau.m04).tong
+    if (kpiM04 !== null && (hs.diemKpiTong === null || Math.abs(hs.diemKpiTong - kpiM04) > 0.001)) return { ok: false, loi: `Điểm KPI (${hs.diemKpiTong ?? 'trống'}) không khớp bảng Mẫu 04 (${kpiM04}); lưu lại bảng Mẫu 04.` }
     const loi = (await chayKiemTra(hs, cb)).filter((v) => v.mucDo === 'LOI')
     if (loi.length) return { ok: false, loi: `Còn ${loi.length} lỗi cần sửa trước khi trình: ${loi.slice(0, 3).map((v) => v.thongDiep).join(' | ')}` }
   }
@@ -359,6 +378,12 @@ export async function chuyenBuoc(user: CurrentUser, reviewId: string, mucPheDuye
           })
         }
       } else {
+        if (phienBanBb !== null) {
+          // Khoá hàng biên bản và xác nhận vẫn đúng bản đã chốt vừa kiểm (chặn đua với "mở lại" / sửa biên bản)
+          const k = await tx.$queryRaw<{ id: string }[]>`select id from office_year_dept_reviews where "toChucId" = ${hs.toChucId} and nam = ${hs.nam}
+            and "bieuMau"->'bienBan'->>'phienBan' = ${phienBanBb} and jsonb_typeof("bieuMau"->'bienBan'->'chot') = 'object' for update`
+          if (k.length !== 1) throw new Error('XUNG_DOT')
+        }
         const so = await tx.$executeRaw`update office_year_reviews set "trangThai"=${den},"updatedAt"=now() where id=${hs.id} and "trangThai"=${hs.trangThai}`
         if (so !== 1) throw new Error('XUNG_DOT')
       }
@@ -452,7 +477,7 @@ export async function duLieuXuatCaNhan(user: CurrentUser, reviewId: string): Pro
     ngaySinh: ngay ? `${String(ngay.getUTCDate()).padStart(2, '0')}/${String(ngay.getUTCMonth() + 1).padStart(2, '0')}/${ngay.getUTCFullYear()}` : null,
     chucVuChinhQuyen: n.cb.chucVu, viTriViecLam: n.cb.viTri, donViCongTac: n.cb.tenPhong ?? '',
     tuDanhGia: n.hs.tuDanhGia.noiDung ?? null, nhanXet: nx, diemChung: n.hs.diemChung, diemKpiTong: n.hs.diemKpiTong,
-    nhanXetLanhDao: n.hs.nhanXetLanhDao, mucPheDuyet: n.hs.mucPheDuyet, diemQuy: n.hs.diemQuy,
+    nhanXetLanhDao: n.hs.nhanXetLanhDao, mucPheDuyet: n.hs.mucPheDuyet, diemQuy: n.hs.diemQuy, bieuMau: n.hs.bieuMau, tongDiem: n.hs.tongDiem,
   }
   return { ok: true, hs: n.hs, cb: n.cb, du, tenNhiemVu: du0.congViec.map((c) => c.tieuDe) }
 }

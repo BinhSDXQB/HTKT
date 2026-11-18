@@ -13,6 +13,9 @@ import { MUC_XEP_LOAI_OPTIONS, MUC_XEP_LOAI_LABEL } from '@/lib/office-labels'
 import {
   taoHoSoAction, luuAction, suaDoanAction, soanTuDongAction, chuyenBuocAction, traVeAction,
 } from '@/app/actions/danh-gia-nam'
+import { luuHopTapTheAction } from '@/app/actions/bieu-mau'
+import { kiemTraBienBanPhong } from '@/lib/danh-gia-nam/bien-ban-db'
+import { thongKeThamDu } from '@/lib/danh-gia-nam/bien-ban-hop'
 
 export const dynamic = 'force-dynamic'
 
@@ -106,6 +109,7 @@ export default async function DanhGiaNamPage({
   const sua = (p: 'tuDanhGia' | 'nhanXet' | 'diem' | 'mucDeXuat') => duocSuaPhan(p, h.trangThai, vaiTro)
   const mau = h.mauApDung ? timMau(h.mauApDung, 'SNV_CV6862') : null
   const du = loai === 'CBCCVC' ? await layDuKien(cb, nam) : null
+  const bbPhong = loai === 'CBCCVC' ? await kiemTraBienBanPhong(h.toChucId, nam) : null
   const vanDe = vaiTro.some((v) => v !== 'CHINH_CHU')
     ? (await chayKiemTra(h, cb)).filter((v) => loai === 'CBCCVC' || v.ma === 'TRUY_CAP_NGOAI_THAM_QUYEN')
     : []
@@ -130,7 +134,11 @@ export default async function DanhGiaNamPage({
 
     {loai === 'CBCCVC' && (
       <div className="flex flex-wrap gap-2 text-xs">
-        <span className="text-slate-500 self-center">Xuất biểu mẫu:</span>
+        <span className="text-slate-500 self-center">Nhập theo mẫu:</span>
+        {([h.mauApDung, '03', '04'] as (string | null)[]).filter(Boolean).map((m) => (
+          <Link key={'n' + m} href={`/dashboard/van-phong-so/ho-so/${id}/danh-gia-nam/mau/${m}?nam=${nam}`} className="px-2.5 py-1 rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-800 hover:bg-indigo-100">Mẫu {m}</Link>
+        ))}
+        <span className="text-slate-500 self-center ml-2">Xuất biểu mẫu:</span>
         {([h.mauApDung, '03', '04'] as (string | null)[]).filter(Boolean).map((m) => (
           <a key={m} href={`/api/office/danh-gia-nam/xuat?reviewId=${h.id}&mau=${m}`} className="px-2.5 py-1 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Mẫu {m} ({m === '04' ? 'Excel' : 'Word'})</a>
         ))}
@@ -241,6 +249,53 @@ export default async function DanhGiaNamPage({
         ) : <p className="text-sm whitespace-pre-wrap text-slate-700">{h.nhanXetLanhDao || <span className="text-slate-400">Chưa có.</span>}</p>}
       </section>
     )}
+
+    {/* Họp đánh giá của tập thể phòng — cùng điểm vẫn phải có nhận xét của tập thể trước khi trình phê duyệt */}
+    {loai === 'CBCCVC' && (() => {
+      const hop = h.bieuMau.hopTapThe ?? {}
+      const bb = bbPhong?.bb ?? null
+      const duocGhi = sua('diem') && (h.trangThai === 'TONG_HOP' || h.trangThai === 'HOP_DANH_GIA') && !bb?.chot
+      const loiBb = (bbPhong?.viPham ?? []).filter((v) => v.mucDo === 'LOI')
+      const tk = bb ? thongKeThamDu(bb) : null
+      return (
+        <form action={luuHopTapTheAction} className="rounded-xl border border-indigo-200 bg-white p-5 space-y-2">{hid(h.id)}
+          <h2 className="font-bold text-slate-900">Họp đánh giá của tập thể phòng</h2>
+          <p className="text-xs text-slate-500">Điểm chỉ là ngưỡng tối đa có thể đề xuất; hai người cùng điểm vẫn có thể có mức khác nhau. Mức đề xuất phải căn cứ nhận xét của tập thể phòng tại cuộc họp. Chưa có nhận xét tập thể thì không trình phê duyệt được. Ghi ở bước Tổng hợp hoặc Họp đánh giá.</p>
+          <div className={`rounded-lg border px-3 py-2 text-sm ${loiBb.length ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-emerald-200 bg-emerald-50 text-emerald-800'}`}>
+            <b>Biên bản họp của phòng:</b>{' '}
+            {!bb ? 'chưa lập.' : <>họp ngày {bb.ngayHop ?? '…'}, có mặt {tk!.coMat}/{tk!.trieuTap} người{loiBb.length ? '' : ' — đủ thành phần'}; {bb.chot ? 'ĐÃ CHỐT (ý kiến bên dưới đã khoá theo biên bản)' : 'chưa chốt'}.</>}
+            {loiBb.length > 0 && <ul className="list-disc pl-5 text-xs mt-1">{loiBb.slice(0, 4).map((v, i) => <li key={i}>{v.thongDiep}</li>)}</ul>}
+            {h.toChucId && <Link className="ml-1 underline" href={`/dashboard/van-phong-so/danh-gia/bien-ban?phong=${h.toChucId}&nam=${nam}`}>{bb ? 'Xem / sửa biên bản' : 'Lập biên bản'}</Link>}
+            <span className="block text-xs mt-1">Biên bản chưa đủ thành phần (Điều 21 NĐ 335/2025; Điều 15 NĐ 233/2026) hoặc chưa chốt thì không trình phê duyệt được. Ghi ý kiến tập thể ở đây TRƯỚC khi chốt biên bản.</span>
+          </div>
+          {bb ? (
+            <p className="text-sm text-slate-700">Ngày họp, chủ trì, số người dự họp lấy theo biên bản: {bb.ngayHop ?? '…'} · {bb.thanhVien.find((x) => x.canBoId === bb.chuTriId)?.hoTen ?? '…'} · {tk!.coMat} người có mặt.</p>
+          ) : (
+            <div className="flex flex-wrap gap-3 text-sm">
+              <label>Ngày họp <input type="date" name="ngayHop" defaultValue={hop.ngayHop ?? ''} disabled={!duocGhi} className="h-9 border rounded-lg px-2 ml-1" /></label>
+              <label>Chủ trì <input name="chuTri" defaultValue={hop.chuTri ?? ''} disabled={!duocGhi} className="h-9 border rounded-lg px-2 ml-1 w-56" /></label>
+              <label>Số người dự họp <input name="soNguoiDuHop" defaultValue={hop.soNguoiDuHop ?? ''} disabled={!duocGhi} className="h-9 border rounded-lg px-2 ml-1 w-20" /></label>
+            </div>
+          )}
+          <label className="block text-sm font-medium text-slate-800">Ý kiến nhận xét của tập thể phòng *
+            <textarea name="yKien" defaultValue={hop.yKien ?? ''} disabled={!duocGhi} rows={4} className="w-full border rounded-lg p-2 text-sm font-normal mt-1" />
+          </label>
+          <div className="text-sm text-slate-700">Kết quả biểu quyết mức đề xuất (số phiếu, nếu có):</div>
+          <div className="flex flex-wrap gap-3 text-xs">
+            {MUC_XEP_LOAI_OPTIONS.map((o) => (
+              <label key={o.value}>{o.label} <input name={`phieu_${o.value}`} defaultValue={hop.bieuQuyet?.[o.value] ?? ''} disabled={!duocGhi} className="w-14 h-8 border rounded px-1 ml-1" /></label>
+            ))}
+          </div>
+          <label className="block text-sm">Mức tập thể phòng đề xuất sau họp{' '}
+            <select name="mucTapTheDeXuat" defaultValue={hop.mucTapTheDeXuat ?? ''} disabled={!duocGhi} className="border rounded-lg h-9 px-2 text-sm ml-1">
+              <option value="">—</option>{MUC_XEP_LOAI_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+          </label>
+          {duocGhi ? <button className="px-3 py-1.5 rounded-lg bg-slate-800 text-white text-sm">Lưu kết quả họp</button>
+            : <p className="text-xs text-slate-400">{hop.yKien ? 'Đã ghi; chỉ xem.' : 'Chưa ghi.'} (Thư ký tổng hợp hoặc lãnh đạo phòng ghi ở bước Tổng hợp / Họp đánh giá.)</p>}
+        </form>
+      )
+    })()}
 
     {/* Đề xuất mức */}
     <section className="rounded-xl border bg-white p-5 space-y-2">

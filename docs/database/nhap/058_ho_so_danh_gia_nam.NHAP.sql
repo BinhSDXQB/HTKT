@@ -1,5 +1,5 @@
 -- ============================================================================
--- BẢN NHÁP v1 — CHƯA DUYỆT, CHƯA ÁP VÀO CSDL THẬT, CHƯA QUA PHẢN BIỆN CODEX.
+-- BẢN NHÁP v3 (thêm cột bieuMau; FK người duyệt không SET NULL) — CHƯA DUYỆT, CHƯA ÁP VÀO CSDL THẬT, CHƯA QUA PHẢN BIỆN CODEX.
 -- Không đặt vào app/prisma/migrations_manual cho đến khi được duyệt.
 -- Chỉ được thử trên bản sao ql_htkt_thu051 (sau khi người dùng đồng ý).
 --
@@ -48,6 +48,9 @@ CREATE TABLE IF NOT EXISTS public.office_year_reviews (
   "tongDiem"        numeric(6,3),
   "nhanXet"         jsonb       NOT NULL DEFAULT '[]'::jsonb,
   "nhanXetLanhDao"  text,
+  -- Dữ liệu NHẬP theo biểu mẫu (Mẫu 2A/2B/2C phần A, tự nhận mức, dòng KPI Mẫu 04, bảng III, Mẫu 03):
+  -- cấu trúc ở app/lib/danh-gia-nam/bieu-mau-du-lieu.ts, ứng dụng chỉ ghi các khoá có trong danh sách.
+  "bieuMau"         jsonb       NOT NULL DEFAULT '{}'::jsonb,
   "mucDeXuat"       text,
   "mucPheDuyet"     text,
   "pheDuyetById"    text        REFERENCES public.users("id"),
@@ -106,6 +109,8 @@ CREATE TABLE IF NOT EXISTS public.office_year_dept_reviews (
   "nam"          integer     NOT NULL,
   "trangThai"    text        NOT NULL DEFAULT 'DU_THAO',
   "duThaoNhanXet" jsonb      NOT NULL DEFAULT '[]'::jsonb,
+  -- Dữ liệu NHẬP Mẫu 01 (phần A, 6 tiêu chí chung, KPI nhóm A/B, bảng III)
+  "bieuMau"      jsonb       NOT NULL DEFAULT '{}'::jsonb,
   "diemChung"    jsonb       NOT NULL DEFAULT '{}'::jsonb,
   "diemKpiTong"  numeric(6,3),
   "mucTuDeXuat"  text,

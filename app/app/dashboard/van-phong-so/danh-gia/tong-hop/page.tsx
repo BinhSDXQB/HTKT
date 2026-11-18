@@ -35,6 +35,9 @@ export default async function TongHopDanhGiaPhong({ searchParams }: { searchPara
       </form>
 
       <a href={`/api/office/danh-gia-nam/xuat?phong=${phongId}&nam=${nam}&mau=01`} className="inline-block text-sm px-3 py-1.5 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Xuất Mẫu 01 (Word)</a>
+      <a href={`/dashboard/van-phong-so/danh-gia/tong-hop/mau-01?phong=${phongId}&nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-800 hover:bg-indigo-100">Nhập Mẫu 01 của phòng</a>
+      <a href={`/dashboard/van-phong-so/danh-gia/bien-ban?phong=${phongId}&nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-800 hover:bg-indigo-100">Biên bản họp đánh giá</a>
+      <a href={`/dashboard/van-phong-so/danh-gia/tong-hop-so?nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Mẫu 05, 06, 07 toàn Sở</a>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[

@@ -61,6 +61,8 @@ export type DauVaoKiemTra = {
   /** Tổng điểm người dùng nhập tay (nếu có) để đối chiếu */
   tongDiemNhap?: number | null
   mucDeXuat?: MucXepLoaiMa | null
+  /** mức tập thể phòng đề xuất sau họp đánh giá */
+  mucTapTheDeXuat?: MucXepLoaiMa | null
   dieuKienXepLoai?: DieuKienXepLoai
   kyTruoc?: { nam: number; mucXepLoai?: MucXepLoaiMa | null; soHanChe: number }
   truyCap?: SuKienTruyCap[]
@@ -165,6 +167,12 @@ export function kiemTraHoSo(d: DauVaoKiemTra): VanDe[] {
     if (thieu.length || d.diemKpiTong === null || d.diemKpiTong === undefined) {
       vd.push({ ma: 'DE_XUAT_CHUA_DU_DIEU_KIEN', mucDo: 'LOI', viTri: 'Tự đánh giá › Điểm', thongDiep: `Đã đề xuất mức xếp loại nhưng chưa đủ dữ liệu chấm điểm${thieu.length ? ` (thiếu tiêu chí ${thieu.join(', ')})` : ''}${d.diemKpiTong === null || d.diemKpiTong === undefined ? ' và chưa có điểm KPI' : ''}.`, duLieu: { thieu } })
     }
+  }
+
+  // 9a. Mức trình lên khác mức tập thể phòng đề xuất tại cuộc họp: cao hơn → lỗi; thấp hơn → cảnh báo, cần giải trình
+  if (d.mucDeXuat && d.mucTapTheDeXuat && d.mucDeXuat !== d.mucTapTheDeXuat) {
+    const cao = mucCao(d.mucDeXuat, d.mucTapTheDeXuat)
+    vd.push({ ma: 'DE_XUAT_CHUA_DU_DIEU_KIEN', mucDo: cao ? 'LOI' : 'CANH_BAO', viTri: 'Đề xuất xếp loại', thongDiep: `Mức đề xuất (${d.mucDeXuat}) khác mức tập thể phòng đề xuất tại cuộc họp (${d.mucTapTheDeXuat})${cao ? ': không được cao hơn mức tập thể đề xuất.' : ': cần giải trình.'}` })
   }
 
   // 9. Kết quả đề xuất chưa đủ điều kiện

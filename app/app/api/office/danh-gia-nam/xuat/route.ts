@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth'
+import { db } from '@/lib/db'
 import { logAction } from '@/lib/audit'
 import { MODULES } from '@/lib/permissions'
 import { chuanNam, duLieuXuatCaNhan, duLieuXuatTrong, kiemTraBang, tongHopTheoPhong, duocXemTongHopPhong } from '@/lib/danh-gia-nam/may-chu'
-import { buildMauCaNhan, buildMau03, buildMau01, buildMau04 } from '@/lib/danh-gia-nam/xuat-mau'
+import { buildMauCaNhan, buildMau03, buildMau01, buildMau04, buildMau0506, buildMau07, buildBienBan } from '@/lib/danh-gia-nam/xuat-mau'
+import { layBienBan, chupYKien } from '@/lib/danh-gia-nam/bien-ban-db'
+import { layHoSoTapThe, quyenTapThe, duocXemTongHopSo, duLieuTongHopSo } from '@/lib/danh-gia-nam/may-chu-bieu-mau'
+import { lapMau05, lapMau06, chuaPhanLoai } from '@/lib/danh-gia-nam/bieu-mau-du-lieu'
 
 // Xuất biểu mẫu đánh giá cuối năm: ?reviewId=&mau=2A|2B|2C|03|04  hoặc  ?phong=<toChucId>&nam=&mau=01
 // Quyền theo từng hồ sơ (xem lib/danh-gia-nam/quyen.ts); mẫu cá nhân phải đúng đối tượng (mauApDung của hồ sơ).
@@ -25,12 +29,35 @@ export async function GET(req: NextRequest) {
 
   if (mau === '01') {
     const phong = q.get('phong') ?? ''; const nam = chuanNam(q.get('nam')) ?? 2026
-    if (!phong || !(await duocXemTongHopPhong(user, phong))) return NextResponse.json({ error: 'Không có quyền' }, { status: 403 })
+    if (!phong || !((await duocXemTongHopPhong(user, phong)) || (await quyenTapThe(user, phong)).xem)) return NextResponse.json({ error: 'Không có quyền' }, { status: 403 })
     const d = await tongHopTheoPhong(phong, nam)
     if (!d) return NextResponse.json({ error: 'Không tìm thấy đơn vị' }, { status: 404 })
-    const buf = await buildMau01({ tenCoQuan: 'Sở Xây dựng Quảng Trị', tenDonVi: 'Sở Xây dựng Quảng Trị', nam, tenTapThe: d.tenPhong, duThaoNhanXet: d.duThao.filter((l) => !l.startsWith('Mức xếp loại tập thể')) })
+    const tt = await layHoSoTapThe(phong, nam)
+    const buf = await buildMau01({ tenCoQuan: 'Sở Xây dựng Quảng Trị', tenDonVi: d.tenPhong, nam, tenTapThe: d.tenPhong, duThaoNhanXet: d.duThao.filter((l) => !l.startsWith('Mức xếp loại tập thể')), bieuMau: tt?.bieuMau, mucTuDeXuat: tt?.mucTuDeXuat })
     await logAction({ userId: user.id, action: 'EXPORT', module: MODULES.OFFICE, targetId: phong, targetType: 'office_year_dept_reviews', detail: `Xuất Mẫu 01 năm ${nam}` })
     return tep(buf, `Mau01_${khongDau(d.tenPhong)}_${nam}.docx`, DOCX)
+  }
+
+  // Biên bản cuộc họp nhận xét, đánh giá cuối năm của phòng/đơn vị: ?phong=&nam=&mau=BB
+  if (mau === 'BB') {
+    const phong = q.get('phong') ?? ''; const nam = chuanNam(q.get('nam')) ?? 2026
+    if (!phong || !(await quyenTapThe(user, phong)).xem) return NextResponse.json({ error: 'Không có quyền' }, { status: 403 })
+    const [tc, bb] = await Promise.all([db.toChuc.findUnique({ where: { id: phong }, select: { ten: true } }), layBienBan(phong, nam)])
+    if (!tc) return NextResponse.json({ error: 'Không tìm thấy đơn vị' }, { status: 404 })
+    if (!bb) return NextResponse.json({ error: 'Phòng/đơn vị chưa lập biên bản họp.' }, { status: 404 })
+    const buf = await buildBienBan({ tenCoQuan: 'Sở Xây dựng Quảng Trị', tenDonVi: tc.ten, nam, bb, nguoi: bb.chot ? bb.chot.yKien : await chupYKien(phong, nam) })
+    await logAction({ userId: user.id, action: 'EXPORT', module: MODULES.OFFICE, targetId: phong, targetType: 'office_year_dept_reviews', detail: `Xuất biên bản họp đánh giá năm ${nam}${bb.chot ? '' : ' (dự thảo)'}` })
+    return tep(buf, `BienBan_${khongDau(tc.ten)}_${nam}.docx`, DOCX)
+  }
+
+  // Mẫu 05/06/07: tổng hợp toàn Sở từ hồ sơ ĐÃ PHÊ DUYỆT
+  if (mau === '05' || mau === '06' || mau === '07') {
+    if (!duocXemTongHopSo(user)) return NextResponse.json({ error: 'Không có quyền' }, { status: 403 })
+    const nam = chuanNam(q.get('nam')) ?? 2026
+    const ds = await duLieuTongHopSo(nam)
+    const buf = mau === '07' ? await buildMau07(nam, 'Sở Xây dựng Quảng Trị', ds) : await buildMau0506(mau, nam, 'Sở Xây dựng Quảng Trị', mau === '05' ? lapMau05(ds) : lapMau06(ds), chuaPhanLoai(ds).map((d) => d.hoTen))
+    await logAction({ userId: user.id, action: 'EXPORT', module: MODULES.OFFICE, targetType: 'office_year_reviews', detail: `Xuất Mẫu ${mau} toàn Sở năm ${nam}` })
+    return tep(buf, `Mau${mau}_SXD_${nam}.docx`, DOCX)
   }
 
   // Bản trống (chưa có hồ sơ): ?canBoId=&nam=&mau=  — chỉ thông tin hành chính, không có điểm/nhận xét
@@ -58,7 +85,12 @@ export async function GET(req: NextRequest) {
     if (r.hs.mauApDung !== mau) return NextResponse.json({ error: `Mẫu ${mau} không đúng đối tượng; hồ sơ này áp dụng Mẫu ${r.hs.mauApDung ?? '(chưa xác định)'}.` }, { status: 400 })
     out = tep(await buildMauCaNhan(mau, r.du), `Mau${mau}_${base}.docx`, DOCX)
   } else if (mau === '03') out = tep(await buildMau03(r.du), `Mau03_${base}.docx`, DOCX)
-  else if (mau === '04') out = tep(await buildMau04(r.hs.nam, r.cb.hoTen, r.tenNhiemVu.map((t) => ({ nhiemVu: t }))), `Mau04_${base}.xlsx`, XLSX)
+  else if (mau === '04') {
+    // Đã nhập bảng KPI thì xuất đúng các dòng đã nhập; chưa nhập thì liệt kê nhiệm vụ đang giao ở nhóm B để tự điền
+    const m04 = r.hs.bieuMau.m04
+    const coDong = !!m04 && (m04.A.length + m04.B.length) > 0
+    out = tep(await buildMau04(r.hs.nam, r.cb.hoTen, coDong ? m04!.A : [], coDong ? m04!.B : r.tenNhiemVu.map((t) => ({ nhiemVu: t }))), `Mau04_${base}.xlsx`, XLSX)
+  }
   else return NextResponse.json({ error: 'Mẫu chưa được hỗ trợ (chưa có bản gốc đọc được).' }, { status: 400 })
   await logAction({ userId: user.id, action: 'EXPORT', module: MODULES.OFFICE, targetId: r.hs.id, targetType: 'office_year_reviews', detail: `Xuất Mẫu ${mau} năm ${r.hs.nam}` })
   return out

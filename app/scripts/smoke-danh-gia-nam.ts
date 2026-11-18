@@ -4,7 +4,9 @@
 // Tạo dữ liệu thử có tiền tố SMOKE và dọn lại khi xong. Dùng người dùng giả (không đăng nhập thật).
 import { db } from '@/lib/db'
 import type { CurrentUser } from '@/lib/auth'
-import { buildMauCaNhan, buildMau03, buildMau04 } from '@/lib/danh-gia-nam/xuat-mau'
+import { buildMauCaNhan, buildMau03, buildMau04, buildBienBan } from '@/lib/danh-gia-nam/xuat-mau'
+import { luuBieuMauCaNhan, luuBienBan, chotBienBan, moLaiBienBan } from '@/lib/danh-gia-nam/may-chu-bieu-mau'
+import { thanhPhanTrieuTap, layBienBan } from '@/lib/danh-gia-nam/bien-ban-db'
 import {
   taoHoSo, chuyenBuoc, luuNoiDung, soanTuDong, chayKiemTra, moHoSo, layCanBo, tongHopTheoPhong, traVeBuocTruoc, layHoSoTheoId, layDuKien, duLieuXuatCaNhan, duLieuXuatTrong,
   type HoSoDanhGia,
@@ -35,6 +37,16 @@ const giamDoc = nguoi(roi[1], { lanhDaoSo: true })
 
 const phongs = await db.toChuc.findMany({ where: { ma: { in: ['PHONG_HTKT', 'PHONG_QL_VT'] } }, select: { id: true, ma: true } })
 const dauVet = { cv: [] as string[], nv: [] as string[], hs: [] as string[] }
+// Biên bản họp của phòng nằm trong office_year_dept_reviews: ghi nhớ hàng có sẵn để trả lại nguyên trạng khi dọn
+const truocTapThe = await db.$queryRaw<{ id: string; bb: unknown }[]>`select id, "bieuMau"->'bienBan' bb from office_year_dept_reviews where nam = ${NAM}`
+const idTapTheTruoc = new Set(truocTapThe.map((x) => x.id))
+async function lapBienBan(u: CurrentUser, toChucId: string, chuTriId: string, thuKyId: string, them: Record<string, string> = {}) {
+  const tp = (await thanhPhanTrieuTap(toChucId))!
+  const cu = await layBienBan(toChucId, NAM)
+  const raw: Record<string, string> = { ...Object.fromEntries(tp.ds.map((d) => [`td_${d.canBoId}`, 'CO_MAT'])), phienBan: cu?.phienBan ?? '',
+    ngayHop: '2026-12-10', gioBatDau: '08:00', gioKetThuc: '10:00', diaDiem: 'Phòng họp', noiDung: 'Từng người trình bày báo cáo tự đánh giá.', chuTriId, thuKyId, tanThanh: String(tp.ds.length), khongTanThanh: '0', ...them }
+  return { tp, r: await luuBienBan(u, toChucId, NAM, raw) }
+}
 const truocEval = new Set((await db.officeAnnualEvaluation.findMany({ where: { nam: NAM }, select: { id: true } })).map((e) => e.id))
 
 type Ca = { cb: NonNullable<Awaited<ReturnType<typeof layCanBo>>>; loai: string }
@@ -128,10 +140,58 @@ try {
   h = (await layHoSoTheoId(h.id))!
   ok(Math.abs((h.tongDiem ?? 0) - (28.5 + 88 * 0.7)) < 0.01, 'tổng điểm = chung + KPI×70/100', String(h.tongDiem))
   ok((await buoc(thuKy)).ok && h.trangThai === 'HOP_DANH_GIA', 'sang Họp đánh giá')
-  const chanTrinh = await buoc(thuKy)
-  ok(!chanTrinh.ok, 'đề xuất xuất sắc không đủ điều kiện → chặn trình phê duyệt', !chanTrinh.ok ? chanTrinh.loi.slice(0, 110) : '')
   await luuNoiDung(thuKy, h.id, { mucDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
-  ok((await buoc(thuKy)).ok && h.trangThai === 'TRINH_PHE_DUYET', 'đề xuất hợp lệ → trình phê duyệt')
+  const chuaHop = await chuyenBuoc(thuKy, h.id)
+  ok(!chuaHop.ok && /tập thể phòng/.test(chuaHop.loi), 'đủ điểm, đủ đề xuất nhưng CHƯA có nhận xét tập thể phòng → không trình được')
+  await luuNoiDung(thuKy, h.id, { mucDeXuat: 'HOAN_THANH_XUAT_SAC_NHIEM_VU' })
+  const hopR = await luuBieuMauCaNhan(thuKy, h.id, 'hopTapThe', { ngayHop: '2026-11-18', soNguoiDuHop: '6', yKien: 'Tập thể phòng nhận xét: hoàn thành tốt, chưa có sản phẩm nổi trội.', phieu_HOAN_THANH_TOT_NHIEM_VU: '6', mucTapTheDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
+  ok(hopR.ok, 'ghi kết quả họp đánh giá của tập thể phòng')
+  ok(!(await luuBieuMauCaNhan(chinhChu(cv), h.id, 'hopTapThe', { yKien: 'tự ghi' })).ok, 'chính chủ không tự ghi nhận xét của tập thể')
+  await luuNoiDung(thuKy, h.id, { mucDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
+  const phongHt = cv.cb.toChucId!
+  const tpBb = ca['PHONG_HTKT/TRUONG_PHONG'].cb.id
+  const coSan = await layBienBan(phongHt, NAM)
+  if (coSan?.chot) await moLaiBienBan(thuKy, phongHt, NAM, 'smoke: mở lại biên bản có sẵn trên bản sao')
+  if (!coSan) {
+    const chuaBb = await chuyenBuoc(thuKy, h.id)
+    ok(!chuaBb.ok && /Biên bản/.test(chuaBb.loi), 'có nhận xét tập thể nhưng CHƯA lập biên bản họp của phòng → không trình được')
+  }
+  ok(!(await lapBienBan(chinhChu(cv), phongHt, tpBb, cv.cb.id)).r.ok, 'chuyên viên không lập được biên bản của phòng')
+  const tp0 = (await thanhPhanTrieuTap(phongHt))!
+  const thieuTd = await luuBienBan(thuKy, phongHt, NAM, { phienBan: (await layBienBan(phongHt, NAM))?.phienBan ?? '', ngayHop: '2026-12-10', chuTriId: tpBb, thuKyId: cv.cb.id })
+  ok(!thieuTd.ok && /Chưa chọn trạng thái tham dự/.test(thieuTd.loi), 'không mặc định "có mặt": thiếu trạng thái tham dự bị từ chối', `${tp0.ds.length} người triệu tập`)
+  const thieuTq = await lapBienBan(thuKy, phongHt, tpBb, cv.cb.id, { tanThanh: '' })
+  ok(thieuTq.r.ok, 'thư ký lưu được biên bản (thành phần lấy từ hồ sơ cán bộ)', `${thieuTq.tp.ds.length} người triệu tập`)
+  const chuaTq = await chuyenBuoc(thuKy, h.id)
+  ok(!chuaTq.ok && /biểu quyết thông qua/.test(chuaTq.loi), 'biên bản chưa biểu quyết thông qua → không trình được')
+  ok(!(await lapBienBan(thuKy, phongHt, 'nguoi-la', cv.cb.id)).r.ok, 'chủ trì ngoài thành phần triệu tập bị từ chối')
+  const cuPhien = (await layBienBan(phongHt, NAM))!.phienBan ?? ''
+  const vang = thieuTq.tp.ds.find((d) => d.canBoId !== tpBb && d.canBoId !== cv.cb.id)
+  const du = await lapBienBan(thuKy, phongHt, tpBb, cv.cb.id, vang ? { [`td_${vang.canBoId}`]: 'VANG_CO_LY_DO', [`ly_${vang.canBoId}`]: 'Đi công tác', tanThanh: String(thieuTq.tp.ds.length - 1) } : {})
+  ok(du.r.ok && du.r.bb.thanhVien.length === du.tp.ds.length, 'biên bản đủ thành phần (có người vắng có lý do)')
+  const cu2 = await luuBienBan(thuKy, phongHt, NAM, { ...Object.fromEntries(du.tp.ds.map((d) => [`td_${d.canBoId}`, 'CO_MAT'])), phienBan: cuPhien, ngayHop: '2026-12-11', chuTriId: tpBb, thuKyId: cv.cb.id, tanThanh: '1' })
+  ok(!cu2.ok && /người khác sửa/.test(cu2.loi), 'lưu bằng form cũ (phiên bản cũ) bị từ chối, không ghi đè người lưu trước')
+  await luuBieuMauCaNhan(thuKy, h.id, 'hopTapThe', { soNguoiDuHop: '99', yKien: 'Tập thể phòng nhận xét: hoàn thành tốt, chưa có sản phẩm nổi trội.', phieu_HOAN_THANH_TOT_NHIEM_VU: '3', mucTapTheDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
+  const hSync = (await layHoSoTheoId(h.id))!
+  ok(hSync.bieuMau.hopTapThe?.soNguoiDuHop === du.tp.ds.length - (vang ? 1 : 0) && hSync.bieuMau.hopTapThe?.ngayHop === '2026-12-10', 'ngày họp, số người dự họp của từng người lấy theo biên bản (không nhập lệch)')
+  const chuaChot = await chuyenBuoc(thuKy, h.id)
+  ok(!chuaChot.ok && /chưa được chốt/.test(chuaChot.loi), 'biên bản đủ thành phần nhưng CHƯA chốt → không trình được')
+  ok(!(await chotBienBan(thuKy, phongHt, NAM, 'phien-sai')).ok, 'chốt bằng phiên bản cũ bị từ chối')
+  const ch = await chotBienBan(thuKy, phongHt, NAM, (await layBienBan(phongHt, NAM))!.phienBan ?? '')
+  ok(ch.ok && !!ch.bb.chot && ch.bb.chot.yKien.some((y) => y.canBoId === cv.cb.id && !!y.yKien), 'chốt biên bản: chụp lại ý kiến tập thể của từng người', ch.ok ? `${ch.bb.chot!.yKien.length} người` : ch.loi)
+  ok(!(await luuBieuMauCaNhan(thuKy, h.id, 'hopTapThe', { yKien: 'sửa sau khi chốt' })).ok, 'đã chốt thì không sửa được ý kiến tập thể của từng người')
+  ok(!(await lapBienBan(thuKy, phongHt, tpBb, cv.cb.id)).r.ok, 'đã chốt thì không sửa được biên bản')
+  if (ch.ok) {
+    const w = await buildBienBan({ tenCoQuan: 'Sở Xây dựng Quảng Trị', tenDonVi: du.tp.ten, nam: NAM, bb: ch.bb, nguoi: ch.bb.chot!.yKien })
+    ok(w.length > 5000, 'sinh được biên bản họp (Word) của phòng theo bản chốt', `${w.length} byte`)
+  }
+  await luuNoiDung(thuKy, h.id, { mucDeXuat: 'HOAN_THANH_XUAT_SAC_NHIEM_VU' })
+  const chanTrinh = await buoc(thuKy)
+  ok(!chanTrinh.ok && !/Biên bản/.test(chanTrinh.loi), 'biên bản đã chốt nhưng đề xuất xuất sắc không đủ điều kiện → vẫn chặn trình', !chanTrinh.ok ? chanTrinh.loi.slice(0, 110) : '')
+  await luuNoiDung(thuKy, h.id, { mucDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
+  ok((await buoc(thuKy)).ok && h.trangThai === 'TRINH_PHE_DUYET', 'đề xuất hợp lệ + biên bản đã chốt → trình phê duyệt')
+  const mo = await moLaiBienBan(thuKy, phongHt, NAM, 'thử mở lại')
+  ok(!mo.ok && /trả các hồ sơ đó về/.test(mo.loi), 'đã có hồ sơ trình theo biên bản → không mở lại được biên bản')
   ok(!(await luuNoiDung(thuKy, h.id, { diemKpiTong: 100 })).ok, 'đã trình thì khoá nội dung')
   ok(!(await buoc(thuKy, 'HOAN_THANH_TOT_NHIEM_VU')).ok, 'thư ký không có quyền phê duyệt')
   ok(!(await buoc(nx, 'HOAN_THANH_TOT_NHIEM_VU')).ok, 'Trưởng phòng không tự có quyền phê duyệt')
@@ -166,7 +226,15 @@ try {
   await dem(thuKy); await luuNoiDung(chinhChu(pq), p2.id, { tuDanhGia: 'Tự đánh giá Phó phòng.' }); await dem(chinhChu(pq))
   await luuNoiDung(nxQ, p2.id, { nhanXetLanhDao: 'Nhận xét.' }); await dem(nxQ)
   await luuNoiDung(thuKy, p2.id, { diemChung: DIEM_CHUNG, diemKpiTong: 80, mucDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
-  await dem(thuKy); await dem(thuKy)
+  await dem(thuKy)
+  await luuBieuMauCaNhan(thuKy, p2.id, 'hopTapThe', { yKien: 'Tập thể thống nhất mức hoàn thành tốt.', mucTapTheDeXuat: 'HOAN_THANH_TOT_NHIEM_VU' })
+  {
+    const bq = await layBienBan(pq.cb.toChucId!, NAM)
+    if (bq?.chot) await moLaiBienBan(thuKy, pq.cb.toChucId!, NAM, 'smoke')
+    const l = await lapBienBan(thuKy, pq.cb.toChucId!, ca['PHONG_QL_VT/TRUONG_PHONG'].cb.id, pq.cb.id)
+    if (l.r.ok) await chotBienBan(thuKy, pq.cb.toChucId!, NAM, l.r.bb.phienBan ?? '')
+  }
+  await dem(thuKy)
   ok(p2.trangThai === 'TRINH_PHE_DUYET', 'Phó phòng QLVT đã tới bước Trình phê duyệt')
   const gd2 = nguoi(roi[1] , { lanhDaoSo: true })
   const kqs = await Promise.all([chuyenBuoc(giamDoc, p2.id, 'HOAN_THANH_TOT_NHIEM_VU'), chuyenBuoc(gd2, p2.id, 'HOAN_THANH_NHIEM_VU')])
@@ -235,6 +303,13 @@ try {
 } finally {
   // dọn dấu vết
   if (dauVet.hs.length) await db.$executeRaw`delete from office_year_reviews where id = any(${dauVet.hs})`
+  const tapTheSau = await db.$queryRaw<{ id: string }[]>`select id from office_year_dept_reviews where nam = ${NAM}`
+  const ttMoi = tapTheSau.map((x) => x.id).filter((id) => !idTapTheTruoc.has(id))
+  if (ttMoi.length) await db.$executeRaw`delete from office_year_dept_reviews where id = any(${ttMoi})`
+  for (const x of truocTapThe) {
+    if (x.bb === null) await db.$executeRaw`update office_year_dept_reviews set "bieuMau" = "bieuMau" - 'bienBan' where id = ${x.id}`
+    else await db.$executeRaw`update office_year_dept_reviews set "bieuMau" = jsonb_set("bieuMau", '{bienBan}', ${JSON.stringify(x.bb)}::jsonb, true) where id = ${x.id}`
+  }
   if (dauVet.cv.length) await db.congViec.deleteMany({ where: { id: { in: dauVet.cv } } })
   if (dauVet.nv.length) await db.nghiepVuBanGhi.deleteMany({ where: { id: { in: dauVet.nv } } })
   const sau = await db.officeAnnualEvaluation.findMany({ where: { nam: NAM }, select: { id: true } })
