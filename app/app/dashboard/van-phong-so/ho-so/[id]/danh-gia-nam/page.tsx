@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import { requireAuth, canAccessOffice } from '@/lib/auth'
 import {
   chuanNam, kiemTraBang, layCanBo, layHoSo, moHoSo, nguCanhQuyen, layDuKien, chayKiemTra,
@@ -31,10 +30,20 @@ export default async function DanhGiaNamPage({
   const nam = chuanNam(sp.nam) ?? 2026
   const loai: LoaiHoSo = sp.loai === 'DANG_VIEN' ? 'DANG_VIEN' : 'CBCCVC'
 
+  // Trang mở cho mọi cán bộ (middleware không chặn theo phòng) → kiểm quyền TRƯỚC khi hiện bất kỳ thông tin nào
+  // của cán bộ; không có cán bộ / không có quyền / hồ sơ không thuộc quyền trả cùng một thông báo.
+  const tuChoi = (
+    <div className="space-y-3 max-w-5xl">
+      <h1 className="text-xl font-bold text-slate-900">Đánh giá cuối năm {nam}</h1>
+      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">Bạn không có quyền xem hồ sơ này.</div>
+      <Link href="/dashboard" className="text-sm text-indigo-700 hover:underline">← Về trang tổng quan</Link>
+    </div>
+  )
   const cb = await layCanBo(id)
-  if (!cb) notFound()
+  if (!cb) return tuChoi
   const co = await kiemTraBang()
-  const ctx = await nguCanhQuyen(user, cb)
+  const ctxHienTai = await nguCanhQuyen(user, cb)
+  // (khung chỉ được dựng SAU khi đã quyết quyền ở từng nhánh dưới)
   const khung = (noiDung: React.ReactNode) => (
     <div className="space-y-5 max-w-5xl">
       <div className="text-sm text-slate-500">
@@ -48,16 +57,20 @@ export default async function DanhGiaNamPage({
     </div>
   )
 
+  if (!co && !duocXemHoSo('CBCCVC', ctxHienTai) && !duocXemHoSo('DANG_VIEN', ctxHienTai)) return tuChoi
   if (!co) return khung(<div className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">Chưa áp migration 058 (bảng hồ sơ đánh giá năm). Chức năng chưa sẵn sàng.</div>)
 
-  // Không có quyền xem loại hồ sơ này → không nêu hồ sơ có tồn tại hay không
-  if (!duocXemHoSo(loai, ctx)) {
-    const h = await layHoSo(id, nam, loai)
-    if (h) await moHoSo(user, h.id) // ghi nhật ký từ chối truy cập (hồ sơ Đảng)
-    return khung(<div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">Bạn không có quyền xem hồ sơ này.</div>)
-  }
-
+  // Hồ sơ đã lập: quyền theo PHÒNG LƯU TRÊN HỒ SƠ (moHoSo, đồng thời ghi nhật ký xem/từ chối hồ sơ Đảng) và
+  // DỪNG nếu bị từ chối. Chưa lập: theo phòng hiện tại. Không nêu hồ sơ có tồn tại hay không khi không có quyền.
   const h = await layHoSo(id, nam, loai)
+  let ctx = ctxHienTai
+  if (h) {
+    const m = await moHoSo(user, h.id)
+    if (!m || m.tuChoi) return tuChoi
+    ctx = m.ctx
+  } else if (!duocXemHoSo(loai, ctx)) {
+    return tuChoi
+  }
   const vaiTro = xacDinhVaiTro(loai, ctx)
   const tab = (
     <div className="flex gap-2 text-sm">
@@ -103,8 +116,7 @@ export default async function DanhGiaNamPage({
       </div></>)
   }
 
-  // Có quyền xem: ghi nhật ký xem (hồ sơ Đảng) rồi nạp dữ liệu
-  await moHoSo(user, h.id)
+  // Có quyền xem (moHoSo ở trên đã ghi nhật ký xem hồ sơ Đảng) → nạp dữ liệu
   const buocIdx = TRANG_THAI_DANH_GIA.indexOf(h.trangThai)
   const sua = (p: 'tuDanhGia' | 'nhanXet' | 'diem' | 'mucDeXuat') => duocSuaPhan(p, h.trangThai, vaiTro)
   const mau = h.mauApDung ? timMau(h.mauApDung, 'SNV_CV6862') : null

@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
-import { chuanNam, kiemTraBang, layHoSo, moHoSo } from '@/lib/danh-gia-nam/may-chu'
-import { duocSuaPhan } from '@/lib/danh-gia-nam/quyen'
+import { chuanNam, kiemTraBang, layHoSo, moHoSo, layCanBo, nguCanhQuyen } from '@/lib/danh-gia-nam/may-chu'
+import { duocSuaPhan, duocXemHoSo } from '@/lib/danh-gia-nam/quyen'
 import { TRANG_THAI_DANH_GIA_LABEL } from '@/lib/danh-gia-nam/trang-thai'
 import { TIEU_CHI_CHUNG, diemNhiemVuNam } from '@/lib/danh-gia-nam/tieu-chi'
 import { timMau } from '@/lib/danh-gia-nam/mau-bieu'
@@ -26,9 +26,15 @@ export default async function MauCaNhanPage({ params, searchParams }: { params: 
   const quayLai = `/dashboard/van-phong-so/ho-so/${id}/danh-gia-nam?nam=${nam}`
   if (!(await kiemTraBang())) return <p className="text-sm text-amber-700">Chưa áp migration 058; chức năng chưa sẵn sàng.</p>
   const h0 = await layHoSo(id, nam, 'CBCCVC')
+  const khongQuyen = <p className="text-sm text-red-700">Bạn không có quyền xem hồ sơ này.</p>
+  if (!h0) {
+    // Chưa lập: chỉ người có quyền với cán bộ này (theo phòng hiện tại) mới được biết là "chưa có hồ sơ"
+    const cbNgan = await layCanBo(id)
+    if (!cbNgan || !duocXemHoSo('CBCCVC', await nguCanhQuyen(user, cbNgan))) return khongQuyen
+  }
   if (!h0) return <div className="space-y-2"><p className="text-sm">Chưa có hồ sơ đánh giá năm {nam}.</p><Link className="text-indigo-700 text-sm hover:underline" href={quayLai}>← Lập hồ sơ</Link></div>
   const m = await moHoSo(user, h0.id)
-  if (!m || m.tuChoi) return <p className="text-sm text-red-700">Bạn không có quyền xem hồ sơ này.</p>
+  if (!m || m.tuChoi) return khongQuyen
   const { hs: h, cb, vaiTro } = m
   if (['2A', '2B', '2C'].includes(ma) && ma !== h.mauApDung) {
     return <div className="space-y-2"><p className="text-sm text-red-700">Mẫu {ma} không đúng đối tượng; hồ sơ này áp dụng Mẫu {h.mauApDung}.</p><Link className="text-indigo-700 text-sm hover:underline" href={`./${h.mauApDung}?nam=${nam}`}>Mở Mẫu {h.mauApDung}</Link></div>
