@@ -1,13 +1,13 @@
 # RUNBOOK — Triển khai và hoàn tác
 
-Cập nhật: 2026-10-28 · Nguồn: đọc `.github/workflows/build-vps.yml` và `app/scripts/deploy/vps-auto-deploy.ps1` (VERIFIED theo mã; chưa diễn tập thực tế bản rollback trong phiên này).
+Cập nhật: 2026-11-19 (bước 3–4 viết lại sau sự cố kẹt nhánh 19/11) · Trước đó 2026-10-28 · Nguồn: đọc `.github/workflows/build-vps.yml` và `app/scripts/deploy/vps-auto-deploy.ps1` (VERIFIED theo mã; chưa diễn tập thực tế bản rollback trong phiên này).
 
 ## 1. Luồng triển khai
 ```
 Local (npm test) → push nhánh main → GitHub Actions "Build cho VPS":
    npm ci → prisma generate → npm test → next build → artifact "next-build" (có DEPLOY_SHA)
 → VPS: tác vụ QLHTKT_AutoDeploy (5 phút/lần, SYSTEM) lấy lần build THÀNH CÔNG mới nhất trên main
-→ giải nén vào .next-staging → git merge --ff-only → (migration mới: pg_dump rồi áp) → (package-lock đổi: npm install)
+→ giải nén vào .next-staging → đối chiếu mã (KHÔNG đổi nhánh thư mục làm việc) → (migration mới lấy từ chính commit build: pg_dump rồi áp) → (package-lock đổi: npm install)
 → đổi .next ↔ .next-staging → pm2 reload ql-htkt → kiểm tra /api/health + 2 tiến trình khởi động lại sau lúc đổi
 → đạt: ghi deployed_sha.txt + báo Telegram · không đạt: tự quay về bản cũ
 ```
@@ -18,10 +18,13 @@ Local (npm test) → push nhánh main → GitHub Actions "Build cho VPS":
 |---|---|
 | `npm test` trong workflow (MỚI, 28/10/2026) | Test đỏ → workflow thất bại → không có artifact thành công mới → VPS không triển khai commit đó |
 | Artifact phải có `BUILD_ID` + `DEPLOY_SHA` khớp commit | Chặn bản build lẫn commit |
-| VPS có sửa đổi chưa commit | Dừng, chờ xử lý tay |
-| `merge --ff-only` | Không tự gộp/ghi đè lịch sử |
+| Commit build phải nằm trên `origin/main`; bản đang chạy (`deployed_sha.txt`) phải là tổ tiên của bản mới | Không triển khai lùi / rẽ nhánh (lùi bản: làm tay, `-Force`) |
+| Không đổi nhánh `C:\Troly\HTKT` (cũng là thư mục làm việc). Chỉ `merge --ff-only` khi thư mục đang ở `main`, sạch và đi sau bản build; bản build sửa chính script → dừng sau merge, lần chạy sau dùng script mới | Không làm kẹt/đổi nhánh của phiên đang làm như 19/11/2026 |
+| Tệp web đọc lúc chạy (`app/public`, `next.config.ts`, `package-lock.json`) và mã triển khai (`app/scripts/deploy`) phải trùng commit build, kể cả sửa chưa commit và tệp mới chưa theo dõi | Không chạy bản build mới với tệp của nhánh khác; **sửa script triển khai trên nhánh làm việc sẽ chặn triển khai tới khi script đó lên `main`** |
+| Migration lấy bằng `git archive` từ chính commit build | Không áp migration của nhánh đang làm (vd 050 AI Content) |
+| Cần cài thư viện mà `package.json` khác commit build | Dừng trước migration |
 | `pg_dump` trước migration + dừng nếu lỗi | Không áp migration khi chưa có sao lưu |
-| Health check sau đổi bản | Tự quay về bản cũ nếu web không lên |
+| Health check sau đổi bản (cần ≥ `MIN_WORKERS`, mặc định 2 tiến trình mới) | Tự quay về bản cũ nếu web không lên |
 
 Lưu ý: AutoDeploy chọn lần build thành công **mới nhất**; một lần build đỏ không thu hồi bản đã triển khai trước đó.
 
@@ -37,7 +40,7 @@ Lưu ý: AutoDeploy chọn lần build thành công **mới nhất**; một lầ
 - Commit đang chạy: `C:\Troly\deploy\deployed_sha.txt`.
 - Sức khoẻ: `http://localhost:3001/api/health` phải `status: ok`; `pm2 list` thấy 2 tiến trình `ql-htkt` online.
 - Smoke tay/script liên quan: `node app/scripts/smoke-chatbot.mjs`, `smoke-trang-chu.mjs` (chạy khi đụng chatbot/trang chủ).
-- Telegram báo "Da trien khai …" hoặc "DUNG trien khai …" (báo lỗi 1 lần mỗi commit).
+- Telegram báo "Da trien khai …" hoặc "DUNG trien khai …"/"LOI …": mỗi cặp (commit, nội dung lỗi) báo 1 lần, chỉ đánh dấu khi gửi được (`C:\Troly\deploy\sent_alerts.txt`).
 
 ## 5. Hoàn tác
 **A. Tự động (đã có trong script):** health/pm2 thất bại sau khi đổi bản → `.next` hỏng đổi tên `.next-failed`, `.next-old` trả về `.next`, `pm2 reload`, kiểm tra health lại. Báo "da quay ve ban build cu" nếu xác nhận được; báo **"ROLLBACK KHONG XAC NHAN … CAN XU LY TAY NGAY"** nếu không. Lưu ý: mã nguồn trên VPS đã nằm ở commit mới (không tự lùi), và migration đã áp **không** tự hoàn tác. Script thử lại mỗi 5 phút vì `deployed_sha.txt` chưa cập nhật; để dừng, sửa commit hoặc tắt tác vụ (B3).
@@ -54,9 +57,16 @@ Lưu ý: AutoDeploy chọn lần build thành công **mới nhất**; một lầ
 
 ## 6. Công cụ vận hành (không tự chạy khi chưa được phép)
 - `vps-auto-deploy.ps1 -DryRun`: chỉ tải + kiểm artifact, dừng trước khi động tới git/CSDL/web.
+- `vps-auto-deploy.ps1 -Force -DryRunSync`: chạy tới hết đối chiếu mã + liệt kê migration sẽ áp rồi dừng (không merge, không ghi CSDL, không đổi web, không gửi Telegram; vẫn tải artifact vào `.next-staging`).
 - `vps-auto-deploy.ps1 -Force`: triển khai lại dù cùng commit.
 - Cấu hình/trạng thái ngoài repo: `C:\Troly\deploy\` (`deploy.env` chứa token, KHÔNG đưa lên git, KHÔNG in ra).
 
-## 7. Chưa kiểm chứng
+## 7. Việc còn lại (PROPOSED, chưa làm)
+- Thư mục release riêng theo SHA (artifact + `public` + cấu hình + thư viện) cho pm2, tách hẳn khỏi thư mục làm việc; cần diễn tập đổi `cwd`, `.env`, quyền SYSTEM/PM2.
+- Tác vụ `QLHTKT_AutoDeploy` hiện chạy chính script trong thư mục làm việc (quyền SYSTEM): nên chạy bản cố định ngoài repo. Đổi tác vụ = đổi cấu hình hệ thống, cần duyệt.
+- Sổ migration lưu trong CSDL kèm checksum, ghi cùng giao dịch với SQL (hiện là tệp `applied_migrations.txt` theo tên).
+
+## 8. Chưa kiểm chứng
+- Nhánh tiến thẳng (thư mục ở `main`) của bản script 19/11 chưa chạy thật; mới chạy thử `-DryRunSync` ở nhánh giữ nguyên thư mục.
 - Chưa diễn tập rollback tự động trên VPS; chưa chạy workflow đã thêm `npm test` trên GitHub (chỉ kiểm cú pháp YAML và chạy `npm test` cục bộ).
 - Hành vi khi nhiều commit dồn liên tiếp (concurrency `cancel-in-progress`) chỉ suy ra từ cấu hình workflow.
