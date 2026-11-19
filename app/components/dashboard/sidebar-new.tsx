@@ -94,6 +94,8 @@ const navGroups: NavGroup[] = [
     items: [
       { label: 'Tổng quan', href: '/dashboard', icon: LayoutDashboard },
       { label: 'Hồ sơ của tôi', href: '/dashboard/ho-so-ca-nhan', icon: UserCircle2 },
+      { label: 'Đánh giá cuối năm của tôi', href: '/dashboard/danh-gia-cua-toi', icon: ClipboardCheck },
+      { label: 'Tổng hợp đánh giá phòng', href: '/dashboard/van-phong-so/danh-gia/tong-hop', icon: BarChart3, adminOnly: true },
       { label: 'Nghỉ phép', href: '/dashboard/nghi-phep', icon: CalendarDays },
       { label: 'Chấm công làm thêm giờ', href: '/dashboard/cham-cong-lam-them', icon: Clock },
     ],

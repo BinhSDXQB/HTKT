@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
+import { laDuongDanDanhGiaNam } from './lib/danh-gia-nam/duong-dan-mo'
 
 // Chặn nhanh ở edge cho nhóm route nội bộ theo phòng ban.
 // Đây là lớp phòng thủ thứ nhất; trang/API vẫn gọi requireOfficeAccess (DB-backed) làm lớp xác thực chính.
@@ -65,6 +66,9 @@ export async function middleware(req: NextRequest) {
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
+
+  // Đánh giá cuối năm: mọi cán bộ đã đăng nhập; quyền thật kiểm ở trang/action/API (xem duong-dan-mo.ts)
+  if (laDuongDanDanhGiaNam(pathname)) return pass()
 
   const okOffice = canAccessModule(token, 'office', 'VPS')
   const okHtkt = canAccessModule(token, 'htkt', 'HTKT')

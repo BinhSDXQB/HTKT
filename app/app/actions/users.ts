@@ -110,10 +110,14 @@ export async function updateUserAction(prevState: UserFormState, formData: FormD
     if (!tc) return { error: 'Phòng/đơn vị không hợp lệ hoặc đã ngừng hoạt động' }
   }
 
+  // Tài khoản gắn hồ sơ cán bộ: phòng LUÔN theo hồ sơ (bỏ qua giá trị gửi lên) — tránh tài khoản lệch hồ sơ như trước
+  const hoSo = await db.canBo.findFirst({ where: { userId: d.userId }, select: { toChucId: true } })
   const updateData: any = {
     name: d.name, email: d.email, roleId: d.roleId, phone: d.phone || null,
-    toChucId: d.toChucId || null, isActive: d.isActive ?? true,
+    toChucId: hoSo ? hoSo.toChucId : (d.toChucId || null), isActive: d.isActive ?? true,
   }
+  // Đổi phòng của BẤT KỲ tài khoản nào thì tắt cờ lãnh đạo phòng (không mang quyền duyệt sang phòng mới); bật lại là thao tác riêng
+  if ((updateData.toChucId ?? null) !== (user.toChucId ?? null)) updateData.isDepartmentLeader = false
   if (d.password) {
     updateData.password = await bcrypt.hash(d.password, 12)
   }

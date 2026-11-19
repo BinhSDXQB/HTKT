@@ -225,6 +225,8 @@ export async function addRewardRecordAction(prev: OfficeFormState, formData: For
 
   const nam = intOrNull(d.nam)
   if (nam === null) return { fieldErrors: { nam: ['Năm không hợp lệ'] } }
+  // Từ năm 2026 mức xếp loại chỉ được ghi qua quy trình hồ sơ đánh giá cuối năm (tự đánh giá → ... → phê duyệt), không nhập thẳng.
+  if (nam >= 2026) return { error: `Năm ${nam} áp dụng quy trình đánh giá cuối năm: lập hồ sơ tại mục "Đánh giá cuối năm" của cán bộ; mức xếp loại chỉ được ghi sau khi cấp có thẩm quyền phê duyệt.` }
 
   const canBo = await db.canBo.findUnique({ where: { id: d.canBoId } })
   if (!canBo) return { error: 'Không tìm thấy cán bộ.' }

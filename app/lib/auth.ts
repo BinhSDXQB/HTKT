@@ -191,6 +191,20 @@ export function canViewOfficeSensitive(user: CurrentUser): boolean {
   )
 }
 
+/**
+ * Quyền xem THÔNG TIN ĐẢNG và hồ sơ kiểm điểm đảng viên — tách khỏi quyền xem hồ sơ đánh giá công chức, viên chức.
+ * Được xem: chính chủ; admin; có quyền office:party_review_view; nhóm xem dữ liệu nhạy cảm của Văn phòng Sở
+ * (canViewOfficeSensitive). Cán bộ chỉ có quyền vào menu Văn phòng Sở thì KHÔNG xem được.
+ */
+export function canViewThongTinDang(user: CurrentUser, laChinhChu: boolean): boolean {
+  return (
+    laChinhChu ||
+    user.role.name === 'admin' ||
+    hasPermission(user.permissions, MODULES.OFFICE, 'party_review_view') ||
+    canViewOfficeSensitive(user)
+  )
+}
+
 /** Lãnh đạo Văn phòng Sở (Chánh/Phó Chánh VP) — dùng để gate các thao tác duyệt/quản lý nghiệp vụ VPS */
 export function isOfficeLeader(user: CurrentUser): boolean {
   return (

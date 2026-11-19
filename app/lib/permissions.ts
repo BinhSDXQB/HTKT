@@ -55,6 +55,9 @@ export const OFFICE_ACTIONS = [
   'reward_manage',
   'reward_review',
   'annual_evaluation_manage',
+  'annual_evaluation_approve', // phê duyệt hồ sơ đánh giá cuối năm (cấp có thẩm quyền)
+  'party_review_view',         // xem hồ sơ kiểm điểm, thông tin Đảng — tách khỏi đánh giá CC/VC
+  'party_review_manage',       // nhập/sửa hồ sơ kiểm điểm Đảng
   'discipline_manage',
   'leave_view',
   'leave_manage',

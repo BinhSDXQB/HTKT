@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { requireOfficeAccess, canViewOfficeSensitive, isOfficeLeader, canManageCanBo, isLeadership } from '@/lib/auth'
+import { requireOfficeAccess, canViewOfficeSensitive, isOfficeLeader, canManageCanBo, isLeadership, canViewThongTinDang } from '@/lib/auth'
 import { DeptLeaderToggle } from '@/components/van-phong-so/dept-leader-toggle'
 import { tuoiNghiHuuLabel, TRUONG_HOP_LUI, type MaTruongHopLui } from '@/lib/nghi-huu'
 import { hasPermission, MODULES } from '@/lib/permissions'
@@ -59,8 +59,9 @@ const TRANG_THAI_LABEL: Record<string, string> = {
   CHUYEN_CONG_TAC: 'Chuyển công tác', NGHI_VIEC: 'Nghỉ việc',
 }
 
-export default async function HoSoDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function HoSoDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ lc?: string }> }) {
   const { id } = await params
+  const thongBaoLc = (await searchParams).lc
   const user = await requireOfficeAccess()
   const canSee = canViewOfficeSensitive(user)
   const canRewardDoc = isOfficeLeader(user) || hasPermission(user.permissions, MODULES.OFFICE, 'reward_manage')
@@ -182,6 +183,7 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
+      {thongBaoLc && <div className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">Luân chuyển: {thongBaoLc}</div>}
       <nav className="flex items-center gap-1.5 text-sm text-slate-500 flex-wrap">
         <Link href="/dashboard/van-phong-so" className="hover:text-indigo-700 flex items-center gap-1">
           <Briefcase className="w-3.5 h-3.5" />Văn phòng Sở
@@ -284,7 +286,8 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
         </dl>
       </section>
 
-      {/* Thông tin Đảng */}
+      {/* Thông tin Đảng — chỉ chính chủ / người có quyền party_review_view / nhóm nhạy cảm */}
+      {canViewThongTinDang(user, cb.user?.id === user.id) && (
       <section className="rounded-xl border bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <Flag className="w-5 h-5 text-red-600" />
@@ -299,6 +302,7 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
           ))}
         </dl>
       </section>
+      )}
 
       {/* Con — người phụ thuộc (giảm trừ gia cảnh) & thành tích học tập */}
       <section className="rounded-xl border bg-white p-5 space-y-3">
@@ -553,7 +557,10 @@ export default async function HoSoDetailPage({ params }: { params: Promise<{ id:
             <ClipboardCheck className="w-5 h-5 text-indigo-600" />
             <h2 className="text-base font-bold text-slate-900">Đánh giá, xếp loại hằng năm</h2>
           </div>
-          <EvaluationForm canBoId={cb.id} defaultNam={CURRENT_YEAR} />
+          <div className="flex items-center gap-2">
+            <Link href={`/dashboard/van-phong-so/ho-so/${cb.id}/danh-gia-nam?nam=2026`} className="text-sm px-3 py-1.5 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Đánh giá cuối năm 2026</Link>
+            <EvaluationForm canBoId={cb.id} defaultNam={CURRENT_YEAR} />
+          </div>
         </div>
         <div className="rounded-lg border overflow-hidden">
           <table className="w-full text-sm">
