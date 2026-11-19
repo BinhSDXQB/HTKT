@@ -122,7 +122,7 @@ export default async function BienBanPage({ searchParams }: { searchParams: Prom
             <table className="w-full text-xs"><tbody>{nguoi.map((n) => (
               <tr key={n.canBoId} className="border-t">
                 <td className="py-1"><Link className="text-indigo-700 hover:underline" href={`/dashboard/van-phong-so/ho-so/${n.canBoId}/danh-gia-nam?nam=${nam}&loai=CBCCVC`}>{n.hoTen}</Link></td>
-                <td>{n.tongDiem ?? '—'} điểm</td>
+                <td>{n.tongDiem != null ? `${n.tongDiem} điểm` : 'chưa chấm điểm'}</td>
                 <td>{n.hop?.yKien?.trim() ? 'Đã ghi ý kiến tập thể' : <span className="text-amber-700">Chưa ghi ý kiến tập thể</span>}</td>
                 <td>{n.hop?.mucTapTheDeXuat ? `Tập thể đề xuất: ${MUC_XEP_LOAI_LABEL[n.hop.mucTapTheDeXuat]}` : ''}</td>
               </tr>

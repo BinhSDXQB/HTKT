@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { getSoDonViOptions } from '@/lib/office-scope'
 import { chuanNam, kiemTraBang, tongHopTheoPhong, duocXemTongHopPhong, hoSoCuaToi } from '@/lib/danh-gia-nam/may-chu'
+import { duocXemTongHopSo } from '@/lib/danh-gia-nam/may-chu-bieu-mau'
 import { TRANG_THAI_DANH_GIA, TRANG_THAI_DANH_GIA_LABEL } from '@/lib/danh-gia-nam/trang-thai'
 import { MUC_XEP_LOAI_LABEL } from '@/lib/office-labels'
 
@@ -21,14 +22,16 @@ export default async function TongHopDanhGiaPhong({ searchParams }: { searchPara
   const d = await tongHopTheoPhong(phongId, nam)
   if (!d) redirect('/forbidden')
   const donVi = await getSoDonViOptions()
+  const xemToanSo = duocXemTongHopSo(user)
   const t = d.tong
 
   return (
     <div className="space-y-5 max-w-6xl">
       <h1 className="text-xl font-bold text-slate-900">Tổng hợp đánh giá cuối năm {nam} — {d.tenPhong}</h1>
       <form className="flex flex-wrap gap-2 items-center text-sm">
+        {/* Trưởng/Phó phòng chỉ xem phòng mình: không liệt kê đơn vị khác (chọn vào sẽ bị từ chối) */}
         <select name="phong" defaultValue={phongId} className="border rounded-lg h-9 px-2">
-          {donVi.map((o) => <option key={o.id} value={o.id}>{o.ten}</option>)}
+          {donVi.filter((o) => xemToanSo || o.id === phongId).map((o) => <option key={o.id} value={o.id}>{o.ten}</option>)}
         </select>
         <input name="nam" type="number" defaultValue={nam} className="border rounded-lg h-9 px-2 w-24" />
         <button className="px-3 h-9 rounded-lg border">Xem</button>
@@ -37,7 +40,7 @@ export default async function TongHopDanhGiaPhong({ searchParams }: { searchPara
       <a href={`/api/office/danh-gia-nam/xuat?phong=${phongId}&nam=${nam}&mau=01`} className="inline-block text-sm px-3 py-1.5 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Xuất Mẫu 01 (Word)</a>
       <a href={`/dashboard/van-phong-so/danh-gia/tong-hop/mau-01?phong=${phongId}&nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-800 hover:bg-indigo-100">Nhập Mẫu 01 của phòng</a>
       <a href={`/dashboard/van-phong-so/danh-gia/bien-ban?phong=${phongId}&nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border border-indigo-300 bg-indigo-50 text-indigo-800 hover:bg-indigo-100">Biên bản họp đánh giá</a>
-      <a href={`/dashboard/van-phong-so/danh-gia/tong-hop-so?nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Mẫu 05, 06, 07 toàn Sở</a>
+      {xemToanSo && <a href={`/dashboard/van-phong-so/danh-gia/tong-hop-so?nam=${nam}`} className="inline-block ml-2 text-sm px-3 py-1.5 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Mẫu 05, 06, 07 toàn Sở</a>}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[

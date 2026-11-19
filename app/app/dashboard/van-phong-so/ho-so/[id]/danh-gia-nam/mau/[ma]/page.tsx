@@ -63,6 +63,11 @@ export default async function MauCaNhanPage({ params, searchParams }: { params: 
       <h1 className="text-xl font-bold text-slate-900">Mẫu số {ma} — {mau?.ten}</h1>
       <p className="text-sm text-slate-600">{cb.hoTen} · {cb.chucVu ?? '—'} · {cb.tenPhong ?? '—'} · Bước: <b>{TRANG_THAI_DANH_GIA_LABEL[h.trangThai]}</b></p>
       <p className="text-xs text-slate-500">Căn cứ: {mau?.banGoc}. Dữ liệu nhập ở đây được lưu vào hồ sơ đánh giá và dùng khi xuất Word.</p>
+      {h.trangThai === 'DU_THAO' && vaiTro.includes('CHINH_CHU') && (
+        <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          Hồ sơ đang ở bước Dự thảo nên chưa nhập được. Để tự viết phần kiểm điểm, tự đánh giá: về <Link href={quayLai} className="underline">trang hồ sơ đánh giá</Link>, bấm “Chuyển sang bước tiếp theo” để sang bước Tự đánh giá.
+        </p>
+      )}
       <a href={`/api/office/danh-gia-nam/xuat?reviewId=${h.id}&mau=${ma}`} className="inline-block text-xs px-2.5 py-1 rounded-lg border bg-white text-indigo-700 hover:bg-indigo-50">Xuất Mẫu {ma} ({ma === '04' ? 'Excel' : 'Word'})</a>
       {sp.tb && <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">{sp.tb}</div>}
       {sp.loi && <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{sp.loi}</div>}

@@ -4,7 +4,7 @@ import {
   chuanNam, kiemTraBang, layCanBo, layHoSo, moHoSo, nguCanhQuyen, layDuKien, chayKiemTra,
 } from '@/lib/danh-gia-nam/may-chu'
 import { xacDinhVaiTro, duocSuaPhan, duocXemHoSo, type LoaiHoSo } from '@/lib/danh-gia-nam/quyen'
-import { TRANG_THAI_DANH_GIA, TRANG_THAI_DANH_GIA_LABEL } from '@/lib/danh-gia-nam/trang-thai'
+import { TRANG_THAI_DANH_GIA, TRANG_THAI_DANH_GIA_LABEL, VAI_TRO_DANH_GIA_LABEL } from '@/lib/danh-gia-nam/trang-thai'
 import { TIEU_CHI_CHUNG, mucToiDaTheoDiem } from '@/lib/danh-gia-nam/tieu-chi'
 import { MUC_NHAN_XET, laDoanThieuDuLieu } from '@/lib/danh-gia-nam/nhan-xet'
 import { timMau, chonMauCaNhan } from '@/lib/danh-gia-nam/mau-bieu'
@@ -141,7 +141,7 @@ export default async function DanhGiaNamPage({
     </ol>
     <div className="text-xs text-slate-500">
       {mau ? <>Biểu mẫu áp dụng: <b>Mẫu {mau.ma}</b> — {mau.ten}. </> : null}
-      Vai trò của bạn: {vaiTro.length ? vaiTro.join(', ') : 'chỉ xem'}.
+      Vai trò của bạn: {vaiTro.length ? vaiTro.map((v) => VAI_TRO_DANH_GIA_LABEL[v]).join(', ') : 'chỉ xem'}.
     </div>
 
     {loai === 'CBCCVC' && (
@@ -244,7 +244,7 @@ export default async function DanhGiaNamPage({
             </div>
             <button className="px-3 py-1.5 rounded-lg bg-slate-800 text-white text-sm">Lưu điểm</button>
           </form>
-        ) : <p className="text-sm text-slate-700">Tổng điểm {h.tongDiem ?? '—'} (KPI {h.diemKpiTong ?? '—'}).</p>}
+        ) : <p className="text-sm text-slate-700">Tổng điểm: {h.tongDiem ?? 'chưa chấm'} (KPI: {h.diemKpiTong ?? 'chưa chấm'}).</p>}
         {toiDa && <p className="text-xs text-slate-500">Theo ngưỡng điểm (dự thảo công văn Sở, chưa có số), mức cao nhất có thể đề xuất: {MUC_XEP_LOAI_LABEL[toiDa.muc]}. Đây chỉ là gợi ý; không tự quyết xếp loại.</p>}
       </section>
     )}

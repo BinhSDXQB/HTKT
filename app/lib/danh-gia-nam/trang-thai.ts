@@ -27,6 +27,14 @@ export const TRANG_THAI_DANH_GIA_LABEL: Record<TrangThaiDanhGia, string> = {
 /** Vai trò thao tác trên quy trình. */
 export type VaiTroDanhGia = 'CHINH_CHU' | 'NGUOI_NHAN_XET' | 'THU_KY_TONG_HOP' | 'CAP_PHE_DUYET'
 
+/** Nhãn hiển thị vai trò (không in mã nội bộ ra giao diện). */
+export const VAI_TRO_DANH_GIA_LABEL: Record<VaiTroDanhGia, string> = {
+  CHINH_CHU: 'người được đánh giá (tự đánh giá)',
+  NGUOI_NHAN_XET: 'người nhận xét',
+  THU_KY_TONG_HOP: 'thư ký tổng hợp',
+  CAP_PHE_DUYET: 'cấp phê duyệt',
+}
+
 /** Bước tiếp theo hợp lệ + vai trò được làm. Không cho nhảy cóc. */
 const BUOC_TIEP: Record<TrangThaiDanhGia, { den: TrangThaiDanhGia; vaiTro: VaiTroDanhGia | VaiTroDanhGia[] } | null> = {
   // Cá nhân tự mở bước tự đánh giá của mình (theo lịch của Sở) hoặc thư ký mở hàng loạt
